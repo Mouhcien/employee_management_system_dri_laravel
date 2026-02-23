@@ -8,12 +8,12 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you may specify the default filesystem disk that should be used
-    | by the framework. The "local" disk, as well as a variety of cloud
+    | by the framework. The "locals" disk, as well as a variety of cloud
     | based disks are available to your application for file storage.
     |
     */
 
-    'default' => env('FILESYSTEM_DISK', 'local'),
+    'default' => env('FILESYSTEM_DISK', 'locals'),
 
     /*
     |--------------------------------------------------------------------------
@@ -24,14 +24,14 @@ return [
     | may even configure multiple disks for the same driver. Examples for
     | most supported storage drivers are configured here for reference.
     |
-    | Supported drivers: "local", "ftp", "sftp", "s3"
+    | Supported drivers: "locals", "ftp", "sftp", "s3"
     |
     */
 
     'disks' => [
 
-        'local' => [
-            'driver' => 'local',
+        'locals' => [
+            'driver' => 'locals',
             'root' => storage_path('app/private'),
             'serve' => true,
             'throw' => false,
@@ -39,7 +39,7 @@ return [
         ],
 
         'public' => [
-            'driver' => 'local',
+            'driver' => 'locals',
             'root' => storage_path('app/public'),
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',
