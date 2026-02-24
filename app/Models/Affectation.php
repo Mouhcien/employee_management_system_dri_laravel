@@ -6,5 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Affectation extends Model
 {
-    //
+    public function employee() {
+        return $this->belongsTo(Employee::class);
+    }
+
+    public function service() {
+        return $this->belongsTo(Service::class);
+    }
+
+    public function entity() {
+        return $this->belongsTo(Entity::class);
+    }
+
+    public function sector() {
+        return $this->belongsTo(Sector::class);
+    }
+
+    public function section() {
+        return $this->belongsTo(Section::class);
+    }
 }

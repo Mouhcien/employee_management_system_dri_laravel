@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class EntityType extends Model
 {
-    //
+    public function entities() {
+        return $this->hasMany(Entity::class);
+    }
 }
