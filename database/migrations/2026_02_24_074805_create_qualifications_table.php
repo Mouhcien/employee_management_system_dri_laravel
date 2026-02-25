@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Employee::class, 'employee_id')->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Diploma::class, 'diploma_id')->constrained()->cascadeOnDelete();
-            $table->integer('year');
+            $table->integer('year'); //date d'obtention
             $table->timestamps();
         });
     }
