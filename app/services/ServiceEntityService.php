@@ -18,11 +18,11 @@ class ServiceEntityService
     }
 
     public function getAll($pages=0){
-        return $this->serviceEntityRepository->All(Service::class, ['entities', 'employees'], $pages);
+        return $this->serviceEntityRepository->All(Service::class, ['entities', 'affectations'], $pages);
     }
 
     public function getOneById($id){
-        return $this->serviceEntityRepository->One(Service::class, ['entities', 'employees'], $id);
+        return $this->serviceEntityRepository->One(Service::class, ['entities', 'affectations'], $id);
     }
 
     public function create($data){

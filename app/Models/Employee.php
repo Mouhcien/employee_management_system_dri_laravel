@@ -6,9 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
-    public function gender() {
-        return $this->belongsTo(Gender::class);
-    }
 
     public function qualifications() {
         return $this->hasMany(Qualification::class);

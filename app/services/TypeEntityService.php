@@ -2,7 +2,7 @@
 
 namespace App\services;
 
-use App\Models\EntityType;
+use App\Models\Type;
 use App\repositories\TypeEntityRepository;
 
 class TypeEntityService
@@ -18,15 +18,15 @@ class TypeEntityService
     }
 
     public function getAll($pages=0){
-        return $this->typeEntityRepository->All(EntityType::class, ['entities'], $pages);
+        return $this->typeEntityRepository->All(Type::class, ['entities'], $pages);
     }
 
     public function getOneById($id){
-        return $this->typeEntityRepository->One(EntityType::class, ['entities'], $id);
+        return $this->typeEntityRepository->One(Type::class, ['entities'], $id);
     }
 
     public function create($data){
-        $obj = new EntityType();
+        $obj = new Type();
 
         $obj->title = $data['title'];
 
@@ -52,6 +52,6 @@ class TypeEntityService
     }
 
     public function getLatestInserted(){
-        return $this->typeEntityRepository->LatestInserted(EntityType::class);
+        return $this->typeEntityRepository->LatestInserted(Type::class);
     }
 }

@@ -10,7 +10,7 @@ class Section extends Model
         return $this->belongsTo(Entity::class);
     }
 
-    public function employees() {
-        return $this->hasMany(Employee::class);
+    public function affectations() {
+        return $this->hasMany(Affectation::class);
     }
 }

@@ -10,7 +10,7 @@ class Service extends Model
         return $this->hasMany(Entity::class);
     }
 
-    public function employees() {
-        return $this->hasMany(Employee::class);
+    public function affectations() {
+        return $this->hasMany(Affectation::class);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Type;
 use App\Models\Service;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->foreignIdFor(Service::class, 'service_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Type::class, 'type_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

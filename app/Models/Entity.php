@@ -6,12 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Entity extends Model
 {
-    public function entity_type() {
-        return $this->belongsTo(EntityType::class);
+    public function type() {
+        return $this->belongsTo(Type::class);
     }
 
-    public function employees() {
-        return $this->hasMany(Employee::class);
+    public function service() {
+        return $this->belongsTo(Service::class);
+    }
+
+    public function affectations() {
+        return $this->hasMany(Affectation::class);
     }
 
     public function sectors() {
