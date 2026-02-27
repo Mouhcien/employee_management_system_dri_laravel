@@ -124,6 +124,7 @@
                 @if(isset($services) && $services->hasPages())
                     <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
                         <div class="flex items-center justify-between">
+                            {{--
                             <div class="flex-1 flex justify-between sm:hidden">
                                 @if($services->onFirstPage())
                                     <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-400 bg-gray-50 cursor-not-allowed">Previous</span>
@@ -137,11 +138,14 @@
                                     <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-400 bg-gray-50 cursor-not-allowed">Next</span>
                                 @endif
                             </div>
+                            --}}
                             <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                                 <div>
+                                    {{--
                                     <p class="text-sm text-gray-700">
                                         Showing <span class="font-medium">{{ $services->firstItem() }}</span> to <span class="font-medium">{{ $services->lastItem() }}</span> of <span class="font-medium">{{ $services->total() }}</span> results
                                     </p>
+                                    --}}
                                 </div>
                                 <div>
                                     {{ $services->links() }}

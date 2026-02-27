@@ -25,12 +25,13 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::prefix('cities')->group(function(){
-    Route::get('/', [CityController::class, 'index'])->name('employees.index');
-    Route::get('/create', [CityController::class, 'create'])->name('employees.create');
-    Route::get('/store', [CityController::class, 'create'])->name('employees.store');
-    Route::get('/edit/{id}', [CityController::class, 'create'])->name('employees.edit');
-    Route::get('/update/{id}', [CityController::class, 'create'])->name('employees.update');
-    Route::get('/delete/{id}', [CityController::class, 'create'])->name('employees.delete');
+    Route::get('/', [CityController::class, 'index'])->name('cities.index');
+    Route::get('/create', [CityController::class, 'create'])->name('cities.create');
+    Route::get('/store', [CityController::class, 'create'])->name('cities.store');
+    Route::get('/show/{id}', [CityController::class, 'show'])->name('cities.show');
+    Route::get('/edit/{id}', [CityController::class, 'create'])->name('cities.edit');
+    Route::get('/update/{id}', [CityController::class, 'create'])->name('cities.update');
+    Route::get('/delete/{id}', [CityController::class, 'create'])->name('cities.delete');
 });
 
 Route::prefix('locals')->group(function(){
