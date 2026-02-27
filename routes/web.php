@@ -38,6 +38,7 @@ Route::prefix('locals')->group(function(){
     Route::get('/', [LocalController::class, 'index'])->name('locals.index');
     Route::get('/create', [LocalController::class, 'create'])->name('locals.create');
     Route::get('/store', [LocalController::class, 'create'])->name('locals.store');
+    Route::get('/{id}', [LocalController::class, 'show'])->name('locals.show');
     Route::get('/edit/{id}', [LocalController::class, 'create'])->name('locals.edit');
     Route::get('/update/{id}', [LocalController::class, 'create'])->name('locals.update');
     Route::get('/delete/{id}', [LocalController::class, 'create'])->name('locals.delete');
@@ -57,6 +58,7 @@ Route::prefix('entities')->group(function(){
     Route::get('/', [EntityController::class, 'index'])->name('entities.index');
     Route::get('/create', [EntityController::class, 'create'])->name('entities.create');
     Route::get('/store', [EntityController::class, 'create'])->name('entities.store');
+    Route::get('/{id}', [EntityController::class, 'show'])->name('entities.show');
     Route::get('/edit/{id}', [EntityController::class, 'create'])->name('entities.edit');
     Route::get('/update/{id}', [EntityController::class, 'create'])->name('entities.update');
     Route::get('/delete/{id}', [EntityController::class, 'create'])->name('entities.delete');
@@ -66,6 +68,7 @@ Route::prefix('sectors')->group(function(){
     Route::get('/', [SectorController::class, 'index'])->name('sectors.index');
     Route::get('/create', [SectorController::class, 'create'])->name('sectors.create');
     Route::get('/store', [SectorController::class, 'create'])->name('sectors.store');
+    Route::get('/{id}', [SectorController::class, 'show'])->name('sectors.show');
     Route::get('/edit/{id}', [SectorController::class, 'create'])->name('sectors.edit');
     Route::get('/update/{id}', [SectorController::class, 'create'])->name('sectors.update');
     Route::get('/delete/{id}', [SectorController::class, 'create'])->name('sectors.delete');
@@ -75,6 +78,7 @@ Route::prefix('sections')->group(function(){
     Route::get('/', [SectionController::class, 'index'])->name('sections.index');
     Route::get('/create', [SectionController::class, 'create'])->name('sections.create');
     Route::get('/store', [SectionController::class, 'create'])->name('sections.store');
+    Route::get('/{id}', [SectionController::class, 'show'])->name('sections.show');
     Route::get('/edit/{id}', [SectionController::class, 'create'])->name('sections.edit');
     Route::get('/update/{id}', [SectionController::class, 'create'])->name('sections.update');
     Route::get('/delete/{id}', [SectionController::class, 'create'])->name('sections.delete');

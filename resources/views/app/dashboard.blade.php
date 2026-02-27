@@ -5,140 +5,184 @@
     @section('title', 'Dashboard - HR Management')
 
     @section('content')
-        <div class="space-y-6">
+        <div class="mb-5">
             {{-- Page Header --}}
-            <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-semibold text-gray-900">Dashboard</h1>
-                <span class="text-sm text-gray-500">{{ now()->format('l, F j, Y') }}</span>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2 mb-0">Dashboard</h1>
+                <span class="text-muted">{{ now()->format('l, F j, Y') }}</span>
             </div>
 
             {{-- Metrics Cards --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">Total Employees</p>
-                            <p class="text-3xl font-bold text-gray-900">{{ $totalEmployees ?? 142 }}</p>
-                        </div>
-                        <div class="p-3 bg-indigo-100 rounded-full">
-                            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <div class="row g-4 mb-5">
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <p class="card-text small text-muted mb-1">Total Employees</p>
+                                    <p class="h3 mb-0 fw-bold">{{ $totalEmployees ?? 142 }}</p>
+                                </div>
+                                <div class="ms-auto p-3 bg-primary-subtle rounded-circle">
+                                    <i class="bi bi-people-fill text-primary fs-4"></i>
+                                </div>
+                            </div>
+                            <p class="text-success small mb-0 d-flex align-items-center">
+                                <i class="bi bi-arrow-up me-1"></i>
+                                +5 this month
+                            </p>
                         </div>
                     </div>
-                    <p class="mt-2 text-sm text-green-600 flex items-center">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-                        +5 this month
-                    </p>
                 </div>
 
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">Present Today</p>
-                            <p class="text-3xl font-bold text-gray-900">{{ $presentToday ?? 128 }}</p>
-                        </div>
-                        <div class="p-3 bg-green-100 rounded-full">
-                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <p class="card-text small text-muted mb-1">Present Today</p>
+                                    <p class="h3 mb-0 fw-bold">{{ $presentToday ?? 128 }}</p>
+                                </div>
+                                <div class="ms-auto p-3 bg-success-subtle rounded-circle">
+                                    <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                                </div>
+                            </div>
+                            <p class="text-muted small mb-0">90% attendance rate</p>
                         </div>
                     </div>
-                    <p class="mt-2 text-sm text-gray-500">90% attendance rate</p>
                 </div>
 
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">On Leave</p>
-                            <p class="text-3xl font-bold text-gray-900">{{ $onLeave ?? 12 }}</p>
-                        </div>
-                        <div class="p-3 bg-amber-100 rounded-full">
-                            <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <p class="card-text small text-muted mb-1">On Leave</p>
+                                    <p class="h3 mb-0 fw-bold">{{ $onLeave ?? 12 }}</p>
+                                </div>
+                                <div class="ms-auto p-3 bg-warning-subtle rounded-circle">
+                                    <i class="bi bi-clock-fill text-warning fs-4"></i>
+                                </div>
+                            </div>
+                            <p class="text-muted small mb-0">8 pending approvals</p>
                         </div>
                     </div>
-                    <p class="mt-2 text-sm text-gray-500">8 pending approvals</p>
                 </div>
 
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">New Hires</p>
-                            <p class="text-3xl font-bold text-gray-900">{{ $newHires ?? 5 }}</p>
-                        </div>
-                        <div class="p-3 bg-blue-100 rounded-full">
-                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <p class="card-text small text-muted mb-1">New Hires</p>
+                                    <p class="h3 mb-0 fw-bold">{{ $newHires ?? 5 }}</p>
+                                </div>
+                                <div class="ms-auto p-3 bg-info-subtle rounded-circle">
+                                    <i class="bi bi-person-plus-fill text-info fs-4"></i>
+                                </div>
+                            </div>
+                            <p class="text-muted small mb-0">This month</p>
                         </div>
                     </div>
-                    <p class="mt-2 text-sm text-gray-500">This month</p>
                 </div>
             </div>
 
             {{-- Quick Actions & Recent Activity --}}
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="row g-4 mb-5">
                 {{-- Quick Actions --}}
-                <div class="lg:col-span-2 bg-white rounded-lg shadow">
-                    <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-900">Quick Actions</h2>
-                    </div>
-                    <div class="p-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <a href="{{ route('employees.create') }}" class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-all">
-                            <div class="p-3 bg-indigo-100 rounded-full mb-3">
-                                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                <div class="col-lg-8">
+                    <div class="card h-100">
+                        <div class="card-header pb-0">
+                            <h2 class="h5 mb-0">Quick Actions</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-6 col-md-3">
+                                    <a href="{{ route('employees.create') }}" class="card border h-100 text-decoration-none text-reset hover-border-primary hover-bg-primary-subtle">
+                                        <div class="card-body d-flex flex-column align-items-center text-center p-4">
+                                            <div class="p-3 bg-primary-subtle rounded-circle mb-3">
+                                                <i class="bi bi-person-plus text-primary fs-4"></i>
+                                            </div>
+                                            <span class="fw-semibold">Add Employee</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <a href="#" class="card border h-100 text-decoration-none text-reset hover-border-success hover-bg-success-subtle">
+                                        <div class="card-body d-flex flex-column align-items-center text-center p-4">
+                                            <div class="p-3 bg-success-subtle rounded-circle mb-3">
+                                                <i class="bi bi-file-earmark-pdf text-success fs-4"></i>
+                                            </div>
+                                            <span class="fw-semibold">Generate Report</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <a href="#" class="card border h-100 text-decoration-none text-reset hover-border-warning hover-bg-warning-subtle">
+                                        <div class="card-body d-flex flex-column align-items-center text-center p-4">
+                                            <div class="p-3 bg-warning-subtle rounded-circle mb-3">
+                                                <i class="bi bi-check-circle text-warning fs-4"></i>
+                                            </div>
+                                            <span class="fw-semibold">Approve Leave</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <a href="#" class="card border h-100 text-decoration-none text-reset hover-border-purple hover-bg-purple-subtle">
+                                        <div class="card-body d-flex flex-column align-items-center text-center p-4">
+                                            <div class="p-3 bg-purple-subtle rounded-circle mb-3">
+                                                <i class="bi bi-download text-purple fs-4"></i>
+                                            </div>
+                                            <span class="fw-semibold">Export Data</span>
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
-                            <span class="text-sm font-medium text-gray-900">Add Employee</span>
-                        </a>
-                        <a href="#" class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-all">
-                            <div class="p-3 bg-green-100 rounded-full mb-3">
-                                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                            </div>
-                            <span class="text-sm font-medium text-gray-900">Generate Report</span>
-                        </a>
-                        <a href="#" class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-all">
-                            <div class="p-3 bg-amber-100 rounded-full mb-3">
-                                <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                            </div>
-                            <span class="text-sm font-medium text-gray-900">Approve Leave</span>
-                        </a>
-                        <a href="#" class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-all">
-                            <div class="p-3 bg-purple-100 rounded-full mb-3">
-                                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                            </div>
-                            <span class="text-sm font-medium text-gray-900">Export Data</span>
-                        </a>
+                        </div>
                     </div>
                 </div>
 
                 {{-- Department Summary --}}
-                <div class="bg-white rounded-lg shadow">
-                    <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-900">Departments</h2>
-                    </div>
-                    <div class="p-6">
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-indigo-500 rounded-full mr-3"></div>
-                                    <span class="text-sm text-gray-700">Engineering</span>
+                <div class="col-lg-4">
+                    <div class="card h-100">
+                        <div class="card-header pb-0">
+                            <h2 class="h5 mb-0">Departments</h2>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                                <div class="flex-shrink-0">
+                                    <span class="badge bg-primary rounded-pill me-2">Eng</span>
                                 </div>
-                                <span class="text-sm font-semibold text-gray-900">45</span>
+                                <div class="flex-grow-1">
+                                    <span class="small text-muted">Engineering</span>
+                                </div>
+                                <span class="fw-semibold">45</span>
                             </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                                    <span class="text-sm text-gray-700">Sales & Marketing</span>
+                            <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                                <div class="flex-shrink-0">
+                                    <span class="badge bg-success rounded-pill me-2">Sales</span>
                                 </div>
-                                <span class="text-sm font-semibold text-gray-900">32</span>
+                                <div class="flex-grow-1">
+                                    <span class="small text-muted">Sales & Marketing</span>
+                                </div>
+                                <span class="fw-semibold">32</span>
                             </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-amber-500 rounded-full mr-3"></div>
-                                    <span class="text-sm text-gray-700">Operations</span>
+                            <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                                <div class="flex-shrink-0">
+                                    <span class="badge bg-warning rounded-pill me-2">Ops</span>
                                 </div>
-                                <span class="text-sm font-semibold text-gray-900">28</span>
+                                <div class="flex-grow-1">
+                                    <span class="small text-muted">Operations</span>
+                                </div>
+                                <span class="fw-semibold">28</span>
                             </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-3 h-3 bg-rose-500 rounded-full mr-3"></div>
-                                    <span class="text-sm text-gray-700">HR & Finance</span>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <span class="badge bg-danger rounded-pill me-2">HR</span>
                                 </div>
-                                <span class="text-sm font-semibold text-gray-900">18</span>
+                                <div class="flex-grow-1">
+                                    <span class="small text-muted">HR & Finance</span>
+                                </div>
+                                <span class="fw-semibold">18</span>
                             </div>
                         </div>
                     </div>
@@ -146,38 +190,40 @@
             </div>
 
             {{-- Recent Activity --}}
-            <div class="bg-white rounded-lg shadow">
-                <div class="p-6 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-900">Recent Activity</h2>
+            <div class="card">
+                <div class="card-header pb-0">
+                    <h2 class="h5 mb-0">Recent Activity</h2>
                 </div>
-                <div class="p-6">
-                    <div class="space-y-4">
-                        <div class="flex items-start space-x-3">
-                            <div class="p-2 bg-green-100 rounded-full">
-                                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                <div class="card-body pt-0">
+                    <div class="mb-3 pb-3 border-bottom">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-shrink-0 p-2 bg-success-subtle rounded-circle me-3">
+                                <i class="bi bi-person-plus text-success"></i>
                             </div>
-                            <div>
-                                <p class="text-sm text-gray-900"><span class="font-semibold">New hire:</span> Sarah Johnson joined as Senior Developer</p>
-                                <p class="text-xs text-gray-500">2 hours ago</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <div class="p-2 bg-amber-100 rounded-full">
-                                <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-900"><span class="font-semibold">Leave approved:</span> Mike Chen's vacation request approved</p>
-                                <p class="text-xs text-gray-500">4 hours ago</p>
+                            <div class="flex-grow-1">
+                                <p class="mb-1 small"><span class="fw-semibold">New hire:</span> Sarah Johnson joined as Senior Developer</p>
+                                <p class="mb-0 small text-muted">2 hours ago</p>
                             </div>
                         </div>
-                        <div class="flex items-start space-x-3">
-                            <div class="p-2 bg-blue-100 rounded-full">
-                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </div>
+                    <div class="mb-3 pb-3 border-bottom">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-shrink-0 p-2 bg-warning-subtle rounded-circle me-3">
+                                <i class="bi bi-clock text-warning"></i>
                             </div>
-                            <div>
-                                <p class="text-sm text-gray-900"><span class="font-semibold">Updated:</span> Emily Davis promoted to Team Lead</p>
-                                <p class="text-xs text-gray-500">Yesterday</p>
+                            <div class="flex-grow-1">
+                                <p class="mb-1 small"><span class="fw-semibold">Leave approved:</span> Mike Chen's vacation request approved</p>
+                                <p class="mb-0 small text-muted">4 hours ago</p>
                             </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start">
+                        <div class="flex-shrink-0 p-2 bg-info-subtle rounded-circle me-3">
+                            <i class="bi bi-pencil-square text-info"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="mb-1 small"><span class="fw-semibold">Updated:</span> Emily Davis promoted to Team Lead</p>
+                            <p class="mb-0 small text-muted">Yesterday</p>
                         </div>
                     </div>
                 </div>
@@ -185,4 +231,3 @@
         </div>
     @endsection
 </x-layout>
-
