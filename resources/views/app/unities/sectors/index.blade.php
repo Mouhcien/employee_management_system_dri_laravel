@@ -1,7 +1,6 @@
 <x-layout>
     @section('title', 'Gestion des secteurs - HR Management')
 
-    @section('content')
         <div class="d-flex flex-column gap-4">
             {{-- Page Header --}}
             <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
@@ -276,7 +275,6 @@
                 </div>
             </div>
         </div>
-    @endsection
 
     @push('styles')
         <style>

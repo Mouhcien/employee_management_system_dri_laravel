@@ -26,22 +26,19 @@ Route::get('/dashboard', function () {
 
 Route::prefix('cities')->group(function(){
     Route::get('/', [CityController::class, 'index'])->name('cities.index');
-    Route::get('/create', [CityController::class, 'create'])->name('cities.create');
-    Route::get('/store', [CityController::class, 'create'])->name('cities.store');
+    Route::post('/store', [CityController::class, 'store'])->name('cities.store');
     Route::get('/show/{id}', [CityController::class, 'show'])->name('cities.show');
-    Route::get('/edit/{id}', [CityController::class, 'create'])->name('cities.edit');
-    Route::get('/update/{id}', [CityController::class, 'create'])->name('cities.update');
-    Route::get('/delete/{id}', [CityController::class, 'create'])->name('cities.delete');
+    Route::get('/edit/{id}', [CityController::class, 'edit'])->name('cities.edit');
+    Route::post('/update/{id}', [CityController::class, 'update'])->name('cities.update');
+    Route::get('/delete/{id}', [CityController::class, 'delete'])->name('cities.delete');
 });
 
 Route::prefix('locals')->group(function(){
     Route::get('/', [LocalController::class, 'index'])->name('locals.index');
-    Route::get('/create', [LocalController::class, 'create'])->name('locals.create');
-    Route::get('/store', [LocalController::class, 'create'])->name('locals.store');
+    Route::post('/store', [LocalController::class, 'store'])->name('locals.store');
     Route::get('/{id}', [LocalController::class, 'show'])->name('locals.show');
-    Route::get('/edit/{id}', [LocalController::class, 'create'])->name('locals.edit');
-    Route::get('/update/{id}', [LocalController::class, 'create'])->name('locals.update');
-    Route::get('/delete/{id}', [LocalController::class, 'create'])->name('locals.delete');
+    Route::post('/update/{id}', [LocalController::class, 'update'])->name('locals.update');
+    Route::get('/delete/{id}', [LocalController::class, 'delete'])->name('locals.delete');
 });
 
 Route::prefix('services')->group(function(){

@@ -8,7 +8,7 @@
     <title>@yield('title', 'HR Management')</title>
 
     {{-- Vite CSS (must include bootstrap + bootstrap-icons in resources/css/app.css) --}}
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.css', 'resources/css/toastr.min.css'])
 </head>
 <body class="bg-light">
 
@@ -24,7 +24,7 @@
 
         <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom border-white/20">
         <span class="fs-3 fw-bold lh-1 shadow-sm" id="sidebarBrandFull">
-            HR<span class="text-purple-200 drop-shadow-sm">Pro</span>
+            RH-<span class="text-purple-200 drop-shadow-sm">DRI-Marrakech</span>
         </span>
             <span class="fs-3 fw-bold lh-1 d-none drop-shadow-sm" id="sidebarBrandMini">H</span>
         </div>
@@ -74,16 +74,17 @@
 
         {{-- Main Content --}}
         <main class="flex-grow-1 overflow-auto p-4 bg-light">
-            @yield('content')
+            {{ $slot }}
         </main>
     </div>
 </div>
 
 {{-- Vite JS (must import bootstrap JS in resources/js/app.js) --}}
-@vite(['resources/js/app.js'])
+@vite(['resources/js/app.js', 'resources/js/jquery-3.7.1.js', 'resources/js/toastr.min.js'])
 
 {{-- Small script to toggle sidebar width (no Alpine) --}}
 <script>
+
     document.addEventListener('DOMContentLoaded', function () {
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('sidebarToggle');
@@ -98,12 +99,49 @@
                 brandFull.classList.remove('d-none');
                 brandMini.classList.add('d-none');
             } else {
-                sidebar.style.width = '70px';
+                sidebar.style.width = '55px';
                 brandFull.classList.add('d-none');
                 brandMini.classList.remove('d-none');
             }
         });
     });
+
+    // Toastr Configuration
+    window.addEventListener('load', function() {
+        // Configure Toastr
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut",
+            "preventDuplicates": true,
+            "newestOnTop": true
+        };
+
+        // Display Session Messages
+        @if(Session::has('success'))
+        toastr.success("{{ session('success') }}", "Succès");
+        @endif
+
+        @if(Session::has('error'))
+        toastr.error("{{ session('error') }}", "Erreur");
+        @endif
+
+        @if(Session::has('info'))
+        toastr.info("{{ session('info') }}", "Information");
+        @endif
+
+        @if(Session::has('warning'))
+        toastr.warning("{{ session('warning') }}", "Attention");
+        @endif
+    });
+
+
 </script>
 
 </body>
