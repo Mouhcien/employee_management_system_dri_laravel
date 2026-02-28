@@ -15,23 +15,37 @@
 <div class="d-flex min-vh-100">
     {{-- Sidebar --}}
     <aside id="sidebar"
-           class="text-white d-flex flex-column flex-shrink-0 p-3 shadow-lg"
-           style="width: 250px;
-              transition: width .3s, transform .2s ease;
-              background: linear-gradient(145deg, #5313e8 0%, #782ef8 25%, #844eff 50%, #a74bff 75%, #c084fc 100%);
-              border-right: 1px solid rgba(255,255,255,0.1);
-              backdrop-filter: blur(10px);">
-
-        <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom border-white/20">
-        <span class="fs-3 fw-bold lh-1 shadow-sm" id="sidebarBrandFull">
-            RH-<span class="text-purple-200 drop-shadow-sm">DRI-Marrakech</span>
+           class="d-flex flex-column flex-shrink-0 p-3 shadow-sm bg-white border-end"
+           style="width: 260px; min-height: 100vh;">
+        <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+        <span class="fs-5 fw-semibold text-dark" id="sidebarBrandFull">
+            RH-<span class="text-primary">DRI-Marrakech</span>
         </span>
-            <span class="fs-3 fw-bold lh-1 d-none drop-shadow-sm" id="sidebarBrandMini">H</span>
+            <span class="fs-5 fw-semibold d-none text-primary" id="sidebarBrandMini">H</span>
         </div>
 
-        {{-- Vertical Nav --}}
         <x-nav />
     </aside>
+
+
+    <style>
+        #sidebar {
+            font-size: 0.935rem;
+        }
+
+        #sidebar .border-bottom {
+            border-color: #e5e7eb !important;
+        }
+
+        #sidebar #sidebarBrandFull span.text-primary {
+            color: #2563eb !important;
+        }
+        .sidebar {
+            overflow-y: auto;
+        }
+
+
+    </style>
 
 
     {{-- Main area --}}
@@ -80,7 +94,7 @@
 </div>
 
 {{-- Vite JS (must import bootstrap JS in resources/js/app.js) --}}
-@vite(['resources/js/app.js', 'resources/js/jquery-3.7.1.js', 'resources/js/toastr.min.js'])
+@vite(['resources/js/app.js', 'resources/js/jquery-3.7.1.js', 'resources/js/toastr.min.js', 'resources/js/script.js'])
 
 {{-- Small script to toggle sidebar width (no Alpine) --}}
 <script>

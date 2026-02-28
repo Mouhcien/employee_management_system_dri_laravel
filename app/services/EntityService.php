@@ -60,4 +60,8 @@ class EntityService
     public function getLatestInserted(){
         return $this->entityRepository->LatestInserted(Entity::class);
     }
+
+    public function getAllEntityByService($service_id){
+        return $this->entityRepository->getAllEntityByService($service_id);
+    }
 }

@@ -25,7 +25,7 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-primary mb-1">{{ $entities->count() ?? 0 }}</div>
+                            <div class="h2 fw-bold text-primary mb-1">{{ $entities->total() ?? 0 }}</div>
                             <div class="text-muted small">Entités total</div>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-success mb-1">{{ $totalServices ?? 0 }}</div>
+                            <div class="h2 fw-bold text-success mb-1">{{ $total_service - 1 ?? 0 }}</div>
                             <div class="text-muted small">Services</div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-info mb-1">{{ $totalSectors ?? 0 }}</div>
+                            <div class="h2 fw-bold text-info mb-1">{{ $total_sector ?? 0 }}</div>
                             <div class="text-muted small">Secteurs</div>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-warning mb-1">{{ $totalSections ?? 0 }}</div>
+                            <div class="h2 fw-bold text-warning mb-1">{{ $total_section ?? 0 }}</div>
                             <div class="text-muted small">Sections</div>
                         </div>
                     </div>
@@ -180,12 +180,9 @@
                                                 <li><a href="#" class="dropdown-item"><i class="bi bi-file-earmark-pdf me-2"></i>PDF</a></li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <form method="POST" action="{{ route('entities.delete', $entity) }}" class="d-inline" onsubmit="return confirm('Confirmer la suppression?')">
-                                                        @csrf @method('DELETE')
-                                                        <button type="submit" class="dropdown-item text-danger">
-                                                            <i class="bi bi-trash me-2"></i>Supprimer
-                                                        </button>
-                                                    </form>
+                                                    <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteEntityModal">
+                                                        <i class="bi bi-trash me-2"></i>Supprimer
+                                                    </button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -214,6 +211,14 @@
                         </tbody>
                     </table>
                 </div>
+
+                @foreach($entities as $entity)
+                    <x-delete-model
+                        href="{{ route('entities.delete', $entity->id) }}"
+                        message="Voulez-vous vraiment supprimer cette entité ?"
+                        title="Confiramtion"
+                        target="deleteEntityModal" />
+                @endforeach
 
                 {{-- Pagination --}}
                 @if(isset($entities) && $entities->hasPages())

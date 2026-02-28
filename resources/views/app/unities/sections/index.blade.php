@@ -25,7 +25,7 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-primary mb-1">{{ $sections->count() ?? 0 }}</div>
+                            <div class="h2 fw-bold text-primary mb-1">{{ $sections->total() ?? 0 }}</div>
                             <div class="text-muted small">Sections total</div>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-success mb-1">{{ $totalSectors ?? 0 }}</div>
+                            <div class="h2 fw-bold text-success mb-1">{{ $total_sector ?? 0 }}</div>
                             <div class="text-muted small">Secteurs</div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-info mb-1">{{ $totalEntities ?? 0 }}</div>
+                            <div class="h2 fw-bold text-info mb-1">{{ $total_entity ?? 0 }}</div>
                             <div class="text-muted small">Entités</div>
                         </div>
                     </div>
@@ -49,8 +49,8 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-warning mb-1">{{ $activeSections ?? 0 }}</div>
-                            <div class="text-muted small">Sections actives</div>
+                            <div class="h2 fw-bold text-warning mb-1">{{ $total_service - 1 ?? 0 }}</div>
+                            <div class="text-muted small">Services</div>
                         </div>
                     </div>
                 </div>
@@ -183,12 +183,9 @@
                                                 <li><a href="#" class="dropdown-item"><i class="bi bi-file-earmark-pdf me-2"></i>PDF</a></li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <form method="POST" action="{{ route('sections.delete', $section) }}" class="d-inline" onsubmit="return confirm('Confirmer la suppression?')">
-                                                        @csrf @method('DELETE')
-                                                        <button type="submit" class="dropdown-item text-danger">
-                                                            <i class="bi bi-trash me-2"></i>Supprimer
-                                                        </button>
-                                                    </form>
+                                                    <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteSectionModal">
+                                                        <i class="bi bi-trash me-2"></i>Supprimer
+                                                    </button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -243,6 +240,14 @@
                 @endif
             </div>
         </div>
+
+    @foreach($sections as $section)
+        <x-delete-model
+            href="{{ route('sections.delete', $section->id) }}"
+            message="Voulez-vous vraiment supprimer cette section ?"
+            title="Confiramtion"
+            target="deleteSectionModal" />
+    @endforeach
 
         {{-- Bulk Actions Modal --}}
         <div class="modal fade" id="bulkActions" tabindex="-1">

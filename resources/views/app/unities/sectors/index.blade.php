@@ -25,7 +25,7 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-primary mb-1">{{ $sectors->count() ?? 0 }}</div>
+                            <div class="h2 fw-bold text-primary mb-1">{{ $sectors->total() ?? 0 }}</div>
                             <div class="text-muted small">Secteurs total</div>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-success mb-1">{{ $totalEntities ?? 0 }}</div>
+                            <div class="h2 fw-bold text-success mb-1">{{ $total_entity ?? 0 }}</div>
                             <div class="text-muted small">Entités</div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-info mb-1">{{ $totalSections ?? 0 }}</div>
+                            <div class="h2 fw-bold text-info mb-1">{{ $total_section ?? 0 }}</div>
                             <div class="text-muted small">Sections</div>
                         </div>
                     </div>
@@ -49,8 +49,8 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-warning mb-1">{{ $activeSectors ?? 0 }}</div>
-                            <div class="text-muted small">Secteurs actifs</div>
+                            <div class="h2 fw-bold text-warning mb-1">{{ $total_service - 1 ?? 0 }}</div>
+                            <div class="text-muted small">Service</div>
                         </div>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
                         <tr>
                             <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Secteur</th>
                             <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Entité & Service</th>
-                            <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Sections</th>
+                            <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Statiqtiques</th>
                             <th class="border-0 py-3 px-4 text-end small fw-semibold text-muted text-uppercase ls-1">Actions</th>
                         </tr>
                         </thead>
@@ -145,7 +145,6 @@
                             <tr class="hover-table-row">
                                 <td class="py-3 px-4">
                                     <div class="fw-semibold text-dark small">{{ $sector->title }}</div>
-                                    <div class="text-muted extra-small">{{ $sector->created_at->format('d/m/Y') }}</div>
                                 </td>
                                 <td class="py-3 px-4">
                                     <div class="d-flex flex-column">
@@ -178,12 +177,9 @@
                                                 <li><a href="#" class="dropdown-item"><i class="bi bi-file-earmark-pdf me-2"></i>PDF</a></li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <form method="POST" action="{{ route('sectors.delete', $sector) }}" class="d-inline" onsubmit="return confirm('Confirmer la suppression?')">
-                                                        @csrf @method('DELETE')
-                                                        <button type="submit" class="dropdown-item text-danger">
-                                                            <i class="bi bi-trash me-2"></i>Supprimer
-                                                        </button>
-                                                    </form>
+                                                    <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteSectorModal">
+                                                        <i class="bi bi-trash me-2"></i>Supprimer
+                                                    </button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -238,6 +234,14 @@
                 @endif
             </div>
         </div>
+
+    @foreach($sectors as $sector)
+        <x-delete-model
+            href="{{ route('sectors.delete', $sector->id) }}"
+            message="Voulez-vous vraiment supprimer ce secteur ?"
+            title="Confiramtion"
+            target="deleteSectorModal" />
+    @endforeach
 
         {{-- Bulk Actions Modal --}}
         <div class="modal fade" id="bulkActions" tabindex="-1">

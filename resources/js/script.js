@@ -1,8 +1,15 @@
 $(function() {
-    $("#sl_service_id").on('change', function () {
-        const srv = $("#sl_service_id").val();
-        window.location.href = '/distributions/create?srv='+srv;
+    $("#service_id").on('change', function () {
+        const srv = $(this).val();
+        window.location.href = '/sectors/create?srv='+srv;
     });
+
+    $("#sect_service_id").on('change', function () {
+        const srv = $(this).val();
+        window.location.href = '/sections/create?srv='+srv;
+    });
+
+    /*
 
     $("#sl_entity_id").on('change', function () {
         const srv = $("#sl_service_id").val();
@@ -30,7 +37,7 @@ $(function() {
         window.location.href = '/distributions/create2/'+emp+'/?art='+art;
     });
 
-    /** ################################################################### **/
+
 
     $("#sl_edit_service_id").on('change', function () {
         const srv = $("#sl_edit_service_id").val();
@@ -80,7 +87,6 @@ $(function() {
         window.location.href = '/distributions/edit/'+distribution_id+'/?art='+art;
     });
 
-    /** ################################################################### **/
 
     $("#sl_brand_id_2").on('change', function () {
         let url = "/products/?";
@@ -131,7 +137,6 @@ $(function() {
         window.location.href = url;
     });
 
-    /** ################################################################### **/
 
     $("#sl_company_id_1").on('change', function () {
         let url = "/deliveries/?";
@@ -237,8 +242,6 @@ $(function() {
         window.location.href = url;
     });
 
-    /** ################################################################### **/
-
     $("#sl_category_id_22").on('change', function () {
         let url  = $("#txt_url_22").val();
 
@@ -292,8 +295,6 @@ $(function() {
 
         window.location.href = url;
     });
-
-    /** ################################################################### **/
 
     $("#sl_product_id_33").on('change', function () {
         let url  = '/distributions/?';
@@ -525,5 +526,6 @@ $(function() {
         });
 
     });
+    */
 
 });

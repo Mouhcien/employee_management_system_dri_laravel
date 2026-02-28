@@ -29,7 +29,8 @@ class SectionEntityService
         $obj = new Section();
 
         $obj->title = $data['title'];
-        $obj->entity_id = $data['entity_id'];
+        if (isset($data['entity_id']))
+            $obj->entity_id = $data['entity_id'];
 
         return $this->sectionEntityRepository->Add($obj);
     }
