@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SectorController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -43,56 +44,58 @@ Route::prefix('locals')->group(function(){
 
 Route::prefix('services')->group(function(){
     Route::get('/', [ServiceController::class, 'index'])->name('services.index');
-    Route::get('/create', [ServiceController::class, 'create'])->name('services.create');
-    Route::get('/store', [ServiceController::class, 'create'])->name('services.store');
+    Route::post('/store', [ServiceController::class, 'store'])->name('services.store');
     Route::get('/{id}', [ServiceController::class, 'show'])->name('services.show');
-    Route::get('/edit/{id}', [ServiceController::class, 'create'])->name('services.edit');
-    Route::get('/update/{id}', [ServiceController::class, 'create'])->name('services.update');
-    Route::get('/delete/{id}', [ServiceController::class, 'create'])->name('services.delete');
+    Route::post('/update/{id}', [ServiceController::class, 'update'])->name('services.update');
+    Route::get('/delete/{id}', [ServiceController::class, 'delete'])->name('services.delete');
 });
 
 Route::prefix('entities')->group(function(){
     Route::get('/', [EntityController::class, 'index'])->name('entities.index');
     Route::get('/create', [EntityController::class, 'create'])->name('entities.create');
-    Route::get('/store', [EntityController::class, 'create'])->name('entities.store');
+    Route::post('/store', [EntityController::class, 'store'])->name('entities.store');
     Route::get('/{id}', [EntityController::class, 'show'])->name('entities.show');
-    Route::get('/edit/{id}', [EntityController::class, 'create'])->name('entities.edit');
-    Route::get('/update/{id}', [EntityController::class, 'create'])->name('entities.update');
-    Route::get('/delete/{id}', [EntityController::class, 'create'])->name('entities.delete');
+    Route::get('/edit/{id}', [EntityController::class, 'edit'])->name('entities.edit');
+    Route::post('/update/{id}', [EntityController::class, 'update'])->name('entities.update');
+    Route::get('/delete/{id}', [EntityController::class, 'delete'])->name('entities.delete');
 });
 
 Route::prefix('sectors')->group(function(){
     Route::get('/', [SectorController::class, 'index'])->name('sectors.index');
     Route::get('/create', [SectorController::class, 'create'])->name('sectors.create');
-    Route::get('/store', [SectorController::class, 'create'])->name('sectors.store');
+    Route::post('/store', [SectorController::class, 'store'])->name('sectors.store');
     Route::get('/{id}', [SectorController::class, 'show'])->name('sectors.show');
-    Route::get('/edit/{id}', [SectorController::class, 'create'])->name('sectors.edit');
-    Route::get('/update/{id}', [SectorController::class, 'create'])->name('sectors.update');
-    Route::get('/delete/{id}', [SectorController::class, 'create'])->name('sectors.delete');
+    Route::get('/edit/{id}', [SectorController::class, 'edit'])->name('sectors.edit');
+    Route::post('/update/{id}', [SectorController::class, 'update'])->name('sectors.update');
+    Route::get('/delete/{id}', [SectorController::class, 'delete'])->name('sectors.delete');
 });
 
 Route::prefix('sections')->group(function(){
     Route::get('/', [SectionController::class, 'index'])->name('sections.index');
     Route::get('/create', [SectionController::class, 'create'])->name('sections.create');
-    Route::get('/store', [SectionController::class, 'create'])->name('sections.store');
+    Route::post('/store', [SectionController::class, 'store'])->name('sections.store');
     Route::get('/{id}', [SectionController::class, 'show'])->name('sections.show');
-    Route::get('/edit/{id}', [SectionController::class, 'create'])->name('sections.edit');
-    Route::get('/update/{id}', [SectionController::class, 'create'])->name('sections.update');
-    Route::get('/delete/{id}', [SectionController::class, 'create'])->name('sections.delete');
+    Route::get('/edit/{id}', [SectionController::class, 'edit'])->name('sections.edit');
+    Route::post('/update/{id}', [SectionController::class, 'update'])->name('sections.update');
+    Route::get('/delete/{id}', [SectionController::class, 'delete'])->name('sections.delete');
 });
 
-Route::prefix('types')->group(function(){
-    Route::get('/', [EntityTypeController::class, 'index'])->name('types.index');
-    Route::get('/create', [EntityTypeController::class, 'create'])->name('types.create');
-    Route::get('/store', [EntityTypeController::class, 'create'])->name('types.store');
-    Route::get('/edit/{id}', [EntityTypeController::class, 'create'])->name('types.edit');
-    Route::get('/update/{id}', [EntityTypeController::class, 'create'])->name('types.update');
-    Route::get('/delete/{id}', [EntityTypeController::class, 'create'])->name('types.delete');
-});
 
 Route::prefix('employees')->group(function(){
     Route::get('/', [EmployeeController::class, 'index'])->name('employees.index');
     Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
+});
+
+Route::prefix('settings')->group(function (){
+    Route::get('/', [SettingController::class, 'index'])->name('settings');
+
+    Route::prefix('types')->group(function(){
+        Route::get('/', [EntityTypeController::class, 'index'])->name('settings.types.index');
+        Route::post('/store', [EntityTypeController::class, 'store'])->name('settings.types.store');
+        Route::get('/edit/{id}', [EntityTypeController::class, 'edit'])->name('settings.types.edit');
+        Route::post('/update/{id}', [EntityTypeController::class, 'update'])->name('settings.types.update');
+        Route::get('/delete/{id}', [EntityTypeController::class, 'delete'])->name('settings.types.delete');
+    });
 });
 
 Route::middleware('auth')->group(function () {

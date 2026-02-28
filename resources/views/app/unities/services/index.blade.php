@@ -9,10 +9,10 @@
                     <p class="text-muted mb-0">Organisez et gérez efficacement votre structure de services</p>
                 </div>
                 <div class="d-flex gap-2">
-                    <a href="{{ route('services.create') }}" class="btn btn-primary d-inline-flex align-items-center fw-semibold">
+                    <button class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createServiceModal">
                         <i class="bi bi-plus-circle me-2"></i>
-                        Nouveau Service
-                    </a>
+                        Nouvelle Service
+                    </button>
                     <button class="btn btn-outline-secondary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#bulkActions">
                         <i class="bi bi-download me-2"></i>
                         Exporter
@@ -25,7 +25,7 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-primary mb-1">{{ $services->count() ?? 0 }}</div>
+                            <div class="h2 fw-bold text-primary mb-1">{{ $services->total() - 1 ?? 0 }}</div>
                             <div class="text-muted small">Services total</div>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-success mb-1">{{ $totalEntities ?? 0 }}</div>
+                            <div class="h2 fw-bold text-success mb-1">{{ $total_entity ?? 0 }}</div>
                             <div class="text-muted small">Entités</div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-info mb-1">{{ $totalSectors ?? 0 }}</div>
+                            <div class="h2 fw-bold text-info mb-1">{{ $total_sector ?? 0 }}</div>
                             <div class="text-muted small">Secteurs</div>
                         </div>
                     </div>
@@ -49,8 +49,8 @@
                 <div class="col-md-3">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
-                            <div class="h2 fw-bold text-warning mb-1">{{ $activeServices ?? 0 }}</div>
-                            <div class="text-muted small">Services actifs</div>
+                            <div class="h2 fw-bold text-warning mb-1">{{ $total_section ?? 0 }}</div>
+                            <div class="text-muted small">Sections</div>
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="card-body pt-0">
                     <form method="GET" action="{{ route('services.index') }}" class="row g-3">
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-10 col-md-8">
                             <label class="form-label small fw-semibold text-muted">Recherche</label>
                             <div class="position-relative">
                                 <div class="position-absolute top-50 start-0 translate-middle-y ps-3">
@@ -73,25 +73,7 @@
                                        class="form-control ps-5" placeholder="Nom du service...">
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-6">
-                            <label class="form-label small fw-semibold text-muted">Département</label>
-                            <select name="department" class="form-select">
-                                <option value="">Tous les départements</option>
-                                <option value="engineering" {{ request('department') == 'engineering' ? 'selected' : '' }}>Engineering</option>
-                                <option value="sales" {{ request('department') == 'sales' ? 'selected' : '' }}>Sales & Marketing</option>
-                                <option value="operations" {{ request('department') == 'operations' ? 'selected' : '' }}>Operations</option>
-                                <option value="hr" {{ request('department') == 'hr' ? 'selected' : '' }}>HR & Finance</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-2 col-md-6">
-                            <label class="form-label small fw-semibold text-muted">Statut</label>
-                            <select name="status" class="form-select">
-                                <option value="">Tous</option>
-                                <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Actif</option>
-                                <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactif</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-3 col-md-6 d-flex align-items-end gap-2">
+                        <div class="col-lg-2 col-md-4 d-flex align-items-end gap-2">
                             <button type="submit" class="btn btn-primary flex-fill">
                                 <i class="bi bi-funnel me-1"></i> Filtrer
                             </button>
@@ -130,9 +112,9 @@
                     <table class="table mb-0 align-middle">
                         <thead class="table-light">
                         <tr>
-                            <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">ID</th>
                             <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Service</th>
-                            <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Entités</th>
+                            <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Chef</th>
+                            <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Statistiques</th>
                             <th class="border-0 py-3 px-4 text-end small fw-semibold text-muted text-uppercase ls-1">Actions</th>
                         </tr>
                         </thead>
@@ -140,39 +122,29 @@
                         @forelse($services ?? [] as $service)
                             <tr class="hover-table-row">
                                 <td class="py-3 px-4">
-                                    <div class="badge bg-light text-dark fs-6 px-3 py-2">{{ $service->id }}</div>
-                                </td>
-                                <td class="py-3 px-4">
                                     <div class="d-flex align-items-center">
                                         <div class="avatar avatar-sm bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3">
                                             <i class="bi bi-journal-text fs-6"></i>
                                         </div>
                                         <div>
                                             <div class="fw-semibold text-dark small">{{ $service->title }}</div>
-                                            <div class="text-muted extra-small">{{ $service->created_at->format('d/m/Y') }}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="py-3 px-4">
                                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                                        @if(isset($service->entities_count))
-                                            <span class="badge bg-success small px-3 py-2">{{ $service->entities_count }} entités</span>
-                                        @endif
-                                        @if(isset($service->sectors_count))
-                                            <span class="badge bg-info small">{{ $service->sectors_count }} secteurs</span>
-                                        @endif
-                                        @if(isset($service->sections_count))
-                                            <span class="badge bg-warning small">{{ $service->sections_count }} sections</span>
-                                        @endif
+
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+
                                     </div>
                                 </td>
                                 <td class="py-3 px-4 text-end">
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('services.show', $service) }}" class="btn btn-sm btn-outline-primary" title="Voir">
                                             <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="{{ route('services.edit', $service) }}" class="btn btn-sm btn-outline-success" title="Modifier">
-                                            <i class="bi bi-pencil"></i>
                                         </a>
                                         <div class="dropdown">
                                             <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -183,12 +155,9 @@
                                                 <li><a href="#" class="dropdown-item"><i class="bi bi-file-earmark-pdf me-2"></i>PDF</a></li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <form method="POST" action="{{ route('services.delete', $service) }}" class="d-inline" onsubmit="return confirm('Confirmer la suppression?')">
-                                                        @csrf @method('DELETE')
-                                                        <button type="submit" class="dropdown-item text-danger">
-                                                            <i class="bi bi-trash me-2"></i>Supprimer
-                                                        </button>
-                                                    </form>
+                                                    <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteServiceModal">
+                                                        <i class="bi bi-trash me-2"></i>Supprimer
+                                                    </button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -244,6 +213,14 @@
             </div>
         </div>
 
+        @foreach($services as $service)
+            <x-delete-model
+                href="{{ route('services.delete', $service->id) }}"
+                message="Voulez-vous vraiment supprimer ce service ?"
+                title="Confiramtion"
+                target="deleteServiceModal" />
+        @endforeach
+
         {{-- Bulk Actions Modal --}}
         <div class="modal fade" id="bulkActions" tabindex="-1">
             <div class="modal-dialog modal-sm">
@@ -280,6 +257,75 @@
                 </div>
             </div>
         </div>
+
+        {{-- Create Service Modal --}}
+        <div class="modal fade" id="createServiceModal" tabindex="-1" aria-labelledby="createServiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <form action="{{ route('services.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-header border-0 pb-0">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3">
+                                <i class="bi bi-geo-alt-fill text-primary fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="modal-title fw-bold mb-0" id="createCityModalLabel">Nouveau Service</h5>
+                                <small class="text-muted">Ajoutez un nouveau service à votre structure</small>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body pt-0 px-4">
+                        {{-- Title Field --}}
+                        <div class="mb-4">
+                            <label for="cityTitle" class="form-label fw-semibold text-dark mb-2">
+                                Nom du service <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="bi bi-geo-alt text-primary"></i>
+                            </span>
+                                <input type="text"
+                                       class="form-control form-control-lg border-start-0 shadow-sm @error('title') is-invalid @enderror"
+                                       id="cityTitle"
+                                       name="title"
+                                       placeholder="Ex: Service..."
+                                       value="{{ old('title') }}"
+                                       required>
+                                @error('title')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <small class="text-muted mt-1">Le nom doit être unique et descriptif</small>
+                        </div>
+
+                        {{-- Quick Preview --}}
+                        <div class="bg-light rounded-3 p-3 mb-3 d-none" id="previewSection">
+                            <small class="text-muted mb-2 d-block">Aperçu:</small>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-2">
+                                    <i class="bi bi-geo-alt-fill text-primary"></i>
+                                </div>
+                                <div class="fw-semibold text-dark" id="previewTitle">Tapez un nom...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer border-0 bg-light px-4 py-3 rounded-bottom">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-1"></i>Annuler
+                        </button>
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Créer le service
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     @push('styles')
         <style>

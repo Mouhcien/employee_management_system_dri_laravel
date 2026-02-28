@@ -58,13 +58,13 @@
                         <span class="fw-medium text-dark">{{ Auth::user()->name ?? 'Admin' }}</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuButton">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('settings') }}">Paramètres</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="dropdown-item">Logout</button>
+                                <button type="submit" class="dropdown-item">Déconnexion</button>
                             </form>
                         </li>
                     </ul>
@@ -84,27 +84,6 @@
 
 {{-- Small script to toggle sidebar width (no Alpine) --}}
 <script>
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('sidebarToggle');
-        const brandFull = document.getElementById('sidebarBrandFull');
-        const brandMini = document.getElementById('sidebarBrandMini');
-        let open = true;
-
-        toggleBtn.addEventListener('click', function () {
-            open = !open;
-            if (open) {
-                sidebar.style.width = '250px';
-                brandFull.classList.remove('d-none');
-                brandMini.classList.add('d-none');
-            } else {
-                sidebar.style.width = '55px';
-                brandFull.classList.add('d-none');
-                brandMini.classList.remove('d-none');
-            }
-        });
-    });
 
     // Toastr Configuration
     window.addEventListener('load', function() {

@@ -155,7 +155,6 @@
                                         </div>
                                         <div>
                                             <div class="fw-semibold text-dark small">{{ $entity->title }}</div>
-                                            <div class="text-muted extra-small">{{ $entity->created_at->format('d/m/Y') }}</div>
                                         </div>
                                     </div>
                                 </td>
