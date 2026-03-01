@@ -104,7 +104,7 @@
     <div class="mt-1">
         <button
             class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-2
-                   @if(request()->routeIs('locals.*')) active @endif"
+                   @if(request()->routeIs('local.*')) active @endif"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#menuLocaux"
@@ -117,7 +117,7 @@
             <i class="bi bi-chevron-down small"></i>
         </button>
 
-        <div class="collapse @if(request()->routeIs('locals.*')) show @endif" id="menuLocaux">
+        <div class="collapse @if(request()->routeIs('locals.*') || request()->routeIs('cities.*')) show @endif" id="menuLocaux">
             <ul class="nav flex-column ms-3 mt-2">
                 <li class="nav-item">
                     <a
@@ -133,7 +133,7 @@
                     <a
                         href="{{ route('cities.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('cities*')) active @endif"
+                               @if(request()->routeIs('cities.index')) active @endif"
                     >
                         <i class="bi bi-geo-alt-fill me-2 fs-6"></i>
                         <span class="sidebar-text">Villes</span>
@@ -163,13 +163,13 @@
             <i class="bi bi-chevron-down small"></i>
         </button>
 
-        <div class="collapse @if(request()->routeIs('unites.*')) show @endif" id="menuUnites">
+        <div class="collapse @if(request()->routeIs('services.*') || request()->routeIs('entities.*') || request()->routeIs('sectors.*') || request()->routeIs('sections.*')) show @endif" id="menuUnites">
             <ul class="nav flex-column ms-3 mt-2">
                 <li class="nav-item">
                     <a
                         href="{{ route('services.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('unites.index')) active @endif"
+                               @if(request()->routeIs('services.index')) active @endif"
                     >
                         <i class="bi bi-diagram-3 me-2 fs-6"></i>
                         <span class="sidebar-text">Services</span>
@@ -179,7 +179,7 @@
                     <a
                         href="{{ route('entities.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('unites.entities*')) active @endif"
+                               @if(request()->routeIs('entities.index')) active @endif"
                     >
                         <i class="bi bi-diagram-3 me-2 fs-6"></i>
                         <span class="sidebar-text">Entités</span>
@@ -189,7 +189,7 @@
                     <a
                         href="{{ route('sectors.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('unites.sectors*')) active @endif"
+                               @if(request()->routeIs('sectors.index')) active @endif"
                     >
                         <i class="bi bi-diagram-3 me-2 fs-6"></i>
                         <span class="sidebar-text">Secteurs</span>
@@ -199,7 +199,7 @@
                     <a
                         href="{{ route('sections.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('unites.sections*')) active @endif"
+                               @if(request()->routeIs('sections.index')) active @endif"
                     >
                         <i class="bi bi-diagram-3 me-2 fs-6"></i>
                         <span class="sidebar-text">Sections</span>
