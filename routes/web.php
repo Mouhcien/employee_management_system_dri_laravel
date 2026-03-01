@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\EntityTypeController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\LevelController;
 use App\Http\Controllers\LocalController;
 use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\ProfileController;
@@ -109,9 +110,11 @@ Route::prefix('employees')->group(function(){
 });
 
 Route::prefix('settings')->group(function (){
+
     Route::get('/', [SettingController::class, 'index'])->name('settings');
     Route::get('/diploma/{id}', [SettingController::class, 'edit_diploma'])->name('settings.edit.diploma');
     Route::get('/type/{id}', [SettingController::class, 'edit_type'])->name('settings.edit.type');
+    Route::get('/level/{id}', [SettingController::class, 'edit_level'])->name('settings.edit.level');
 
     Route::prefix('types')->group(function(){
         Route::get('/', [EntityTypeController::class, 'index'])->name('settings.types.index');
@@ -125,6 +128,13 @@ Route::prefix('settings')->group(function (){
         Route::post('/store', [DiplomaController::class, 'store'])->name('settings.diplomas.store');
         Route::post('/update/{id}', [DiplomaController::class, 'update'])->name('settings.diplomas.update');
         Route::get('/delete/{id}', [DiplomaController::class, 'delete'])->name('settings.diplomas.delete');
+    });
+
+    Route::prefix('levels')->group(function(){
+        Route::get('/', [LevelController::class, 'index'])->name('settings.levels.index');
+        Route::post('/store', [LevelController::class, 'store'])->name('settings.levels.store');
+        Route::post('/update/{id}', [LevelController::class, 'update'])->name('settings.levels.update');
+        Route::get('/delete/{id}', [LevelController::class, 'delete'])->name('settings.levels.delete');
     });
 });
 

@@ -30,6 +30,20 @@
                         Gestion des Diplômes
                     </a>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                        class="nav-link @if (request()->routeIs('settings.edit.level')) active  @endif text-secondary fw-semibold"
+                        id="levels-tab"
+                        data-bs-toggle="tab"
+                        href="#levels"
+                        role="tab"
+                        aria-controls="levels"
+                        aria-selected="false"
+                    >
+                        <i class="bi bi-award me-2"></i>
+                        Gestion des Niveaux d'éducation
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -56,6 +70,19 @@
                     <div class="text-muted">
                         <i class="bi bi-info-circle me-1"></i>
                         @include('app.settings.diplomas.index')
+                    </div>
+                </div>
+
+                <!-- Tab 3: Gestion des Niveaux -->
+                <div
+                    class="tab-pane fade"
+                    id="levels"
+                    role="tabpanel"
+                    aria-labelledby="levels-tab"
+                >
+                    <div class="text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        @include('app.settings.levels.index')
                     </div>
                 </div>
 
