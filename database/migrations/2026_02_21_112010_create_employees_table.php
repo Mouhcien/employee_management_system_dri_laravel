@@ -22,10 +22,14 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
+            $table->string('ppr');
+            $table->string('cin');
             $table->string('firstname');
             $table->string('lastname');
             $table->string('firstname_arab')->nullable();
             $table->string('lastname_arab')->nullable();
+            $table->date('birth_date')->nullable();
+            $table->string('birth_city')->nullable();
             $table->string('gender', ['M', 'F'])->nullable();
             $table->string('sit', ['C', 'D', 'M'])->nullable();
             $table->date('hiring_date')->nullable();
@@ -35,6 +39,18 @@ return new class extends Migration
             $table->foreignIdFor(Competence::class, 'competence_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Classement::class, 'classement_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Remuneration::class, 'remuneration_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->date('disposition_date')->nullable();
+            $table->string('disposition_reason')->nullable();
+            $table->date('retiring_date')->nullable();
+            $table->date('reintegration_date')->nullable();
+            $table->string('reintegration_reason')->nullable();
+            $table->string('commission_card')->nullable();
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('tel')->nullable();
+            $table->string('email')->nullable();
+            $table->string('photo')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }
