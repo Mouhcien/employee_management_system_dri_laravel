@@ -150,7 +150,6 @@
                                         </div>
                                         <div>
                                             <div class="fw-semibold text-dark small">{{ $section->title }}</div>
-                                            <div class="text-muted extra-small">{{ $section->created_at->format('d/m/Y') }}</div>
                                         </div>
                                     </div>
                                 </td>

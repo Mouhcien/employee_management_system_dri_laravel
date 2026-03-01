@@ -1,12 +1,16 @@
 $(function() {
     $("#service_id").on('change', function () {
         const srv = $(this).val();
-        window.location.href = '/sectors/create?srv='+srv;
+        const option = $(this).attr('opt');
+        const id = $(this).attr('ident');
+        window.location.href = '/sectors/'+option+'/'+id+'?srv='+srv;
     });
 
     $("#sect_service_id").on('change', function () {
         const srv = $(this).val();
-        window.location.href = '/sections/create?srv='+srv;
+        const option = $(this).attr('opt');
+        const id = $(this).attr('ident');
+        window.location.href = '/sections/'+option+'/'+id+'?srv='+srv;
     });
 
     /*

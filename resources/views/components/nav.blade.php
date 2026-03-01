@@ -47,11 +47,37 @@
                         <span class="sidebar-text">Liste des employés</span>
                     </a>
                 </li>
+            </ul>
+        </div>
+    </div>
+
+    {{-- Référentiels title --}}
+    <div class="sidebar-section-title mt-4 mb-1">Référentiels</div>
+
+    {{-- Référentiels avec sous-menu --}}
+    <div class="mt-1">
+        <button
+            class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-2
+                   @if(request()->routeIs('locaux.*')) active @endif"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#menuReferenciel"
+            aria-expanded="{{ request()->routeIs('locaux.*') ? 'true' : 'false' }}"
+        >
+            <span class="d-flex align-items-center">
+                <i class="bi bi-building me-2 fs-5"></i>
+                <span class="text-truncate fw-medium sidebar-text">Référentiels</span>
+            </span>
+            <i class="bi bi-chevron-down small"></i>
+        </button>
+
+        <div class="collapse @if(request()->routeIs('occupations.*') || request()->routeIs('grades.*')) show @endif" id="menuReferenciel">
+            <ul class="nav flex-column ms-3 mt-2">
                 <li class="nav-item">
                     <a
-                        href="{{ route('employees.create') }}"
+                        href="{{ route('occupations.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('employees.create')) active @endif"
+                               @if(request()->routeIs('occupations.index')) active @endif"
                     >
                         <i class="bi bi-plus-lg me-2 fs-6"></i>
                         <span class="sidebar-text">Gestion des fonctions</span>
@@ -59,7 +85,7 @@
                 </li>
                 <li class="nav-item">
                     <a
-                        href=""
+                        href="{{ route('grades.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
                                @if(request()->routeIs('grades.*')) active @endif"
                     >
@@ -67,32 +93,22 @@
                         <span class="sidebar-text">Gestion des Grades</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a
-                        href=""
-                        class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('echelons.*')) active @endif"
-                    >
-                        <i class="bi bi-arrow-up-right-square me-2 fs-6"></i>
-                        <span class="sidebar-text">Gestion des Échelons</span>
-                    </a>
-                </li>
             </ul>
         </div>
     </div>
 
     {{-- Section title --}}
-    <div class="sidebar-section-title mt-4 mb-1">LOCAUX</div>
+    <div class="sidebar-section-title mt-4 mb-1">LOCAUX D'AFFECTATION</div>
 
     {{-- Locaux avec sous-menu --}}
     <div class="mt-1">
         <button
             class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-2
-                   @if(request()->routeIs('locaux.*')) active @endif"
+                   @if(request()->routeIs('locals.*')) active @endif"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#menuLocaux"
-            aria-expanded="{{ request()->routeIs('locaux.*') ? 'true' : 'false' }}"
+            aria-expanded="{{ request()->routeIs('locals.*') ? 'true' : 'false' }}"
         >
             <span class="d-flex align-items-center">
                 <i class="bi bi-building me-2 fs-5"></i>
@@ -101,13 +117,13 @@
             <i class="bi bi-chevron-down small"></i>
         </button>
 
-        <div class="collapse @if(request()->routeIs('locaux.*')) show @endif" id="menuLocaux">
+        <div class="collapse @if(request()->routeIs('locals.*')) show @endif" id="menuLocaux">
             <ul class="nav flex-column ms-3 mt-2">
                 <li class="nav-item">
                     <a
                         href="{{ route('locals.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('locaux.index')) active @endif"
+                               @if(request()->routeIs('locals.index')) active @endif"
                     >
                         <i class="bi bi-building me-2 fs-6"></i>
                         <span class="sidebar-text">Locaux</span>
@@ -117,7 +133,7 @@
                     <a
                         href="{{ route('cities.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('locaux.cities*')) active @endif"
+                               @if(request()->routeIs('cities*')) active @endif"
                     >
                         <i class="bi bi-geo-alt-fill me-2 fs-6"></i>
                         <span class="sidebar-text">Villes</span>
@@ -155,7 +171,7 @@
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
                                @if(request()->routeIs('unites.index')) active @endif"
                     >
-                        <i class="bi bi-journal-text me-2 fs-6"></i>
+                        <i class="bi bi-diagram-3 me-2 fs-6"></i>
                         <span class="sidebar-text">Services</span>
                     </a>
                 </li>
@@ -165,7 +181,7 @@
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
                                @if(request()->routeIs('unites.entities*')) active @endif"
                     >
-                        <i class="bi bi-journal-text me-2 fs-6"></i>
+                        <i class="bi bi-diagram-3 me-2 fs-6"></i>
                         <span class="sidebar-text">Entités</span>
                     </a>
                 </li>
@@ -185,7 +201,7 @@
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
                                @if(request()->routeIs('unites.sections*')) active @endif"
                     >
-                        <i class="bi bi-journal-text me-2 fs-6"></i>
+                        <i class="bi bi-diagram-3 me-2 fs-6"></i>
                         <span class="sidebar-text">Sections</span>
                     </a>
                 </li>

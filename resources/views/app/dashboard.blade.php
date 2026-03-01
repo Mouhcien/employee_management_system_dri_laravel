@@ -4,8 +4,7 @@
 <x-layout>
     @section('title', 'Dashboard - HR Management')
 
-    @section('content')
-        <div class="mb-5">
+    <div class="mb-5">
             {{-- Page Header --}}
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="h2 mb-0">Dashboard</h1>
@@ -229,5 +228,4 @@
                 </div>
             </div>
         </div>
-    @endsection
 </x-layout>

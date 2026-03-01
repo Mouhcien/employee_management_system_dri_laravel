@@ -4,7 +4,9 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\EntityTypeController;
+use App\Http\Controllers\GradeController;
 use App\Http\Controllers\LocalController;
+use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SectorController;
@@ -80,6 +82,25 @@ Route::prefix('sections')->group(function(){
     Route::get('/delete/{id}', [SectionController::class, 'delete'])->name('sections.delete');
 });
 
+Route::prefix('occupations')->group(function(){
+    Route::get('/', [OccupationController::class, 'index'])->name('occupations.index');
+    Route::get('/create', [OccupationController::class, 'create'])->name('occupations.create');
+    Route::post('/store', [OccupationController::class, 'store'])->name('occupations.store');
+    Route::get('/{id}', [OccupationController::class, 'show'])->name('occupations.show');
+    Route::get('/edit/{id}', [OccupationController::class, 'edit'])->name('occupations.edit');
+    Route::post('/update/{id}', [OccupationController::class, 'update'])->name('occupations.update');
+    Route::get('/delete/{id}', [OccupationController::class, 'delete'])->name('occupations.delete');
+});
+
+Route::prefix('grades')->group(function(){
+    Route::get('/', [GradeController::class, 'index'])->name('grades.index');
+    Route::get('/create', [GradeController::class, 'create'])->name('grades.create');
+    Route::post('/store', [GradeController::class, 'store'])->name('grades.store');
+    Route::get('/{id}', [GradeController::class, 'show'])->name('grades.show');
+    Route::get('/edit/{id}', [GradeController::class, 'edit'])->name('grades.edit');
+    Route::post('/update/{id}', [GradeController::class, 'update'])->name('grades.update');
+    Route::get('/delete/{id}', [GradeController::class, 'delete'])->name('grades.delete');
+});
 
 Route::prefix('employees')->group(function(){
     Route::get('/', [EmployeeController::class, 'index'])->name('employees.index');

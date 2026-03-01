@@ -37,6 +37,8 @@
                                     id="service_id"
                                     name="service_id"
                                     class="form-select form-select-lg rounded-3 @error('service_id') is-invalid @enderror"
+                                    ident="{{ $sector->id }}"
+                                    {{ isset($sector) ? 'opt=edit' : 'opt=create' }}
                                     required
                                 >
                                     <option value="">
