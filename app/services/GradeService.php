@@ -29,6 +29,7 @@ class GradeService
         $obj = new Grade();
 
         $obj->title = $data['title'];
+        $obj->scale = $data['scale'];
 
         return $this->gradeRepository->Add($obj);
     }
@@ -40,6 +41,9 @@ class GradeService
 
         if (isset($data['title']))
             $obj->title = $data['title'];
+
+        if (isset($data['scale']))
+            $obj->scale = $data['scale'];
 
         return $this->gradeRepository->Update($obj);
     }

@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Employee extends Model
 {
 
+    public function works() {
+        return $this->hasMany(Work::class);
+    }
+
     public function qualifications() {
         return $this->hasMany(Qualification::class);
     }

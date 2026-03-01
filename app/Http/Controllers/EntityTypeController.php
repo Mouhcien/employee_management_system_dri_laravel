@@ -59,25 +59,6 @@ class EntityTypeController extends Controller
         }
     }
 
-    public function edit($id) {
-        try {
-
-            $types = $this->typeEntityService->getAll($this->pages);
-            $type = $this->typeEntityService->getOneById($id);
-
-            if (is_null($type)) {
-                return back()->with('error', 'type introuvable !!');
-            }
-
-            return view('app.settings.index',[
-                'types' => $types,
-                'typeObj' => $type
-            ]);
-        }catch (\Exception $exception) {
-
-        }
-    }
-
     public function update(Request $request, $id) {
         try {
             $data = $request->validate($this->rules);

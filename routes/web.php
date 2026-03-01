@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\DiplomaController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\EntityTypeController;
@@ -109,13 +110,21 @@ Route::prefix('employees')->group(function(){
 
 Route::prefix('settings')->group(function (){
     Route::get('/', [SettingController::class, 'index'])->name('settings');
+    Route::get('/diploma/{id}', [SettingController::class, 'edit_diploma'])->name('settings.edit.diploma');
+    Route::get('/type/{id}', [SettingController::class, 'edit_type'])->name('settings.edit.type');
 
     Route::prefix('types')->group(function(){
         Route::get('/', [EntityTypeController::class, 'index'])->name('settings.types.index');
         Route::post('/store', [EntityTypeController::class, 'store'])->name('settings.types.store');
-        Route::get('/edit/{id}', [EntityTypeController::class, 'edit'])->name('settings.types.edit');
         Route::post('/update/{id}', [EntityTypeController::class, 'update'])->name('settings.types.update');
         Route::get('/delete/{id}', [EntityTypeController::class, 'delete'])->name('settings.types.delete');
+    });
+
+    Route::prefix('diplomas')->group(function(){
+        Route::get('/', [DiplomaController::class, 'index'])->name('settings.diplomas.index');
+        Route::post('/store', [DiplomaController::class, 'store'])->name('settings.diplomas.store');
+        Route::post('/update/{id}', [DiplomaController::class, 'update'])->name('settings.diplomas.update');
+        Route::get('/delete/{id}', [DiplomaController::class, 'delete'])->name('settings.diplomas.delete');
     });
 });
 

@@ -18,11 +18,11 @@ class DiplomaService
     }
 
     public function getAll($pages=0){
-        return $this->diplomaRepository->All(Diploma::class, ['remunerations'], $pages);
+        return $this->diplomaRepository->All(Diploma::class, ['qualifications'], $pages);
     }
 
     public function getOneById($id){
-        return $this->diplomaRepository->One(Diploma::class, ['remunerations'], $id);
+        return $this->diplomaRepository->One(Diploma::class, ['qualifications'], $id);
     }
 
     public function create($data){
