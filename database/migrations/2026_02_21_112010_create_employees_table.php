@@ -33,12 +33,7 @@ return new class extends Migration
             $table->string('gender', ['M', 'F'])->nullable();
             $table->string('sit', ['C', 'D', 'M'])->nullable();
             $table->date('hiring_date')->nullable();
-            $table->foreignIdFor(Work::class, 'work_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Local::class, 'local_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Qualification::class, 'qualification_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Competence::class, 'competence_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Classement::class, 'classement_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Remuneration::class, 'remuneration_id')->nullable()->constrained()->cascadeOnDelete();
             $table->date('disposition_date')->nullable();
             $table->string('disposition_reason')->nullable();
             $table->date('retiring_date')->nullable();

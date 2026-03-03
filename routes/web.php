@@ -107,6 +107,11 @@ Route::prefix('grades')->group(function(){
 Route::prefix('employees')->group(function(){
     Route::get('/', [EmployeeController::class, 'index'])->name('employees.index');
     Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
+    Route::post('/store', [EmployeeController::class, 'store'])->name('employees.store');
+    Route::get('/{id}', [EmployeeController::class, 'show'])->name('employees.show');
+    Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('employees.edit');
+    Route::post('/update/{id}', [EmployeeController::class, 'update'])->name('employees.update');
+    Route::get('/delete/{id}', [EmployeeController::class, 'delete'])->name('employees.delete');
 });
 
 Route::prefix('settings')->group(function (){

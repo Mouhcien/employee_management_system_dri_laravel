@@ -1,197 +1,420 @@
 <x-layout>
-    {{-- resources/views/employees/index.blade.php --}}
-    {{-- @extends('layouts.app') --}}
+    {{-- Custom Styles --}}
+    <style>
+        .employee-female-row {
+            background-color: rgba(255, 192, 203, 0.15); /* light pink, low opacity [web:67] */
+        }
+
+        .employee-female-row:hover {
+            background-color: rgba(255, 192, 203, 0.25) !important;
+        }
+
+        .bg-gradient-primary-to-secondary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .hover-primary:hover {
+            color: #667eea !important;
+        }
+
+        .fw-mono {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85em;
+        }
+
+        .object-fit-cover {
+            object-fit: cover;
+        }
+
+        .dropdown-menu {
+            border-radius: 0.75rem;
+        }
+
+        .dropdown-item {
+            border-radius: 0.5rem;
+            margin: 0.125rem 0.5rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-light {
+            background-color: #f8f9fa;
+            border-color: #e9ecef;
+        }
+
+        .btn-light:hover {
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+        .badge {
+            font-weight: 500;
+            padding: 0.5em 0.75em;
+        }
+
+        .table th {
+            letter-spacing: 0.5px;
+        }
+
+        .card {
+            border-radius: 1rem;
+        }
+
+        .card-header {
+            border-radius: 1rem 1rem 0 0 !important;
+        }
+
+        .rounded-4 {
+            border-radius: 1rem !important;
+        }
+
+        .table tbody tr {
+            border-left: 3px solid transparent;
+        }
+
+        .table tbody tr:hover {
+            border-left-color: #667eea;
+        }
+
+
+        /* Status indicator pulse animation */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
+        }
+
+        .position-absolute.bg-success {
+            animation: pulse 2s infinite;
+        }
+
+        .table-responsive {
+            overflow-x: visible;  /* or hidden, instead of auto */
+        }
+
+    </style>
 
     @section('title', 'Employees - HR Management')
 
-    @section('content')
-        <div class="space-y-6">
-            {{-- Page Header --}}
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div class="container-fluid py-4">
+        {{-- Page Header with Gradient Background --}}
+        <div class="bg-gradient-primary-to-secondary rounded-4 p-4 mb-4 text-white shadow-lg">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
                 <div>
-                    <h1 class="text-2xl font-semibold text-gray-900">Employees</h1>
-                    <p class="mt-1 text-sm text-gray-500">Manage your team members and their information</p>
+                    <h1 class="h3 mb-1 fw-bold"><i class="bi bi-people-fill me-2"></i>Gestion des Agents</h1>
+                    <p class="text-white-50 small mb-0"><i class="bi bi-geo-alt-fill me-1"></i>DRI-Marrakech | Administration du personnel</p>
                 </div>
-                <a href="{{ route('employees.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    Add Employee
+                <a href="{{ route('employees.create') }}" class="btn btn-light btn-lg d-inline-flex align-items-center shadow-sm fw-semibold">
+                    <i class="bi bi-plus-circle-fill me-2 text-primary"></i>
+                    Nouvel employé
                 </a>
             </div>
+        </div>
 
-            {{-- Filters --}}
-            <div class="bg-white rounded-lg shadow p-4">
-                <form method="GET" action="{{ route('employees.index') }}" class="flex flex-col md:flex-row gap-4">
-                    <div class="flex-1">
-                        <label for="search" class="sr-only">Search</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                            </div>
-                            <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Search by name, email, or ID..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+        {{-- Statistics Cards --}}
+        <div class="row g-3 mb-4">
+            {{-- Total employés --}}
+            <div class="col-md-3 col-sm-6">
+                <div class="card border-0 shadow-sm h-100 bg-primary bg-opacity-10 border-start border-primary border-4">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="flex-shrink-0 bg-primary bg-opacity-25 rounded-3 p-3 text-primary">
+                            <i class="bi bi-people fs-3"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="card-title text-muted small mb-1 text-uppercase">Total employés</h6>
+                            <h4 class="mb-0 fw-bold text-primary">{{ $totalEmployees ?? 0 }}</h4>
                         </div>
                     </div>
-                    <div class="flex gap-4">
-                        <select name="department" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                            <option value="">All Departments</option>
-                            <option value="engineering" {{ request('department') == 'engineering' ? 'selected' : '' }}>Engineering</option>
-                            <option value="sales" {{ request('department') == 'sales' ? 'selected' : '' }}>Sales & Marketing</option>
-                            <option value="operations" {{ request('department') == 'operations' ? 'selected' : '' }}>Operations</option>
-                            <option value="hr" {{ request('department') == 'hr' ? 'selected' : '' }}>HR & Finance</option>
+                </div>
+            </div>
+
+            {{-- Femmes --}}
+            <div class="col-md-3 col-sm-6">
+                <div class="card border-0 shadow-sm h-100 bg-pink bg-opacity-10 border-start border-pink border-4">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="flex-shrink-0 bg-pink bg-opacity-25 rounded-3 p-3" style="color:#d63384;">
+                            <i class="bi bi-gender-female fs-3"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="card-title text-muted small mb-1 text-uppercase">Femmes</h6>
+                            <h4 class="mb-0 fw-bold" style="color:#d63384;">{{ $femaleCount ?? 0 }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Hommes --}}
+            <div class="col-md-3 col-sm-6">
+                <div class="card border-0 shadow-sm h-100 bg-info bg-opacity-10 border-start border-info border-4">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="flex-shrink-0 bg-info bg-opacity-25 rounded-3 p-3 text-info">
+                            <i class="bi bi-gender-male fs-3"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="card-title text-muted small mb-1 text-uppercase">Hommes</h6>
+                            <h4 class="mb-0 fw-bold text-info">{{ $maleCount ?? 0 }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Locaux --}}
+            <div class="col-md-3 col-sm-6">
+                <div class="card border-0 shadow-sm h-100 bg-warning bg-opacity-10 border-start border-warning border-4">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="flex-shrink-0 bg-warning bg-opacity-25 rounded-3 p-3 text-warning">
+                            <i class="bi bi-building fs-3"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="card-title text-muted small mb-1 text-uppercase">Locaux</h6>
+                            <h4 class="mb-0 fw-bold text-warning">{{ $locals->count() ?? 0 }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {{-- Filters --}}
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-header bg-white border-bottom py-3">
+                <h5 class="mb-0 text-muted"><i class="bi bi-funnel-fill me-2 text-info"></i>Filtres de recherche</h5>
+            </div>
+            <div class="card-body">
+                <form method="GET" action="{{ route('employees.index') }}" class="row g-3">
+                    <div class="col-lg-4 col-md-6">
+                        <label for="search" class="form-label small fw-semibold text-muted">Recherche</label>
+                        <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-muted">
+                            <i class="bi bi-search"></i>
+                        </span>
+                            <input type="text" name="search" id="search" value="{{ request('search') }}"
+                                   placeholder="Nom, prénom, email, PPR..." class="form-control border-start-0 bg-light">
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <label for="department" class="form-label small fw-semibold text-muted">Local</label>
+                        <select name="department" id="department" class="form-select bg-light">
+                            <option value="">Tous les locaux</option>
+                            @foreach($locals as $local)
+                                <option value="{{ $local->id }}" {{ request('department') == $local->id ? 'selected' : '' }}>
+                                    {{ $local->title }}
+                                </option>
+                            @endforeach
                         </select>
-                        <select name="status" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                            <option value="">All Status</option>
-                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                            <option value="on_leave" {{ request('status') == 'on_leave' ? 'selected' : '' }}>On Leave</option>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <label for="status" class="form-label small fw-semibold text-muted">Ville</label>
+                        <select name="status" id="status" class="form-select bg-light">
+                            <option value="">Toutes les villes</option>
+                            @foreach($cities as $city)
+                                <option value="{{ $city->id }}" {{ request('status') == $city->id ? 'selected' : '' }}>
+                                    {{ $city->title }}
+                                </option>
+                            @endforeach
                         </select>
-                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            Filter
+                    </div>
+                    <div class="col-lg-2 col-md-12 d-flex align-items-end gap-2">
+                        <button type="submit" class="btn btn-primary flex-fill">
+                            <i class="bi bi-funnel me-1"></i>Filtrer
                         </button>
+                        <a href="{{ route('employees.index') }}" class="btn btn-outline-secondary" title="Réinitialiser">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </a>
                     </div>
                 </form>
             </div>
+        </div>
 
-            {{-- Employees Table --}}
-            <div class="bg-white rounded-lg shadow overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
-                            <th scope="col" class="relative px-6 py-3">
-                                <span class="sr-only">Actions</span>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($employees ?? [] as $employee)
-                            <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            @if($employee->photo)
-                                                <img class="h-10 w-10 rounded-full object-cover" src="{{ Storage::url($employee->photo) }}" alt="{{ $employee->first_name }}">
-                                            @else
-                                                <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                                    <span class="text-indigo-600 font-medium text-sm">{{ substr($employee->first_name, 0, 1) }}{{ substr($employee->last_name, 0, 1) }}</span>
-                                                </div>
-                                            @endif
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">{{ $employee->first_name }} {{ $employee->last_name }}</div>
-                                            <div class="text-sm text-gray-500">{{ $employee->email }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">#{{ $employee->employee_id ?? 'EMP-' . str_pad($employee->id, 4, '0', STR_PAD_LEFT) }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ $employee->department->name ?? 'N/A' }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ $employee->job_title ?? 'N/A' }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @php
-                                        $statusClasses = [
-                                            'active' => 'bg-green-100 text-green-800',
-                                            'inactive' => 'bg-gray-100 text-gray-800',
-                                            'on_leave' => 'bg-amber-100 text-amber-800'
-                                        ];
-                                        $statusClass = $statusClasses[$employee->status] ?? 'bg-gray-100 text-gray-800';
-                                    @endphp
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
-                                {{ ucfirst(str_replace('_', ' ', $employee->status ?? 'Active')) }}
-                            </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $employee->join_date ? $employee->join_date->format('M d, Y') : 'N/A' }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <div class="flex items-center justify-end space-x-2" x-data="{ open: false }">
-                                        <a href="{{ route('employees.show', $employee) }}" class="text-indigo-600 hover:text-indigo-900" title="View">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </a>
-                                        <a href="{{ route('employees.edit', $employee) }}" class="text-indigo-600 hover:text-indigo-900" title="Edit">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                        </a>
-                                        <div class="relative">
-                                            <button @click="open = !open" @click.away="open = false" class="text-gray-400 hover:text-gray-600">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/></svg>
-                                            </button>
-                                            <div x-show="open" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Send Email</a>
-                                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download PDF</a>
-                                                <form method="POST" action="{{ route('employees.destroy', $employee) }}" onsubmit="return confirm('Are you sure you want to delete this employee?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Delete</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="px-6 py-12 text-center">
-                                    <div class="flex flex-col items-center">
-                                        <div class="p-4 bg-gray-100 rounded-full mb-4">
-                                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                                        </div>
-                                        <h3 class="text-lg font-medium text-gray-900 mb-1">No employees found</h3>
-                                        <p class="text-gray-500 mb-4">Get started by creating your first employee record.</p>
-                                        <a href="{{ route('employees.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                                            Add Employee
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                        </tbody>
-                    </table>
+        {{-- Employees Table --}}
+        <div class="card shadow border-0">
+            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-list-ul me-2 text-primary"></i>Liste des employés</h5>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.print()">
+                        <i class="bi bi-printer me-1"></i>Imprimer
+                    </button>
+                    <button type="button" class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-file-excel me-1"></i>Exporter
+                    </button>
                 </div>
-
-                {{-- Pagination --}}
-                @if(isset($employees) && $employees->hasPages())
-                    <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex-1 flex justify-between sm:hidden">
-                                @if($employees->onFirstPage())
-                                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-400 bg-gray-50 cursor-not-allowed">Previous</span>
-                                @else
-                                    <a href="{{ $employees->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Previous</a>
-                                @endif
-
-                                @if($employees->hasMorePages())
-                                    <a href="{{ $employees->nextPageUrl() }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Next</a>
-                                @else
-                                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-400 bg-gray-50 cursor-not-allowed">Next</span>
-                                @endif
-                            </div>
-                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                                <div>
-                                    <p class="text-sm text-gray-700">
-                                        Showing <span class="font-medium">{{ $employees->firstItem() }}</span> to <span class="font-medium">{{ $employees->lastItem() }}</span> of <span class="font-medium">{{ $employees->total() }}</span> results
-                                    </p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                    <tr>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">PHOTO</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">PPR</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">NOM</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">PRÉNOM</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">CIN</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">RECRUTEMENT</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">CONTACT</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">EMAIL</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0 text-center">ACTIONS</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                    @forelse($employees ?? [] as $employee)
+                        <tr class="border-bottom {{ $employee->gender == 'F' ? 'employee-female-row' : '' }}">
+                            <td class="px-4 py-3">
+                                <div class="position-relative">
+                                    @if($employee->photo)
+                                        <img class="rounded-circle border border-2 border-white shadow-sm object-fit-cover"
+                                             width="45" height="45" src="{{ Storage::url($employee->photo) }}"
+                                             alt="{{ $employee->first_name }}">
+                                    @else
+                                        <div class="rounded-circle bg-gradient-primary d-flex align-items-center justify-content-center shadow-sm text-white fw-bold"
+                                             style="width: 45px; height: 45px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                            {{ strtoupper(substr($employee->first_name, 0, 1)) }}{{ strtoupper(substr($employee->last_name, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                    @if ($employee->status == 1)
+                                        <span class="position-absolute bottom-0 end-0 translate-middle-x p-1 bg-success border border-light rounded-circle"
+                                            style="width: 12px; height: 12px;" title="Actif">
+                                        </span>
+                                        @else
+                                            <span class="position-absolute bottom-0 end-0 translate-middle-x p-1 bg-danger border border-light rounded-circle"
+                                                  style="width: 12px; height: 12px;" title="Actif">
+                                            </span>
+                                        @endif
                                 </div>
-                                <div>
-                                    {{ $employees->links() }}
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="badge bg-dark bg-opacity-10 text-dark fw-mono font-monospace">
+                                    {{ $employee->ppr }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="fw-semibold text-dark">{{ $employee->lastname }}</div>
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="fw-semibold text-dark">{{ $employee->firstname }}</div>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary font-monospace">
+                                    {{ $employee->cin }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="d-flex align-items-center text-muted">
+                                    <i class="bi bi-calendar3 me-2 text-info"></i>
+                                    <span>{{ \Carbon\Carbon::parse($employee->hiring_date)->format('d/m/Y') }}</span>
                                 </div>
-                            </div>
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-telephone me-2 text-success"></i>
+                                    <span class="text-dark">{{ $employee->tel ?? '—' }}</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-envelope me-2 text-warning"></i>
+                                    <a href="mailto:{{ $employee->email }}" class="text-decoration-none text-dark hover-primary">
+                                        {{ $employee->email }}
+                                    </a>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="dropdown position-static">
+                                    <button
+                                        class="btn btn-light btn-sm rounded-pill px-3 dropdown-toggle fw-medium shadow-sm"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    >
+                                        <i class="bi bi-gear-fill me-1 text-primary"></i>Gérer
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                        <li>
+                                            <a class="dropdown-item py-2" href="{{ route('employees.show', $employee) }}">
+                                                <i class="bi bi-eye-fill me-2 text-info"></i>Voir détails
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item py-2" href="{{ route('employees.edit', $employee) }}">
+                                                <i class="bi bi-pencil-square me-2 text-warning"></i>Modifier
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item py-2" href="#">
+                                                <i class="bi bi-diagram-3-fill me-2 text-primary"></i>Affectation
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item py-2" href="#">
+                                                <i class="bi bi-file-earmark-pdf me-2 text-danger"></i>Télécharger CV
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <button type="button" class="dropdown-item py-2 text-danger"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteEmployeeModal">
+                                                <i class="bi bi-trash-fill me-2"></i>Supprimer
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="text-center py-5">
+                                <div class="d-flex flex-column align-items-center">
+                                    <div class="mb-3 p-4 bg-primary bg-opacity-10 rounded-circle">
+                                        <i class="bi bi-search text-primary" style="font-size: 3rem;"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-2 text-dark">Aucun employé trouvé</h5>
+                                    <p class="text-muted mb-4">Aucun résultat ne correspond à vos critères de recherche.</p>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ route('employees.index') }}" class="btn btn-outline-secondary">
+                                            <i class="bi bi-arrow-left me-1"></i>Retour
+                                        </a>
+                                        <a href="{{ route('employees.create') }}" class="btn btn-primary">
+                                            <i class="bi bi-plus-lg me-1"></i>Nouvel employé
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- Pagination --}}
+            @if(isset($employees) && $employees->hasPages())
+                <div class="card-footer bg-white border-top py-3">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                        <div class="text-muted small">
+                            Affichage de <span class="fw-bold text-dark">{{ $employees->firstItem() }}</span> à
+                            <span class="fw-bold text-dark">{{ $employees->lastItem() }}</span> sur
+                            <span class="fw-bold text-dark">{{ $employees->total() }}</span> employés
+                        </div>
+                        <div>
+                            {{ $employees->links() }}
                         </div>
                     </div>
-                @endif
-            </div>
+                </div>
+            @endif
         </div>
-    @endsection
 
+        @foreach($employees as $employee)
+            <x-delete-model
+                href="{{ route('employees.delete', $employee->id) }}"
+                message="Voulez-vous vraiment supprimer ce agent ?"
+                title="Confiramtion"
+                target="deleteEmployeeModal" />
+        @endforeach
+
+    </div>
 
 </x-layout>
