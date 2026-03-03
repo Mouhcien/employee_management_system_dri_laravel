@@ -21,8 +21,7 @@
     {{-- Employés avec sous-menu --}}
     <div class="mt-1">
         <button
-            class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-2
-                   @if(request()->routeIs('employees.*')) active @endif"
+            class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-2"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#menuEmployees"
@@ -41,7 +40,7 @@
                     <a
                         href="{{ route('employees.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('employees.index')) active @endif"
+                               @if(request()->routeIs('employees.index')) active bg-gradient-primary-to-secondary @endif"
                     >
                         <i class="bi bi-people me-2 fs-6"></i>
                         <span class="sidebar-text">Liste des employés</span>
@@ -57,8 +56,7 @@
     {{-- Référentiels avec sous-menu --}}
     <div class="mt-1">
         <button
-            class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-2
-                   @if(request()->routeIs('locaux.*')) active @endif"
+            class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-2"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#menuReferenciel"
@@ -77,7 +75,7 @@
                     <a
                         href="{{ route('occupations.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('occupations.index')) active @endif"
+                               @if(request()->routeIs('occupations.index')) active bg-gradient-primary-to-secondary @endif"
                     >
                         <i class="bi bi-plus-lg me-2 fs-6"></i>
                         <span class="sidebar-text">Gestion des fonctions</span>
@@ -87,7 +85,7 @@
                     <a
                         href="{{ route('grades.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('grades.*')) active @endif"
+                               @if(request()->routeIs('grades.*')) active bg-gradient-primary-to-secondary @endif"
                     >
                         <i class="bi bi-award me-2 fs-6"></i>
                         <span class="sidebar-text">Gestion des Grades</span>
@@ -103,8 +101,7 @@
     {{-- Locaux avec sous-menu --}}
     <div class="mt-1">
         <button
-            class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-2
-                   @if(request()->routeIs('local.*')) active @endif"
+            class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-2"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#menuLocaux"
@@ -123,7 +120,7 @@
                     <a
                         href="{{ route('locals.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('locals.index')) active @endif"
+                               @if(request()->routeIs('locals.index')) active bg-gradient-primary-to-secondary @endif"
                     >
                         <i class="bi bi-building me-2 fs-6"></i>
                         <span class="sidebar-text">Locaux</span>
@@ -133,7 +130,7 @@
                     <a
                         href="{{ route('cities.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('cities.index')) active @endif"
+                               @if(request()->routeIs('cities.index')) active bg-gradient-primary-to-secondary @endif"
                     >
                         <i class="bi bi-geo-alt-fill me-2 fs-6"></i>
                         <span class="sidebar-text">Villes</span>
@@ -149,8 +146,7 @@
     {{-- Unités structurelle avec sous-menu --}}
     <div class="mt-1">
         <button
-            class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-2
-                   @if(request()->routeIs('unites.*')) active @endif"
+            class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-2"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#menuUnites"
@@ -169,7 +165,7 @@
                     <a
                         href="{{ route('services.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('services.index')) active @endif"
+                               @if(request()->routeIs('services.index')) active bg-gradient-primary-to-secondary @endif"
                     >
                         <i class="bi bi-diagram-3 me-2 fs-6"></i>
                         <span class="sidebar-text">Services</span>
@@ -179,7 +175,7 @@
                     <a
                         href="{{ route('entities.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('entities.index')) active @endif"
+                               @if(request()->routeIs('entities.index')) active bg-gradient-primary-to-secondary @endif"
                     >
                         <i class="bi bi-diagram-3 me-2 fs-6"></i>
                         <span class="sidebar-text">Entités</span>
@@ -189,7 +185,7 @@
                     <a
                         href="{{ route('sectors.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('sectors.index')) active @endif"
+                               @if(request()->routeIs('sectors.index')) active bg-gradient-primary-to-secondary @endif"
                     >
                         <i class="bi bi-diagram-3 me-2 fs-6"></i>
                         <span class="sidebar-text">Secteurs</span>
@@ -199,7 +195,7 @@
                     <a
                         href="{{ route('sections.index') }}"
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('sections.index')) active @endif"
+                               @if(request()->routeIs('sections.index')) active bg-gradient-primary-to-secondary @endif"
                     >
                         <i class="bi bi-diagram-3 me-2 fs-6"></i>
                         <span class="sidebar-text">Sections</span>
@@ -235,7 +231,7 @@
                     <a
                         href=""
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('chefs.index')) active @endif"
+                               @if(request()->routeIs('chefs.index')) active bg-gradient-primary-to-secondary @endif"
                     >
                         <i class="bi bi-eye-fill me-2 fs-6"></i>
                         <span class="sidebar-text">Consulter</span>
@@ -245,7 +241,7 @@
                     <a
                         href=""
                         class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
-                               @if(request()->routeIs('chefs.create')) active @endif"
+                               @if(request()->routeIs('chefs.create')) active bg-gradient-primary-to-secondary @endif"
                     >
                         <i class="bi bi-plus-lg me-2 fs-6"></i>
                         <span class="sidebar-text">Créer</span>

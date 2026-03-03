@@ -3,20 +3,22 @@
 
     <div class="d-flex flex-column gap-4">
         {{-- Page Header --}}
-        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
-            <div>
-                <h1 class="h2 fw-bold text-dark mb-1">Gestion des locaux</h1>
-                <p class="text-muted mb-0">Gérez efficacement vos locaux et leurs associations</p>
-            </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createLocalModal">
-                    <i class="bi bi-plus-circle me-2"></i>
-                    Nouveau local
-                </button>
-                <button class="btn btn-outline-secondary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#bulkActions">
-                    <i class="bi bi-download me-2"></i>
-                    Exporter
-                </button>
+        <div class="bg-gradient-primary-to-secondary rounded-4 p-4 mb-4 text-white shadow-lg" >
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
+                <div>
+                    <h1 class="h2 fw-bold text-dark mb-1">Gestion des locaux</h1>
+                    <p class="text-muted mb-0">Gérez efficacement vos locaux et leurs associations</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createLocalModal">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Nouveau local
+                    </button>
+                    <button class="btn btn-outline-secondary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#bulkActions">
+                        <i class="bi bi-download me-2"></i>
+                        Exporter
+                    </button>
+                </div>
             </div>
         </div>
 

@@ -1,2 +1,8 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
+
+
+.bg-gradient-primary-to-secondary {
+    background: linear-gradient(135deg, #6980e1 0%, #460588 100%);
+}
+

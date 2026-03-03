@@ -3,6 +3,7 @@
 
         <div class="d-flex flex-column gap-4">
             {{-- Page Header --}}
+            <div class="bg-gradient-primary-to-secondary rounded-4 p-4 mb-4 text-white shadow-lg" >
             <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
                 <div>
                     <h1 class="h2 fw-bold text-dark mb-1">Gestion des villes de la région</h1>
@@ -18,6 +19,7 @@
                         Exporter
                     </button>
                 </div>
+            </div>
             </div>
 
             {{-- Stats Cards --}}

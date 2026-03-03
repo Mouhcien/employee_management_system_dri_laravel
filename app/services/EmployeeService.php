@@ -22,6 +22,11 @@ class EmployeeService
         return $this->employeeRepository->all(Employee::class, $with, $pages);
     }
 
+    public function getAllByFilter($filter, $pages = 0)
+    {
+        return $this->employeeRepository->allByFilter($filter, $pages);
+    }
+
     public function getOneById(int $id): ?Employee
     {
         $with = ['works', 'qualifications', 'competences', 'remunerations', 'chefs', 'affectations'];

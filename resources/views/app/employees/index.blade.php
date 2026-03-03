@@ -9,10 +9,6 @@
             background-color: rgba(255, 192, 203, 0.25) !important;
         }
 
-        .bg-gradient-primary-to-secondary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
         .hover-primary:hover {
             color: #667eea !important;
         }
@@ -95,6 +91,26 @@
             overflow-x: visible;  /* or hidden, instead of auto */
         }
 
+        #employee-photo-preview {
+            position: fixed;
+            display: none;
+            pointer-events: none;           /* mouse passes through */
+            z-index: 2000;                  /* above table & dropdowns */
+            padding: 6px;
+            background: #fff;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+            border: 1px solid rgba(148, 163, 184, 0.5);
+        }
+
+        #employee-photo-preview img {
+            display: block;
+            max-width: 360px;
+            max-height: 360px;
+            border-radius: 0.75rem;
+            object-fit: cover;
+        }
+
     </style>
 
     @section('title', 'Employees - HR Management')
@@ -125,7 +141,7 @@
                         </div>
                         <div class="ms-3">
                             <h6 class="card-title text-muted small mb-1 text-uppercase">Total employés</h6>
-                            <h4 class="mb-0 fw-bold text-primary">{{ $totalEmployees ?? 0 }}</h4>
+                            <h4 class="mb-0 fw-bold text-primary">{{ $employees->count() ?? 0 }}</h4>
                         </div>
                     </div>
                 </div>
@@ -246,6 +262,7 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light">
                     <tr>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0"></th>
                         <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">PHOTO</th>
                         <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">PPR</th>
                         <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">NOM</th>
@@ -259,13 +276,24 @@
                     </thead>
                     <tbody class="bg-white">
                     @forelse($employees ?? [] as $employee)
-                        <tr class="border-bottom {{ $employee->gender == 'F' ? 'employee-female-row' : '' }}">
+                        <tr class="border-bottom ">
+                            <td class="px-4 py-3">
+                                @if ($employee->gender == 'M')
+                                    <i class="bi bi-gender-male fs-3"></i>
+                                @elseif($employee->gender == 'F')
+                                    <i class="bi bi-gender-female fs-3"></i>
+                                @endif
+                            </td>
                             <td class="px-4 py-3">
                                 <div class="position-relative">
                                     @if($employee->photo)
-                                        <img class="rounded-circle border border-2 border-white shadow-sm object-fit-cover"
-                                             width="45" height="45" src="{{ Storage::url($employee->photo) }}"
-                                             alt="{{ $employee->first_name }}">
+                                        <img
+                                            class="rounded-circle border border-2 border-white shadow-sm object-fit-cover employee-photo-thumb"
+                                            width="45" height="45"
+                                            src="{{ Storage::url($employee->photo) }}"
+                                            data-full="{{ Storage::url($employee->photo) }}"
+                                            alt="{{ $employee->first_name }}"
+                                        >
                                     @else
                                         <div class="rounded-circle bg-gradient-primary d-flex align-items-center justify-content-center shadow-sm text-white fw-bold"
                                              style="width: 45px; height: 45px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
@@ -416,5 +444,44 @@
         @endforeach
 
     </div>
+
+    <div id="employee-photo-preview">
+        <img src="" alt="Aperçu employé">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const previewBox = document.getElementById('employee-photo-preview');
+            const previewImg = previewBox.querySelector('img');
+            const offsetX = 20;  // distance from cursor
+            const offsetY = 20;
+
+            document.querySelectorAll('.employee-photo-thumb').forEach(function (img) {
+                img.addEventListener('mouseenter', function (e) {
+                    const src = img.dataset.full || img.src;
+                    previewImg.src = src;
+                    previewBox.style.display = 'block';
+                    movePreview(e);
+                });
+
+                img.addEventListener('mousemove', function (e) {
+                    movePreview(e);
+                });
+
+                img.addEventListener('mouseleave', function () {
+                    previewBox.style.display = 'none';
+                });
+            });
+
+            function movePreview(e) {
+                const x = e.clientX + offsetX;
+                const y = e.clientY + offsetY;
+
+                previewBox.style.left = x + 'px';
+                previewBox.style.top  = y + 'px';
+            }
+        });
+    </script>
+
 
 </x-layout>

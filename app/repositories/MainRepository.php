@@ -6,8 +6,10 @@ class MainRepository
 {
 
     public function All($class, $relations, $pages) {
-        $query = $class::with($relations)
-            ->orderBy('id', 'DESC');
+        $query = $class::with($relations);
+
+        if ($class === 'Employee')
+            $query->orderBy('birth_date', 'DESC');
 
         if ($pages != 0)
             return $query->paginate($pages);

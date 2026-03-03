@@ -2,6 +2,7 @@
     <div class="d-flex flex-column gap-4">
 
         <!-- Header section with "Retour" -->
+        <div class="bg-gradient-primary-to-secondary rounded-4 p-4 mb-4 text-white shadow-lg" >
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
             <div>
                 <h1 class="h3 fw-semibold text-dark mb-1">
@@ -21,7 +22,7 @@
                 Retour
             </a>
         </div>
-
+        </div>
         <!-- Three colored cards -->
         <div class="row g-4">
             <!-- Card: Edit city (primary-themed) -->

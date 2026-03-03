@@ -2,14 +2,15 @@
     <div class="d-flex flex-column gap-4">
 
         <!-- Header section with "Retour" -->
+        <div class="bg-gradient-primary-to-secondary rounded-4 p-4 mb-4 text-white shadow-lg" >
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
             <div>
                 <h1 class="h3 fw-semibold text-dark mb-1">
-                    Service :
+                    Fonction :
                     <span class="text-primary">{{ $occupation->title }}</span>
                 </h1>
                 <p class="text-muted mb-0">
-                    Gérez efficacement le occupation <strong class="text-primary">{{ $occupation->title }}</strong> et ses employés associées.
+                    Gérez efficacement l'occupation <strong class="text-primary">{{ $occupation->title }}</strong>
                 </p>
             </div>
             <!-- Retour link -->
@@ -21,7 +22,7 @@
                 Retour
             </a>
         </div>
-
+        </div>
         <!-- Edit form section -->
         <div class="bg-light rounded-3 border p-4 shadow-sm">
             <form action="{{ route('occupations.update', $occupation->id) }}" method="POST">

@@ -39,12 +39,16 @@ class EmployeeController extends Controller
 
         $locals = $this->localService->getAll(0);
         $employees = $this->employeeService->getAll($this->pages);
+        $male_employees = $this->employeeService->getAllByFilter(['col' => 'gender', 'val' => 'M'], 0);
+        $female_employees = $this->employeeService->getAllByFilter(['col' => 'gender', 'val' => 'F'], 0);
         $cities = $this->cityService->getAll(0);
 
         return view('app.employees.index', [
             'locals' => $locals,
             'employees' => $employees,
-            'cities' => $cities
+            'cities' => $cities,
+            'femaleCount' => $female_employees->count(),
+            'maleCount' => $male_employees->count()
         ]);
     }
 
@@ -184,6 +188,22 @@ class EmployeeController extends Controller
             }
 
             return back()->with('error', 'Erreur suppression employé');
+
+        }catch (\Exception $exception) {
+
+        }
+    }
+
+    public function show($id){
+        try {
+            $employee = $this->employeeService->getOneById($id);
+            if (is_null($employee)) {
+                return back()->with('error', 'Employé introuvable');
+            }
+
+            return view('app.employees.show', [
+                'employee' => $employee
+            ]);
 
         }catch (\Exception $exception) {
 
