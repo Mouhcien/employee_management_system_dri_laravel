@@ -272,22 +272,258 @@
                         </div>
                     </div>
 
-                    {{-- Notes / section libre (facultatif) --}}
-                    <div class="card shadow-sm border-0">
+                    {{-- Fonction --}}
+                    <div class="card shadow-sm border-0 mb-4">
                         <div class="card-header bg-white border-0 d-flex align-items-center">
                     <span class="badge rounded-pill bg-light text-dark me-2">
                         <i class="bi bi-info-circle-fill"></i>
                     </span>
-                            <h5 class="mb-0 text-dark">Informations complémentaires</h5>
+                            <h5 class="mb-0 text-dark">Fonction</h5>
                         </div>
                         <div class="card-body small text-muted">
-                            <p class="mb-0">
-                                Vous pouvez ajouter ici des notes internes, des remarques RH ou des liens vers des documents
-                                (CV, décisions administratives, etc.).
-                            </p>
+                            @if (count($employee->works) != 0)
+                                <table class="table">
+                                    @foreach($employee->works as $work)
+                                        @if (is_null($work->terminated_date))
+                                            <tr>
+                                                <td> {{ $work->occupation->title }} </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-danger">
+                                                        <i class="bi-x"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                </table>
+                            @else
+                                <p class="mb-0">
+                                    Merci de spécifier la fonction
+                                </p>
+                                <button class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#affectOccupationModal">
+                                    <i class="bi bi-plus-circle me-2"></i>
+                                    Affecter fonction
+                                </button>
+                            @endif
                         </div>
                     </div>
 
+                    {{-- Competence/ grade --}}
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-header bg-white border-0 d-flex align-items-center">
+                    <span class="badge rounded-pill bg-light text-dark me-2">
+                        <i class="bi bi-info-circle-fill"></i>
+                    </span>
+                            <h5 class="mb-0 text-dark">Grade</h5>
+                        </div>
+                        <div class="card-body small text-muted">
+                            @if (count($employee->competences) != 0)
+                            <table class="table">
+                                @foreach($employee->competences as $competence)
+                                    <tr>
+                                        <td> {{ $competence->level->title }} </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger">
+                                                <i class="bi-x"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                            @else
+                                <p class="mb-0">
+                                    Merci de spécifier le grade
+                                </p>
+                                <button class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#affectFonctionModal">
+                                    <i class="bi bi-plus-circle me-2"></i>
+                                    Affecter Grade
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+
+                    {{-- Notes / section libre (facultatif) --}}
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white border-0 d-flex align-items-center">
+                            <div class="row col-12">
+                                <div class="col-8">
+                                    <span class="badge rounded-pill bg-light text-dark me-2">
+                                        <i class="bi bi-info-circle-fill"></i>
+                                    </span>
+                                    <h5 class="mb-0 text-dark">Diplômes</h5>
+                                </div>
+                                <div class="col-4">
+                                    @if (count($employee->qualifications) != 0)
+                                    <button class="btn btn-primary d-inline-flex align-items-center float-end" data-bs-toggle="modal" data-bs-target="#affectDiplomaModal">
+                                        <i class="bi bi-plus-circle me-2"></i>
+                                        Affecter Diplôme
+                                    </button>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body small text-muted">
+                            @if (count($employee->qualifications) != 0)
+                            <table class="table">
+                                @foreach($employee->qualifications as $qualification)
+                                    <tr>
+                                        <td> {{ $qualification->diploma->title }} </td>
+                                        <td> {{ $qualification->year }} </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger">
+                                                <i class="bi-x"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                            @else
+                                <p class="mb-0">
+                                    Merci de spécifier le diplôme
+                                </p>
+                                <button class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#affectDiplomaModal">
+                                    <i class="bi bi-plus-circle me-2"></i>
+                                    Affecter Diplôme
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {{-- Affecter Fonction Modal --}}
+        <div class="modal fade" id="affectOccupationModal" tabindex="-1" aria-labelledby="affectOccupationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+                    <form action="{{ route('works.store') }}" method="POST">
+                        @csrf
+
+                        <div class="modal-header border-0 pb-0">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3">
+                                    <i class="bi bi-geo-alt-fill text-primary fs-4"></i>
+                                </div>
+                                <div>
+                                    <h5 class="modal-title fw-bold mb-0" id="createCityModalLabel">Nouvelle Affectation</h5>
+                                    <small class="text-muted">Affecter fonction</small>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body pt-0 px-4">
+                            {{-- Title Field --}}
+                            <div class="mb-4">
+                                <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+
+                                <label for="workTitle" class="form-label fw-semibold text-dark mb-2">
+                                    Fonction <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-lg mb-2">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="bi bi-geo-alt text-primary"></i>
+                                    </span>
+                                    <select class="form-control" name="occupation_id">
+                                        <option> Sélectionnez la fonction</option>
+                                        @foreach($occupations as $occupation)
+                                            <option value="{{ $occupation->id }}"> {{ $occupation->title }} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <label for="workTitle" class="form-label fw-semibold text-dark mb-2">
+                                    Date de commencement <span class="text-danger"></span>
+                                </label>
+                                <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="bi bi-calendar text-primary"></i>
+                                </span>
+                                    <x-date-input id="starting_date"
+                                                  name="starting_date"
+                                                  value="" />
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="modal-footer border-0 bg-light px-4 py-3 rounded-bottom">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle me-1"></i>Annuler
+                            </button>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-save me-2"></i>
+                                Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {{-- Affecter diplôme Modal --}}
+        <div class="modal fade" id="affectDiplomaModal" tabindex="-1" aria-labelledby="affectDiplomaModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+                    <form action="{{ route('qualifications.store') }}" method="POST">
+                        @csrf
+                        <div class="modal-header border-0 pb-0">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3">
+                                    <i class="bi bi-geo-alt-fill text-primary fs-4"></i>
+                                </div>
+                                <div>
+                                    <h5 class="modal-title fw-bold mb-0" id="createCityModalLabel">Nouvelle Affectation</h5>
+                                    <small class="text-muted">Affecter Diplôme</small>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body pt-0 px-4">
+                            {{-- Title Field --}}
+                            <div class="mb-4">
+                                <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+
+                                <label for="workTitle" class="form-label fw-semibold text-dark mb-2">
+                                    Diplôme <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-lg mb-2">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="bi bi-geo-alt text-primary"></i>
+                                    </span>
+                                    <select class="form-control" name="diploma_id">
+                                        <option> Sélectionnez le diplôme</option>
+                                        @foreach($diplomas as $diploma)
+                                            <option value="{{ $diploma->id }}"> {{ $diploma->title }} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <label for="workTitle" class="form-label fw-semibold text-dark mb-2">
+                                    Année d'obtention <span class="text-danger"></span>
+                                </label>
+                                <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="bi bi-calendar text-primary"></i>
+                                </span>
+                                    <input type="number" name="year" class="form-control">
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="modal-footer border-0 bg-light px-4 py-3 rounded-bottom">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle me-1"></i>Annuler
+                            </button>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-save me-2"></i>
+                                Enregistrer
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

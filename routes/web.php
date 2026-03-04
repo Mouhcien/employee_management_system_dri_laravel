@@ -10,10 +10,12 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\LocalController;
 use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QualificationController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SectorController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\WorkController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -141,6 +143,20 @@ Route::prefix('settings')->group(function (){
         Route::post('/update/{id}', [LevelController::class, 'update'])->name('settings.levels.update');
         Route::get('/delete/{id}', [LevelController::class, 'delete'])->name('settings.levels.delete');
     });
+});
+
+Route::prefix('works')->group(function(){
+    Route::get('/', [WorkController::class, 'index'])->name('works.index');
+    Route::post('/store', [WorkController::class, 'store'])->name('works.store');
+    Route::get('/{id}', [WorkController::class, 'show'])->name('works.show');
+    Route::get('/delete/{id}', [WorkController::class, 'delete'])->name('works.delete');
+});
+
+Route::prefix('qualifications')->group(function(){
+    Route::get('/', [QualificationController::class, 'index'])->name('qualifications.index');
+    Route::post('/store', [QualificationController::class, 'store'])->name('qualifications.store');
+    Route::get('/{id}', [QualificationController::class, 'show'])->name('qualifications.show');
+    Route::get('/delete/{id}', [QualificationController::class, 'delete'])->name('qualifications.delete');
 });
 
 Route::middleware('auth')->group(function () {

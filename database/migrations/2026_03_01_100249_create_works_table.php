@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(Employee::class, 'employee_id')->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Occupation::class, 'occupation_id')->constrained()->cascadeOnDelete();
             $table->date('starting_date');
-            $table->date('terminated_date');
+            $table->date('terminated_date')->nullable();
             $table->timestamps();
         });
     }

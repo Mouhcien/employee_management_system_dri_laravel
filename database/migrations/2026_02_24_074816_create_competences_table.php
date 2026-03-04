@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Employee;
+use App\Models\Grade;
 use App\Models\Level;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,7 +18,9 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Employee::class, 'employee_id')->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Level::class, 'level_id')->constrained()->cascadeOnDelete();
-            $table->date('starting_date');
+            $table->foreignIdFor(Grade::class, 'grade_id')->constrained()->cascadeOnDelete();
+            $table->date('starting_date')->nullable();
+            $table->date('finished_date')->nullable();
             $table->timestamps();
         });
     }

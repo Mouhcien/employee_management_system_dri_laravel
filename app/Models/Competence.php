@@ -13,4 +13,8 @@ class Competence extends Model
     public function level() {
         return $this->belongsTo(Level::class);
     }
+
+    public function grade() {
+        return $this->belongsTo(Grade::class);
+    }
 }

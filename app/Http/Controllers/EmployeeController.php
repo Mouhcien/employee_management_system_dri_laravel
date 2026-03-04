@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\services\CityService;
+use App\services\LevelService;
+use App\services\GradeService;
+use App\services\DiplomaService;
 use App\services\EmployeeService;
 use App\services\LocalService;
+use App\services\OccupationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,6 +17,10 @@ class EmployeeController extends Controller
     private EmployeeService $employeeService;
     private LocalService $localService;
     private CityService $cityService;
+    private OccupationService $occupationService;
+    private DiplomaService $diplomaService;
+    private GradeService $gradeService;
+    private LevelService $levelService;
     private $pages = 10;
     private $rules = [
         'ppr' => 'required',
@@ -27,11 +35,21 @@ class EmployeeController extends Controller
      * @param LocalService $localService
      * @param CityService $cityService
      */
-    public function __construct(EmployeeService $employeeService, LocalService $localService, CityService $cityService)
+    public function __construct(EmployeeService $employeeService,
+                                LocalService $localService,
+                                CityService $cityService,
+                                OccupationService $occupationService,
+                                DiplomaService $diplomaService,
+                                GradeService $gradeService,
+                                LevelService $levelService)
     {
         $this->employeeService = $employeeService;
         $this->localService = $localService;
         $this->cityService = $cityService;
+        $this->occupationService = $occupationService;
+        $this->diplomaService = $diplomaService;
+        $this->gradeService = $gradeService;
+        $this->levelService = $levelService;
     }
 
 
@@ -197,12 +215,21 @@ class EmployeeController extends Controller
     public function show($id){
         try {
             $employee = $this->employeeService->getOneById($id);
+            $occupations = $this->occupationService->getAll(0);
+            $diplomas = $this->diplomaService->getAll(0);
+            $grades = $this->gradeService->getAll(0);
+            $levels = $this->levelService->getAll(0);
+
             if (is_null($employee)) {
                 return back()->with('error', 'Employé introuvable');
             }
 
             return view('app.employees.show', [
-                'employee' => $employee
+                'employee' => $employee,
+                'occupations' => $occupations,
+                'diplomas' => $diplomas,
+                'grades' => $grades,
+                'levels' => $levels,
             ]);
 
         }catch (\Exception $exception) {
