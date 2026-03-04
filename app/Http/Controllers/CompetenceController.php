@@ -11,6 +11,7 @@ class CompetenceController extends Controller
     private $rules = [
         'employee_id' => 'required',
         'level_id' => 'required',
+        'grade_id' => 'required',
         'starting_date' => 'required'
     ];
 
@@ -34,10 +35,10 @@ class CompetenceController extends Controller
             $result = $this->competenceService->create($data);
 
             if ($result) {
-                return back()->with('success', 'La competence est bien spécifié');
+                return back()->with('success', 'La competance est bien spécifié');
             }
 
-            return back()->with('error', 'Erreur insertion competence');
+            return back()->with('error', 'Erreur insertion competance');
 
         }catch (\Exception $exception) {
             dd($exception->getMessage());

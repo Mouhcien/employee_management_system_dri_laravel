@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\CompetenceController;
 use App\Http\Controllers\DiplomaController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EntityController;
@@ -157,6 +158,13 @@ Route::prefix('qualifications')->group(function(){
     Route::post('/store', [QualificationController::class, 'store'])->name('qualifications.store');
     Route::get('/{id}', [QualificationController::class, 'show'])->name('qualifications.show');
     Route::get('/delete/{id}', [QualificationController::class, 'delete'])->name('qualifications.delete');
+});
+
+Route::prefix('competences')->group(function(){
+    Route::get('/', [CompetenceController::class, 'index'])->name('competences.index');
+    Route::post('/store', [CompetenceController::class, 'store'])->name('competences.store');
+    Route::get('/{id}', [CompetenceController::class, 'show'])->name('competences.show');
+    Route::get('/delete/{id}', [CompetenceController::class, 'delete'])->name('competences.delete');
 });
 
 Route::middleware('auth')->group(function () {
