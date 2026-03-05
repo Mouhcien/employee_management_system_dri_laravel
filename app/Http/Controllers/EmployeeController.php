@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\services\CityService;
+use App\services\EntityService;
 use App\services\LevelService;
 use App\services\GradeService;
 use App\services\DiplomaService;
 use App\services\EmployeeService;
 use App\services\LocalService;
 use App\services\OccupationService;
+use App\services\SectionEntityService;
+use App\services\SectorEntityService;
+use App\services\ServiceEntityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -21,6 +25,10 @@ class EmployeeController extends Controller
     private DiplomaService $diplomaService;
     private GradeService $gradeService;
     private LevelService $levelService;
+    private ServiceEntityService $serviceEntityService;
+    private EntityService $entityService;
+    private SectionEntityService $sectionEntityService;
+    private SectorEntityService $sectorEntityService;
     private $pages = 10;
     private $rules = [
         'ppr' => 'required',
@@ -41,7 +49,12 @@ class EmployeeController extends Controller
                                 OccupationService $occupationService,
                                 DiplomaService $diplomaService,
                                 GradeService $gradeService,
-                                LevelService $levelService)
+                                LevelService $levelService,
+                                ServiceEntityService $serviceEntityService,
+                                EntityService $entityService,
+                                SectionEntityService $sectionEntityService,
+                                SectorEntityService $sectorEntityService
+    )
     {
         $this->employeeService = $employeeService;
         $this->localService = $localService;
@@ -50,6 +63,10 @@ class EmployeeController extends Controller
         $this->diplomaService = $diplomaService;
         $this->gradeService = $gradeService;
         $this->levelService = $levelService;
+        $this->serviceEntityService = $serviceEntityService;
+        $this->entityService = $entityService;
+        $this->sectionEntityService = $sectionEntityService;
+        $this->sectorEntityService = $sectorEntityService;
     }
 
 
@@ -230,6 +247,31 @@ class EmployeeController extends Controller
                 'diplomas' => $diplomas,
                 'grades' => $grades,
                 'levels' => $levels,
+            ]);
+
+        }catch (\Exception $exception) {
+
+        }
+    }
+
+    public function unities($id){
+        try {
+            $employee = $this->employeeService->getOneById($id);
+            $services = $this->serviceEntityService->getAll(0);
+            $entities = $this->entityService->getAll(0);
+            $sectors = $this->sectorEntityService->getAll(0);
+            $sections = $this->sectionEntityService->getAll(0);
+
+            if (is_null($employee)) {
+                return back()->with('error', 'Employé introuvable');
+            }
+
+            return view('app.employees.unities', [
+                'employee' => $employee,
+                'services' => $services,
+                'entities' => $entities,
+                'sectors' => $sectors,
+                'sections' => $sections
             ]);
 
         }catch (\Exception $exception) {

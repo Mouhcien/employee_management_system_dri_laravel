@@ -371,7 +371,7 @@
                                         </li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li>
-                                            <a class="dropdown-item py-2" href="#">
+                                            <a class="dropdown-item py-2" href="{{ route('employees.unities', $employee) }}">
                                                 <i class="bi bi-diagram-3-fill me-2 text-primary"></i>Affectation
                                             </a>
                                         </li>

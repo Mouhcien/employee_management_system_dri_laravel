@@ -58,339 +58,370 @@
                 </div>
             </div>
 
-            <div class="row g-4">
+            <div class="container-xxl py-4">
 
-                {{-- Left column: identity + contact --}}
-                <div class="col-lg-4">
+                <!-- Content -->
+                <section class="row g-4">
 
-                    {{-- Identité --}}
-                    <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-header bg-white border-0 d-flex align-items-center">
-                    <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary me-2">
-                        <i class="bi bi-person-badge-fill"></i>
-                    </span>
-                            <h5 class="mb-0 text-dark">Identité</h5>
-                        </div>
-                        <div class="card-body">
-                            <dl class="row mb-0 small">
-                                <dt class="col-5 text-muted">Nom</dt>
-                                <dd class="col-7 fw-semibold text-dark">{{ $employee->lastname }}</dd>
+                    <!-- Left column -->
+                    <div class="col-lg-4 d-flex flex-column gap-4">
 
-                                <dt class="col-5 text-muted">Prénom</dt>
-                                <dd class="col-7 fw-semibold text-dark">{{ $employee->firstname }}</dd>
+                        <!-- Identité -->
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <div class="d-flex align-items-center">
+                        <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary me-2">
+                            <i class="bi bi-person-badge-fill"></i>
+                        </span>
+                                    <h5 class="mb-0">Identité</h5>
+                                </div>
+                            </div>
+                            <div class="card-body pt-3">
+                                <dl class="row mb-0 small">
+                                    <dt class="col-5 text-muted">Nom</dt>
+                                    <dd class="col-7 fw-semibold text-dark">{{ $employee->lastname }}</dd>
 
-                                @if($employee->firstname_arab || $employee->lastname_arab)
-                                    <dt class="col-5 text-muted">Nom (Arabe)</dt>
-                                    <dd class="col-7 fw-semibold text-dark">
-                                        {{ $employee->firstname_arab }} {{ $employee->lastname_arab }}
-                                    </dd>
-                                @endif
+                                    <dt class="col-5 text-muted">Prénom</dt>
+                                    <dd class="col-7 fw-semibold text-dark">{{ $employee->firstname }}</dd>
 
-                                <dt class="col-5 text-muted">Genre</dt>
-                                <dd class="col-7">
-                                    @if($employee->gender === 'F')
-                                        <span class="badge rounded-pill bg-pink-soft text-pink">
+                                    @if($employee->firstname_arab || $employee->lastname_arab)
+                                        <dt class="col-5 text-muted">Nom (Arabe)</dt>
+                                        <dd class="col-7 fw-semibold text-dark">
+                                            {{ $employee->firstname_arab }} {{ $employee->lastname_arab }}
+                                        </dd>
+                                    @endif
+
+                                    <dt class="col-5 text-muted">Genre</dt>
+                                    <dd class="col-7">
+                                        @if($employee->gender === 'F')
+                                            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger">
                                     <i class="bi bi-gender-female me-1"></i>Féminin
                                 </span>
-                                    @elseif($employee->gender === 'M')
-                                        <span class="badge rounded-pill bg-info-soft text-info">
+                                        @elseif($employee->gender === 'M')
+                                            <span class="badge rounded-pill bg-info bg-opacity-10 text-info">
                                     <i class="bi bi-gender-male me-1"></i>Masculin
                                 </span>
-                                    @else
-                                        <span class="badge rounded-pill bg-secondary-subtle text-secondary">
+                                        @else
+                                            <span class="badge rounded-pill bg-secondary-subtle text-secondary">
                                     Non spécifié
                                 </span>
-                                    @endif
-                                </dd>
+                                        @endif
+                                    </dd>
 
-                                <dt class="col-5 text-muted">Date de naissance</dt>
-                                <dd class="col-7">
-                                    {{ $employee->birth_date ? \Carbon\Carbon::parse($employee->birth_date)->format('d/m/Y') : '—' }}
-                                </dd>
+                                    <dt class="col-5 text-muted">Date de naissance</dt>
+                                    <dd class="col-7">
+                                        {{ $employee->birth_date ? \Carbon\Carbon::parse($employee->birth_date)->format('d/m/Y') : '—' }}
+                                    </dd>
 
-                                <dt class="col-5 text-muted">Lieu de naissance</dt>
-                                <dd class="col-7">{{ $employee->birth_city ?? '—' }}</dd>
+                                    <dt class="col-5 text-muted">Lieu de naissance</dt>
+                                    <dd class="col-7">{{ $employee->birth_city ?? '—' }}</dd>
 
-                                <dt class="col-5 text-muted">Situation familiale</dt>
-                                <dd class="col-7">{{ $employee->sit ?? '—' }}</dd>
-                            </dl>
+                                    <dt class="col-5 text-muted">Situation familiale</dt>
+                                    <dd class="col-7">{{ $employee->sit ?? '—' }}</dd>
+                                </dl>
+                            </div>
                         </div>
-                    </div>
 
-                    {{-- Coordonnées --}}
-                    <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-header bg-white border-0 d-flex align-items-center">
-                    <span class="badge rounded-pill bg-success bg-opacity-10 text-success me-2">
-                        <i class="bi bi-telephone-fill"></i>
-                    </span>
-                            <h5 class="mb-0 text-dark">Coordonnées</h5>
-                        </div>
-                        <div class="card-body small">
-                            <div class="mb-3">
-                                <div class="text-muted mb-1">Téléphone</div>
+                        <!-- Coordonnées -->
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+                            <div class="card-header bg-transparent border-0 pb-0">
                                 <div class="d-flex align-items-center">
-                                    <i class="bi bi-telephone me-2 text-success"></i>
-                                    <span class="fw-semibold text-dark">{{ $employee->tel ?? '—' }}</span>
+                        <span class="badge rounded-pill bg-success bg-opacity-10 text-success me-2">
+                            <i class="bi bi-telephone-fill"></i>
+                        </span>
+                                    <h5 class="mb-0">Coordonnées</h5>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <div class="text-muted mb-1">Email</div>
-                                <div class="d-flex align-items-center">
-                                    <i class="bi bi-envelope me-2 text-warning"></i>
-                                    @if($employee->email)
-                                        <a href="mailto:{{ $employee->email }}" class="fw-semibold text-decoration-none text-dark">
-                                            {{ $employee->email }}
-                                        </a>
-                                    @else
-                                        <span class="text-dark">—</span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="text-muted mb-1">Adresse</div>
-                                <p class="mb-0 text-dark fw-semibold">
-                                    {{ $employee->address ?? '—' }}
-                                    @if($employee->city)
-                                        <br><span class="text-muted">{{ $employee->city }}</span>
-                                    @endif
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Affectation actuelle --}}
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white border-0 d-flex align-items-center">
-                    <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning me-2">
-                        <i class="bi bi-building"></i>
-                    </span>
-                            <h5 class="mb-0 text-dark">Affectation actuelle</h5>
-                        </div>
-                        <div class="card-body small">
-                            <div class="mb-2">
-                                <span class="text-muted d-block">Local</span>
-                                <span class="fw-semibold text-dark">
-                            {{ $employee->local->title ?? 'Non affecté' }}
-                        </span>
-                            </div>
-                            <div class="mb-2">
-                                <span class="text-muted d-block">Commission / carte</span>
-                                <span class="fw-semibold text-dark">
-                            {{ $employee->commission_card ?? '—' }}
-                        </span>
-                            </div>
-                            <div class="mb-0">
-                                <span class="text-muted d-block">Statut</span>
-                                <span class="badge rounded-pill {{ $employee->status == 1 ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary' }}">
-                            {{ $employee->status == 1 ? 'Actif' : 'Inactif' }}
-                        </span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                {{-- Right column: professional & history --}}
-                <div class="col-lg-8">
-
-                    {{-- Informations professionnelles --}}
-                    <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-header bg-white border-0 d-flex align-items-center">
-                    <span class="badge rounded-pill bg-info bg-opacity-10 text-info me-2">
-                        <i class="bi bi-briefcase-fill"></i>
-                    </span>
-                            <h5 class="mb-0 text-dark">Informations professionnelles</h5>
-                        </div>
-                        <div class="card-body small">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="text-muted mb-1">Date de recrutement</div>
+                            <div class="card-body small pt-3">
+                                <div class="mb-3">
+                                    <div class="text-muted mb-1">Téléphone</div>
                                     <div class="d-flex align-items-center text-dark">
-                                        <i class="bi bi-calendar-check me-2 text-info"></i>
-                                        <span>
-                                    {{ $employee->hiring_date ? \Carbon\Carbon::parse($employee->hiring_date)->format('d/m/Y') : '—' }}
-                                </span>
+                                        <i class="bi bi-telephone me-2 text-success"></i>
+                                        <span class="fw-semibold">{{ $employee->tel ?? '—' }}</span>
                                     </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <div class="text-muted mb-1">Date de départ à la retraite</div>
-                                    <div class="d-flex align-items-center text-dark">
-                                        <i class="bi bi-hourglass-split me-2 text-secondary"></i>
-                                        <span>
-                                    {{ $employee->retiring_date ? \Carbon\Carbon::parse($employee->retiring_date)->format('d/m/Y') : '—' }}
-                                </span>
+                                <div class="mb-3">
+                                    <div class="text-muted mb-1">Email</div>
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-envelope me-2 text-warning"></i>
+                                        @if($employee->email)
+                                            <a href="mailto:{{ $employee->email }}" class="fw-semibold text-decoration-none text-dark">
+                                                {{ $employee->email }}
+                                            </a>
+                                        @else
+                                            <span class="text-dark">—</span>
+                                        @endif
                                     </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <div class="text-muted mb-1">Date de disposition</div>
-                                    <div class="d-flex align-items-center text-dark">
-                                        <i class="bi bi-arrow-left-right me-2 text-warning"></i>
-                                        <span>
-                                    {{ $employee->disposition_date ? \Carbon\Carbon::parse($employee->disposition_date)->format('d/m/Y') : '—' }}
-                                </span>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="text-muted mb-1">Motif de disposition</div>
+                                <div>
+                                    <div class="text-muted mb-1">Adresse</div>
                                     <p class="mb-0 text-dark fw-semibold">
-                                        {{ $employee->disposition_reason ?? '—' }}
+                                        {{ $employee->address ?? '—' }}
+                                        @if($employee->city)
+                                            <br><span class="text-muted">{{ $employee->city }}</span>
+                                        @endif
                                     </p>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    {{-- Historique de réintégration / mouvements --}}
-                    <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-header bg-white border-0 d-flex align-items-center">
-                    <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary me-2">
-                        <i class="bi bi-clock-history"></i>
-                    </span>
-                            <h5 class="mb-0 text-dark">Historique administratif</h5>
-                        </div>
-                        <div class="card-body small">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item px-0 d-flex">
-                                    <div class="me-3 text-secondary">
-                                        <i class="bi bi-arrow-repeat"></i>
-                                    </div>
-                                    <div>
-                                        <div class="text-muted small mb-1">Réintégration</div>
-                                        <div class="fw-semibold text-dark">
-                                            {{ $employee->reintegration_date ? \Carbon\Carbon::parse($employee->reintegration_date)->format('d/m/Y') : '—' }}
-                                        </div>
-                                        <div class="text-muted">
-                                            {{ $employee->reintegration_reason ?? 'Aucun motif renseigné.' }}
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    {{-- Fonction --}}
-                    <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-header bg-white border-0 d-flex align-items-center">
-                    <span class="badge rounded-pill bg-light text-dark me-2">
-                        <i class="bi bi-info-circle-fill"></i>
-                    </span>
-                            <h5 class="mb-0 text-dark">Fonction</h5>
-                        </div>
-                        <div class="card-body small text-muted">
-                            @if (count($employee->works) != 0)
-                                <table class="table">
-                                    @foreach($employee->works as $work)
-                                        @if (is_null($work->terminated_date))
-                                            <tr>
-                                                <td> {{ $work->occupation->title }} </td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-danger">
-                                                        <i class="bi-x"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endif
-                                    @endforeach
-                                </table>
-                            @else
-                                <p class="mb-0">
-                                    Merci de spécifier la fonction
-                                </p>
-                                <button class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#affectOccupationModal">
-                                    <i class="bi bi-plus-circle me-2"></i>
-                                    Affecter fonction
-                                </button>
-                            @endif
-                        </div>
-                    </div>
-
-                    {{-- Competence/ grade --}}
-                    <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-header bg-white border-0 d-flex align-items-center">
-                    <span class="badge rounded-pill bg-light text-dark me-2">
-                        <i class="bi bi-info-circle-fill"></i>
-                    </span>
-                            <h5 class="mb-0 text-dark">Grade</h5>
-                        </div>
-                        <div class="card-body small text-muted">
-                            @if (count($employee->competences) != 0)
-                            <table class="table">
-                                @foreach($employee->competences as $competence)
-                                    <tr>
-                                        <td> {{ $competence->level->title }} </td>
-                                        <td> {{ $competence->grade->title }} </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-danger">
-                                                <i class="bi-x"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </table>
-                            @else
-                                <p class="mb-0">
-                                    Merci de spécifier le grade
-                                </p>
-                                <button class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#affectGradeModal">
-                                    <i class="bi bi-plus-circle me-2"></i>
-                                    Affecter Grade
-                                </button>
-                            @endif
-                        </div>
-                    </div>
-
-                    {{-- Notes / section libre (facultatif) --}}
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white border-0 d-flex align-items-center">
-                            <div class="row col-12">
-                                <div class="col-8">
-                                    <span class="badge rounded-pill bg-light text-dark me-2">
-                                        <i class="bi bi-info-circle-fill"></i>
-                                    </span>
-                                    <h5 class="mb-0 text-dark">Diplômes</h5>
+                        <!-- Affectation actuelle -->
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <div class="d-flex align-items-center">
+                        <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning me-2">
+                            <i class="bi bi-building"></i>
+                        </span>
+                                    <h5 class="mb-0">Affectation actuelle</h5>
                                 </div>
-                                <div class="col-4">
-                                    @if (count($employee->qualifications) != 0)
-                                    <button class="btn btn-primary d-inline-flex align-items-center float-end" data-bs-toggle="modal" data-bs-target="#affectDiplomaModal">
-                                        <i class="bi bi-plus-circle me-2"></i>
-                                        Affecter Diplôme
-                                    </button>
-                                    @endif
+                            </div>
+                            <div class="card-body small pt-3">
+                                <div class="mb-3">
+                                    <span class="text-muted d-block">Local</span>
+                                    <span class="fw-semibold text-dark">
+                            {{ $employee->local->title ?? 'Non affecté' }}
+                        </span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted d-block">Commission / carte</span>
+                                    <span class="fw-semibold text-dark">
+                            {{ $employee->commission_card ?? '—' }}
+                        </span>
+                                </div>
+                                <div>
+                                    <span class="text-muted d-block">Statut</span>
+                                    <span class="badge rounded-pill {{ $employee->status == 1 ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary' }}">
+                            {{ $employee->status == 1 ? 'Actif' : 'Inactif' }}
+                        </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body small text-muted">
-                            @if (count($employee->qualifications) != 0)
-                            <table class="table">
-                                @foreach($employee->qualifications as $qualification)
-                                    <tr>
-                                        <td> {{ $qualification->diploma->title }} </td>
-                                        <td> {{ $qualification->year }} </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-danger">
-                                                <i class="bi-x"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </table>
-                            @else
-                                <p class="mb-0">
-                                    Merci de spécifier le diplôme
-                                </p>
-                                <button class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#affectDiplomaModal">
-                                    <i class="bi bi-plus-circle me-2"></i>
-                                    Affecter Diplôme
-                                </button>
-                            @endif
-                        </div>
+
                     </div>
 
-                </div>
+                    <!-- Right column -->
+                    <div class="col-lg-8 d-flex flex-column gap-4">
+
+                        <!-- Informations professionnelles -->
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <div class="d-flex align-items-center">
+                        <span class="badge rounded-pill bg-info bg-opacity-10 text-info me-2">
+                            <i class="bi bi-briefcase-fill"></i>
+                        </span>
+                                    <h5 class="mb-0">Informations professionnelles</h5>
+                                </div>
+                            </div>
+                            <div class="card-body small pt-3">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="text-muted mb-1">Date de recrutement</div>
+                                        <div class="d-flex align-items-center text-dark">
+                                            <i class="bi bi-calendar-check me-2 text-info"></i>
+                                            <span>
+                                    {{ $employee->hiring_date ? \Carbon\Carbon::parse($employee->hiring_date)->format('d/m/Y') : '—' }}
+                                </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="text-muted mb-1">Date de départ à la retraite</div>
+                                        <div class="d-flex align-items-center text-dark">
+                                            <i class="bi bi-hourglass-split me-2 text-secondary"></i>
+                                            <span>
+                                    {{ $employee->retiring_date ? \Carbon\Carbon::parse($employee->retiring_date)->format('d/m/Y') : '—' }}
+                                </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="text-muted mb-1">Date de disposition</div>
+                                        <div class="d-flex align-items-center text-dark">
+                                            <i class="bi bi-arrow-left-right me-2 text-warning"></i>
+                                            <span>
+                                    {{ $employee->disposition_date ? \Carbon\Carbon::parse($employee->disposition_date)->format('d/m/Y') : '—' }}
+                                </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="text-muted mb-1">Motif de disposition</div>
+                                        <p class="mb-0 text-dark fw-semibold">
+                                            {{ $employee->disposition_reason ?? '—' }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Historique administratif -->
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <div class="d-flex align-items-center">
+                        <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary me-2">
+                            <i class="bi bi-clock-history"></i>
+                        </span>
+                                    <h5 class="mb-0">Historique administratif</h5>
+                                </div>
+                            </div>
+                            <div class="card-body small pt-3">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item px-0 d-flex border-0">
+                                        <div class="me-3 text-secondary">
+                                            <i class="bi bi-arrow-repeat fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted small mb-1">Réintégration</div>
+                                            <div class="fw-semibold text-dark">
+                                                {{ $employee->reintegration_date ? \Carbon\Carbon::parse($employee->reintegration_date)->format('d/m/Y') : '—' }}
+                                            </div>
+                                            <div class="text-muted">
+                                                {{ $employee->reintegration_reason ?? 'Aucun motif renseigné.' }}
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Fonction -->
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <div class="d-flex align-items-center">
+                        <span class="badge rounded-pill bg-light text-dark me-2">
+                            <i class="bi bi-info-circle-fill"></i>
+                        </span>
+                                    <h5 class="mb-0">Fonction</h5>
+                                </div>
+                            </div>
+                            <div class="card-body small text-muted pt-3">
+                                @if (count($employee->works) != 0)
+                                    <div class="table-responsive">
+                                        <table class="table align-middle mb-0">
+                                            <tbody>
+                                            @foreach($employee->works as $work)
+                                                @if (is_null($work->terminated_date))
+                                                    <tr>
+                                                        <td class="fw-semibold text-dark">{{ $work->occupation->title }}</td>
+                                                        <td class="text-end">
+                                                            <button class="btn btn-sm btn-outline-danger">
+                                                                <i class="bi bi-x-lg"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <p class="mb-2">
+                                        Merci de spécifier la fonction
+                                    </p>
+                                    <button class="btn btn-primary btn-sm d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#affectOccupationModal">
+                                        <i class="bi bi-plus-circle me-2"></i>
+                                        Affecter fonction
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Grade -->
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <div class="d-flex align-items-center">
+                        <span class="badge rounded-pill bg-light text-dark me-2">
+                            <i class="bi bi-info-circle-fill"></i>
+                        </span>
+                                    <h5 class="mb-0">Grade</h5>
+                                </div>
+                            </div>
+                            <div class="card-body small text-muted pt-3">
+                                @if (count($employee->competences) != 0)
+                                    <div class="table-responsive">
+                                        <table class="table align-middle mb-0">
+                                            <tbody>
+                                            @foreach($employee->competences as $competence)
+                                                <tr>
+                                                    <td class="fw-semibold text-dark">{{ $competence->level->title }}</td>
+                                                    <td class="fw-semibold text-dark">{{ $competence->grade->title }}</td>
+                                                    <td class="text-end">
+                                                        <button class="btn btn-sm btn-outline-danger">
+                                                            <i class="bi bi-x-lg"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <p class="mb-2">
+                                        Merci de spécifier le grade
+                                    </p>
+                                    <button class="btn btn-primary btn-sm d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#affectGradeModal">
+                                        <i class="bi bi-plus-circle me-2"></i>
+                                        Affecter Grade
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Diplômes -->
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <div class="row align-items-center gx-2">
+                                    <div class="col-8 d-flex align-items-center">
+                            <span class="badge rounded-pill bg-light text-dark me-2">
+                                <i class="bi bi-info-circle-fill"></i>
+                            </span>
+                                        <h5 class="mb-0">Diplômes</h5>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        @if (count($employee->qualifications) != 0)
+                                            <button class="btn btn-primary btn-sm d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#affectDiplomaModal">
+                                                <i class="bi bi-plus-circle me-2"></i>
+                                                Affecter Diplôme
+                                            </button>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body small text-muted pt-3">
+                                @if (count($employee->qualifications) != 0)
+                                    <div class="table-responsive">
+                                        <table class="table align-middle mb-0">
+                                            <tbody>
+                                            @foreach($employee->qualifications as $qualification)
+                                                <tr>
+                                                    <td class="fw-semibold text-dark">{{ $qualification->diploma->title }}</td>
+                                                    <td class="fw-semibold text-dark">{{ $qualification->year }}</td>
+                                                    <td class="text-end">
+                                                        <button class="btn btn-sm btn-outline-danger">
+                                                            <i class="bi bi-x-lg"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <p class="mb-2">
+                                        Merci de spécifier le diplôme
+                                    </p>
+                                    <button class="btn btn-primary btn-sm d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#affectDiplomaModal">
+                                        <i class="bi bi-plus-circle me-2"></i>
+                                        Affecter Diplôme
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
             </div>
+
         </div>
 
     {{-- Affecter Fonction Modal --}}
@@ -407,18 +438,6 @@
 
             .object-fit-cover {
                 object-fit: cover;
-            }
-
-            .bg-pink-soft {
-                background-color: rgba(255, 192, 203, 0.15);
-            }
-
-            .text-pink {
-                color: #d63384;
-            }
-
-            .bg-success-subtle {
-                background-color: rgba(25, 135, 84, 0.12);
             }
 
             .bg-secondary-subtle {

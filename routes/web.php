@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AffectationController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompetenceController;
 use App\Http\Controllers\DiplomaController;
@@ -115,6 +116,7 @@ Route::prefix('employees')->group(function(){
     Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('employees.edit');
     Route::post('/update/{id}', [EmployeeController::class, 'update'])->name('employees.update');
     Route::get('/delete/{id}', [EmployeeController::class, 'delete'])->name('employees.delete');
+    Route::get('/unities/{id}', [EmployeeController::class, 'unities'])->name('employees.unities');
 });
 
 Route::prefix('settings')->group(function (){
@@ -165,6 +167,13 @@ Route::prefix('competences')->group(function(){
     Route::post('/store', [CompetenceController::class, 'store'])->name('competences.store');
     Route::get('/{id}', [CompetenceController::class, 'show'])->name('competences.show');
     Route::get('/delete/{id}', [CompetenceController::class, 'delete'])->name('competences.delete');
+});
+
+Route::prefix('affectations')->group(function(){
+    Route::get('/', [AffectationController::class, 'index'])->name('affectations.index');
+    Route::post('/store', [AffectationController::class, 'store'])->name('affectations.store');
+    Route::get('/{id}', [AffectationController::class, 'show'])->name('affectations.show');
+    Route::get('/delete/{id}', [AffectationController::class, 'delete'])->name('affectations.delete');
 });
 
 Route::middleware('auth')->group(function () {
