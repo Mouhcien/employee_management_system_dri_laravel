@@ -59,4 +59,8 @@ class Employee extends Model
         return $this->hasMany(Affectation::class);
     }
 
+    public function local()
+    {
+        return $this->belongsTo(Local::class);
+    }
 }

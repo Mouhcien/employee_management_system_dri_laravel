@@ -103,11 +103,12 @@ class EmployeeController extends Controller
         }
 
         $template = 'app.employees.index';
+        /*
         if ($request->has('opt')) {
             $opt = $request->query('opt');
             if ($opt == 'cards')
                 $template = 'app.employees.cards';
-        }
+        }*/
 
         return view($template, [
             'locals' => $locals,
