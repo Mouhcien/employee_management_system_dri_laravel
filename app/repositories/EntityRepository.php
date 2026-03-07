@@ -7,10 +7,11 @@ use App\Models\Entity;
 class EntityRepository extends MainRepository
 {
 
-    public function getAllEntityByService($service_id) {
-        return Entity::with('type', 'sectors', 'sections', 'affectations', 'service')
+    public function AllByService($service_id, $pages) {
+        $query = Entity::with(['type', 'sectors', 'sections', 'affectations', 'service'])
             ->where('service_id', '=', $service_id)
-            ->get();
+            ->orderBy('title', 'ASC');
 
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
 }

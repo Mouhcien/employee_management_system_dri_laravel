@@ -22,6 +22,10 @@ class SectorEntityService
         return $this->sectorEntityRepository->All(Sector::class, ['entity', 'affectations'], $pages);
     }
 
+    public function getAllByEntity($entity_id, $pages=0){
+        return $this->sectorEntityRepository->AllByByEntity($entity_id, $pages);
+    }
+
     public function getOneById($id){
         return $this->sectorEntityRepository->One(Sector::class, ['entity', 'affectations'], $id);
     }

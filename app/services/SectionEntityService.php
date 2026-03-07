@@ -21,6 +21,10 @@ class SectionEntityService
         return $this->sectionEntityRepository->All(Section::class, ['entity', 'affectations'], $pages);
     }
 
+    public function getAllByEntity($entity_id, $pages=0){
+        return $this->sectionEntityRepository->getAllByEntity($entity_id, $pages);
+    }
+
     public function getOneById($id){
         return $this->sectionEntityRepository->One(Section::class, ['entity', 'affectations'], $id);
     }

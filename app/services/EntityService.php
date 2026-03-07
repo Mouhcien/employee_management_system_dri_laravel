@@ -21,6 +21,10 @@ class EntityService
         return $this->entityRepository->All(Entity::class, ['type', 'sectors', 'sections', 'affectations', 'service'], $pages);
     }
 
+    public function getAllByService($service_id, $pages=0){
+        return $this->entityRepository->AllByService($service_id, $pages);
+    }
+
     public function getOneById($id){
         return $this->entityRepository->One(Entity::class, ['type', 'sectors', 'sections', 'affectations', 'service'], $id);
     }
@@ -61,7 +65,4 @@ class EntityService
         return $this->entityRepository->LatestInserted(Entity::class);
     }
 
-    public function getAllEntityByService($service_id){
-        return $this->entityRepository->getAllEntityByService($service_id);
-    }
 }

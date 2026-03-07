@@ -13,6 +13,32 @@ $(function() {
         window.location.href = '/sections/'+option+'/'+id+'?srv='+srv;
     });
 
+    $("#sl_aff_service_id").on('change', function () {
+        const srv = $(this).val();
+        const option = $(this).attr('opt');
+        const employee_id = $(this).attr('employee_id');
+
+        if (option == 'edit'){
+            const affectation_id = $(this).attr('affectation_id');
+            window.location.href = '/affectations/'+option+'/'+employee_id+'/'+affectation_id+'/?srv='+srv;
+        }else
+            window.location.href = '/employees/unities/'+employee_id+'?srv='+srv;
+    });
+
+    $("#sl_aff_entity_id").on('change', function () {
+        const srv = $("#sl_aff_service_id").val();
+        const ent = $(this).val();
+        const option = $(this).attr('opt');
+        const employee_id = $(this).attr('employee_id');
+
+        if (option == 'edit'){
+            const affectation_id = $(this).attr('affectation_id');
+            window.location.href = '/affectations/'+option+'/'+employee_id+'/'+affectation_id+'/?srv='+srv+'&ent='+ent;
+        }else
+            window.location.href = '/employees/unities/'+employee_id+'?srv='+srv+'&ent='+ent;
+    });
+
+
     /*
 
     $("#sl_entity_id").on('change', function () {

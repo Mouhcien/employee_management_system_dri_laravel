@@ -8,6 +8,7 @@ use App\Repositories\EmployeeRepository;
 class EmployeeService
 {
     private EmployeeRepository $employeeRepository;
+    private $with = ['works', 'qualifications', 'competences', 'remunerations', 'chefs', 'affectations'];
 
     public function __construct(
         EmployeeRepository $employeeRepository
@@ -17,9 +18,7 @@ class EmployeeService
 
     public function getAll(int $pages = 0)
     {
-        $with = ['works', 'qualifications', 'competences', 'remunerations', 'chefs', 'affectations'];
-
-        return $this->employeeRepository->all(Employee::class, $with, $pages);
+        return $this->employeeRepository->all(Employee::class, $this->with, $pages);
     }
 
     public function getAllByFilter($filter, $pages = 0)
@@ -29,9 +28,7 @@ class EmployeeService
 
     public function getOneById(int $id): ?Employee
     {
-        $with = ['works', 'qualifications', 'competences', 'remunerations', 'chefs', 'affectations'];
-
-        return $this->employeeRepository->one(Employee::class, $with, $id);
+        return $this->employeeRepository->one(Employee::class, $this->with, $id);
     }
 
     public function create(array $data): ?bool

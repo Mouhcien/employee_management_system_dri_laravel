@@ -48,23 +48,26 @@ class AffectationService
         if (is_null($obj))
             return null;
 
-        if (isset($data['service_id']))
-            $obj->service_id = $data['service_id'];
+        $obj->service_id = $data['service_id'];
 
-        if (isset($data['entity_id']))
+        if ($data['entity_id'] == 'null')
+            $obj->entity_id = null;
+        else
             $obj->entity_id = $data['entity_id'];
 
-        if (isset($data['sector_id']))
+        if ($data['sector_id'] == 'null')
+            $obj->sector_id = null;
+        else
             $obj->sector_id = $data['sector_id'];
 
-        if (isset($data['section_id']))
+        if ($data['section_id'] == 'null')
+            $obj->section_id = null;
+        else
             $obj->section_id = $data['section_id'];
 
-        if (isset($data['employee_id']))
-            $obj->employee_id = $data['employee_id'];
+        $obj->employee_id = $data['employee_id'];
 
-        if (isset($data['affectation_date']))
-            $obj->affectation_date = $data['affectation_date'];
+        $obj->affectation_date = $data['affectation_date'];
 
         return $this->affectationRepository->Update($obj);
     }

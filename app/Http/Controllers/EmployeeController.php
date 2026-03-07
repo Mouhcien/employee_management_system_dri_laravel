@@ -254,16 +254,30 @@ class EmployeeController extends Controller
         }
     }
 
-    public function unities($id){
+    public function unities(Request $request, $id){
         try {
             $employee = $this->employeeService->getOneById($id);
+            if (is_null($employee)) {
+                return back()->with('error', 'Employé introuvable');
+            }
+
             $services = $this->serviceEntityService->getAll(0);
             $entities = $this->entityService->getAll(0);
             $sectors = $this->sectorEntityService->getAll(0);
             $sections = $this->sectionEntityService->getAll(0);
 
-            if (is_null($employee)) {
-                return back()->with('error', 'Employé introuvable');
+            $service_id = null;
+            $entity_id = null;
+
+            if ($request->has('srv')) {
+                $service_id = $request->query('srv');
+                $entities = $this->entityService->getAllByService($service_id, 0);
+            }
+
+            if ($request->has('ent')) {
+                $entity_id = $request->query('ent');
+                $sectors = $this->sectorEntityService->getAllByEntity($entity_id, 0);
+                $sections = $this->sectionEntityService->getAllByEntity($entity_id, 0);
             }
 
             return view('app.employees.unities', [
@@ -271,11 +285,16 @@ class EmployeeController extends Controller
                 'services' => $services,
                 'entities' => $entities,
                 'sectors' => $sectors,
-                'sections' => $sections
+                'sections' => $sections,
+                'affectationObj' => null,
+                'service_id' => $service_id,
+                'entity_id' => $entity_id
             ]);
 
         }catch (\Exception $exception) {
-
+            dd($exception->getMessage());
         }
     }
+
+
 }

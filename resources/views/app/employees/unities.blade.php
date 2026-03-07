@@ -65,9 +65,31 @@
                     <div class="card-header border-0 bg-primary bg-gradient text-white fw-semibold">
                         <i class="bi bi-diagram-3-fill me-2"></i>
                         L'affectation actuelle
+                        @php
+                            $affectation_id = null;
+                            if(count($employee->affectations)) {
+                                foreach($employee->affectations as $affectation) {
+                                    if ($affectation->state == 1) {
+                                        $affectation_id = $affectation->id;
+                                    }
+                                }
+                            }
+                        @endphp
+
+                        @if (count($employee->affectations) != 0)
+                            @if (is_null($affectationObj))
+                                <a href="{{ route('affectations.edit', ['employee_id' => $employee->id, 'affectation_id' => $affectation_id]) }}"
+                                   class="text-warning float-end" >
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            @else
+                                <a href="{{ route('employees.unities', $employee->id) }}" class="text-white float-end" ><i class="bi bi-arrow-left me-1"></i></a>
+                            @endif
+                        @endif
+
                     </div>
                     <div class="card-body">
-                        @if(count($employee->affectations))
+                        @if(count($employee->affectations) != 0)
                             @foreach($employee->affectations as $affectation)
                                 @if ($affectation->state == 1)
                                     <div class="mb-2 small">
@@ -127,60 +149,109 @@
             <!-- Nouvelle affectation -->
             <div class="col-12 col-lg-6">
                 <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-header border-0 bg-success bg-gradient text-white fw-semibold">
+                    <div class="card-header border-0 {{ is_null($affectationObj) ? 'bg-success' : 'bg-warning' }} bg-gradient text-white fw-semibold">
                         <i class="bi bi-diagram-3-fill me-2"></i>
-                        Nouvelle Affectation pour {{ $employee->firstname }} {{ $employee->lastname }}
+                        @if (is_null($affectationObj))
+                            Nouvelle Affectation pour {{ $employee->firstname }} {{ $employee->lastname }}
+                        @else
+                            Modifier l'affectation pour {{ $employee->firstname }} {{ $employee->lastname }}
+                        @endif
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('affectations.store') }}" method="POST">
+                        <form action="{{ is_null($affectationObj) ? route('affectations.store') : route('affectations.update', $affectationObj->id)}}" method="POST">
                             @csrf
 
                             <div class="row g-3">
                                 <div class="col-12">
                                     <label class="form-label fw-semibold small text-muted">Service</label>
-                                    <select class="form-select form-select-sm" name="service_id">
-                                        <option value="null">Séléctionnez le service</option>
-                                        @foreach($services as $service)
-                                            <option value="{{ $service->id }}"> {{ $service->title }} </option>
-                                        @endforeach
-                                    </select>
+                                    @if (is_null($affectationObj))
+                                        <select class="form-select form-select-sm" name="service_id" id="sl_aff_service_id" opt="create" employee_id="{{ $employee->id }}">
+                                            <option value="null">Séléctionnez le service</option>
+                                            @foreach($services as $service)
+                                                <option value="{{ $service->id }}" {{ $service_id == $service->id ? 'selected' : '' }}> {{ $service->title }} </option>
+                                            @endforeach
+                                        </select>
+                                    @else
+                                        <select class="form-select form-select-sm" name="service_id" id="sl_aff_service_id" opt="edit" employee_id="{{ $employee->id }}" affectation_id="{{ $affectationObj->id }}">
+                                            <option value="null">Séléctionnez le service</option>
+                                            @foreach($services as $service)
+                                                @if (is_null($service_id))
+                                                    <option value="{{ $service->id }}" {{ $affectationObj->service_id == $service->id ? 'selected' : '' }}> {{ $service->id }} - {{ $service->title }} </option>
+                                                @else
+                                                    <option value="{{ $service->id }}" {{ $service_id == $service->id ? 'selected' : '' }}> {{ $service->id }} - {{ $service->title }} </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    @endif
                                 </div>
 
                                 <div class="col-12">
                                     <label class="form-label fw-semibold small text-muted">Entité</label>
-                                    <select class="form-select form-select-sm" name="entity_id">
-                                        <option value="null">Séléctionnez l'entité</option>
+                                    @if (is_null($affectationObj))
+                                    <select class="form-select form-select-sm"  name="entity_id" id="sl_aff_entity_id" opt="create" employee_id="{{ $employee->id }}" >
+                                        <option value=null>Séléctionnez l'entité</option>
                                         @foreach($entities as $entity)
-                                            <option value="{{ $entity->id }}"> {{ $entity->title }} </option>
+                                            <option value="{{ $entity->id }}" {{ $entity_id == $entity->id ? 'selected' : '' }}> {{ $entity->title }} </option>
                                         @endforeach
                                     </select>
+                                    @else
+                                        <select class="form-select form-select-sm" name="entity_id" id="sl_aff_entity_id" opt="edit" employee_id="{{ $employee->id }}" affectation_id="{{ $affectationObj->id }}">
+                                            <option value=null>Séléctionnez l'entité</option>
+                                            @foreach($entities as $entity)
+                                                @if (is_null($entity_id))
+                                                    <option value="{{ $entity->id }}" {{ $affectationObj->entity_id == $entity->id ? 'selected' : '' }}> {{ $entity->title }} </option>
+                                                @else
+                                                    <option value="{{ $entity->id }}" {{ $entity_id == $entity->id ? 'selected' : '' }}> {{ $entity->title }} </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    @endif
                                 </div>
 
                                 <div class="col-12">
                                     <label class="form-label fw-semibold small text-muted">Secteur</label>
+                                    @if (is_null($affectationObj))
                                     <select class="form-select form-select-sm" name="sector_id">
                                         <option value="null">Séléctionnez le secteur</option>
                                         @foreach($sectors as $sector)
                                             <option value="{{ $sector->id }}"> {{ $sector->title }} </option>
                                         @endforeach
                                     </select>
+                                    @else
+                                    <select class="form-select form-select-sm" name="sector_id">
+                                        <option value="null">Séléctionnez le secteur</option>
+                                        @foreach($sectors as $sector)
+                                            <option value="{{ $sector->id }}" {{ $affectationObj->sector_id == $sector->id ? 'selected' : '' }}> {{ $sector->title }} </option>
+                                        @endforeach
+                                    </select>
+                                    @endif
                                 </div>
 
                                 <div class="col-12">
                                     <label class="form-label fw-semibold small text-muted">Section</label>
+                                    @if (is_null($affectationObj))
                                     <select class="form-select form-select-sm" name="section_id">
-                                        <option value="null">Séléctionnez la section</option>
+                                        <option value=null>Séléctionnez la section</option>
                                         @foreach($sections as $section)
                                             <option value="{{ $section->id }}"> {{ $section->title }} </option>
                                         @endforeach
                                     </select>
+                                    @else
+                                    <select class="form-select form-select-sm" name="section_id">
+                                        <option value=null>Séléctionnez la section</option>
+                                        @foreach($sections as $section)
+                                            <option value="{{ $section->id }}" {{ $affectationObj->section_id == $section->id ? 'selected' : '' }}> {{ $section->title }} </option>
+                                        @endforeach
+                                    </select>
+                                    @endif
                                 </div>
 
                                 <div class="col-12">
                                     <label class="form-label fw-semibold small text-muted">Date d'affectation</label>
                                     <x-date-input id="affectation_date"
                                                   name="affectation_date"
-                                                  value="" />
+                                                  value="{{ is_null($affectationObj) ? '' : $affectationObj->affectation_date }}"
+                                                  required="required"/>
                                 </div>
 
                                 <input type="hidden" name="employee_id" value="{{ $employee->id }}">
@@ -188,8 +259,8 @@
                                 <div class="col-12">
                                     <hr class="mt-3 mb-3">
                                     <div class="d-flex justify-content-end">
-                                        <button type="submit" class="btn btn-sm btn-success d-inline-flex align-items-center">
-                                            <i class="bi bi-save me-2"></i> Enregistrer
+                                        <button type="submit" class="btn btn-sm {{ is_null($affectationObj) ? 'btn-success' : 'btn-warning' }} d-inline-flex align-items-center">
+                                            <i class="bi bi-save me-2"></i> {{ is_null($affectationObj) ? 'Enregistrer' : 'Mettre à jour' }}
                                         </button>
                                     </div>
                                 </div>

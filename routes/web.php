@@ -173,6 +173,8 @@ Route::prefix('affectations')->group(function(){
     Route::get('/', [AffectationController::class, 'index'])->name('affectations.index');
     Route::post('/store', [AffectationController::class, 'store'])->name('affectations.store');
     Route::get('/{id}', [AffectationController::class, 'show'])->name('affectations.show');
+    Route::get('/edit/{employee_id}/{affectation_id}', [AffectationController::class, 'edit'])->name('affectations.edit');
+    Route::post('/update/{id}', [AffectationController::class, 'update'])->name('affectations.update');
     Route::get('/delete/{id}', [AffectationController::class, 'delete'])->name('affectations.delete');
 });
 

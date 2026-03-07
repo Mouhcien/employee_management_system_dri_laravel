@@ -1,4 +1,4 @@
-@props(['label', 'name', 'id', 'value'=>''])
+@props(['label', 'name', 'id', 'value'=>'', 'required' => ''])
 
     <input
         type="date"
@@ -6,5 +6,6 @@
         id="{{$id}}"
         name="{{$name}}"
         value="{{$value}}"
+        {{ $required }}
     />
 
