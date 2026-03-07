@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
+    public const STATUS_ACTIVE = 1;
+
     protected $fillable = [
         'ppr',
         'cin',
@@ -27,27 +29,33 @@ class Employee extends Model
         'status'
     ];
 
-    public function works() {
+    public function works()
+    {
         return $this->hasMany(Work::class);
     }
 
-    public function qualifications() {
+    public function qualifications()
+    {
         return $this->hasMany(Qualification::class);
     }
 
-    public function competences() {
+    public function competences()
+    {
         return $this->hasMany(Competence::class);
     }
 
-    public function remunerations() {
+    public function remunerations()
+    {
         return $this->hasMany(Remuneration::class);
     }
 
-    public function chefs() {
+    public function chefs()
+    {
         return $this->hasMany(Qualification::class);
     }
 
-    public function affectations() {
+    public function affectations()
+    {
         return $this->hasMany(Affectation::class);
     }
 

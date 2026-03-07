@@ -7,6 +7,9 @@ use App\services\SectionEntityService;
 use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Requests\StoreSectionRequest;
+use App\Http\Requests\UpdateSectionRequest;
 
 class SectionController extends Controller
 {
@@ -15,28 +18,26 @@ class SectionController extends Controller
     private EntityService $entityService;
     private SectorEntityService $sectorEntityService;
     private $pages = 10;
-    private $rules = [
-        'title' => 'required',
-        'entity_id' => 'required'
-    ];
 
     /**
      * @param SectionEntityService $sectionEntityService
      * @param ServiceEntityService $serviceEntityService
      * @param EntityService $entityService
      */
-    public function __construct(SectionEntityService $sectionEntityService,
-                                ServiceEntityService $serviceEntityService,
-                                EntityService $entityService,
-                                SectorEntityService $sectorEntityService)
-    {
+    public function __construct(
+        SectionEntityService $sectionEntityService,
+        ServiceEntityService $serviceEntityService,
+        EntityService $entityService,
+        SectorEntityService $sectorEntityService
+    ) {
         $this->sectionEntityService = $sectionEntityService;
         $this->serviceEntityService = $serviceEntityService;
         $this->entityService = $entityService;
         $this->sectorEntityService = $sectorEntityService;
     }
 
-    public function index() {
+    public function index()
+    {
         try {
 
             $services = $this->serviceEntityService->getAll(0);
@@ -44,7 +45,7 @@ class SectionController extends Controller
             $sectors = $this->sectorEntityService->getAll(0);
             $sections = $this->sectionEntityService->getAll($this->pages);
 
-            return view('app.unities.sections.index',[
+            return view('app.unities.sections.index', [
                 'services' => $services,
                 'entities' => $entities,
                 'sections' => $sections,
@@ -53,12 +54,14 @@ class SectionController extends Controller
                 'total_sector' => $sectors->count()
             ]);
 
-        }catch (\Exception $exception){
-            dd($exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error('Error in SectionController@index: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors du chargement des sections.');
         }
     }
 
-    public function create(Request $request) {
+    public function create(Request $request)
+    {
         try {
 
             $services = $this->serviceEntityService->getAll(0);
@@ -70,36 +73,39 @@ class SectionController extends Controller
                 $entities = $this->entityService->getAllEntityByService($service_id);
             }
 
-            return view('app.unities.sections.insert',[
+            return view('app.unities.sections.insert', [
                 'services' => $services,
                 'entities' => $entities,
                 'service_id' => $service_id
             ]);
 
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error('Error in SectionController@create: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors de l\'ouverture du formulaire.');
         }
     }
 
-    public function store(Request $request) {
+    public function store(StoreSectionRequest $request)
+    {
         try {
-
-            $data = $request->validate($this->rules);
+            $data = $request->validated();
 
             $result = $this->sectionEntityService->create($data);
 
             if ($result) {
                 return redirect()->route('sections.index')->with('success', 'Section est bien enregistré !!');
-            }else{
+            } else {
                 return back()->with('error', 'Erreur insertion secteur');
             }
 
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error('Error in SectionController@store: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors de l\'enregistrement.');
         }
     }
 
-    public function edit(Request $request, $id) {
+    public function edit(Request $request, $id)
+    {
         try {
 
             $services = $this->serviceEntityService->getAll(0);
@@ -116,42 +122,45 @@ class SectionController extends Controller
                 return back()->with('error', 'Section introuvable !!');
             }
 
-            return view('app.unities.sections.insert',[
+            return view('app.unities.sections.insert', [
                 'section' => $section,
                 'services' => $services,
                 'entities' => $entities,
                 'service_id' => $service_id
             ]);
 
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error('Error in SectionController@edit: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue.');
         }
     }
 
-    public function update(Request $request, $id) {
+    public function update(UpdateSectionRequest $request, $id)
+    {
         try {
-
             $section = $this->sectionEntityService->getOneById($id);
 
             if (is_null($section)) {
                 return back()->with('error', 'Section introuvable !!');
             }
 
-            $data = $request->validate($this->rules);
+            $data = $request->validated();
             $result = $this->sectionEntityService->update($id, $data);
 
             if ($result) {
                 return redirect()->route('sections.index')->with('success', 'Section est bien modifié !!');
-            }else{
+            } else {
                 return back()->with('error', 'Erreur modification secteur');
             }
 
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error('Error in SectionController@update: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors de la modification.');
         }
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         try {
 
             $section = $this->sectionEntityService->getOneById($id);
@@ -164,12 +173,13 @@ class SectionController extends Controller
 
             if ($result) {
                 return redirect()->route('sections.index')->with('success', 'Section est bien supprimé !!');
-            }else{
+            } else {
                 return back()->with('error', 'Erreur suppression secteur');
             }
 
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error('Error in SectionController@delete: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors de la suppression.');
         }
     }
 }

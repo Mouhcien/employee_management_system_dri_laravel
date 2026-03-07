@@ -15,6 +15,10 @@ use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use App\Http\Requests\StoreEmployeeRequest;
+use App\Http\Requests\UpdateEmployeeRequest;
+use App\Models\Employee;
 
 class EmployeeController extends Controller
 {
@@ -30,32 +34,25 @@ class EmployeeController extends Controller
     private SectionEntityService $sectionEntityService;
     private SectorEntityService $sectorEntityService;
     private $pages = 10;
-    private $rules = [
-        'ppr' => 'required',
-        'cin' => 'required',
-        'firstname' => 'required',
-        'lastname' => 'required',
-        'local_id' => 'required'
-    ];
 
     /**
      * @param EmployeeService $employeeService
      * @param LocalService $localService
      * @param CityService $cityService
      */
-    public function __construct(EmployeeService $employeeService,
-                                LocalService $localService,
-                                CityService $cityService,
-                                OccupationService $occupationService,
-                                DiplomaService $diplomaService,
-                                GradeService $gradeService,
-                                LevelService $levelService,
-                                ServiceEntityService $serviceEntityService,
-                                EntityService $entityService,
-                                SectionEntityService $sectionEntityService,
-                                SectorEntityService $sectorEntityService
-    )
-    {
+    public function __construct(
+        EmployeeService $employeeService,
+        LocalService $localService,
+        CityService $cityService,
+        OccupationService $occupationService,
+        DiplomaService $diplomaService,
+        GradeService $gradeService,
+        LevelService $levelService,
+        ServiceEntityService $serviceEntityService,
+        EntityService $entityService,
+        SectionEntityService $sectionEntityService,
+        SectorEntityService $sectorEntityService
+    ) {
         $this->employeeService = $employeeService;
         $this->localService = $localService;
         $this->cityService = $cityService;
@@ -70,7 +67,8 @@ class EmployeeController extends Controller
     }
 
 
-    public function index() {
+    public function index()
+    {
 
         $locals = $this->localService->getAll(0);
         $employees = $this->employeeService->getAll($this->pages);
@@ -87,7 +85,8 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function create(){
+    public function create()
+    {
         try {
             $locals = $this->localService->getAll(0);
 
@@ -95,15 +94,16 @@ class EmployeeController extends Controller
                 'locals' => $locals
             ]);
 
-        }catch (\Exception $exception) {
-
+        } catch (\Exception $exception) {
+            Log::error('Error in EmployeeController@create: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors de la création.');
         }
     }
 
-    public function store(Request $request){
+    public function store(StoreEmployeeRequest $request)
+    {
         try {
-
-            $data = $request->validate($this->rules);
+            $data = $request->validated();
 
             $data['firstname_arab'] = $request->input('firstname_arab');
             $data['lastname_arab'] = $request->input('lastname_arab');
@@ -116,7 +116,7 @@ class EmployeeController extends Controller
             $data['tel'] = $request->input('tel');
             $data['city'] = $request->input('city');
             $data['email'] = $request->input('email');
-            $data['status'] = 1; //actif
+            $data['status'] = Employee::STATUS_ACTIVE;
 
             $data['photo'] = null;
             if ($request->hasFile('photo')) {
@@ -136,13 +136,14 @@ class EmployeeController extends Controller
 
             return back()->with('error', 'Erreur insertion employé');
 
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error('Error in EmployeeController@store: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors de l\'enregistrement de l\'employé.');
         }
     }
 
-    public function edit($id){
+    public function edit($id)
+    {
         try {
             $locals = $this->localService->getAll(0);
             $employee = $this->employeeService->getOneById($id);
@@ -155,20 +156,21 @@ class EmployeeController extends Controller
                 'employee' => $employee
             ]);
 
-        }catch (\Exception $exception) {
-
+        } catch (\Exception $exception) {
+            Log::error('Error in EmployeeController@edit: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue.');
         }
     }
 
-    public function update(Request $request, $id){
+    public function update(UpdateEmployeeRequest $request, $id)
+    {
         try {
-
             $employee = $this->employeeService->getOneById($id);
             if (is_null($employee)) {
                 return back()->with('error', 'Employé introuvable');
             }
 
-            $data = $request->validate($this->rules);
+            $data = $request->validated();
 
             $data['firstname_arab'] = $request->input('firstname_arab');
             $data['lastname_arab'] = $request->input('lastname_arab');
@@ -182,10 +184,13 @@ class EmployeeController extends Controller
             $data['city'] = $request->input('city');
             $data['email'] = $request->input('email');
 
-
             if ($request->hasFile('photo')) {
-                $file = $request->file('photo');
+                // Delete old photo if exists
+                if (!is_null($employee->photo) && Storage::disk('public')->exists($employee->photo)) {
+                    Storage::disk('public')->delete($employee->photo);
+                }
 
+                $file = $request->file('photo');
                 $filename = time() . '_' . $data['lastname'] . '_' . $data['firstname'] . '-' . uniqid() . '.' . $file->extension();
                 $path = $file->storeAs('photos/employees', $filename, 'public');
 
@@ -200,13 +205,14 @@ class EmployeeController extends Controller
 
             return back()->with('error', 'Erreur insertion employé');
 
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error('Error in EmployeeController@update: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors de la modification de l\'employé.');
         }
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         try {
             $employee = $this->employeeService->getOneById($id);
             if (is_null($employee)) {
@@ -224,12 +230,14 @@ class EmployeeController extends Controller
 
             return back()->with('error', 'Erreur suppression employé');
 
-        }catch (\Exception $exception) {
-
+        } catch (\Exception $exception) {
+            Log::error('Error in EmployeeController@delete: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors de la suppression.');
         }
     }
 
-    public function show($id){
+    public function show($id)
+    {
         try {
             $employee = $this->employeeService->getOneById($id);
             $occupations = $this->occupationService->getAll(0);
@@ -249,12 +257,14 @@ class EmployeeController extends Controller
                 'levels' => $levels,
             ]);
 
-        }catch (\Exception $exception) {
-
+        } catch (\Exception $exception) {
+            Log::error('Error in EmployeeController@show: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue.');
         }
     }
 
-    public function unities(Request $request, $id){
+    public function unities(Request $request, $id)
+    {
         try {
             $employee = $this->employeeService->getOneById($id);
             if (is_null($employee)) {
@@ -291,8 +301,9 @@ class EmployeeController extends Controller
                 'entity_id' => $entity_id
             ]);
 
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error('Error in EmployeeController@unities: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue.');
         }
     }
 

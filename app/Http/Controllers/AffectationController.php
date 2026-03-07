@@ -9,6 +9,9 @@ use App\services\SectionEntityService;
 use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Requests\StoreAffectationRequest;
+use App\Http\Requests\UpdateAffectationRequest;
 
 class AffectationController extends Controller
 {
@@ -19,25 +22,17 @@ class AffectationController extends Controller
     private SectionEntityService $sectionEntityService;
     private EmployeeService $employeeService;
 
-    private $rules = [
-        'employee_id' => 'required',
-        'service_id' => 'required',
-        'entity_id' => 'required',
-        'sector_id' => 'required',
-        'section_id' => 'required',
-        'affectation_date' => 'required',
-    ];
-
     /**
      * @param AffectationService $affectationService
      */
-    public function __construct(AffectationService $affectationService,
-                                ServiceEntityService $serviceEntityService,
-                                EntityService $entityService,
-                                SectorEntityService $sectorEntityService,
-                                SectionEntityService $sectionEntityService,
-                                EmployeeService $employeeService)
-    {
+    public function __construct(
+        AffectationService $affectationService,
+        ServiceEntityService $serviceEntityService,
+        EntityService $entityService,
+        SectorEntityService $sectorEntityService,
+        SectionEntityService $sectionEntityService,
+        EmployeeService $employeeService
+    ) {
         $this->affectationService = $affectationService;
         $this->serviceEntityService = $serviceEntityService;
         $this->entityService = $entityService;
@@ -46,10 +41,10 @@ class AffectationController extends Controller
         $this->employeeService = $employeeService;
     }
 
-    public function store(Request $request) {
+    public function store(StoreAffectationRequest $request)
+    {
         try {
-
-            $data = $request->validate($this->rules);
+            $data = $request->validated();
 
             $result = $this->affectationService->create($data);
 
@@ -59,12 +54,14 @@ class AffectationController extends Controller
 
             return back()->with('error', 'Erreur insertion Affectation');
 
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error('Error in AffectationController@store: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors de l\'enregistrement de l\'affectation.');
         }
     }
 
-    public function edit(Request $request, $employee_id, $affectation_id){
+    public function edit(Request $request, $employee_id, $affectation_id)
+    {
         try {
             $employee = $this->employeeService->getOneById($employee_id);
             if (is_null($employee)) {
@@ -106,15 +103,16 @@ class AffectationController extends Controller
                 'entity_id' => $entity_id
             ]);
 
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error('Error in AffectationController@edit: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors de l\'édition.');
         }
     }
 
-    public function update(Request $request, $id) {
+    public function update(UpdateAffectationRequest $request, $id)
+    {
         try {
-
-            $data = $request->validate($this->rules);
+            $data = $request->validated();
 
             $result = $this->affectationService->update($id, $data);
 
@@ -124,8 +122,9 @@ class AffectationController extends Controller
 
             return back()->with('error', 'Erreur modification Affectation');
 
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error('Error in AffectationController@update: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue lors de la modification.');
         }
     }
 }

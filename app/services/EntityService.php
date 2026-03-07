@@ -17,19 +17,28 @@ class EntityService
         $this->entityRepository = $entityRepository;
     }
 
-    public function getAll($pages=0){
+    public function getAll($pages = 0)
+    {
         return $this->entityRepository->All(Entity::class, ['type', 'sectors', 'sections', 'affectations', 'service'], $pages);
     }
 
-    public function getAllByService($service_id, $pages=0){
+    public function getAllByService($service_id, $pages = 0)
+    {
         return $this->entityRepository->AllByService($service_id, $pages);
     }
 
-    public function getOneById($id){
+    public function getAllEntityByService($service_id, $pages = 0)
+    {
+        return $this->getAllByService($service_id, $pages);
+    }
+
+    public function getOneById($id)
+    {
         return $this->entityRepository->One(Entity::class, ['type', 'sectors', 'sections', 'affectations', 'service'], $id);
     }
 
-    public function create($data){
+    public function create($data)
+    {
         $obj = new Entity();
 
         $obj->title = $data['title'];
@@ -39,7 +48,8 @@ class EntityService
         return $this->entityRepository->Add($obj);
     }
 
-    public function update($id, $data){
+    public function update($id, $data)
+    {
         $obj = $this->getOneById($id);
         if (is_null($obj))
             return null;
@@ -53,7 +63,8 @@ class EntityService
 
         return $this->entityRepository->Update($obj);
     }
-    public function delete($id){
+    public function delete($id)
+    {
         $obj = $this->getOneById($id);
         if (is_null($obj))
             return null;
@@ -61,7 +72,8 @@ class EntityService
         return $this->entityRepository->Delete($obj);
     }
 
-    public function getLatestInserted(){
+    public function getLatestInserted()
+    {
         return $this->entityRepository->LatestInserted(Entity::class);
     }
 
