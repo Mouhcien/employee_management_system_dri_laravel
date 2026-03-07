@@ -26,6 +26,16 @@ class EmployeeService
         return $this->employeeRepository->allByFilter($filter, $pages);
     }
 
+    public function getAllByFilterValue($val, $pages = 0)
+    {
+        return $this->employeeRepository->allByFilterValue($val, $pages);
+    }
+
+    public function getAllByFilterAdvanced($filter, $pages = 0)
+    {
+        return $this->employeeRepository->allByFilterAdvanced($filter, $pages);
+    }
+
     public function getOneById(int $id): ?Employee
     {
         return $this->employeeRepository->one(Employee::class, $this->with, $id);

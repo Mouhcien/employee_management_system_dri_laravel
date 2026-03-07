@@ -67,8 +67,10 @@ class EmployeeController extends Controller
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->has('opt'))
+            $this->pages = 12;
 
         $locals = $this->localService->getAll(0);
         $employees = $this->employeeService->getAll($this->pages);
@@ -76,12 +78,47 @@ class EmployeeController extends Controller
         $female_employees = $this->employeeService->getAllByFilter(['col' => 'gender', 'val' => 'F'], 0);
         $cities = $this->cityService->getAll(0);
 
-        return view('app.employees.index', [
+        $local_id = null;
+        $city_id = null;
+        $filter = null;
+
+        if ($request->has('ct')) {
+            $city_id = $request->query('ct');
+            $filter['city_id'] = $city_id;
+            $locals = $this->localService->getAllByCity($city_id);
+        }
+
+        if ($request->has('lc')) {
+            $local_id = $request->query('lc');
+            $filter['local_id'] = $local_id;
+        }
+
+        if ($request->has('gr')) {
+            $genre = $request->query('gr');
+            $filter['gender'] = $genre ==  'fml' ? 'F' : 'M';
+        }
+
+        if ($request->has('lc') || $request->has('ct') || $request->has('gr')) {
+            $employees = $this->employeeService->getAllByFilterAdvanced($filter, $this->pages);
+        }
+
+        $template = 'app.employees.index';
+        if ($request->has('opt')) {
+            $opt = $request->query('opt');
+            if ($opt == 'cards')
+                $template = 'app.employees.cards';
+        }
+
+        return view($template, [
             'locals' => $locals,
             'employees' => $employees,
             'cities' => $cities,
             'femaleCount' => $female_employees->count(),
-            'maleCount' => $male_employees->count()
+            'maleCount' => $male_employees->count(),
+            'total_employee' => $employees->total(),
+            'local_id' => $local_id,
+            'city_id' => $city_id,
+            'filter_val' => null
         ]);
     }
 
@@ -307,5 +344,34 @@ class EmployeeController extends Controller
         }
     }
 
+    public function search(Request $request) {
+        try {
+
+            $locals = $this->localService->getAll(0);
+            $male_employees = $this->employeeService->getAllByFilter(['col' => 'gender', 'val' => 'M'], 0);
+            $female_employees = $this->employeeService->getAllByFilter(['col' => 'gender', 'val' => 'F'], 0);
+            $cities = $this->cityService->getAll(0);
+
+            $query = $request->input('employee_search');
+
+            $employees = $this->employeeService->getAllByFilterValue($query, $this->pages);
+
+            return view('app.employees.index', [
+                'locals' => $locals,
+                'employees' => $employees,
+                'cities' => $cities,
+                'femaleCount' => $female_employees->count(),
+                'maleCount' => $male_employees->count(),
+                'total_employee' => $employees->total(),
+                'local_id' => null,
+                'city_id' => null,
+                'filter_val' => $query
+            ]);
+
+        }catch (\Exception $exception) {
+            Log::error('Error in EmployeeController@search: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue.');
+        }
+    }
 
 }
