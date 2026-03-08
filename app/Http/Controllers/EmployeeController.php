@@ -69,8 +69,24 @@ class EmployeeController extends Controller
 
     public function index(Request $request)
     {
-        if ($request->has('opt'))
-            $this->pages = 12;
+
+        if ($request->has('opt')) {
+            if ($request->query('opt') == 'list') {
+                $request->session()->put('opt', 'list');
+            }elseif ($request->query('opt') == 'cards') {
+                $this->pages = 12;
+                $request->session()->put('opt', 'cards');
+            }
+        }else{
+            if ($request->session()->has('opt')) {
+                if ($request->session()->get('opt') == 'list') {
+                    $request->session()->put('opt', 'list');
+                }elseif ($request->session()->get('opt') == 'cards') {
+                    $this->pages = 12;
+                    $request->session()->put('opt', 'cards');
+                }
+            }
+        }
 
         $locals = $this->localService->getAll(0);
         $employees = $this->employeeService->getAll($this->pages);
@@ -85,7 +101,7 @@ class EmployeeController extends Controller
         if ($request->has('ct')) {
             $city_id = $request->query('ct');
             $filter['city_id'] = $city_id;
-            $locals = $this->localService->getAllByCity($city_id);
+            $locals = $this->localService->getAllByCity($city_id, 0);
         }
 
         if ($request->has('lc')) {
@@ -103,12 +119,6 @@ class EmployeeController extends Controller
         }
 
         $template = 'app.employees.index';
-        /*
-        if ($request->has('opt')) {
-            $opt = $request->query('opt');
-            if ($opt == 'cards')
-                $template = 'app.employees.cards';
-        }*/
 
         return view($template, [
             'locals' => $locals,
@@ -368,6 +378,63 @@ class EmployeeController extends Controller
                 'city_id' => null,
                 'filter_val' => $query
             ]);
+
+        }catch (\Exception $exception) {
+            Log::error('Error in EmployeeController@search: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue.');
+        }
+    }
+
+    public function import(Request $request) {
+        try {
+
+            $locals = $this->localService->getAll(0);
+            return view('app.employees.import', [
+                'locals' => $locals
+            ]);
+
+        }catch (\Exception $exception) {
+            Log::error('Error in EmployeeController@import: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue.');
+        }
+    }
+
+    public function importation(Request $request) {
+        try {
+
+            if ($request->hasFile('file')) {
+
+                $request->validate([
+                    'file' => 'required|file|mimes:xlsx,csv,xls'
+                ]);
+
+                // Read data into array
+                $rows = Excel::toArray([], $request->file('file'));
+
+                $count = 0;
+                foreach ($rows[0] as $rr) {
+                    $data['serial']             = $rr[0];
+                    $data['delivery_material_id']  = $rr[2];
+                    $data['ip']                 = $rr[1] ?? null;
+                    $data['inventory_number']   = $rr[2] ?? null;
+                    $data['is_reform']          = false;
+                    $data['state']              = 1;
+                    $data['is_deployed']        = false;
+
+                    $this->materialService->createNewMaterial($data);
+                    $count++;
+                }
+
+                if ($count == count($rows[0])) {
+                    return redirect()->route('employees.index')->with('success', "Importation est bien faite!!  ".$count."/".count($rows[0])." !");
+                }else{
+                    return redirect()->route('employees.index')->with('error', "Nouveaux matériels ajouté ".$count."/".count($rows[0])." !");
+                }
+
+            }else{
+                return redirect()->route('employees.import')->with('error', "Merci de spécifier le fichier excel contenant les employés");
+            }
+
 
         }catch (\Exception $exception) {
             Log::error('Error in EmployeeController@search: ' . $exception->getMessage());

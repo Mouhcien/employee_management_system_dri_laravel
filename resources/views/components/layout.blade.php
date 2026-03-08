@@ -10,8 +10,6 @@
     {{-- Vite CSS (must include bootstrap + bootstrap-icons in resources/css/app.css) --}}
     @vite(['resources/css/app.css', 'resources/css/toastr.min.css'])
 
-    @livewireStyles
-
 </head>
 <body class="bg-light">
 
@@ -139,8 +137,6 @@
 
 
 </script>
-
-@livewireScripts
 
 </body>
 </html>

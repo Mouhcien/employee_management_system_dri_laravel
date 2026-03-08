@@ -12,7 +12,7 @@
                 <div class="d-flex gap-2">
                     <button class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createServiceModal">
                         <i class="bi bi-plus-circle me-2"></i>
-                        Nouveau Fonction
+                        Nouvelle Fonction
                     </button>
                     <button class="btn btn-outline-secondary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#bulkActions">
                         <i class="bi bi-download me-2"></i>
@@ -150,7 +150,7 @@
                                                 <li><a href="#" class="dropdown-item"><i class="bi bi-file-earmark-pdf me-2"></i>PDF</a></li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteServiceModal">
+                                                    <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteServiceModal-{{ $occupation->id }}">
                                                         <i class="bi bi-trash me-2"></i>Supprimer
                                                     </button>
                                                 </li>
@@ -167,13 +167,13 @@
                                             <i class="bi bi-journal-text-fill fs-1 text-muted"></i>
                                         </div>
                                         <div>
-                                            <h3 class="h4 fw-semibold text-muted mb-1">Aucun service trouvé</h3>
-                                            <p class="text-muted mb-0">Commencez par ajouter votre premier service</p>
+                                            <h3 class="h4 fw-semibold text-muted mb-1">Aucune fonction trouvé</h3>
+                                            <p class="text-muted mb-0">Commencez par ajouter votre premier fonction</p>
                                         </div>
-                                        <a href="{{ route('occupations.create') }}" class="btn btn-primary btn-lg px-4">
+                                        <button class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createServiceModal">
                                             <i class="bi bi-plus-circle me-2"></i>
-                                            Ajouter un service
-                                        </a>
+                                            Nouvelle Fonction
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -194,12 +194,7 @@
                             </div>
                             <div class="col-md-6">
                                 <nav aria-label="Pagination">
-                                    {{--
-                                    {{ $occupations->appends(request()->query())->links([
-                                        'class' => 'pagination pagination-sm justify-content-end mb-0'
-                                    ]) }}
-                                    --}}
-                                    {{ $occupations->links() }}
+                                    {{ $occupations->appends(request()->query())->links() }}
                                 </nav>
                             </div>
                         </div>
@@ -213,7 +208,7 @@
                 href="{{ route('occupations.delete', $occupation->id) }}"
                 message="Voulez-vous vraiment supprimer cette fonction ?"
                 title="Confiramtion"
-                target="deleteServiceModal" />
+                target="deleteServiceModal-{{ $occupation->id }}" />
         @endforeach
 
         {{-- Bulk Actions Modal --}}
@@ -265,8 +260,8 @@
                                 <i class="bi bi-geo-alt-fill text-primary fs-4"></i>
                             </div>
                             <div>
-                                <h5 class="modal-title fw-bold mb-0" id="createCityModalLabel">Nouveau Fonction</h5>
-                                <small class="text-muted">Ajoutez un nouveau service à votre structure</small>
+                                <h5 class="modal-title fw-bold mb-0" id="createCityModalLabel">Nouvelle Fonction</h5>
+                                <small class="text-muted">Ajoutez un nouvelle fonction à votre structure</small>
                             </div>
                         </div>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -314,7 +309,7 @@
                         </button>
                         <button type="submit" class="btn btn-primary px-4">
                             <i class="bi bi-check-circle me-2"></i>
-                            Créer le service
+                            Créer la fonction
                         </button>
                     </div>
                 </form>

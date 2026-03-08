@@ -237,7 +237,7 @@
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <label for="department" class="form-label small fw-semibold text-muted">Local</label>
-                        <select name="employee_id" id="sl_employee_local" class="form-select bg-light">
+                        <select name="local_id" id="sl_employee_local" class="form-select bg-light">
                             <option value="-1">Tous les locaux</option>
                             @foreach($locals as $local)
                                 <option value="{{ $local->id }}" {{ $local_id == $local->id ? 'selected' : '' }}>
@@ -249,7 +249,7 @@
                     <div class="col-lg-3 col-md-6">
                         <label for="status" class="form-label small fw-semibold text-muted">Ville</label>
                         <select name="city_id" id="sl_employee_city" class="form-select bg-light">
-                            <option value=-1"">Toutes les villes</option>
+                            <option value="-1">Toutes les villes</option>
                             @foreach($cities as $city)
                                 <option value="{{ $city->id }}" {{ $city_id == $city->id ? 'selected' : '' }}>
                                     {{ $city->title }}
@@ -271,7 +271,28 @@
         <div class="card shadow border-0">
 
             <div class="table-responsive">
-                @if (request()->has('opt'))
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-list-ul me-2 text-primary"></i>Liste des employés</h5>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.print()">
+                            <i class="bi bi-printer me-1"></i>Imprimer
+                        </button>
+                        <button type="button" class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-file-excel me-1"></i>Exporter
+                        </button>
+                        @if (session('opt') == 'list')
+                            <a href="{{ route('employees.index') }}?opt=cards" class="btn btn-outline-info btn-sm">
+                                <i class="bi bi-card-list me-1"></i>
+                            </a>
+                        @else
+                            <a href="{{ route('employees.index') }}?opt=list" class="btn btn-outline-info btn-sm">
+                                <i class="bi bi-list me-1"></i>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+
+                @if (session('opt') == 'cards')
                     @include('app.employees._cards')
                 @else
                     @include('app.employees._list')

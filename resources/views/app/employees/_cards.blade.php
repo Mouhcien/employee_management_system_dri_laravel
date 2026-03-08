@@ -1,17 +1,6 @@
 
     {{-- Employees Cards --}}
     <div class="card shadow border-0">
-        <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-grid-3x3-gap-fill me-2 text-primary"></i>Liste des employés</h5>
-            <div class="btn-group">
-                <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.print()">
-                    <i class="bi bi-printer me-1"></i>Imprimer
-                </button>
-                <button type="button" class="btn btn-outline-success btn-sm">
-                    <i class="bi bi-file-excel me-1"></i>Exporter
-                </button>
-            </div>
-        </div>
 
         <div class="p-4">
             <div class="row g-4" id="employees-cards">
@@ -287,21 +276,6 @@
             </div>
         </div>
 
-        {{-- Pagination --}}
-        @if(isset($employees) && $employees->hasPages())
-            <div class="card-footer bg-white border-top py-3">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                    <div class="text-muted small">
-                        Affichage de <span class="fw-bold text-dark">{{ $employees->firstItem() }}</span> à
-                        <span class="fw-bold text-dark">{{ $employees->lastItem() }}</span> sur
-                        <span class="fw-bold text-dark">{{ $employees->total() }}</span> employés
-                    </div>
-                    <div>
-                        {{ $employees->appends(request()->query())->links() }}
-                    </div>
-                </div>
-            </div>
-        @endif
     </div>
 
     {{-- Hover effect --}}

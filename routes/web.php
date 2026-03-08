@@ -113,6 +113,8 @@ Route::prefix('employees')->group(function(){
     Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
     Route::post('/store', [EmployeeController::class, 'store'])->name('employees.store');
     Route::post('/search', [EmployeeController::class, 'search'])->name('employees.search');
+    Route::get('/import', [EmployeeController::class, 'import'])->name('employees.import');
+    Route::post('/importation', [EmployeeController::class, 'importation'])->name('employees.importation');
     Route::get('/{id}', [EmployeeController::class, 'show'])->name('employees.show');
     Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('employees.edit');
     Route::post('/update/{id}', [EmployeeController::class, 'update'])->name('employees.update');

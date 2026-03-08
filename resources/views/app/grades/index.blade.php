@@ -134,7 +134,7 @@
                                 </td>
                                 <td class="py-3 px-4">
                                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                                        {{ $grade->scale }}
+                                        <span class="badge bg-info">{{ $grade->scale }}</span>
                                     </div>
                                 </td>
                                 <td class="py-3 px-4">
@@ -200,12 +200,7 @@
                             </div>
                             <div class="col-md-6">
                                 <nav aria-label="Pagination">
-                                    {{--
-                                    {{ $grades->appends(request()->query())->links([
-                                        'class' => 'pagination pagination-sm justify-content-end mb-0'
-                                    ]) }}
-                                    --}}
-                                    {{ $grades->links() }}
+                                    {{ $grades->appends(request()->query())->links() }}
                                 </nav>
                             </div>
                         </div>
@@ -317,13 +312,14 @@
                                        name="scale"
                                        required>
                                     <option value="-1"> Séléctionnez l'échelle</option>
-                                    <option value="H"> Hors-échelle</option>
                                     <option value="12">12</option>
                                     <option value="11">11</option>
                                     <option value="10">10</option>
                                     <option value="9">9</option>
                                     <option value="8">8</option>
                                     <option value="7">7</option>
+                                    <option value="6">6</option>
+                                    <option value="0">0</option>
                                 </select>
                                 @error('title')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>

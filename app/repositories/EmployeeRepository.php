@@ -45,9 +45,10 @@ class EmployeeRepository extends MainRepository
         if (isset($filter['local_id']))
             $query->where('local_id', '=', $filter['local_id']);
 
-        if (isset($filter['city_id']))
+        if (isset($filter['city_id'])) {
             $query->join('locals', 'locals.id', '=', 'employees.local_id');
             $query->where('locals.city_id', '=', $filter['city_id']);
+        }
 
         if (isset($filter['gender']))
             $query->where('gender', '=', $filter['gender']);

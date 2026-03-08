@@ -46,6 +46,16 @@
                         <span class="sidebar-text">Liste des employés</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a
+                        href="{{ route('employees.import') }}"
+                        class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
+                               @if(request()->routeIs('employees.import')) active bg-gradient-primary-to-secondary @endif"
+                    >
+                        <i class="bi bi-file-earmark-excel-fill me-2 fs-6"></i>
+                        <span class="sidebar-text">Importer les employés</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

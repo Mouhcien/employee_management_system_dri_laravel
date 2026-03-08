@@ -1,18 +1,5 @@
 
-<div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-    <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-list-ul me-2 text-primary"></i>Liste des employés</h5>
-    <div class="btn-group">
-        <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.print()">
-            <i class="bi bi-printer me-1"></i>Imprimer
-        </button>
-        <button type="button" class="btn btn-outline-success btn-sm">
-            <i class="bi bi-file-excel me-1"></i>Exporter
-        </button>
-        <a href="{{ route('employees.index') }}?opt=cards" class="btn btn-outline-info btn-sm">
-            <i class="bi bi-card-list me-1"></i>
-        </a>
-    </div>
-</div>
+
 <table class="table table-hover align-middle mb-0">
     <thead class="bg-light">
     <tr>
