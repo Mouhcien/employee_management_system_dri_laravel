@@ -120,7 +120,8 @@
                             <div class="card-body text-center pt-2 pb-3 px-3">
                                 {{-- Name --}}
                                 <h6 class="fw-bold text-dark mb-0">
-                                    {{ $employee->firstname }} {{ $employee->lastname }}
+                                    {{ $employee->firstname }} {{ $employee->lastname }} <br>
+                                    {{ $employee->firstname_arab }} {{ $employee->lastname_arab }}
                                 </h6>
 
                                 {{-- PPR & CIN badges --}}

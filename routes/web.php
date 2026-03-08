@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AffectationController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompetenceController;
 use App\Http\Controllers\DiplomaController;
@@ -108,6 +109,16 @@ Route::prefix('grades')->group(function(){
     Route::get('/delete/{id}', [GradeController::class, 'delete'])->name('grades.delete');
 });
 
+Route::prefix('categories')->group(function(){
+    Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/store', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/{id}', [CategoryController::class, 'show'])->name('categories.show');
+    Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::post('/update/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::get('/delete/{id}', [CategoryController::class, 'delete'])->name('categories.delete');
+});
+
 Route::prefix('employees')->group(function(){
     Route::get('/', [EmployeeController::class, 'index'])->name('employees.index');
     Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
@@ -120,8 +131,6 @@ Route::prefix('employees')->group(function(){
     Route::post('/update/{id}', [EmployeeController::class, 'update'])->name('employees.update');
     Route::get('/delete/{id}', [EmployeeController::class, 'delete'])->name('employees.delete');
     Route::get('/unities/{id}', [EmployeeController::class, 'unities'])->name('employees.unities');
-
-
 });
 
 Route::prefix('settings')->group(function (){

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Category;
 use App\Models\Chef;
 use App\Models\Classement;
 use App\Models\Competence;
@@ -46,6 +47,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('photo')->nullable();
             $table->string('status')->nullable();
+            $table->foreignIdFor(Category::class, 'category_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

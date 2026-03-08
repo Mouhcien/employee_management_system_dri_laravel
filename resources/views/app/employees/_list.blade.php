@@ -87,10 +87,10 @@
                 </span>
             </td>
             <td class="px-4 py-3">
-                <div class="fw-semibold text-dark">{{ $employee->lastname }}</div>
+                <div class="fw-semibold text-dark">{{ $employee->lastname }} <br> {{ $employee->lastname_arab }}</div>
             </td>
             <td class="px-4 py-3">
-                <div class="fw-semibold text-dark">{{ $employee->firstname }}</div>
+                <div class="fw-semibold text-dark">{{ $employee->firstname }} <br> {{ $employee->firstname_arab }}</div>
             </td>
             <td class="px-4 py-3">
                 <span class="badge bg-secondary bg-opacity-10 text-secondary font-monospace">

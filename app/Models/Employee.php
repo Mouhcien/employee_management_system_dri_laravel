@@ -63,4 +63,9 @@ class Employee extends Model
     {
         return $this->belongsTo(Local::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

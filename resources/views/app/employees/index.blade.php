@@ -6,38 +6,6 @@
             border-top: none;
         }
 
-        .employee-row:hover {
-            background-color: rgba(0,0,0,0.02);
-        }
-
-
-        .hover-primary:hover {
-            color: #667eea !important;
-        }
-
-        .fw-mono {
-            font-family: 'SF Mono', Monaco, monospace;
-            font-size: 0.85em;
-        }
-
-        .object-fit-cover {
-            object-fit: cover;
-        }
-
-        .dropdown-menu {
-            border-radius: 0.75rem;
-        }
-
-        .dropdown-item {
-            border-radius: 0.5rem;
-            margin: 0.125rem 0.5rem;
-            padding: 0.5rem 1rem;
-        }
-
-        .dropdown-item:hover {
-            background-color: rgba(102, 126, 234, 0.1);
-        }
-
         .btn-light {
             background-color: #f8f9fa;
             border-color: #e9ecef;
@@ -46,11 +14,6 @@
         .btn-light:hover {
             background-color: #e9ecef;
             border-color: #dee2e6;
-        }
-
-        .badge {
-            font-weight: 500;
-            padding: 0.5em 0.75em;
         }
 
         .table th {
@@ -83,10 +46,6 @@
             0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); }
             100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
-        }
-
-        .position-absolute.bg-success {
-            animation: pulse 2s infinite;
         }
 
         .table-responsive {
