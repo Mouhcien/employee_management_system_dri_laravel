@@ -46,7 +46,7 @@
             $rowId = 'employee-details-' . $employee->id;
         @endphp
 
-        <tr class="border-bottom employee-row" data-bs-toggle="collapse" data-bs-target="#{{ $rowId }}" aria-expanded="false" style="cursor:pointer;">
+        <tr class="border-bottom employee-row"  style="cursor:pointer;">
             <td class="px-4 py-3 align-middle">
                 @if ($employee->gender == 'M')
                     <i class="bi bi-gender-male fs-3 text-primary"></i>
@@ -82,9 +82,9 @@
                 </div>
             </td>
             <td class="px-4 py-3">
-                                    <span class="badge bg-dark bg-opacity-10 text-dark fw-mono font-monospace">
-                                        {{ $employee->ppr }}
-                                    </span>
+                <span class="badge bg-dark bg-opacity-10 text-dark fw-mono font-monospace">
+                    {{ $employee->ppr }}
+                </span>
             </td>
             <td class="px-4 py-3">
                 <div class="fw-semibold text-dark">{{ $employee->lastname }}</div>
@@ -93,9 +93,9 @@
                 <div class="fw-semibold text-dark">{{ $employee->firstname }}</div>
             </td>
             <td class="px-4 py-3">
-                                    <span class="badge bg-secondary bg-opacity-10 text-secondary font-monospace">
-                                        {{ $employee->cin }}
-                                    </span>
+                <span class="badge bg-secondary bg-opacity-10 text-secondary font-monospace">
+                    {{ $employee->cin }}
+                </span>
             </td>
             <td class="px-4 py-3">
                 <div class="d-flex align-items-center text-muted">
@@ -119,7 +119,7 @@
             </td>
             <td class="px-4 py-3 text-center">
                 <div class="d-flex justify-content-center align-items-center gap-2">
-                    <button class="btn btn-light btn-sm rounded-circle shadow-sm toggle-details" type="button">
+                    <button class="btn btn-light btn-sm rounded-circle shadow-sm toggle-details" type="button" data-bs-toggle="collapse" data-bs-target="#{{ $rowId }}" aria-expanded="false">
                         <i class="bi bi-chevron-down"></i>
                     </button>
 

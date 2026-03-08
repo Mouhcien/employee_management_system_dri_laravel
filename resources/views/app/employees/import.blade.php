@@ -120,7 +120,7 @@
 
     <div class="container-fluid py-4">
         <form action="{{ route('employees.importation') }}" method="POST" enctype="multipart/form-data">
-
+            @csrf
             <div class="bg-gradient-primary-to-secondary rounded-4 p-4 mb-4 text-white shadow-lg">
                 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
                     <div class="row col-12">
@@ -137,11 +137,15 @@
                             </select>
                         </div>
                         <div class="col-4">
-                            <input type="file" class="form-control d-inline-flex align-items-center shadow-sm fw-semibold" />
+                            <input type="file" name="file" class="form-control d-inline-flex align-items-center shadow-sm fw-semibold" />
                         </div>
                     </div>
                 </div>
             </div>
+
+            <button type="submit" class="btn btn-success mb-2">
+                <i class="bi bi-save"> Importer </i>
+            </button>
 
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">

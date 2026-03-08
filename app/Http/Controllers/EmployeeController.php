@@ -14,11 +14,14 @@ use App\services\SectionEntityService;
 use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Employee;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class EmployeeController extends Controller
 {
@@ -413,22 +416,33 @@ class EmployeeController extends Controller
 
                 $count = 0;
                 foreach ($rows[0] as $rr) {
-                    $data['serial']             = $rr[0];
-                    $data['delivery_material_id']  = $rr[2];
-                    $data['ip']                 = $rr[1] ?? null;
-                    $data['inventory_number']   = $rr[2] ?? null;
-                    $data['is_reform']          = false;
-                    $data['state']              = 1;
-                    $data['is_deployed']        = false;
+                    $data['local_id'] = $request->input('local_id');
+                    $data['ppr'] = $rr[0];
+                    $data['cin'] = $rr[1];
+                    $data['firstname'] = $rr[12];
+                    $data['lastname'] = $rr[11];
 
-                    $this->materialService->createNewMaterial($data);
+                    $data['firstname_arab'] = $rr[14];
+                    $data['lastname_arab'] = $rr[13];
+                    $data['birth_date'] = Date::excelToDateTimeObject($rr[3])->format('Y-m-d');
+                    $data['birth_city'] = $rr[4];
+                    $data['gender'] = $rr[5];
+                    $data['sit'] = $rr[6];
+                    $data['hiring_date'] = Date::excelToDateTimeObject((float)$rr[7])->format('Y-m-d');
+                    $data['address'] = $rr[8];
+                    $data['tel'] = $rr[9];
+                    $data['email'] = $rr[10];
+                    $data['status'] = Employee::STATUS_ACTIVE;
+
+                    $data['photo'] = null;
+                    $this->employeeService->create($data);
                     $count++;
                 }
 
                 if ($count == count($rows[0])) {
                     return redirect()->route('employees.index')->with('success', "Importation est bien faite!!  ".$count."/".count($rows[0])." !");
                 }else{
-                    return redirect()->route('employees.index')->with('error', "Nouveaux matériels ajouté ".$count."/".count($rows[0])." !");
+                    return redirect()->route('employees.index')->with('error', "Employé sont ajouté ".$count."/".count($rows[0])." !");
                 }
 
             }else{
@@ -438,7 +452,7 @@ class EmployeeController extends Controller
 
         }catch (\Exception $exception) {
             Log::error('Error in EmployeeController@search: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue.');
+            return back()->with('error', 'Une erreur est survenue.'. $exception->getMessage());
         }
     }
 
