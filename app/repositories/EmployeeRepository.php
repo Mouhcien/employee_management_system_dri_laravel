@@ -59,4 +59,11 @@ class EmployeeRepository extends MainRepository
     }
 
 
+    public function getOneByPPR($ppr) {
+        return Employee::with($this->with)
+            ->where('ppr', '=', $ppr)
+            ->first();
+    }
+
+
 }

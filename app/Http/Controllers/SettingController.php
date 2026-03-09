@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\services\DiplomaService;
 use App\services\LevelService;
+use App\services\LocalService;
+use App\services\OccupationService;
 use App\services\TypeEntityService;
 
 class SettingController extends Controller
@@ -11,16 +13,24 @@ class SettingController extends Controller
     private TypeEntityService $typeEntityService;
     private DiplomaService $diplomaService;
     private LevelService $levelService;
+    private LocalService $localService;
+    private OccupationService $occupationService;
     private $pages = 10;
 
     /**
      * @param TypeEntityService $typeEntityService
      */
-    public function __construct(TypeEntityService $typeEntityService, DiplomaService $diplomaService, LevelService $levelService)
+    public function __construct(TypeEntityService $typeEntityService,
+                                DiplomaService $diplomaService,
+                                LevelService $levelService,
+                                LocalService $localService,
+                                OccupationService $occupationService)
     {
         $this->typeEntityService = $typeEntityService;
         $this->diplomaService = $diplomaService;
         $this->levelService = $levelService;
+        $this->localService = $localService;
+        $this->occupationService = $occupationService;
     }
 
     public function index() {
@@ -115,6 +125,22 @@ class SettingController extends Controller
             ]);
         }catch (\Exception $exception) {
             dd($exception->getMessage());
+        }
+    }
+
+    public function importation() {
+        try {
+
+            $locals = $this->localService->getAll(0);
+            $occupations = $this->occupationService->getAll(0);
+
+            return view('app.settings.importation', [
+                'locals' => $locals,
+                'occupations' => $occupations
+            ]);
+
+        }catch (\Exception $exception) {
+
         }
     }
 

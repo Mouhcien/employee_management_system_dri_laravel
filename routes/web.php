@@ -139,6 +139,7 @@ Route::prefix('settings')->group(function (){
     Route::get('/diploma/{id}', [SettingController::class, 'edit_diploma'])->name('settings.edit.diploma');
     Route::get('/type/{id}', [SettingController::class, 'edit_type'])->name('settings.edit.type');
     Route::get('/level/{id}', [SettingController::class, 'edit_level'])->name('settings.edit.level');
+    Route::get('/importation', [SettingController::class, 'importation'])->name('settings.importation');
 
     Route::prefix('types')->group(function(){
         Route::get('/', [EntityTypeController::class, 'index'])->name('settings.types.index');
@@ -167,6 +168,7 @@ Route::prefix('works')->group(function(){
     Route::post('/store', [WorkController::class, 'store'])->name('works.store');
     Route::get('/{id}', [WorkController::class, 'show'])->name('works.show');
     Route::get('/delete/{id}', [WorkController::class, 'delete'])->name('works.delete');
+    Route::post('/importation', [WorkController::class, 'importation'])->name('works.importation');
 });
 
 Route::prefix('qualifications')->group(function(){

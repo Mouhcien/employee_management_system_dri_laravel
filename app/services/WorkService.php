@@ -31,7 +31,8 @@ class WorkService
 
         $obj->occupation_id = $data['occupation_id'];
         $obj->employee_id = $data['employee_id'];
-        $obj->starting_date = $data['starting_date'];
+        if (isset($data['starting_date']))
+            $obj->starting_date = $data['starting_date'];
 
         return $this->workRepository->Add($obj);
     }

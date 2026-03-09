@@ -41,6 +41,10 @@ class EmployeeService
         return $this->employeeRepository->one(Employee::class, $this->with, $id);
     }
 
+    public function getOneByPPR($ppr) {
+        return $this->employeeRepository->getOneByPPR($ppr);
+    }
+
     public function create(array $data): ?bool
     {
         $employee = new Employee();

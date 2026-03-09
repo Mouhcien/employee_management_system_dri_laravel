@@ -75,6 +75,9 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuButton">
                         <li><a class="dropdown-item" href="#">Profil</a></li>
                         <li><a class="dropdown-item" href="{{ route('settings') }}">Paramètres</a></li>
+                        @if (env('APP_MOD') == "DEV")
+                        <li><a class="dropdown-item" href="{{ route('settings.importation') }}">Importation </a></li>
+                        @endif
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}">

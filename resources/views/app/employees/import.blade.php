@@ -1,4 +1,3 @@
-<x-layout>
 
     {{-- Custom Styles --}}
     <style>
@@ -125,7 +124,7 @@
                 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
                     <div class="row col-12">
                         <div class="col-4">
-                            <h1 class="h3 mb-1 fw-bold"><i class="bi bi-file-earmark-excel-fill me-2"></i>Importer les agents</h1>
+                            <h1 class="h3 mb-1 fw-bold"><i class="bi bi-file-earmark-excel-fill me-2"></i>Importer les agents par local</h1>
                             <p class="text-white-50 small mb-0"><i class="bi bi-geo-alt-fill me-1"></i>DRI-Marrakech | Administration du personnel</p>
                         </div>
                         <div class="col-4">
@@ -151,24 +150,37 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light">
                     <tr>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0"></th>
                         <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">PPR</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">NOM</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">PRÉNOM</th>
                         <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">CIN</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">DATE RECRUTEMENT</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">TEL CONTACT</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">EMAIL</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Date de naissance</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Lieu de naissance</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Genre</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Situation familliale</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Date de recrutement</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Adresse</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Tel</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Email</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Nom FR</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Prénom FR</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Nom ARB</th>
+                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Prénom ARB</th>
                     </tr>
                     </thead>
                     <tbody class="bg-white">
-
+                    @for($i=0;$i<3;$i++)
+                        <tr>
+                            <td> XXX </td><td> XXX </td>
+                            <td> XXX </td><td> XXX </td>
+                            <td> XXX </td><td> XXX </td>
+                            <td> XXX </td><td> XXX </td>
+                            <td> XXX </td><td>  XXX@XX.XX </td>
+                            <td> XXX </td><td> XXX </td>
+                            <td> XXX </td><td> XXX </td>
+                        </tr>
+                    @endfor
                     </tbody>
                 </table>
             </div>
         </form>
     </div>
 
-
-
-</x-layout>
