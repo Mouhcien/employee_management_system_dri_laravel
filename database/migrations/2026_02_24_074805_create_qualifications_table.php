@@ -2,6 +2,7 @@
 
 use App\Models\Diploma;
 use App\Models\Employee;
+use App\Models\Option;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,8 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Employee::class, 'employee_id')->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Diploma::class, 'diploma_id')->constrained()->cascadeOnDelete();
-            $table->integer('year'); //date d'obtention
+            $table->foreignIdFor(Option::class, 'option_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->integer('year')->nullable(); //date d'obtention
             $table->timestamps();
         });
     }

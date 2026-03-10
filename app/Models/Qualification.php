@@ -13,4 +13,8 @@ class Qualification extends Model
     public function diploma() {
         return $this->belongsTo(Diploma::class);
     }
+
+    public function option() {
+        return $this->belongsTo(Option::class);
+    }
 }

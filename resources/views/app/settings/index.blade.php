@@ -18,7 +18,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <a
-                        class="nav-link @if (request()->routeIs('settings.edit.diploma')) active  @endif text-secondary fw-semibold"
+                        class="nav-link @if (request()->routeIs('edit.diploma')) active  @endif text-secondary fw-semibold"
                         id="grades-tab"
                         data-bs-toggle="tab"
                         href="#grades"

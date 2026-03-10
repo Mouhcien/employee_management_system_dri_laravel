@@ -25,7 +25,7 @@
                                 <td class="fw-semibold text-dark">{{ $diploma->title }}</td>
                                 <td>
                                     <a
-                                        href="{{ route('settings.edit.diploma', $diploma->id) }}"
+                                        href="{{ route('diplomas.edit', $diploma->id) }}"
                                         class="btn btn-sm btn-outline-primary me-1"
                                     >
                                         <i class="bi bi-pencil me-1"></i>
@@ -54,7 +54,7 @@
 
     @foreach($diplomas as $diploma)
         <x-delete-model
-            href="{{ route('settings.diplomas.delete', $diploma->id) }}"
+            href="{{ route('diplomas.delete', $diploma->id) }}"
             message="Voulez-vous vraiment supprimer ce diplôme ?"
             title="Confiramtion"
             target="deleteDiplomaModal" />
@@ -70,7 +70,7 @@
                 </h5>
             </div>
             <div class="card-body p-4 pt-3">
-                <form action="{{ is_null($diplomaObj) ? route('settings.diplomas.store') : route('settings.diplomas.update', $diplomaObj->id) }}" method="POST">
+                <form action="{{ is_null($diplomaObj) ? route('diplomas.store') : route('diplomas.update', $diplomaObj->id) }}" method="POST">
                     @csrf
                     <div class="mb-4">
                         <label for="diplomaTitle" class="form-label fw-semibold text-dark">

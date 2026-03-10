@@ -101,6 +101,26 @@
                         <span class="sidebar-text">Gestion des Grades</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a
+                        href="{{ route('diplomas.index') }}"
+                        class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
+                               @if(request()->routeIs('diplomas.*')) active bg-gradient-primary-to-secondary @endif"
+                    >
+                        <i class="bi bi-award me-2 fs-6"></i>
+                        <span class="sidebar-text">Diplômes des agents</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                        href="{{ route('options.index') }}"
+                        class="nav-link sidebar-link-nested rounded-2 px-3 py-2 d-flex align-items-center small
+                               @if(request()->routeIs('options.*')) active bg-gradient-primary-to-secondary @endif"
+                    >
+                        <i class="bi bi-award me-2 fs-6"></i>
+                        <span class="sidebar-text">Options des diplômes</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

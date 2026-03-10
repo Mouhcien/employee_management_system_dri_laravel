@@ -12,6 +12,7 @@ use App\Http\Controllers\GradeController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\LocalController;
 use App\Http\Controllers\OccupationController;
+use App\Http\Controllers\OptionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QualificationController;
 use App\Http\Controllers\SectionController;
@@ -136,7 +137,7 @@ Route::prefix('employees')->group(function(){
 Route::prefix('settings')->group(function (){
 
     Route::get('/', [SettingController::class, 'index'])->name('settings');
-    Route::get('/diploma/{id}', [SettingController::class, 'edit_diploma'])->name('settings.edit.diploma');
+
     Route::get('/type/{id}', [SettingController::class, 'edit_type'])->name('settings.edit.type');
     Route::get('/level/{id}', [SettingController::class, 'edit_level'])->name('settings.edit.level');
     Route::get('/importation', [SettingController::class, 'importation'])->name('settings.importation');
@@ -148,19 +149,28 @@ Route::prefix('settings')->group(function (){
         Route::get('/delete/{id}', [EntityTypeController::class, 'delete'])->name('settings.types.delete');
     });
 
-    Route::prefix('diplomas')->group(function(){
-        Route::get('/', [DiplomaController::class, 'index'])->name('settings.diplomas.index');
-        Route::post('/store', [DiplomaController::class, 'store'])->name('settings.diplomas.store');
-        Route::post('/update/{id}', [DiplomaController::class, 'update'])->name('settings.diplomas.update');
-        Route::get('/delete/{id}', [DiplomaController::class, 'delete'])->name('settings.diplomas.delete');
-    });
-
     Route::prefix('levels')->group(function(){
         Route::get('/', [LevelController::class, 'index'])->name('settings.levels.index');
         Route::post('/store', [LevelController::class, 'store'])->name('settings.levels.store');
         Route::post('/update/{id}', [LevelController::class, 'update'])->name('settings.levels.update');
         Route::get('/delete/{id}', [LevelController::class, 'delete'])->name('settings.levels.delete');
     });
+});
+
+Route::prefix('diplomas')->group(function(){
+    Route::get('/', [DiplomaController::class, 'index'])->name('diplomas.index');
+    Route::post('/store', [DiplomaController::class, 'store'])->name('diplomas.store');
+    Route::get('/diploma/{id}', [SettingController::class, 'edit_diploma'])->name('diplomas.edit');
+    Route::post('/update/{id}', [DiplomaController::class, 'update'])->name('diplomas.update');
+    Route::get('/delete/{id}', [DiplomaController::class, 'delete'])->name('diplomas.delete');
+});
+
+Route::prefix('options')->group(function(){
+    Route::get('/', [OptionController::class, 'index'])->name('options.index');
+    Route::post('/store', [OptionController::class, 'store'])->name('options.store');
+    Route::get('/edit/{id}', [SettingController::class, 'edit_diploma'])->name('options.edit');
+    Route::post('/update/{id}', [OptionController::class, 'update'])->name('options.update');
+    Route::get('/delete/{id}', [OptionController::class, 'delete'])->name('options.delete');
 });
 
 Route::prefix('works')->group(function(){
@@ -176,6 +186,7 @@ Route::prefix('qualifications')->group(function(){
     Route::post('/store', [QualificationController::class, 'store'])->name('qualifications.store');
     Route::get('/{id}', [QualificationController::class, 'show'])->name('qualifications.show');
     Route::get('/delete/{id}', [QualificationController::class, 'delete'])->name('qualifications.delete');
+    Route::post('/importation', [QualificationController::class, 'importation'])->name('qualifications.importation');
 });
 
 Route::prefix('competences')->group(function(){

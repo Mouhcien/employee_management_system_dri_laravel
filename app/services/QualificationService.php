@@ -31,7 +31,8 @@ class QualificationService
 
         $obj->diploma_id = $data['diploma_id'];
         $obj->employee_id = $data['employee_id'];
-        $obj->year = $data['year'];
+        if (isset($data['year']))
+            $obj->year = $data['year'];
 
         return $this->qualificationRepository->Add($obj);
     }

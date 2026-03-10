@@ -133,10 +133,12 @@ class SettingController extends Controller
 
             $locals = $this->localService->getAll(0);
             $occupations = $this->occupationService->getAll(0);
+            $diplomas = $this->diplomaService->getAll(0);
 
             return view('app.settings.importation', [
                 'locals' => $locals,
-                'occupations' => $occupations
+                'occupations' => $occupations,
+                'diplomas' => $diplomas
             ]);
 
         }catch (\Exception $exception) {
