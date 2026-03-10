@@ -21,94 +21,68 @@ class OccupationController extends Controller
         $this->occupationService = $occupationService;
     }
 
-    public function index() {
-        try {
+    public function index()
+    {
+        $services = $this->occupationService->getAll($this->pages);
 
-            $services = $this->occupationService->getAll($this->pages);
-
-            return view('app.occupations.index', [
-                'occupations' => $services
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
-        }
+        return view('app.occupations.index', [
+            'occupations' => $services
+        ]);
     }
 
-    public function store(Request $request) {
-        try {
-            $data = $request->validate($this->rules);
+    public function store(Request $request)
+    {
+        $data = $request->validate($this->rules);
 
-            $result = $this->occupationService->create($data);
-
-            if ($result) {
-                return redirect()->route('occupations.index')->with('success', 'La fonction est bien ajouté');
-            }else{
-                return back()->with('error', 'Erreur insertion occupation !!!');
-            }
-        }catch (\Exception $exception) {
-
+        if ($this->occupationService->create($data)) {
+            return redirect()->route('occupations.index')->with('success', 'La fonction est bien ajouté');
         }
+
+        return back()->with('error', 'Erreur insertion occupation !!!');
     }
 
-    public function delete($id) {
-        try {
+    public function delete($id)
+    {
+        $occupation = $this->occupationService->getOneById($id);
 
-            $occupation = $this->occupationService->getOneById($id);
-
-            if (is_null($occupation)) {
-                return back()->with('error', 'Fonction introuvable !!');
-            }
-
-            $result = $this->occupationService->delete($id);
-
-            if (is_null($result))
-                return back()->with('error', 'Erreur au suppression du occupation !!');
-
-            return redirect()->route('occupations.index')->with('success', 'La fonction est bien supprimé');
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($occupation)) {
+            return back()->with('error', 'Fonction introuvable !!');
         }
+
+        if (is_null($this->occupationService->delete($id))) {
+            return back()->with('error', 'Erreur au suppression du occupation !!');
+        }
+
+        return redirect()->route('occupations.index')->with('success', 'La fonction est bien supprimé');
     }
 
-    public function show($id) {
-        try {
+    public function show($id)
+    {
+        $occupation = $this->occupationService->getOneById($id);
 
-            $occupation = $this->occupationService->getOneById($id);
-
-            if (is_null($occupation)) {
-                return back()->with('error', 'Fonction introuvable !!');
-            }
-
-            return view('app.occupations.show', [
-                'occupation' => $occupation
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($occupation)) {
+            return back()->with('error', 'Fonction introuvable !!');
         }
+
+        return view('app.occupations.show', [
+            'occupation' => $occupation
+        ]);
     }
 
-    public function update(Request $request, $id) {
-        try {
-            $data = $request->validate($this->rules);
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate($this->rules);
 
-            $occupation = $this->occupationService->getOneById($id);
+        $occupation = $this->occupationService->getOneById($id);
 
-            if (is_null($occupation)) {
-                return back()->with('error', 'Fonction introuvable !!');
-            }
-
-            $result = $this->occupationService->update($id, $data);
-
-            if ($result) {
-                return back()->with('success', 'La fonction est bien modifier');
-            }else{
-                return back()->with('error', 'Erreur midification occupation !!!');
-            }
-        }catch (\Exception $exception) {
-
+        if (is_null($occupation)) {
+            return back()->with('error', 'Fonction introuvable !!');
         }
+
+        if ($this->occupationService->update($id, $data)) {
+            return back()->with('success', 'La fonction est bien modifier');
+        }
+
+        return back()->with('error', 'Erreur midification occupation !!!');
     }
 }

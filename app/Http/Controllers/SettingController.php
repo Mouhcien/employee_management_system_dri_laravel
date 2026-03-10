@@ -22,13 +22,14 @@ class SettingController extends Controller
     /**
      * @param TypeEntityService $typeEntityService
      */
-    public function __construct(TypeEntityService $typeEntityService,
-                                DiplomaService $diplomaService,
-                                LevelService $levelService,
-                                LocalService $localService,
-                                OccupationService $occupationService,
-                                OptionService $optionService)
-    {
+    public function __construct(
+        TypeEntityService $typeEntityService,
+        DiplomaService $diplomaService,
+        LevelService $levelService,
+        LocalService $localService,
+        OccupationService $occupationService,
+        OptionService $optionService
+    ) {
         $this->typeEntityService = $typeEntityService;
         $this->diplomaService = $diplomaService;
         $this->levelService = $levelService;
@@ -37,119 +38,99 @@ class SettingController extends Controller
         $this->optionService = $optionService;
     }
 
-    public function index() {
-        try {
-            $types = $this->typeEntityService->getAll($this->pages);
-            $diplomas = $this->diplomaService->getAll($this->pages);
-            $levels = $this->levelService->getAll($this->pages);
+    public function index()
+    {
+        $types = $this->typeEntityService->getAll($this->pages);
+        $diplomas = $this->diplomaService->getAll($this->pages);
+        $levels = $this->levelService->getAll($this->pages);
 
-            return view('app.settings.index', [
-                'types' => $types,
-                'typeObj' => null,
-                'diplomas' => $diplomas,
-                'diplomaObj' => null,
-                'levels' => $levels,
-                'levelObj' => null
-            ]);
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
-        }
+        return view('app.settings.index', [
+            'types' => $types,
+            'typeObj' => null,
+            'diplomas' => $diplomas,
+            'diplomaObj' => null,
+            'levels' => $levels,
+            'levelObj' => null
+        ]);
     }
 
-    public function edit_diploma($id) {
-        try {
+    public function edit_diploma($id)
+    {
+        $types = $this->typeEntityService->getAll($this->pages);
+        $levels = $this->levelService->getAll($this->pages);
+        $diplomas = $this->diplomaService->getAll($this->pages);
+        $diploma = $this->diplomaService->getOneById($id);
 
-            $types = $this->typeEntityService->getAll($this->pages);
-            $levels = $this->levelService->getAll($this->pages);
-            $diplomas = $this->diplomaService->getAll($this->pages);
-            $diploma = $this->diplomaService->getOneById($id);
-
-            if (is_null($diploma)) {
-                return back()->with('error', 'diplôme introuvable !!');
-            }
-
-            return view('app.settings.index',[
-                'types' => $types,
-                'typeObj' => null,
-                'diplomas' => $diplomas,
-                'diplomaObj' => $diploma,
-                'levels' => $levels,
-                'levelObj' => null
-            ]);
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($diploma)) {
+            return back()->with('error', 'diplôme introuvable !!');
         }
+
+        return view('app.settings.index', [
+            'types' => $types,
+            'typeObj' => null,
+            'diplomas' => $diplomas,
+            'diplomaObj' => $diploma,
+            'levels' => $levels,
+            'levelObj' => null
+        ]);
     }
 
-    public function edit_type($id) {
-        try {
+    public function edit_type($id)
+    {
+        $types = $this->typeEntityService->getAll($this->pages);
+        $type = $this->typeEntityService->getOneById($id);
+        $diplomas = $this->diplomaService->getAll($this->pages);
+        $levels = $this->levelService->getAll($this->pages);
 
-            $types = $this->typeEntityService->getAll($this->pages);
-            $type = $this->typeEntityService->getOneById($id);
-            $diplomas = $this->diplomaService->getAll($this->pages);
-            $levels = $this->levelService->getAll($this->pages);
-
-            if (is_null($type)) {
-                return back()->with('error', 'type introuvable !!');
-            }
-
-            return view('app.settings.index',[
-                'types' => $types,
-                'typeObj' => $type,
-                'diplomas' => $diplomas,
-                'diplomaObj' => null,
-                'levels' => $levels,
-                'levelObj' => null
-            ]);
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($type)) {
+            return back()->with('error', 'type introuvable !!');
         }
+
+        return view('app.settings.index', [
+            'types' => $types,
+            'typeObj' => $type,
+            'diplomas' => $diplomas,
+            'diplomaObj' => null,
+            'levels' => $levels,
+            'levelObj' => null
+        ]);
     }
 
-    public function edit_level($id) {
-        try {
+    public function edit_level($id)
+    {
+        $types = $this->typeEntityService->getAll($this->pages);
+        $levels = $this->levelService->getAll($this->pages);
+        $diplomas = $this->diplomaService->getAll($this->pages);
 
-            $types = $this->typeEntityService->getAll($this->pages);
-            $levels = $this->levelService->getAll($this->pages);
-            $diplomas = $this->diplomaService->getAll($this->pages);
+        $level = $this->levelService->getOneById($id);
 
-            $level = $this->levelService->getOneById($id);
-
-            if (is_null($level)) {
-                return back()->with('error', 'niveau introuvable !!');
-            }
-
-            return view('app.settings.index',[
-                'types' => $types,
-                'typeObj' => null,
-                'diplomas' => $diplomas,
-                'diplomaObj' => null,
-                'levels' => $levels,
-                'levelObj' => $level
-            ]);
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($level)) {
+            return back()->with('error', 'niveau introuvable !!');
         }
+
+        return view('app.settings.index', [
+            'types' => $types,
+            'typeObj' => null,
+            'diplomas' => $diplomas,
+            'diplomaObj' => null,
+            'levels' => $levels,
+            'levelObj' => $level
+        ]);
     }
 
-    public function importation() {
-        try {
+    public function importation()
+    {
+        $locals = $this->localService->getAll(0);
+        $occupations = $this->occupationService->getAll(0);
+        $diplomas = $this->diplomaService->getAll(0);
+        $options = $this->optionService->getAll(0);
 
-            $locals = $this->localService->getAll(0);
-            $occupations = $this->occupationService->getAll(0);
-            $diplomas = $this->diplomaService->getAll(0);
-            $options = $this->optionService->getAll(0);
-
-            return view('app.settings.importation', [
-                'locals' => $locals,
-                'occupations' => $occupations,
-                'diplomas' => $diplomas,
-                'options' => $options
-            ]);
-
-        }catch (\Exception $exception) {
-
-        }
+        return view('app.settings.importation', [
+            'locals' => $locals,
+            'occupations' => $occupations,
+            'diplomas' => $diplomas,
+            'options' => $options
+        ]);
     }
 
 }

@@ -18,18 +18,13 @@ class CategoryController extends Controller
         $this->categoryService = $categoryService;
     }
 
-    public function index() {
-        try {
+    public function index()
+    {
+        $categories = $this->categoryService->getAll($this->pages);
 
-            $categories = $this->categoryService->getAll($this->pages);
-
-            return view('app.categories.index', [
-                'categories' => $categories
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
-        }
+        return view('app.categories.index', [
+            'categories' => $categories
+        ]);
     }
 
 }

@@ -22,112 +22,87 @@ class ServiceController extends Controller
     /**
      * @param ServiceEntityService $serviceEntityService
      */
-    public function __construct(ServiceEntityService $serviceEntityService,
-                                EntityService $entityService,
-                                SectorEntityService $sectorEntityService,
-                                SectionEntityService $sectionEntityService)
-    {
+    public function __construct(
+        ServiceEntityService $serviceEntityService,
+        EntityService $entityService,
+        SectorEntityService $sectorEntityService,
+        SectionEntityService $sectionEntityService
+    ) {
         $this->serviceEntityService = $serviceEntityService;
         $this->entityService = $entityService;
         $this->sectorEntityService = $sectorEntityService;
         $this->sectionEntityService = $sectionEntityService;
     }
 
-    public function index() {
-        try {
+    public function index()
+    {
+        $services = $this->serviceEntityService->getAll($this->pages);
+        $entities = $this->entityService->getAll(0);
+        $sectors = $this->sectorEntityService->getAll(0);
+        $sections = $this->sectionEntityService->getAll(0);
 
-            $services = $this->serviceEntityService->getAll($this->pages);
-            $entities = $this->entityService->getAll(0);
-            $sectors = $this->sectorEntityService->getAll(0);
-            $sections = $this->sectionEntityService->getAll(0);
-
-            return view('app.unities.services.index', [
-                'services' => $services,
-                'total_entity' => $entities->count(),
-                'total_sector' => $sectors->count(),
-                'total_section' => $sections->count()
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
-        }
+        return view('app.unities.services.index', [
+            'services' => $services,
+            'total_entity' => $entities->count(),
+            'total_sector' => $sectors->count(),
+            'total_section' => $sections->count()
+        ]);
     }
 
-    public function store(Request $request) {
-        try {
-            $data = $request->validate($this->rules);
+    public function store(Request $request)
+    {
+        $data = $request->validate($this->rules);
 
-            $result = $this->serviceEntityService->create($data);
-
-            if ($result) {
-                return redirect()->route('services.index')->with('success', 'Le service est bien ajouté');
-            }else{
-                return back()->with('error', 'Erreur insertion service !!!');
-            }
-        }catch (\Exception $exception) {
-
+        if ($this->serviceEntityService->create($data)) {
+            return redirect()->route('services.index')->with('success', 'Le service est bien ajouté');
         }
+
+        return back()->with('error', 'Erreur insertion service !!!');
     }
 
-    public function delete($id) {
-        try {
+    public function delete($id)
+    {
+        $service = $this->serviceEntityService->getOneById($id);
 
-            $service = $this->serviceEntityService->getOneById($id);
+        if (is_null($service)) {
+            return back()->with('error', 'Service introuvable !!');
+        }
 
-            if (is_null($service)) {
-                return back()->with('error', 'Service introuvable !!');
-            }
-
-            $result = $this->serviceEntityService->delete($id);
-
-            if (is_null($result))
-                return back()->with('error', 'Erreur au suppression du service !!');
-
+        if ($this->serviceEntityService->delete($id)) {
             return redirect()->route('services.index')->with('success', 'Le service est bien supprimé');
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
         }
+
+        return back()->with('error', 'Erreur au suppression du service !!');
     }
 
-    public function show($id) {
-        try {
+    public function show($id)
+    {
+        $service = $this->serviceEntityService->getOneById($id);
 
-            $service = $this->serviceEntityService->getOneById($id);
-
-            if (is_null($service)) {
-                return back()->with('error', 'Service introuvable !!');
-            }
-
-            return view('app.unities.services.show', [
-                'service' => $service
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($service)) {
+            return back()->with('error', 'Service introuvable !!');
         }
+
+        return view('app.unities.services.show', [
+            'service' => $service
+        ]);
     }
 
-    public function update(Request $request, $id) {
-        try {
-            $data = $request->validate($this->rules);
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate($this->rules);
 
-            $service = $this->serviceEntityService->getOneById($id);
+        $service = $this->serviceEntityService->getOneById($id);
 
-            if (is_null($service)) {
-                return back()->with('error', 'Service introuvable !!');
-            }
-
-            $result = $this->serviceEntityService->update($id, $data);
-
-            if ($result) {
-                return back()->with('success', 'Le service est bien modifier');
-            }else{
-                return back()->with('error', 'Erreur midification service !!!');
-            }
-        }catch (\Exception $exception) {
-
+        if (is_null($service)) {
+            return back()->with('error', 'Service introuvable !!');
         }
+
+        if ($this->serviceEntityService->update($id, $data)) {
+            return back()->with('success', 'Le service est bien modifier');
+        }
+
+        return back()->with('error', 'Erreur midification service !!!');
     }
 
 }

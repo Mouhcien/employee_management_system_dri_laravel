@@ -76,15 +76,15 @@ class EmployeeController extends Controller
         if ($request->has('opt')) {
             if ($request->query('opt') == 'list') {
                 $request->session()->put('opt', 'list');
-            }elseif ($request->query('opt') == 'cards') {
+            } elseif ($request->query('opt') == 'cards') {
                 $this->pages = 12;
                 $request->session()->put('opt', 'cards');
             }
-        }else{
+        } else {
             if ($request->session()->has('opt')) {
                 if ($request->session()->get('opt') == 'list') {
                     $request->session()->put('opt', 'list');
-                }elseif ($request->session()->get('opt') == 'cards') {
+                } elseif ($request->session()->get('opt') == 'cards') {
                     $this->pages = 12;
                     $request->session()->put('opt', 'cards');
                 }
@@ -114,7 +114,7 @@ class EmployeeController extends Controller
 
         if ($request->has('gr')) {
             $genre = $request->query('gr');
-            $filter['gender'] = $genre ==  'fml' ? 'F' : 'M';
+            $filter['gender'] = $genre == 'fml' ? 'F' : 'M';
         }
 
         if ($request->has('lc') || $request->has('ct') || $request->has('gr')) {
@@ -358,7 +358,8 @@ class EmployeeController extends Controller
         }
     }
 
-    public function search(Request $request) {
+    public function search(Request $request)
+    {
         try {
 
             $locals = $this->localService->getAll(0);
@@ -382,13 +383,14 @@ class EmployeeController extends Controller
                 'filter_val' => $query
             ]);
 
-        }catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             Log::error('Error in EmployeeController@search: ' . $exception->getMessage());
             return back()->with('error', 'Une erreur est survenue.');
         }
     }
 
-    public function import(Request $request) {
+    public function import(Request $request)
+    {
         try {
 
             $locals = $this->localService->getAll(0);
@@ -396,14 +398,15 @@ class EmployeeController extends Controller
                 'locals' => $locals
             ]);
 
-        }catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             Log::error('Error in EmployeeController@import: ' . $exception->getMessage());
             return back()->with('error', 'Une erreur est survenue.');
         }
     }
 
     //Par local
-    public function importation(Request $request) {
+    public function importation(Request $request)
+    {
         try {
 
             if ($request->hasFile('file')) {
@@ -429,7 +432,7 @@ class EmployeeController extends Controller
                     $data['birth_city'] = $rr[4];
                     $data['gender'] = $rr[5];
                     $data['sit'] = $rr[6];
-                    $data['hiring_date'] = Date::excelToDateTimeObject((float)$rr[7])->format('Y-m-d');
+                    $data['hiring_date'] = Date::excelToDateTimeObject((float) $rr[7])->format('Y-m-d');
                     $data['address'] = $rr[8];
                     $data['tel'] = $rr[9];
                     $data['email'] = $rr[10];
@@ -441,19 +444,19 @@ class EmployeeController extends Controller
                 }
 
                 if ($count == count($rows[0])) {
-                    return redirect()->route('employees.index')->with('success', "Importation est bien faite!!  ".$count."/".count($rows[0])." !");
-                }else{
-                    return redirect()->route('employees.index')->with('error', "Employé sont ajouté ".$count."/".count($rows[0])." !");
+                    return redirect()->route('employees.index')->with('success', "Importation est bien faite!!  " . $count . "/" . count($rows[0]) . " !");
+                } else {
+                    return redirect()->route('employees.index')->with('error', "Employé sont ajouté " . $count . "/" . count($rows[0]) . " !");
                 }
 
-            }else{
+            } else {
                 return redirect()->route('employees.import')->with('error', "Merci de spécifier le fichier excel contenant les employés");
             }
 
 
-        }catch (\Exception $exception) {
-            Log::error('Error in EmployeeController@search: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue.'. $exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error('Error in EmployeeController@importation: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue.' . $exception->getMessage());
         }
     }
 

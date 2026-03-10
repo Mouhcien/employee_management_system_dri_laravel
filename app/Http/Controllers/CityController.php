@@ -24,99 +24,73 @@ class CityController extends Controller
         $this->localService = $localService;
     }
 
-    public function index() {
-        try {
+    public function index()
+    {
+        $cities = $this->cityService->getAll($this->pages);
+        $locals = $this->localService->getAll(0);
 
-            $cities = $this->cityService->getAll($this->pages);
-            $locals = $this->localService->getAll(0);
-
-            return view('app.locals.cities.index', [
-                'cities' => $cities,
-                'locals' => $locals,
-                'total' => $cities->total(),
-                'total_locals' => count($locals)
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
-        }
+        return view('app.locals.cities.index', [
+            'cities' => $cities,
+            'locals' => $locals,
+            'total' => $cities->total(),
+            'total_locals' => count($locals)
+        ]);
     }
 
-    public function store(Request $request) {
-        try {
-            $data = $request->validate($this->rules);
+    public function store(Request $request)
+    {
+        $data = $request->validate($this->rules);
 
-            $result = $this->cityService->create($data);
-
-            if ($result) {
-                return redirect()->route('cities.index')->with('success', 'La ville est bien ajouté');
-            }else{
-                return back()->with('error', 'Erreur insertion ville !!!');
-            }
-        }catch (\Exception $exception) {
-
+        if ($this->cityService->create($data)) {
+            return redirect()->route('cities.index')->with('success', 'La ville est bien ajoutée');
         }
+
+        return back()->with('error', 'Erreur insertion ville !!!');
     }
 
-    public function delete($id) {
-        try {
+    public function delete($id)
+    {
+        $city = $this->cityService->getOneById($id);
 
-            $city = $this->cityService->getOneById($id);
-
-            if (is_null($city)) {
-                return back()->with('error', 'Ville introuvable !!');
-            }
-
-            $result = $this->cityService->delete($id);
-
-            if (is_null($result))
-                return back()->with('error', 'Erreur au suppression du ville !!');
-
-            return redirect()->route('cities.index')->with('success', 'La ville est bien supprimé');
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($city)) {
+            return back()->with('error', 'Ville introuvable !!');
         }
+
+        if (is_null($this->cityService->delete($id))) {
+            return back()->with('error', 'Erreur au suppression du ville !!');
+        }
+
+        return redirect()->route('cities.index')->with('success', 'La ville est bien supprimée');
     }
 
-    public function show($id) {
-        try {
+    public function show($id)
+    {
+        $city = $this->cityService->getOneById($id);
 
-            $city = $this->cityService->getOneById($id);
-
-            if (is_null($city)) {
-                return back()->with('error', 'Ville introuvable !!');
-            }
-
-            return view('app.locals.cities.show', [
-                'city' => $city
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($city)) {
+            return back()->with('error', 'Ville introuvable !!');
         }
+
+        return view('app.locals.cities.show', [
+            'city' => $city
+        ]);
     }
 
-    public function update(Request $request, $id) {
-        try {
-            $data = $request->validate($this->rules);
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate($this->rules);
 
-            $city = $this->cityService->getOneById($id);
+        $city = $this->cityService->getOneById($id);
 
-            if (is_null($city)) {
-                return back()->with('error', 'Ville introuvable !!');
-            }
-
-            $result = $this->cityService->update($id, $data);
-
-            if ($result) {
-                return redirect()->route('cities.index')->with('success', 'La ville est bien modifier');
-            }else{
-                return back()->with('error', 'Erreur midification ville !!!');
-            }
-        }catch (\Exception $exception) {
-
+        if (is_null($city)) {
+            return back()->with('error', 'Ville introuvable !!');
         }
+
+        if ($this->cityService->update($id, $data)) {
+            return redirect()->route('cities.index')->with('success', 'La ville est bien modifiée');
+        }
+
+        return back()->with('error', 'Erreur modification ville !!!');
     }
 
 

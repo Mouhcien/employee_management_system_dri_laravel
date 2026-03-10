@@ -22,94 +22,68 @@ class GradeController extends Controller
         $this->gradeService = $gradeService;
     }
 
-    public function index() {
-        try {
+    public function index()
+    {
+        $grades = $this->gradeService->getAll($this->pages);
 
-            $grades = $this->gradeService->getAll($this->pages);
-
-            return view('app.grades.index', [
-                'grades' => $grades
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
-        }
+        return view('app.grades.index', [
+            'grades' => $grades
+        ]);
     }
 
-    public function store(Request $request) {
-        try {
-            $data = $request->validate($this->rules);
+    public function store(Request $request)
+    {
+        $data = $request->validate($this->rules);
 
-            $result = $this->gradeService->create($data);
-
-            if ($result) {
-                return redirect()->route('grades.index')->with('success', 'Le grade est bien ajouté');
-            }else{
-                return back()->with('error', 'Erreur insertion grade !!!');
-            }
-        }catch (\Exception $exception) {
-
+        if ($this->gradeService->create($data)) {
+            return redirect()->route('grades.index')->with('success', 'Le grade est bien ajouté');
         }
+
+        return back()->with('error', 'Erreur insertion grade !!!');
     }
 
-    public function delete($id) {
-        try {
+    public function delete($id)
+    {
+        $grade = $this->gradeService->getOneById($id);
 
-            $grade = $this->gradeService->getOneById($id);
-
-            if (is_null($grade)) {
-                return back()->with('error', 'Grade introuvable !!');
-            }
-
-            $result = $this->gradeService->delete($id);
-
-            if (is_null($result))
-                return back()->with('error', 'Erreur au suppression du grade !!');
-
-            return redirect()->route('grades.index')->with('success', 'Le grade est bien supprimé');
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($grade)) {
+            return back()->with('error', 'Grade introuvable !!');
         }
+
+        if (is_null($this->gradeService->delete($id))) {
+            return back()->with('error', 'Erreur au suppression du grade !!');
+        }
+
+        return redirect()->route('grades.index')->with('success', 'Le grade est bien supprimé');
     }
 
-    public function show($id) {
-        try {
+    public function show($id)
+    {
+        $grade = $this->gradeService->getOneById($id);
 
-            $grade = $this->gradeService->getOneById($id);
-
-            if (is_null($grade)) {
-                return back()->with('error', 'Grade introuvable !!');
-            }
-
-            return view('app.grades.show', [
-                'grade' => $grade
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($grade)) {
+            return back()->with('error', 'Grade introuvable !!');
         }
+
+        return view('app.grades.show', [
+            'grade' => $grade
+        ]);
     }
 
-    public function update(Request $request, $id) {
-        try {
-            $data = $request->validate($this->rules);
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate($this->rules);
 
-            $grade = $this->gradeService->getOneById($id);
+        $grade = $this->gradeService->getOneById($id);
 
-            if (is_null($grade)) {
-                return back()->with('error', 'Grade introuvable !!');
-            }
-
-            $result = $this->gradeService->update($id, $data);
-
-            if ($result) {
-                return back()->with('success', 'Le grade est bien modifier');
-            }else{
-                return back()->with('error', 'Erreur midification grade !!!');
-            }
-        }catch (\Exception $exception) {
-
+        if (is_null($grade)) {
+            return back()->with('error', 'Grade introuvable !!');
         }
+
+        if ($this->gradeService->update($id, $data)) {
+            return back()->with('success', 'Le grade est bien modifier');
+        }
+
+        return back()->with('error', 'Erreur midification grade !!!');
     }
 }

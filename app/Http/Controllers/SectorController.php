@@ -27,152 +27,118 @@ class SectorController extends Controller
      * @param ServiceEntityService $serviceEntityService
      * @param EntityService $entityService
      */
-    public function __construct(SectorEntityService $sectorEntityService,
-                                ServiceEntityService $serviceEntityService,
-                                EntityService $entityService,
-                                SectionEntityService $sectionEntityService)
-    {
+    public function __construct(
+        SectorEntityService $sectorEntityService,
+        ServiceEntityService $serviceEntityService,
+        EntityService $entityService,
+        SectionEntityService $sectionEntityService
+    ) {
         $this->sectorEntityService = $sectorEntityService;
         $this->serviceEntityService = $serviceEntityService;
         $this->entityService = $entityService;
         $this->sectionEntityService = $sectionEntityService;
     }
 
-    public function index() {
-        try {
+    public function index()
+    {
+        $services = $this->serviceEntityService->getAll(0);
+        $entities = $this->entityService->getAll(0);
+        $sectors = $this->sectorEntityService->getAll($this->pages);
+        $sections = $this->sectionEntityService->getAll(0);
 
-            $services = $this->serviceEntityService->getAll(0);
-            $entities = $this->entityService->getAll(0);
-            $sectors = $this->sectorEntityService->getAll($this->pages);
-            $sections = $this->sectionEntityService->getAll(0);
-
-            return view('app.unities.sectors.index',[
-                'services' => $services,
-                'entities' => $entities,
-                'sectors' => $sectors,
-                'total_service' => $services->count(),
-                'total_entity' => $entities->count(),
-                'total_section' => $sections->count()
-            ]);
-
-        }catch (\Exception $exception){
-            dd($exception->getMessage());
-        }
+        return view('app.unities.sectors.index', [
+            'services' => $services,
+            'entities' => $entities,
+            'sectors' => $sectors,
+            'total_service' => $services->count(),
+            'total_entity' => $entities->count(),
+            'total_section' => $sections->count()
+        ]);
     }
 
-    public function create(Request $request) {
-        try {
+    public function create(Request $request)
+    {
+        $services = $this->serviceEntityService->getAll(0);
+        $entities = $this->entityService->getAll(0);
 
-            $services = $this->serviceEntityService->getAll(0);
-            $entities = $this->entityService->getAll(0);
-
-            $service_id = null;
-            if ($request->has('srv')) {
-                $service_id = $request->query('srv');
-                $entities = $this->entityService->getAllEntityByService($service_id);
-            }
-
-            return view('app.unities.sectors.insert',[
-                'services' => $services,
-                'entities' => $entities,
-                'service_id' => $service_id
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        $service_id = null;
+        if ($request->has('srv')) {
+            $service_id = $request->query('srv');
+            $entities = $this->entityService->getAllEntityByService($service_id);
         }
+
+        return view('app.unities.sectors.insert', [
+            'services' => $services,
+            'entities' => $entities,
+            'service_id' => $service_id
+        ]);
     }
 
-    public function store(Request $request) {
-        try {
+    public function store(Request $request)
+    {
+        $data = $request->validate($this->rules);
 
-            $data = $request->validate($this->rules);
-
-            $result = $this->sectorEntityService->create($data);
-
-            if ($result) {
-                return redirect()->route('sectors.index')->with('success', 'Secteur est bien enregistré !!');
-            }else{
-                return back()->with('error', 'Erreur insertion secteur');
-            }
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if ($this->sectorEntityService->create($data)) {
+            return redirect()->route('sectors.index')->with('success', 'Secteur est bien enregistré !!');
         }
+
+        return back()->with('error', 'Erreur insertion secteur');
     }
 
-    public function edit(Request $request, $id) {
-        try {
+    public function edit(Request $request, $id)
+    {
+        $services = $this->serviceEntityService->getAll(0);
+        $entities = $this->entityService->getAll(0);
 
-            $services = $this->serviceEntityService->getAll(0);
-            $entities = $this->entityService->getAll(0);
-
-            $service_id = null;
-            if ($request->has('srv')) {
-                $service_id = $request->query('srv');
-                $entities = $this->entityService->getAllEntityByService($service_id);
-            }
-            $sector = $this->sectorEntityService->getOneById($id);
-
-            if (is_null($sector)) {
-                return back()->with('error', 'Secteur introuvable !!');
-            }
-
-            return view('app.unities.sectors.insert',[
-                'sector' => $sector,
-                'services' => $services,
-                'entities' => $entities,
-                'service_id' => $service_id
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        $service_id = null;
+        if ($request->has('srv')) {
+            $service_id = $request->query('srv');
+            $entities = $this->entityService->getAllEntityByService($service_id);
         }
+        $sector = $this->sectorEntityService->getOneById($id);
+
+        if (is_null($sector)) {
+            return back()->with('error', 'Secteur introuvable !!');
+        }
+
+        return view('app.unities.sectors.insert', [
+            'sector' => $sector,
+            'services' => $services,
+            'entities' => $entities,
+            'service_id' => $service_id
+        ]);
     }
 
-    public function update(Request $request, $id) {
-        try {
+    public function update(Request $request, $id)
+    {
+        $sector = $this->sectorEntityService->getOneById($id);
 
-            $sector = $this->sectorEntityService->getOneById($id);
-
-            if (is_null($sector)) {
-                return back()->with('error', 'Secteur introuvable !!');
-            }
-
-            $data = $request->validate($this->rules);
-            $result = $this->sectorEntityService->update($id, $data);
-
-            if ($result) {
-                return redirect()->route('sectors.index')->with('success', 'Secteur est bien modifié !!');
-            }else{
-                return back()->with('error', 'Erreur modification secteur');
-            }
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($sector)) {
+            return back()->with('error', 'Secteur introuvable !!');
         }
+
+        $data = $request->validate($this->rules);
+
+        if ($this->sectorEntityService->update($id, $data)) {
+            return redirect()->route('sectors.index')->with('success', 'Secteur est bien modifié !!');
+        }
+
+        return back()->with('error', 'Erreur modification secteur');
     }
 
-    public function delete($id) {
-        try {
+    public function delete($id)
+    {
+        $sector = $this->sectorEntityService->getOneById($id);
 
-            $sector = $this->sectorEntityService->getOneById($id);
-
-            if (is_null($sector)) {
-                return back()->with('error', 'Secteur introuvable !!');
-            }
-
-            $result = $this->sectorEntityService->delete($id);
-
-            if ($result) {
-                return redirect()->route('sectors.index')->with('success', 'Secteur est bien supprimé !!');
-            }else{
-                return back()->with('error', 'Erreur suppression secteur');
-            }
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($sector)) {
+            return back()->with('error', 'Secteur introuvable !!');
         }
+
+        if ($this->sectorEntityService->delete($id)) {
+            return redirect()->route('sectors.index')->with('success', 'Secteur est bien supprimé !!');
+        }
+
+        return back()->with('error', 'Erreur suppression secteur');
     }
 
 }

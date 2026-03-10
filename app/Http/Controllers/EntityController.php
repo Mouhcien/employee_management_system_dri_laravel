@@ -40,154 +40,104 @@ class EntityController extends Controller
 
     public function index()
     {
-        try {
+        $services = $this->serviceEntityService->getAll(0);
+        $entities = $this->entityService->getAll($this->pages);
+        $types = $this->typeEntityService->getAll(0);
+        $sectors = $this->sectorEntityService->getAll(0);
+        $sections = $this->sectionEntityService->getAll(0);
 
-            $services = $this->serviceEntityService->getAll(0);
-            $entities = $this->entityService->getAll($this->pages);
-            $types = $this->typeEntityService->getAll(0);
-            $sectors = $this->sectorEntityService->getAll(0);
-            $sections = $this->sectionEntityService->getAll(0);
-
-            return view('app.unities.entities.index', [
-                'services' => $services,
-                'entities' => $entities,
-                'types' => $types,
-                'total_service' => $services->count(),
-                'total_sector' => $sectors->count(),
-                'total_section' => $sections->count()
-            ]);
-
-        } catch (\Exception $exception) {
-            Log::error('Error in EntityController@index: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue lors du chargement des entités.');
-        }
+        return view('app.unities.entities.index', [
+            'services' => $services,
+            'entities' => $entities,
+            'types' => $types,
+            'total_service' => $services->count(),
+            'total_sector' => $sectors->count(),
+            'total_section' => $sections->count()
+        ]);
     }
 
     public function create()
     {
-        try {
+        $types = $this->typeEntityService->getAll(0);
+        $services = $this->serviceEntityService->getAll(0);
 
-            $types = $this->typeEntityService->getAll(0);
-            $services = $this->serviceEntityService->getAll(0);
-
-            return view('app.unities.entities.insert', [
-                'types' => $types,
-                'services' => $services,
-            ]);
-        } catch (\Exception $exception) {
-            Log::error('Error in EntityController@create: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue lors de l\'ouverture du formulaire.');
-        }
+        return view('app.unities.entities.insert', [
+            'types' => $types,
+            'services' => $services,
+        ]);
     }
 
     public function store(StoreEntityRequest $request)
     {
-        try {
-            $data = $request->validated();
+        $data = $request->validated();
 
-            $result = $this->entityService->create($data);
-
-            if ($result) {
-                return redirect()->route('entities.index')->with('success', "L'entité est bien enrgistré !!!");
-            } else {
-                return back()->with('error', 'Erreur insertion des entité !!!');
-            }
-
-        } catch (\Exception $exception) {
-            Log::error('Error in EntityController@store: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue lors de l\'enregistrement.');
+        if ($this->entityService->create($data)) {
+            return redirect()->route('entities.index')->with('success', "L'entité est bien enrgistré !!!");
         }
+
+        return back()->with('error', 'Erreur insertion des entité !!!');
     }
 
     public function edit($id)
     {
-        try {
+        $entity = $this->entityService->getOneById($id);
+        $types = $this->typeEntityService->getAll(0);
+        $services = $this->serviceEntityService->getAll(0);
 
-            $entity = $this->entityService->getOneById($id);
-            $types = $this->typeEntityService->getAll(0);
-            $services = $this->serviceEntityService->getAll(0);
-
-            if (is_null($entity)) {
-                return back()->with('error', 'Entité introuvable !!');
-            }
-
-            return view('app.unities.entities.insert', [
-                'entity' => $entity,
-                'services' => $services,
-                'types' => $types
-            ]);
-        } catch (\Exception $exception) {
-            Log::error('Error in EntityController@edit: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue.');
+        if (is_null($entity)) {
+            return back()->with('error', 'Entité introuvable !!');
         }
+
+        return view('app.unities.entities.insert', [
+            'entity' => $entity,
+            'services' => $services,
+            'types' => $types
+        ]);
     }
 
     public function show($id)
     {
-        try {
+        $entity = $this->entityService->getOneById($id);
 
-            $entity = $this->entityService->getOneById($id);
-
-            if (is_null($entity)) {
-                return back()->with('error', 'Entité introuvable !!');
-            }
-
-            return view('app.unities.entities.show', [
-                'entity' => $entity
-            ]);
-        } catch (\Exception $exception) {
-            Log::error('Error in EntityController@show: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue.');
+        if (is_null($entity)) {
+            return back()->with('error', 'Entité introuvable !!');
         }
+
+        return view('app.unities.entities.show', [
+            'entity' => $entity
+        ]);
     }
 
     public function update(UpdateEntityRequest $request, $id)
     {
-        try {
-            $entity = $this->entityService->getOneById($id);
+        $entity = $this->entityService->getOneById($id);
 
-            if (is_null($entity)) {
-                return back()->with('error', 'Entité introuvable !!');
-            }
-
-            $data = $request->validated();
-
-            $result = $this->entityService->update($id, $data);
-
-            if ($result) {
-                return redirect()->route('entities.index')->with('success', "L'entité est bien modifiée !!!");
-            } else {
-                return back()->with('error', 'Erreur modification entité !!!');
-            }
-
-        } catch (\Exception $exception) {
-            Log::error('Error in EntityController@update: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue lors de la modification.');
+        if (is_null($entity)) {
+            return back()->with('error', 'Entité introuvable !!');
         }
+
+        $data = $request->validated();
+
+        if ($this->entityService->update($id, $data)) {
+            return redirect()->route('entities.index')->with('success', "L'entité est bien modifiée !!!");
+        }
+
+        return back()->with('error', 'Erreur modification entité !!!');
     }
 
     public function delete($id)
     {
-        try {
+        $entity = $this->entityService->getOneById($id);
 
-            $entity = $this->entityService->getOneById($id);
-
-            if (is_null($entity)) {
-                return back()->with('error', 'Entité introuvable !!');
-            }
-
-            $result = $this->entityService->delete($id);
-
-            if ($result) {
-                return redirect()->route('entities.index')->with('success', "L'entité est bien supprimé !!!");
-            } else {
-                return back()->with('error', 'Erreur suppression entité !!!');
-            }
-
-        } catch (\Exception $exception) {
-            Log::error('Error in EntityController@delete: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue lors de la suppression.');
+        if (is_null($entity)) {
+            return back()->with('error', 'Entité introuvable !!');
         }
+
+        if ($this->entityService->delete($id)) {
+            return redirect()->route('entities.index')->with('success', "L'entité est bien supprimé !!!");
+        }
+
+        return back()->with('error', 'Erreur suppression entité !!!');
     }
 
 

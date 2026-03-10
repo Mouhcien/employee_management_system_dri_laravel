@@ -22,25 +22,19 @@ class ClassementController extends Controller
         $this->classementService = $classementService;
     }
 
-    public function index() {
+    public function index()
+    {
 
     }
 
-    public function store(Request $request) {
-        try {
+    public function store(Request $request)
+    {
+        $data = $request->validate($this->rules);
 
-            $data = $request->validate($this->rules);
-
-            $result = $this->classementService->create($data);
-
-            if ($result) {
-                return back()->with('success', 'La grade est bien spécifié');
-            }
-
-            return back()->with('error', 'Erreur insertion grade');
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if ($this->classementService->create($data)) {
+            return back()->with('success', 'La grade est bien spécifié');
         }
+
+        return back()->with('error', 'Erreur insertion grade');
     }
 }

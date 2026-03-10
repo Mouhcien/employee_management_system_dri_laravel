@@ -38,148 +38,103 @@ class SectionController extends Controller
 
     public function index()
     {
-        try {
+        $services = $this->serviceEntityService->getAll(0);
+        $entities = $this->entityService->getAll(0);
+        $sectors = $this->sectorEntityService->getAll(0);
+        $sections = $this->sectionEntityService->getAll($this->pages);
 
-            $services = $this->serviceEntityService->getAll(0);
-            $entities = $this->entityService->getAll(0);
-            $sectors = $this->sectorEntityService->getAll(0);
-            $sections = $this->sectionEntityService->getAll($this->pages);
-
-            return view('app.unities.sections.index', [
-                'services' => $services,
-                'entities' => $entities,
-                'sections' => $sections,
-                'total_service' => $services->count(),
-                'total_entity' => $entities->count(),
-                'total_sector' => $sectors->count()
-            ]);
-
-        } catch (\Exception $exception) {
-            Log::error('Error in SectionController@index: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue lors du chargement des sections.');
-        }
+        return view('app.unities.sections.index', [
+            'services' => $services,
+            'entities' => $entities,
+            'sections' => $sections,
+            'total_service' => $services->count(),
+            'total_entity' => $entities->count(),
+            'total_sector' => $sectors->count()
+        ]);
     }
 
     public function create(Request $request)
     {
-        try {
+        $services = $this->serviceEntityService->getAll(0);
+        $entities = $this->entityService->getAll(0);
 
-            $services = $this->serviceEntityService->getAll(0);
-            $entities = $this->entityService->getAll(0);
-
-            $service_id = null;
-            if ($request->has('srv')) {
-                $service_id = $request->query('srv');
-                $entities = $this->entityService->getAllEntityByService($service_id);
-            }
-
-            return view('app.unities.sections.insert', [
-                'services' => $services,
-                'entities' => $entities,
-                'service_id' => $service_id
-            ]);
-
-        } catch (\Exception $exception) {
-            Log::error('Error in SectionController@create: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue lors de l\'ouverture du formulaire.');
+        $service_id = null;
+        if ($request->has('srv')) {
+            $service_id = $request->query('srv');
+            $entities = $this->entityService->getAllEntityByService($service_id);
         }
+
+        return view('app.unities.sections.insert', [
+            'services' => $services,
+            'entities' => $entities,
+            'service_id' => $service_id
+        ]);
     }
 
     public function store(StoreSectionRequest $request)
     {
-        try {
-            $data = $request->validated();
+        $data = $request->validated();
 
-            $result = $this->sectionEntityService->create($data);
-
-            if ($result) {
-                return redirect()->route('sections.index')->with('success', 'Section est bien enregistré !!');
-            } else {
-                return back()->with('error', 'Erreur insertion secteur');
-            }
-
-        } catch (\Exception $exception) {
-            Log::error('Error in SectionController@store: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue lors de l\'enregistrement.');
+        if ($this->sectionEntityService->create($data)) {
+            return redirect()->route('sections.index')->with('success', 'Section est bien enregistré !!');
         }
+
+        return back()->with('error', 'Erreur insertion secteur');
     }
 
     public function edit(Request $request, $id)
     {
-        try {
+        $services = $this->serviceEntityService->getAll(0);
+        $entities = $this->entityService->getAll(0);
 
-            $services = $this->serviceEntityService->getAll(0);
-            $entities = $this->entityService->getAll(0);
-
-            $service_id = null;
-            if ($request->has('srv')) {
-                $service_id = $request->query('srv');
-                $entities = $this->entityService->getAllEntityByService($service_id);
-            }
-            $section = $this->sectionEntityService->getOneById($id);
-
-            if (is_null($section)) {
-                return back()->with('error', 'Section introuvable !!');
-            }
-
-            return view('app.unities.sections.insert', [
-                'section' => $section,
-                'services' => $services,
-                'entities' => $entities,
-                'service_id' => $service_id
-            ]);
-
-        } catch (\Exception $exception) {
-            Log::error('Error in SectionController@edit: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue.');
+        $service_id = null;
+        if ($request->has('srv')) {
+            $service_id = $request->query('srv');
+            $entities = $this->entityService->getAllEntityByService($service_id);
         }
+        $section = $this->sectionEntityService->getOneById($id);
+
+        if (is_null($section)) {
+            return back()->with('error', 'Section introuvable !!');
+        }
+
+        return view('app.unities.sections.insert', [
+            'section' => $section,
+            'services' => $services,
+            'entities' => $entities,
+            'service_id' => $service_id
+        ]);
     }
 
     public function update(UpdateSectionRequest $request, $id)
     {
-        try {
-            $section = $this->sectionEntityService->getOneById($id);
+        $section = $this->sectionEntityService->getOneById($id);
 
-            if (is_null($section)) {
-                return back()->with('error', 'Section introuvable !!');
-            }
-
-            $data = $request->validated();
-            $result = $this->sectionEntityService->update($id, $data);
-
-            if ($result) {
-                return redirect()->route('sections.index')->with('success', 'Section est bien modifié !!');
-            } else {
-                return back()->with('error', 'Erreur modification secteur');
-            }
-
-        } catch (\Exception $exception) {
-            Log::error('Error in SectionController@update: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue lors de la modification.');
+        if (is_null($section)) {
+            return back()->with('error', 'Section introuvable !!');
         }
+
+        $data = $request->validated();
+
+        if ($this->sectionEntityService->update($id, $data)) {
+            return redirect()->route('sections.index')->with('success', 'Section est bien modifié !!');
+        }
+
+        return back()->with('error', 'Erreur modification secteur');
     }
 
     public function delete($id)
     {
-        try {
+        $section = $this->sectionEntityService->getOneById($id);
 
-            $section = $this->sectionEntityService->getOneById($id);
-
-            if (is_null($section)) {
-                return back()->with('error', 'Section introuvable !!');
-            }
-
-            $result = $this->sectionEntityService->delete($id);
-
-            if ($result) {
-                return redirect()->route('sections.index')->with('success', 'Section est bien supprimé !!');
-            } else {
-                return back()->with('error', 'Erreur suppression secteur');
-            }
-
-        } catch (\Exception $exception) {
-            Log::error('Error in SectionController@delete: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue lors de la suppression.');
+        if (is_null($section)) {
+            return back()->with('error', 'Section introuvable !!');
         }
+
+        if ($this->sectionEntityService->delete($id)) {
+            return redirect()->route('sections.index')->with('success', 'Section est bien supprimé !!');
+        }
+
+        return back()->with('error', 'Erreur suppression secteur');
     }
 }

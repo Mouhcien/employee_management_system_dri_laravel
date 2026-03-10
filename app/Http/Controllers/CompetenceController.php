@@ -23,25 +23,19 @@ class CompetenceController extends Controller
         $this->competenceService = $competenceService;
     }
 
-    public function index() {
+    public function index()
+    {
 
     }
 
-    public function store(Request $request) {
-        try {
+    public function store(Request $request)
+    {
+        $data = $request->validate($this->rules);
 
-            $data = $request->validate($this->rules);
-
-            $result = $this->competenceService->create($data);
-
-            if ($result) {
-                return back()->with('success', 'La competance est bien spécifié');
-            }
-
-            return back()->with('error', 'Erreur insertion competance');
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if ($this->competenceService->create($data)) {
+            return back()->with('success', 'La competance est bien spécifié');
         }
+
+        return back()->with('error', 'Erreur insertion competance');
     }
 }

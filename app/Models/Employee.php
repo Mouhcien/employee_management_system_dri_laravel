@@ -51,7 +51,7 @@ class Employee extends Model
 
     public function chefs()
     {
-        return $this->hasMany(Qualification::class);
+        return $this->hasMany(Chef::class);
     }
 
     public function affectations()

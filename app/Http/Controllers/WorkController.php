@@ -27,65 +27,52 @@ class WorkController extends Controller
         $this->employeeService = $employeeService;
     }
 
-    public function index() {
+    public function index()
+    {
 
     }
 
-    public function store(Request $request) {
-        try {
+    public function store(Request $request)
+    {
+        $data = $request->validate($this->rules);
 
-            $data = $request->validate($this->rules);
-
-            $result = $this->workService->create($data);
-
-            if ($result) {
-                return back()->with('success', 'La fonction est bien spécifié');
-            }
-
-            return back()->with('error', 'Erreur insertion fonction');
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if ($this->workService->create($data)) {
+            return back()->with('success', 'La fonction est bien spécifié');
         }
+
+        return back()->with('error', 'Erreur insertion fonction');
     }
 
-    public function importation(Request $request) {
-        try {
+    public function importation(Request $request)
+    {
+        if ($request->hasFile('file')) {
 
-            if ($request->hasFile('file')) {
+            $request->validate([
+                'file' => 'required|file|mimes:xlsx,csv,xls'
+            ]);
 
-                $request->validate([
-                    'file' => 'required|file|mimes:xlsx,csv,xls'
-                ]);
+            // Read data into array
+            $rows = Excel::toArray([], $request->file('file'));
 
-                // Read data into array
-                $rows = Excel::toArray([], $request->file('file'));
+            $count = 0;
+            foreach ($rows[0] as $rr) {
+                $employee = $this->employeeService->getOneByPPR($rr[0]);
 
-                $count = 0;
-                foreach ($rows[0] as $rr) {
-                    $employee = $this->employeeService->getOneByPPR($rr[0]);
+                $data['occupation_id'] = $request->input('occupation_id');
+                $data['employee_id'] = $employee->id;
 
-                    $data['occupation_id'] = $request->input('occupation_id');
-                    $data['employee_id'] = $employee->id;
-
-                    $this->workService->create($data);
-                    $count++;
-                }
-
-                if ($count == count($rows[0])) {
-                    return redirect()->route('employees.index')->with('success', "Importation est bien faite!!  ".$count."/".count($rows[0])." !");
-                }else{
-                    return redirect()->route('employees.index')->with('error', "Employé sont ajouté ".$count."/".count($rows[0])." !");
-                }
-
-            }else{
-                return redirect()->route('employees.import')->with('error', "Merci de spécifier le fichier excel contenant les employés");
+                $this->workService->create($data);
+                $count++;
             }
 
+            if ($count == count($rows[0])) {
+                return redirect()->route('employees.index')->with('success', "Importation est bien faite!!  " . $count . "/" . count($rows[0]) . " !");
+            } else {
+                return redirect()->route('employees.index')->with('error', "Employé sont ajouté " . $count . "/" . count($rows[0]) . " !");
+            }
 
-        }catch (\Exception $exception) {
-            Log::error('Error in EmployeeController@search: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue.'. $exception->getMessage());
+        } else {
+            return redirect()->route('employees.import')->with('error', "Merci de spécifier le fichier excel contenant les employés");
         }
     }
 }

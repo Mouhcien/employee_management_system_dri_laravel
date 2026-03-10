@@ -21,95 +21,69 @@ class DiplomaController extends Controller
         $this->diplomaService = $diplomaService;
     }
 
-    public function index() {
-        try {
+    public function index()
+    {
+        $diplomas = $this->diplomaService->getAll($this->pages);
 
-            $diplomas = $this->diplomaService->getAll($this->pages);
-
-            return view('app.education.diplomas.index', [
-                'diplomas' => $diplomas
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
-        }
+        return view('app.education.diplomas.index', [
+            'diplomas' => $diplomas
+        ]);
     }
 
-    public function store(Request $request) {
-        try {
-            $data = $request->validate($this->rules);
+    public function store(Request $request)
+    {
+        $data = $request->validate($this->rules);
 
-            $result = $this->diplomaService->create($data);
-
-            if ($result) {
-                return redirect()->route('settings')->with('success', 'Le diplôme est bien ajouté');
-            }else{
-                return back()->with('error', 'Erreur insertion diplôme !!!');
-            }
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if ($this->diplomaService->create($data)) {
+            return redirect()->route('settings')->with('success', 'Le diplôme est bien ajouté');
         }
+
+        return back()->with('error', 'Erreur insertion diplôme !!!');
     }
 
-    public function show($id) {
-        try {
+    public function show($id)
+    {
+        $diploma = $this->diplomaService->getOneById($id);
 
-            $diploma = $this->diplomaService->getOneById($id);
-
-            if (is_null($diploma)) {
-                return back()->with('error', 'Type introuvable !!');
-            }
-
-            return view('app.education.diplomas.show', [
-                'diploma' => $diploma
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($diploma)) {
+            return back()->with('error', 'Type introuvable !!');
         }
+
+        return view('app.education.diplomas.show', [
+            'diploma' => $diploma
+        ]);
     }
 
-    public function delete($id) {
-        try {
+    public function delete($id)
+    {
+        $diploma = $this->diplomaService->getOneById($id);
 
-            $diploma = $this->diplomaService->getOneById($id);
-
-            if (is_null($diploma)) {
-                return back()->with('error', 'Type introuvable !!');
-            }
-
-            $result = $this->diplomaService->delete($id);
-
-            if (is_null($result))
-                return back()->with('error', 'Erreur au suppression du diplôme !!');
-
-            return redirect()->route('settings')->with('success', 'Le diplôme est bien supprimé');
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($diploma)) {
+            return back()->with('error', 'Type introuvable !!');
         }
+
+        if (is_null($this->diplomaService->delete($id))) {
+            return back()->with('error', 'Erreur au suppression du diplôme !!');
+        }
+
+        return redirect()->route('settings')->with('success', 'Le diplôme est bien supprimé');
     }
 
 
-    public function update(Request $request, $id) {
-        try {
-            $data = $request->validate($this->rules);
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate($this->rules);
 
-            $diploma = $this->diplomaService->getOneById($id);
+        $diploma = $this->diplomaService->getOneById($id);
 
-            if (is_null($diploma)) {
-                return back()->with('error', 'diplôme introuvable !!');
-            }
-
-            $result = $this->diplomaService->update($id, $data);
-
-            if ($result) {
-                return back()->with('success', 'Le diplôme est bien modifier');
-            }else{
-                return back()->with('error', 'Erreur midification diplôme !!!');
-            }
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($diploma)) {
+            return back()->with('error', 'diplôme introuvable !!');
         }
+
+        if ($this->diplomaService->update($id, $data)) {
+            return back()->with('success', 'Le diplôme est bien modifier');
+        }
+
+        return back()->with('error', 'Erreur midification diplôme !!!');
     }
 }

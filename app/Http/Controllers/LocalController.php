@@ -25,100 +25,74 @@ class LocalController extends Controller
         $this->localService = $localService;
     }
 
-    public function index() {
-        try {
+    public function index()
+    {
+        $cities = $this->cityService->getAll(0);
+        $locals = $this->localService->getAll($this->pages);
 
-            $cities = $this->cityService->getAll(0);
-            $locals = $this->localService->getAll($this->pages);
-
-            return view('app.locals.locals.index', [
-                'locals' => $locals,
-                'cities' => $cities,
-                'total' => $locals->total(),
-                'totalCities' => count($locals)
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
-        }
+        return view('app.locals.locals.index', [
+            'locals' => $locals,
+            'cities' => $cities,
+            'total' => $locals->total(),
+            'totalCities' => count($locals)
+        ]);
     }
 
-    public function store(Request $request) {
-        try {
-            $data = $request->validate($this->rules);
+    public function store(Request $request)
+    {
+        $data = $request->validate($this->rules);
 
-            $result = $this->localService->create($data);
-
-            if ($result) {
-                return redirect()->route('locals.index')->with('success', 'Le local est bien ajouté');
-            }else{
-                return back()->with('error', 'Erreur insertion local !!!');
-            }
-        }catch (\Exception $exception) {
-
+        if ($this->localService->create($data)) {
+            return redirect()->route('locals.index')->with('success', 'Le local est bien ajouté');
         }
+
+        return back()->with('error', 'Erreur insertion local !!!');
     }
 
-    public function delete($id) {
-        try {
+    public function delete($id)
+    {
+        $local = $this->localService->getOneById($id);
 
-            $local = $this->localService->getOneById($id);
-
-            if (is_null($local)) {
-                return back()->with('error', 'Local introuvable !!');
-            }
-
-            $result = $this->localService->delete($id);
-
-            if (is_null($result))
-                return back()->with('error', 'Erreur au suppression du local !!');
-
-            return redirect()->route('locals.index')->with('success', 'Le local est bien supprimé');
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($local)) {
+            return back()->with('error', 'Local introuvable !!');
         }
+
+        if (is_null($this->localService->delete($id))) {
+            return back()->with('error', 'Erreur au suppression du local !!');
+        }
+
+        return redirect()->route('locals.index')->with('success', 'Le local est bien supprimé');
     }
 
-    public function show($id) {
-        try {
+    public function show($id)
+    {
+        $cities = $this->cityService->getAll(0);
+        $local = $this->localService->getOneById($id);
 
-            $cities = $this->cityService->getAll(0);
-            $local = $this->localService->getOneById($id);
-
-            if (is_null($local)) {
-                return back()->with('error', 'Local introuvable !!');
-            }
-
-            return view('app.locals.locals.show', [
-                'local' => $local,
-                'cities' => $cities
-            ]);
-
-        }catch (\Exception $exception) {
-            dd($exception->getMessage());
+        if (is_null($local)) {
+            return back()->with('error', 'Local introuvable !!');
         }
+
+        return view('app.locals.locals.show', [
+            'local' => $local,
+            'cities' => $cities
+        ]);
     }
 
-    public function update(Request $request, $id) {
-        try {
-            $data = $request->validate($this->rules);
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate($this->rules);
 
-            $local = $this->localService->getOneById($id);
+        $local = $this->localService->getOneById($id);
 
-            if (is_null($local)) {
-                return back()->with('error', 'Local introuvable !!');
-            }
-
-            $result = $this->localService->update($id, $data);
-
-            if ($result) {
-                return redirect()->route('locals.index')->with('success', 'Le local est bien modifier');
-            }else{
-                return back()->with('error', 'Erreur midification local !!!');
-            }
-        }catch (\Exception $exception) {
-
+        if (is_null($local)) {
+            return back()->with('error', 'Local introuvable !!');
         }
+
+        if ($this->localService->update($id, $data)) {
+            return redirect()->route('locals.index')->with('success', 'Le local est bien modifier');
+        }
+
+        return back()->with('error', 'Erreur midification local !!!');
     }
 }
