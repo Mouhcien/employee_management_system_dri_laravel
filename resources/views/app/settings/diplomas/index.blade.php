@@ -60,7 +60,7 @@
             target="deleteDiplomaModal" />
     @endforeach
 
-    <!-- Card: Create new entity diploma -->
+    <!-- Card: Create new diploma -->
     <div class="col-12 col-md-6">
         <div class="card border-success shadow-sm h-100">
             <div class="card-header bg-success text-white pb-3">

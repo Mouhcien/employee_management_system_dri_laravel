@@ -6,6 +6,7 @@ use App\services\DiplomaService;
 use App\services\LevelService;
 use App\services\LocalService;
 use App\services\OccupationService;
+use App\services\OptionService;
 use App\services\TypeEntityService;
 
 class SettingController extends Controller
@@ -15,6 +16,7 @@ class SettingController extends Controller
     private LevelService $levelService;
     private LocalService $localService;
     private OccupationService $occupationService;
+    private OptionService $optionService;
     private $pages = 10;
 
     /**
@@ -24,13 +26,15 @@ class SettingController extends Controller
                                 DiplomaService $diplomaService,
                                 LevelService $levelService,
                                 LocalService $localService,
-                                OccupationService $occupationService)
+                                OccupationService $occupationService,
+                                OptionService $optionService)
     {
         $this->typeEntityService = $typeEntityService;
         $this->diplomaService = $diplomaService;
         $this->levelService = $levelService;
         $this->localService = $localService;
         $this->occupationService = $occupationService;
+        $this->optionService = $optionService;
     }
 
     public function index() {
@@ -134,11 +138,13 @@ class SettingController extends Controller
             $locals = $this->localService->getAll(0);
             $occupations = $this->occupationService->getAll(0);
             $diplomas = $this->diplomaService->getAll(0);
+            $options = $this->optionService->getAll(0);
 
             return view('app.settings.importation', [
                 'locals' => $locals,
                 'occupations' => $occupations,
-                'diplomas' => $diplomas
+                'diplomas' => $diplomas,
+                'options' => $options
             ]);
 
         }catch (\Exception $exception) {

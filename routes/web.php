@@ -159,15 +159,18 @@ Route::prefix('settings')->group(function (){
 
 Route::prefix('diplomas')->group(function(){
     Route::get('/', [DiplomaController::class, 'index'])->name('diplomas.index');
+    Route::get('/{id}', [DiplomaController::class, 'show'])->name('diplomas.show');
     Route::post('/store', [DiplomaController::class, 'store'])->name('diplomas.store');
-    Route::get('/diploma/{id}', [SettingController::class, 'edit_diploma'])->name('diplomas.edit');
+    Route::get('/edit/{id}', [DiplomaController::class, 'edit'])->name('diplomas.edit');
     Route::post('/update/{id}', [DiplomaController::class, 'update'])->name('diplomas.update');
     Route::get('/delete/{id}', [DiplomaController::class, 'delete'])->name('diplomas.delete');
 });
 
 Route::prefix('options')->group(function(){
     Route::get('/', [OptionController::class, 'index'])->name('options.index');
+    Route::get('/{id}', [OptionController::class, 'show'])->name('options.show');
     Route::post('/store', [OptionController::class, 'store'])->name('options.store');
+    Route::post('/import', [OptionController::class, 'import'])->name('options.import');
     Route::get('/edit/{id}', [SettingController::class, 'edit_diploma'])->name('options.edit');
     Route::post('/update/{id}', [OptionController::class, 'update'])->name('options.update');
     Route::get('/delete/{id}', [OptionController::class, 'delete'])->name('options.delete');

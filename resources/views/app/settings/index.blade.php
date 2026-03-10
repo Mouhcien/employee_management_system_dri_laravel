@@ -27,7 +27,7 @@
                         aria-selected="false"
                     >
                         <i class="bi bi-award me-2"></i>
-                        Gestion des Diplômes
+
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -69,7 +69,7 @@
                 >
                     <div class="text-muted">
                         <i class="bi bi-info-circle me-1"></i>
-                        @include('app.settings.diplomas.index')
+
                     </div>
                 </div>
 

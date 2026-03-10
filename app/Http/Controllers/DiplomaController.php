@@ -21,6 +21,20 @@ class DiplomaController extends Controller
         $this->diplomaService = $diplomaService;
     }
 
+    public function index() {
+        try {
+
+            $diplomas = $this->diplomaService->getAll($this->pages);
+
+            return view('app.education.diplomas.index', [
+                'diplomas' => $diplomas
+            ]);
+
+        }catch (\Exception $exception) {
+            dd($exception->getMessage());
+        }
+    }
+
     public function store(Request $request) {
         try {
             $data = $request->validate($this->rules);
@@ -32,6 +46,24 @@ class DiplomaController extends Controller
             }else{
                 return back()->with('error', 'Erreur insertion diplôme !!!');
             }
+        }catch (\Exception $exception) {
+            dd($exception->getMessage());
+        }
+    }
+
+    public function show($id) {
+        try {
+
+            $diploma = $this->diplomaService->getOneById($id);
+
+            if (is_null($diploma)) {
+                return back()->with('error', 'Type introuvable !!');
+            }
+
+            return view('app.education.diplomas.show', [
+                'diploma' => $diploma
+            ]);
+
         }catch (\Exception $exception) {
             dd($exception->getMessage());
         }

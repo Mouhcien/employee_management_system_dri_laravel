@@ -65,7 +65,7 @@ class QualificationController extends Controller
                     $employee = $this->employeeService->getOneByPPR($rr[0]);
 
                     $data['diploma_id'] = $request->input('diploma_id');
-                    $data['option_id'] = $request->input('diploma_id');
+                    $data['option_id'] = $request->input('option_id');
                     $data['employee_id'] = $employee->id;
 
                     $this->qualificationService->create($data);
@@ -81,7 +81,6 @@ class QualificationController extends Controller
             }else{
                 return redirect()->route('employees.import')->with('error', "Merci de spécifier le fichier excel contenant les employés avec les diplômes");
             }
-
 
         }catch (\Exception $exception) {
             Log::error('Error in QualificationController@import: ' . $exception->getMessage());
