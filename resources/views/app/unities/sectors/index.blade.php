@@ -155,10 +155,13 @@
                                 </td>
                                 <td class="py-3 px-4">
                                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                                        @if(isset($sector->sections_count))
-                                            <span class="badge bg-info small px-3 py-2">{{ $sector->sections_count }} sections</span>
-                                        @endif
-                                        <span class="badge bg-success small px-3 py-2">{{ $sector->active_sections ?? 0 }} actives</span>
+                                       <span class="badge bg-success small px-3 py-2">
+                                            @if($sector->affectations->isNotEmpty())
+                                               {{ count($sector->affectations) }}
+                                           @else
+                                                0
+                                           @endif
+                                        </span>
                                     </div>
                                 </td>
                                 <td class="py-3 px-4 text-end">

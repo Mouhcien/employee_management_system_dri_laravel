@@ -151,4 +151,49 @@ class AffectationController extends Controller
             dd($exception->getMessage());
         }
     }
+
+    public function import_sector(Request $request) {
+        try {
+            $sector_id = $request->input('sector_id');
+
+            if ($request->hasFile('file')) {
+
+                $sector = $this->sectorEntityService->getOneById($sector_id);
+
+                $request->validate([
+                    'file' => 'required|file|mimes:xlsx,csv,xls'
+                ]);
+
+                // Read data into array
+                $rows = Excel::toArray([], $request->file('file'));
+
+                $count = 0;
+                foreach ($rows[0] as $rr) {
+                    $data['service_id'] = $sector->entity->service_id;
+                    $data['entity_id'] = $sector->entity_id;
+                    $data['section_id'] = null;
+                    $data['sector_id'] = $sector->id;
+                    $data['affectation_date'] = null;
+
+                    $employee = $this->employeeService->getOneByPPR($rr[0]);
+                    $data['employee_id'] = $employee->id;
+
+                    $this->affectationService->create($data);
+                    $count++;
+                }
+
+                if ($count == count($rows[0])) {
+                    return redirect()->route('sectors.show', $sector_id)->with('success', "Importation est bien faite!!  " . $count . "/" . count($rows[0]) . " !");
+                } else {
+                    return redirect()->route('sectors.show', $sector_id)->with('error', "Employé sont affecté " . $count . "/" . count($rows[0]) . " !");
+                }
+
+            } else {
+                return redirect()->route('sectors.show', $sector_id)->with('error', "Merci de spécifier le fichier excel contenant les employés");
+            }
+
+        }catch (\Exception $exception) {
+            dd($exception->getMessage());
+        }
+    }
 }

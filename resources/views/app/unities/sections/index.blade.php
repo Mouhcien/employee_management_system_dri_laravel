@@ -165,6 +165,8 @@
                                         <span class="badge bg-success small px-3 py-2">
                                             @if($section->affectations->isNotEmpty())
                                                 {{ count($section->affectations) }}
+                                            @else
+                                                0
                                             @endif
                                         </span>
                                     </div>

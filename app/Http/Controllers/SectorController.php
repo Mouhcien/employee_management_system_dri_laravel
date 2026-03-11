@@ -141,4 +141,18 @@ class SectorController extends Controller
         return back()->with('error', 'Erreur suppression secteur');
     }
 
+    public function show($id)
+    {
+        $sector = $this->sectorEntityService->getOneById($id);
+
+        if (is_null($sector)) {
+            return back()->with('error', 'Secteur introuvable !!');
+        }
+
+            return view('app.unities.sectors.show', [
+            'sector' => $sector,
+        ]);
+
+        return back()->with('error', 'Erreur suppression secteur');
+    }
 }
