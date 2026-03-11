@@ -10,7 +10,12 @@ $(function() {
         const srv = $(this).val();
         const option = $(this).attr('opt');
         const id = $(this).attr('ident');
-        window.location.href = '/sections/'+option+'/'+id+'?srv='+srv;
+        if (option == 'edit') {
+            window.location.href = '/sections/'+option+'/'+id+'?srv='+srv;
+        }else{
+            window.location.href = '/sections/'+option+'?srv='+srv;
+        }
+
     });
 
     $("#sl_aff_service_id").on('change', function () {

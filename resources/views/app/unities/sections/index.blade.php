@@ -162,8 +162,11 @@
                                 </td>
                                 <td class="py-3 px-4">
                                     <div class="d-flex align-items-center gap-2">
-                                        <span class="badge bg-success small px-3 py-2">{{ $section->employees_count ?? 0 }} employés</span>
-                                        <span class="badge bg-info small">{{ ($section->employees_count ?? 0) * 0.95 }} actifs</span>
+                                        <span class="badge bg-success small px-3 py-2">
+                                            @if($section->affectations->isNotEmpty())
+                                                {{ count($section->affectations) }}
+                                            @endif
+                                        </span>
                                     </div>
                                 </td>
                                 <td class="py-3 px-4 text-end">

@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreAffectationRequest;
 use App\Http\Requests\UpdateAffectationRequest;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AffectationController extends Controller
 {
@@ -104,5 +105,50 @@ class AffectationController extends Controller
         }
 
         return back()->with('error', 'Erreur modification Affectation');
+    }
+
+    public function import_section(Request $request) {
+        try {
+            $section_id = $request->input('section_id');
+
+            if ($request->hasFile('file')) {
+
+                $section = $this->sectionEntityService->getOneById($section_id);
+
+                $request->validate([
+                    'file' => 'required|file|mimes:xlsx,csv,xls'
+                ]);
+
+                // Read data into array
+                $rows = Excel::toArray([], $request->file('file'));
+
+                $count = 0;
+                foreach ($rows[0] as $rr) {
+                    $data['service_id'] = $section->entity->service_id;
+                    $data['entity_id'] = $section->entity_id;
+                    $data['section_id'] = $section->id;
+                    $data['sector_id'] = null;
+                    $data['affectation_date'] = null;
+
+                    $employee = $this->employeeService->getOneByPPR($rr[0]);
+                    $data['employee_id'] = $employee->id;
+
+                    $this->affectationService->create($data);
+                    $count++;
+                }
+
+                if ($count == count($rows[0])) {
+                    return redirect()->route('sections.show', $section_id)->with('success', "Importation est bien faite!!  " . $count . "/" . count($rows[0]) . " !");
+                } else {
+                    return redirect()->route('sections.show', $section_id)->with('error', "Employé sont affecté " . $count . "/" . count($rows[0]) . " !");
+                }
+
+            } else {
+                return redirect()->route('sections.show', $section_id)->with('error', "Merci de spécifier le fichier excel contenant les employés");
+            }
+
+        }catch (\Exception $exception) {
+            dd($exception->getMessage());
+        }
     }
 }

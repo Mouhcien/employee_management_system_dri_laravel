@@ -55,6 +55,7 @@ Route::prefix('locals')->group(function(){
 Route::prefix('services')->group(function(){
     Route::get('/', [ServiceController::class, 'index'])->name('services.index');
     Route::post('/store', [ServiceController::class, 'store'])->name('services.store');
+    Route::post('/import', [ServiceController::class, 'import'])->name('services.import');
     Route::get('/{id}', [ServiceController::class, 'show'])->name('services.show');
     Route::post('/update/{id}', [ServiceController::class, 'update'])->name('services.update');
     Route::get('/delete/{id}', [ServiceController::class, 'delete'])->name('services.delete');
@@ -64,6 +65,7 @@ Route::prefix('entities')->group(function(){
     Route::get('/', [EntityController::class, 'index'])->name('entities.index');
     Route::get('/create', [EntityController::class, 'create'])->name('entities.create');
     Route::post('/store', [EntityController::class, 'store'])->name('entities.store');
+    Route::post('/import', [EntityController::class, 'import'])->name('entities.import');
     Route::get('/{id}', [EntityController::class, 'show'])->name('entities.show');
     Route::get('/edit/{id}', [EntityController::class, 'edit'])->name('entities.edit');
     Route::post('/update/{id}', [EntityController::class, 'update'])->name('entities.update');
@@ -74,6 +76,7 @@ Route::prefix('sectors')->group(function(){
     Route::get('/', [SectorController::class, 'index'])->name('sectors.index');
     Route::get('/create', [SectorController::class, 'create'])->name('sectors.create');
     Route::post('/store', [SectorController::class, 'store'])->name('sectors.store');
+    Route::post('/import', [SectorController::class, 'import'])->name('sectors.import');
     Route::get('/{id}', [SectorController::class, 'show'])->name('sectors.show');
     Route::get('/edit/{id}', [SectorController::class, 'edit'])->name('sectors.edit');
     Route::post('/update/{id}', [SectorController::class, 'update'])->name('sectors.update');
@@ -202,6 +205,10 @@ Route::prefix('competences')->group(function(){
 Route::prefix('affectations')->group(function(){
     Route::get('/', [AffectationController::class, 'index'])->name('affectations.index');
     Route::post('/store', [AffectationController::class, 'store'])->name('affectations.store');
+    Route::post('/import/section', [AffectationController::class, 'import_section'])->name('affectations.sections.import');
+    Route::post('/import/sector', [AffectationController::class, 'import_sector'])->name('affectations.sectors.import');
+    Route::post('/import/entity', [AffectationController::class, 'import_entity'])->name('affectations.entities.import');
+    Route::post('/import/service', [AffectationController::class, 'import_service'])->name('affectations.services.import');
     Route::get('/{id}', [AffectationController::class, 'show'])->name('affectations.show');
     Route::get('/edit/{employee_id}/{affectation_id}', [AffectationController::class, 'edit'])->name('affectations.edit');
     Route::post('/update/{id}', [AffectationController::class, 'update'])->name('affectations.update');

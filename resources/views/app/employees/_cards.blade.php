@@ -36,12 +36,12 @@
                             <div class="position-relative" style="height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                                 {{-- Gender Badge --}}
                                 <span class="position-absolute top-0 start-0 m-2">
-                            @if ($employee->gender == 'M')
-                                        <i class="bi bi-gender-male text-white fs-5"></i>
-                                    @elseif($employee->gender == 'F')
-                                        <i class="bi bi-gender-female text-white fs-5"></i>
-                                    @endif
-                        </span>
+                                    @if ($employee->gender == 'M')
+                                                <i class="bi bi-gender-male text-white fs-5"></i>
+                                            @elseif($employee->gender == 'F')
+                                                <i class="bi bi-gender-female text-white fs-5"></i>
+                                            @endif
+                                </span>
 
                                 {{-- Action Dropdown --}}
                                 <div class="position-absolute top-0 end-0 m-2 dropdown">

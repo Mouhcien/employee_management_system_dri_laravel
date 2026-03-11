@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use App\services\EntityService;
 use App\services\SectionEntityService;
 use App\services\SectorEntityService;
@@ -10,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreSectionRequest;
 use App\Http\Requests\UpdateSectionRequest;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class SectionController extends Controller
 {
@@ -134,6 +137,21 @@ class SectionController extends Controller
         if ($this->sectionEntityService->delete($id)) {
             return redirect()->route('sections.index')->with('success', 'Section est bien supprimé !!');
         }
+
+        return back()->with('error', 'Erreur suppression secteur');
+    }
+
+    public function show($id)
+    {
+        $section = $this->sectionEntityService->getOneById($id);
+
+        if (is_null($section)) {
+            return back()->with('error', 'Section introuvable !!');
+        }
+
+        return view('app.unities.sections.show', [
+            'section' => $section
+        ]);
 
         return back()->with('error', 'Erreur suppression secteur');
     }
