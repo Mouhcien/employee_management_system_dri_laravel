@@ -1,17 +1,17 @@
 
 @props(['affectation', 'detach' => false])
 
-<div class="card h-100 border shadow-sm rounded-4 overflow-hidden employee-card">
+<div class="card mb-2 border shadow-sm rounded-4 overflow-hidden employee-card">
     {{-- Card Top Banner --}}
     <div class="position-relative" style="height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
         {{-- Gender Badge --}}
         <span class="position-absolute top-0 start-0 m-2">
-                                                    @if ($affectation->employee->gender == 'M')
+            @if ($affectation->employee->gender == 'M')
                 <i class="bi bi-gender-male text-white fs-5"></i>
             @elseif($affectation->employee->gender == 'F')
                 <i class="bi bi-gender-female text-white fs-5"></i>
             @endif
-                                                </span>
+        </span>
 
         {{-- Action Dropdown --}}
         <div class="position-absolute top-0 end-0 m-2 dropdown">

@@ -83,7 +83,7 @@
                             <ul class="list-unstyled mb-0">
                                 @foreach($service->entities as $entity)
                                     <li class="border-bottom pb-1 mb-1 text-dark">
-                                        {{ $entity->title }}
+                                        <a class="text-decoration-none text-primary" href="{{ route('entities.show', $entity->id) }}"> {{ $entity->title }} </a>
                                     </li>
                                 @endforeach
                             </ul>
@@ -114,7 +114,7 @@
                             <ul class="list-unstyled mb-0">
                                 @foreach($sectors as $sector)
                                     <li class="border-bottom pb-1 mb-1 text-success">
-                                        {{ $sector->title }}
+                                        <a class="text-decoration-none text-success" href="{{ route('sectors.show', $sector->id) }}"> {{ $sector->title }} </a>
                                     </li>
                                 @endforeach
                             </ul>
@@ -145,7 +145,7 @@
                             <ul class="list-unstyled mb-0">
                                 @foreach($sections as $section)
                                     <li class="list-group-item border-bottom pb-1 mb-1 text-info">
-                                        {{ $section->title }}
+                                        <a class="text-decoration-none text-info" href="{{ route('sections.show', $section->id) }}"> {{ $section->title }} </a>
                                     </li>
                                 @endforeach
                             </ul>

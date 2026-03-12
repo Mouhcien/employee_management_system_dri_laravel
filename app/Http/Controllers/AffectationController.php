@@ -196,4 +196,94 @@ class AffectationController extends Controller
             dd($exception->getMessage());
         }
     }
+
+    public function import_entity(Request $request) {
+        try {
+            $entity_id = $request->input('entity_id');
+
+            if ($request->hasFile('file')) {
+
+                $entity = $this->entityService->getOneById($entity_id);
+
+                $request->validate([
+                    'file' => 'required|file|mimes:xlsx,csv,xls'
+                ]);
+
+                // Read data into array
+                $rows = Excel::toArray([], $request->file('file'));
+
+                $count = 0;
+                foreach ($rows[0] as $rr) {
+                    $data['service_id'] = $entity->service_id;
+                    $data['entity_id'] = $entity_id;
+                    $data['section_id'] = null;
+                    $data['sector_id'] = null;
+                    $data['affectation_date'] = null;
+
+                    $employee = $this->employeeService->getOneByPPR($rr[0]);
+                    $data['employee_id'] = $employee->id;
+
+                    $this->affectationService->create($data);
+                    $count++;
+                }
+
+                if ($count == count($rows[0])) {
+                    return redirect()->route('entities.show', $entity_id)->with('success', "Importation est bien faite!!  " . $count . "/" . count($rows[0]) . " !");
+                } else {
+                    return redirect()->route('entities.show', $entity_id)->with('error', "Employé sont affecté " . $count . "/" . count($rows[0]) . " !");
+                }
+
+            } else {
+                return redirect()->route('entities.show', $entity_id)->with('error', "Merci de spécifier le fichier excel contenant les employés");
+            }
+
+        }catch (\Exception $exception) {
+            dd($exception->getMessage());
+        }
+    }
+
+    public function import_service(Request $request) {
+        try {
+            $service_id = $request->input('service_id');
+
+            if ($request->hasFile('file')) {
+
+                $service = $this->serviceEntityService->getOneById($service_id);
+
+                $request->validate([
+                    'file' => 'required|file|mimes:xlsx,csv,xls'
+                ]);
+
+                // Read data into array
+                $rows = Excel::toArray([], $request->file('file'));
+
+                $count = 0;
+                foreach ($rows[0] as $rr) {
+                    $data['service_id'] = $service->id;
+                    $data['entity_id'] = null;
+                    $data['section_id'] = null;
+                    $data['sector_id'] = null;
+                    $data['affectation_date'] = null;
+
+                    $employee = $this->employeeService->getOneByPPR($rr[0]);
+                    $data['employee_id'] = $employee->id;
+
+                    $this->affectationService->create($data);
+                    $count++;
+                }
+
+                if ($count == count($rows[0])) {
+                    return redirect()->route('entities.show', $service_id)->with('success', "Importation est bien faite!!  " . $count . "/" . count($rows[0]) . " !");
+                } else {
+                    return redirect()->route('entities.show', $service_id)->with('error', "Employé sont affecté " . $count . "/" . count($rows[0]) . " !");
+                }
+
+            } else {
+                return redirect()->route('entities.show', $service_id)->with('error', "Merci de spécifier le fichier excel contenant les employés");
+            }
+
+        }catch (\Exception $exception) {
+            dd($exception->getMessage());
+        }
+    }
 }
