@@ -13,4 +13,8 @@ class Service extends Model
     public function affectations() {
         return $this->hasMany(Affectation::class);
     }
+
+    public function chefs() {
+        return $this->hasMany(Chef::class);
+    }
 }

@@ -1,7 +1,7 @@
 
 @props(['employee', 'unity_type', 'unity_id', 'unity_name'])
 
-<div class="modal fade" id="affectChefModal" tabindex="-1" aria-labelledby="affectChefModalLabel" aria-hidden="true">
+<div class="modal fade" id="affectChefModal-{{$employee->id}}" tabindex="-1" aria-labelledby="affectChefModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
             <form action="{{ route('chefs.store') }}" method="POST" enctype="multipart/form-data">
@@ -23,10 +23,9 @@
                 <div class="modal-body pt-0 px-4">
                     {{-- Title Field --}}
                     <div class="mb-4">
-                        <p class="text-dark fw-bolder"> Mettre <span class="badge bg-info"> {{ $employee->lastname }} {{ $employee->firstname }} </span> </p>
+                        <p class="text-dark fw-bolder"> Mettre <span class="badge bg-info"> {{ $employee->lastname }} {{ $employee->firstname }}</span> </p>
                         <p>Chef de </p>
                         <p><span class="badge bg-primary"> {!! html_entity_decode($unity_name) !!} </span></p>
-
 
                         <input type="hidden" name="employee_id" value="{{ $employee->id }}">
                         <input type="hidden" name="unity_id" value="{{ $unity_id }}">

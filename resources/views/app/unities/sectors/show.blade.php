@@ -36,7 +36,18 @@
                         </h5>
                     </div>
                     <div class="card-body pt-3 px-4 pb-4">
-
+                        @if($sector->chefs->isNotEmpty())
+                            <div class="row col-12">
+                                @foreach($sector->chefs as $chef)
+                                    @if($chef->state)
+                                        @php $employee = $chef->employee; @endphp
+                                        <x-chef-card :employee="$employee" detach="true" :chef="$chef" />
+                                    @endif
+                                @endforeach
+                            </div>
+                        @else
+                            <small class="text-muted">Aucun chef associé à cette secteur.</small>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -55,7 +66,8 @@
                                 @foreach($sector->affectations as $affectation)
                                     @if ($affectation->state)
                                         <div class="col-4">
-                                            <x-employee-card :affectation="$affectation" detach="true" unity_type="sector" unity_id="{{ $sector->id }}" unity_name="{{ $sector->title }}" />
+                                            @php $employee = $affectation->employee; @endphp
+                                            <x-employee-card :employee="$employee" detach="true" unity_type="sector" unity_id="{{ $sector->id }}" unity_name="{{ $sector->title }}" />
                                         </div>
                                     @endif
                                 @endforeach

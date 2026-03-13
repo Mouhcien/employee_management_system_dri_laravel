@@ -163,17 +163,15 @@
                                 </td>
                                 <td class="py-3 px-4">
                                     <div class="d-flex flex-column">
-                                        @foreach($section->affectations as $affectation)
-                                            @if($affectation->employee->chefs->isNotEmpty())
-                                                @foreach($affectation->employee->chefs as $chef)
-                                                    @if ($chef->state)
-                                                        <a href="{{ Storage::url($chef->decision_file) }}" target="_blank">
-                                                            <bi class="bi-star-fill text-warning"></bi>{{ $chef->employee->lastname }} {{ $chef->employee->firstname }}
-                                                        </a>
-                                                    @endif
-                                                @endforeach
-                                            @endif
-                                        @endforeach
+                                        @if($section->chefs->isNotEmpty())
+                                            @foreach($section->chefs as $chef)
+                                                @if ($chef->state)
+                                                    <a href="{{ Storage::url($chef->decision_file) }}" target="_blank">
+                                                        <bi class="bi-star-fill text-warning"></bi>{{ $chef->employee->lastname }} {{ $chef->employee->firstname }}
+                                                    </a>
+                                                @endif
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </td>
                                 <td class="py-3 px-4">

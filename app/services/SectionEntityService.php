@@ -8,6 +8,7 @@ use App\repositories\SectionEntityRepository;
 class SectionEntityService
 {
     private SectionEntityRepository $sectionEntityRepository;
+    private $with = ['entity', 'affectations', 'chefs'];
 
     /**
      * @param SectionEntityRepository $sectionEntityRepository
@@ -18,7 +19,7 @@ class SectionEntityService
     }
 
     public function getAll($pages=0){
-        return $this->sectionEntityRepository->All(Section::class, ['entity', 'affectations'], $pages);
+        return $this->sectionEntityRepository->All(Section::class, $this->with, $pages);
     }
 
     public function getAllByEntity($entity_id, $pages=0){
@@ -26,7 +27,7 @@ class SectionEntityService
     }
 
     public function getOneById($id){
-        return $this->sectionEntityRepository->One(Section::class, ['entity', 'affectations'], $id);
+        return $this->sectionEntityRepository->One(Section::class, $this->with, $id);
     }
 
     public function create($data){

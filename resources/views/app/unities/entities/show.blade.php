@@ -37,15 +37,14 @@
                             @if($entity->chefs->isNotEmpty())
                                 <div class="row col-12">
                                     @foreach($entity->chefs as $chef)
-                                        @if ($chef->state)
-                                            {{ $chef->employee->lastname }} {{ $chef->employee->firstname }}
-                                            <br>
-                                            <a href="{{ Storage::url($chef->decision_file) }}" target="_blank"> La Decision </a>
+                                        @if($chef->state)
+                                            @php $employee = $chef->employee; @endphp
+                                            <x-chef-card :employee="$employee" detach="true" :chef="$chef" />
                                         @endif
                                     @endforeach
                                 </div>
                             @else
-                                <small class="text-muted">Aucun chef associé à cette section.</small>
+                                <small class="text-muted">Aucun chef associé à cette entité.</small>
                             @endif
                         </div>
                     </div>
@@ -137,7 +136,8 @@
                                     @foreach($entity->affectations as $affectation)
                                         @if ($affectation->state)
                                             <div class="col-4">
-                                                <x-employee-card :affectation="$affectation" detach="true" unity_type="entity" unity_id="{{ $entity->id }}" unity_name="{{ $entity->title }}" />
+                                                @php $employee = $affectation->employee; @endphp
+                                                <x-employee-card :employee="$employee" detach="true" unity_type="entity" unity_id="{{ $entity->id }}" unity_name="{{ $entity->title }}" />
                                             </div>
                                         @endif
                                     @endforeach

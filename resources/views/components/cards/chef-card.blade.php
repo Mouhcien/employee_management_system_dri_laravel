@@ -1,5 +1,5 @@
 
-@props(['employee', 'detach' => false, 'unity_type' => '', 'unity_id' => false, 'unity_name' => ''])
+@props(['employee', 'detach' => false, 'chef'])
 
 <div class="card mb-2 border shadow-sm rounded-4 overflow-hidden employee-card">
     {{-- Card Top Banner --}}
@@ -27,32 +27,14 @@
             <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                 <li>
                     @if($detach)
-                    <a class="dropdown-item py-2 text-success" href="{{ route('employees.show', $employee) }}" data-bs-toggle="modal" data-bs-target="#affectChefModal-{{ $employee->id }}">
-                        <i class="bi bi-star-fill me-2 text-success"></i>Mettre Chef
-                    </a>
+                        <a class="dropdown-item py-2 text-success" href="{{ route('employees.show', $employee) }}" data-bs-toggle="modal" data-bs-target="#affectChefModal">
+                            <i class="bi bi-star-fill me-2 text-success"></i>Mettre Chef
+                        </a>
 
-                    <a class="dropdown-item py-2 text-danger" href="{{ route('employees.show', $employee) }}">
-                        <i class="bi bi-x me-2 text-danger"></i>Détacher
-                    </a>
+                        <a class="dropdown-item py-2 text-danger" href="{{ route('employees.show', $employee) }}">
+                            <i class="bi bi-x me-2 text-danger"></i>Détacher
+                        </a>
                     @endif
-                </li>
-                <li>
-                    <a class="dropdown-item py-2" href="{{ route('employees.show', $employee) }}">
-                        <i class="bi bi-eye-fill me-2 text-info"></i>Voir détails
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item py-2" href="{{ route('employees.edit', $employee) }}">
-                        <i class="bi bi-pencil-square me-2 text-warning"></i>Modifier
-                    </a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                    <button type="button" class="dropdown-item py-2 text-danger"
-                            data-bs-toggle="modal"
-                            data-bs-target="#deleteEmployeeModal">
-                        <i class="bi bi-trash-fill me-2"></i>Supprimer
-                    </button>
                 </li>
             </ul>
         </div>
@@ -96,12 +78,12 @@
 
         {{-- PPR & CIN badges --}}
         <div class="d-flex justify-content-center gap-2 mt-2 flex-wrap">
-            <span class="badge bg-dark bg-opacity-10 text-dark font-monospace small">
-                <i class="bi bi-hash me-1"></i>{{ $employee->ppr }}
-            </span>
+                                                    <span class="badge bg-dark bg-opacity-10 text-dark font-monospace small">
+                                                        <i class="bi bi-hash me-1"></i>{{ $employee->ppr }}
+                                                    </span>
             <span class="badge bg-secondary bg-opacity-10 text-secondary font-monospace small">
-                {{ $employee->cin }}
-            </span>
+                                                        {{ $employee->cin }}
+                                                    </span>
         </div>
 
         <hr class="my-2">
@@ -130,16 +112,7 @@
 
     {{-- Card Footer --}}
     <div class="card-footer bg-white border-top py-2 px-3 d-flex justify-content-between gap-2">
-        <a href="{{ route('employees.show', $employee) }}"
-           class="btn btn-outline-info btn-sm flex-fill rounded-pill">
-            <i class="bi bi-eye-fill me-1"></i>Voir
-        </a>
-        <a href="{{ route('employees.edit', $employee) }}"
-           class="btn btn-outline-warning btn-sm flex-fill rounded-pill">
-            <i class="bi bi-pencil-square me-1"></i>Modifier
-        </a>
+        <a href="{{ Storage::url($chef->decision_file) }}" target="_blank"> La Decision </a>
     </div>
-
-    <x-affect-chef-modal :employee="$employee" unity_type="{{ $unity_type }}" unity_id="{{ $unity_id }}" unity_name="{{ $unity_name }}" />
 
 </div>

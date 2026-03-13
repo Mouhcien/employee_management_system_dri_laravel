@@ -138,6 +138,7 @@
                             <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Catégorie</th>
                             <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Entité</th>
                             <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Service</th>
+                            <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Chef</th>
                             <th class="border-0 py-3 px-4 text-end small fw-semibold text-muted text-uppercase ls-1">Actions</th>
                         </tr>
                         </thead>
@@ -160,9 +161,20 @@
                                     </div>
                                 </td>
                                 <td class="py-3 px-4">
-                                        <span class="badge bg-primary px-3 py-2">
-                                            {{ $entity->service->title ?? 'Non assigné' }}
-                                        </span>
+                                    <span class="badge bg-primary px-3 py-2">
+                                        {{ $entity->service->title ?? 'Non assigné' }}
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    @if($entity->chefs->isNotEmpty())
+                                        @foreach($entity->chefs as $chef)
+                                            @if ($chef->state)
+                                                <a href="{{ Storage::url($chef->decision_file) }}" target="_blank">
+                                                    <bi class="bi-star-fill text-warning"></bi>{{ $chef->employee->lastname }} {{ $chef->employee->firstname }}
+                                                </a>
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 </td>
                                 <td class="py-3 px-4 text-end">
                                     <div class="btn-group" role="group">

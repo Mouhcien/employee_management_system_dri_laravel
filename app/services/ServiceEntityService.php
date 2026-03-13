@@ -8,6 +8,7 @@ use App\repositories\ServiceEntityRepository;
 class ServiceEntityService
 {
     private ServiceEntityRepository $serviceEntityRepository;
+    private $with = ['entities', 'affectations', 'chefs'];
 
     /**
      * @param ServiceEntityRepository $serviceEntityRepository
@@ -18,11 +19,11 @@ class ServiceEntityService
     }
 
     public function getAll($pages=0){
-        return $this->serviceEntityRepository->All(Service::class, ['entities', 'affectations'], $pages);
+        return $this->serviceEntityRepository->All(Service::class, $this->with, $pages);
     }
 
     public function getOneById($id){
-        return $this->serviceEntityRepository->One(Service::class, ['entities', 'affectations'], $id);
+        return $this->serviceEntityRepository->One(Service::class, $this->with, $id);
     }
 
     public function create($data){

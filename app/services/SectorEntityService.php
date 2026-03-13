@@ -9,6 +9,7 @@ use App\repositories\SectorEntityRepository;
 class SectorEntityService
 {
     private SectorEntityRepository $sectorEntityRepository;
+    private $with = ['entity', 'affectations', 'chefs'];
 
     /**
      * @param SectorEntityRepository $sectorEntityRepository
@@ -19,7 +20,7 @@ class SectorEntityService
     }
 
     public function getAll($pages=0){
-        return $this->sectorEntityRepository->All(Sector::class, ['entity', 'affectations'], $pages);
+        return $this->sectorEntityRepository->All(Sector::class, $this->with, $pages);
     }
 
     public function getAllByEntity($entity_id, $pages=0){
@@ -27,7 +28,7 @@ class SectorEntityService
     }
 
     public function getOneById($id){
-        return $this->sectorEntityRepository->One(Sector::class, ['entity', 'affectations'], $id);
+        return $this->sectorEntityRepository->One(Sector::class, $this->with, $id);
     }
 
     public function create($data){
