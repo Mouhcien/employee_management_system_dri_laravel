@@ -157,8 +157,11 @@
                             </td>
                             <td class="py-3 px-4">
                                 <div class="d-flex align-items-center gap-2">
-                                    <span class="badge bg-success small px-3 py-2">{{ $local->employees_count ?? 0 }} employés</span>
-                                    <span class="badge bg-info small">{{ ($local->employees_count ?? 0) * 0.9 }} actifs</span>
+                                    @if($local->employees->isNotEmpty())
+                                        <span class="badge bg-info small px-3 py-2">{{ count($local->employees) }}</span>
+                                    @else
+                                        <span class="badge bg-danger small px-3 py-2">0</span>
+                                    @endif
                                 </div>
                             </td>
                             <td class="py-3 px-4 text-end">

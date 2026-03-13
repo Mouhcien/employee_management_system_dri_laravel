@@ -159,8 +159,13 @@
                                 </td>
                                 <td class="py-3 px-4">
                                     <div class="d-flex align-items-center gap-2">
-                                        <span class="badge bg-success small px-3 py-2">{{ $city->employees_count ?? 0 }} employés</span>
-                                        <span class="badge bg-info small">{{ $city->active_employees ?? 0 }} actifs</span>
+                                        @if($city->locals->isNotEmpty())
+                                            @php $total = 0; @endphp
+                                            @foreach($city->locals as $local)
+                                                @php $total += count($local->employees); @endphp
+                                            @endforeach
+                                            <span class="badge {{ $total == 0 ? 'bg-danger' : 'bg-info' }} small px-3 py-2">{{ $total }}</span>
+                                        @endif
                                     </div>
                                 </td>
                                 <td class="py-3 px-4 text-end">
