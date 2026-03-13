@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->foreignIdFor(Section::class, 'section_id')->nullable()->constrained()->cascadeOnDelete();
             $table->date('starting_date')->nullable();
             $table->date('finished_date')->nullable();
+            $table->string('decision_file')->nullable();
             $table->timestamps();
         });
     }

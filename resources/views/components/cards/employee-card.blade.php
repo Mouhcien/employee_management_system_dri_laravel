@@ -1,5 +1,5 @@
 
-@props(['affectation', 'detach' => false])
+@props(['affectation', 'detach' => false, 'unity_type' => '', 'unity_id' => false, 'unity_name' => ''])
 
 <div class="card mb-2 border shadow-sm rounded-4 overflow-hidden employee-card">
     {{-- Card Top Banner --}}
@@ -27,6 +27,10 @@
             <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                 <li>
                     @if($detach)
+                    <a class="dropdown-item py-2 text-success" href="{{ route('employees.show', $affectation->employee) }}" data-bs-toggle="modal" data-bs-target="#affectChefModal">
+                        <i class="bi bi-star-fill me-2 text-success"></i>Mettre Chef
+                    </a>
+
                     <a class="dropdown-item py-2 text-danger" href="{{ route('employees.show', $affectation->employee) }}">
                         <i class="bi bi-x me-2 text-danger"></i>Détacher
                     </a>
@@ -146,4 +150,6 @@
             <i class="bi bi-pencil-square me-1"></i>Modifier
         </a>
     </div>
+
+    <x-affect-chef-modal :employee="$affectation->employee" unity_type="{{ $unity_type }}" unity_id="{{ $unity_id }}" unity_name="{{ $unity_name }}" />
 </div>

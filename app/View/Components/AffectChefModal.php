@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class EmployeeCard extends Component
+class AffectChefModal extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class EmployeeCard extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.cards.employee-card');
+        return view('components.modals.affect-chef-modal');
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AffectationController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChefController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompetenceController;
 use App\Http\Controllers\DiplomaController;
@@ -213,6 +214,13 @@ Route::prefix('affectations')->group(function(){
     Route::get('/edit/{employee_id}/{affectation_id}', [AffectationController::class, 'edit'])->name('affectations.edit');
     Route::post('/update/{id}', [AffectationController::class, 'update'])->name('affectations.update');
     Route::get('/delete/{id}', [AffectationController::class, 'delete'])->name('affectations.delete');
+});
+
+Route::prefix('chefs')->group(function(){
+    Route::get('/', [ChefController::class, 'index'])->name('chefs.index');
+    Route::post('/store', [ChefController::class, 'store'])->name('chefs.store');
+    Route::get('/{id}', [ChefController::class, 'show'])->name('chefs.show');
+    Route::get('/delete/{id}', [ChefController::class, 'delete'])->name('chefs.delete');
 });
 
 Route::middleware('auth')->group(function () {

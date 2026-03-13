@@ -137,6 +137,7 @@
                         <tr>
                             <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Section</th>
                             <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Entité & Service</th>
+                            <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Chef</th>
                             <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Employés</th>
                             <th class="border-0 py-3 px-4 text-end small fw-semibold text-muted text-uppercase ls-1">Actions</th>
                         </tr>
@@ -158,6 +159,21 @@
                                     <div class="d-flex flex-column">
                                         <span class="fw-semibold text-primary">{{ $section->entity->title ?? 'Non assignée' }}</span>
                                         <small class="text-muted">{{ $section->entity->service->title ?? 'Service non défini' }}</small>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div class="d-flex flex-column">
+                                        @foreach($section->affectations as $affectation)
+                                            @if($affectation->employee->chefs->isNotEmpty())
+                                                @foreach($affectation->employee->chefs as $chef)
+                                                    @if ($chef->state)
+                                                        <a href="{{ Storage::url($chef->decision_file) }}" target="_blank">
+                                                            <bi class="bi-star-fill text-warning"></bi>{{ $chef->employee->lastname }} {{ $chef->employee->firstname }}
+                                                        </a>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                        @endforeach
                                     </div>
                                 </td>
                                 <td class="py-3 px-4">

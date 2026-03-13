@@ -55,7 +55,7 @@
                                 @foreach($sector->affectations as $affectation)
                                     @if ($affectation->state)
                                         <div class="col-4">
-                                            <x-employee-card :affectation="$affectation" detach="true" />
+                                            <x-employee-card :affectation="$affectation" detach="true" unity_type="sector" unity_id="{{ $sector->id }}" unity_name="{{ $sector->title }}" />
                                         </div>
                                     @endif
                                 @endforeach

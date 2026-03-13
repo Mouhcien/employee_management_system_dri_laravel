@@ -18,6 +18,10 @@ class Entity extends Model
         return $this->hasMany(Affectation::class);
     }
 
+    public function chefs() {
+        return $this->hasMany(Chef::class);
+    }
+
     public function sectors() {
         return $this->hasMany(Sector::class);
     }

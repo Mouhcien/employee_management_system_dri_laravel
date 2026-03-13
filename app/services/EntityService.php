@@ -19,7 +19,7 @@ class EntityService
 
     public function getAll($pages = 0)
     {
-        return $this->entityRepository->All(Entity::class, ['type', 'sectors', 'sections', 'affectations', 'service'], $pages);
+        return $this->entityRepository->All(Entity::class, ['type', 'sectors', 'sections', 'affectations', 'service', 'chefs'], $pages);
     }
 
     public function getAllByService($service_id, $pages = 0)
@@ -34,7 +34,7 @@ class EntityService
 
     public function getOneById($id)
     {
-        return $this->entityRepository->One(Entity::class, ['type', 'sectors', 'sections', 'affectations', 'service'], $id);
+        return $this->entityRepository->One(Entity::class, ['type', 'sectors', 'sections', 'affectations', 'service', 'chefs'], $id);
     }
 
     public function create($data)

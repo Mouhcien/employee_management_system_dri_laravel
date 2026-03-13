@@ -34,7 +34,19 @@
                             </h5>
                         </div>
                         <div class="card-body pt-3 px-4 pb-4">
-
+                            @if($entity->chefs->isNotEmpty())
+                                <div class="row col-12">
+                                    @foreach($entity->chefs as $chef)
+                                        @if ($chef->state)
+                                            {{ $chef->employee->lastname }} {{ $chef->employee->firstname }}
+                                            <br>
+                                            <a href="{{ Storage::url($chef->decision_file) }}" target="_blank"> La Decision </a>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @else
+                                <small class="text-muted">Aucun chef associé à cette section.</small>
+                            @endif
                         </div>
                     </div>
 
@@ -125,7 +137,7 @@
                                     @foreach($entity->affectations as $affectation)
                                         @if ($affectation->state)
                                             <div class="col-4">
-                                                <x-employee-card :affectation="$affectation" detach="true" />
+                                                <x-employee-card :affectation="$affectation" detach="true" unity_type="entity" unity_id="{{ $entity->id }}" unity_name="{{ $entity->title }}" />
                                             </div>
                                         @endif
                                     @endforeach

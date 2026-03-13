@@ -36,7 +36,23 @@
                         </h5>
                     </div>
                     <div class="card-body pt-3 px-4 pb-4">
-
+                        @if($section->affectations->isNotEmpty())
+                            <div class="row col-12">
+                                @foreach($section->affectations as $affectation)
+                                    @if($affectation->employee->chefs->isNotEmpty())
+                                        @foreach($affectation->employee->chefs as $chef)
+                                            @if ($chef->state)
+                                                <x-employee-card :affectation="$affectation" detach="true" unity_type="section" unity_id="{{ $section->id }}" unity_name="{{ $section->title }}" />
+                                                <br>
+                                                <a href="{{ Storage::url($chef->decision_file) }}" target="_blank"> La Decision </a>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            </div>
+                        @else
+                            <small class="text-muted">Aucun chef associé à cette section.</small>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -55,7 +71,7 @@
                                 @foreach($section->affectations as $affectation)
                                 @if ($affectation->state)
                                     <div class="col-4">
-                                        <x-employee-card :affectation="$affectation" detach="true" />
+                                        <x-employee-card :affectation="$affectation" detach="true" unity_type="section" unity_id="{{ $section->id }}" unity_name="{{ $section->title }}" />
                                     </div>
                                 @endif
                             @endforeach
