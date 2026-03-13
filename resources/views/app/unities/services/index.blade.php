@@ -134,12 +134,22 @@
                                 </td>
                                 <td class="py-3 px-4">
                                     <div class="d-flex align-items-center gap-2 flex-wrap">
-
+                                        @if($service->chefs->isNotEmpty())
+                                            @foreach($service->chefs as $chef)
+                                                @if ($chef->state)
+                                                    <a href="{{ Storage::url($chef->decision_file) }}" target="_blank">
+                                                        <bi class="bi-star-fill text-warning"></bi>{{ $chef->employee->lastname }} {{ $chef->employee->firstname }}
+                                                    </a>
+                                                @endif
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </td>
                                 <td class="py-3 px-4">
                                     <div class="d-flex align-items-center gap-2 flex-wrap">
-
+                                        <span class="badge bg-info">
+                                        {{ is_null($service->affectations) ? '0' : count($service->affectations) }} employeés
+                                        </span>
                                     </div>
                                 </td>
                                 <td class="py-3 px-4 text-end">

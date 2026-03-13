@@ -24,12 +24,13 @@
 
         <!-- Edit form section -->
         <div class="bg-light rounded-3 border p-4 shadow-sm">
-            <form action="{{ route('services.update', $service->id) }}" method="POST">
-                @csrf
+
                 <div class="row g-3">
                     <!-- Service title -->
                     <div class="col-12 col-lg-8">
-                        <div class="row g-3 align-items-center">
+                        <form action="{{ route('services.update', $service->id) }}" method="POST">
+                            @csrf
+                            <div class="row g-3 align-items-center">
                             <div class="col-12 col-md-8">
                                 <label for="serviceTitle" class="form-label fw-semibold text-dark mb-1">
                                     Nom du service
@@ -49,22 +50,51 @@
                                     Mettre à jour
                                 </button>
                             </div>
+
                         </div>
+                        </form>
                     </div>
 
-                    <!-- Chef info on the right -->
                     <div class="col-12 col-lg-4">
-                        <div class="bg-white border border-primary rounded-3 p-3 text-center shadow-sm">
-                            <h6 class="fw-semibold text-primary mb-1">
-                                Chef du service
-                            </h6>
-                            <p class="text-dark m-0">
-                                {{ $service->chef?->name ?? 'Non défini' }}
-                            </p>
+                        <div class="card border-info shadow-sm mb-2">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="h6 mb-0">
+                                    <i class="bi bi-journal-text me-2"></i>
+                                    Importer les employées
+                                </h5>
+                            </div>
+                            <div class="card-body pt-3 px-4 pb-4">
+                                <form action="{{ route('affectations.services.import') }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" name="service_id" value="{{ $service->id }}">
+                                    <label class="form-label mb-2">Fichier Excel des PPR</label>
+                                    <input type="file" class="form-control mb-2" name="file">
+                                    <button class="btn btn-primary"><i class="bi bi-save me-2"></i> Charger</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </form>
+
+                <!-- Chef info on the right -->
+                <div class="bg-white border border-primary rounded-3 p-3 text-center shadow-sm">
+                        <h6 class="fw-semibold text-primary mb-1">
+                            Chef du service
+                        </h6>
+                        @if($service->chefs->isNotEmpty())
+                            <div class="row col-12">
+                                @foreach($service->chefs as $chef)
+                                    @if($chef->state)
+                                        @php $employee = $chef->employee; @endphp
+                                        <x-chef-card :employee="$employee" detach="true" :chef="$chef" />
+                                    @endif
+                                @endforeach
+                            </div>
+                        @else
+                            <small class="text-muted">Aucun chef associé à cette entité.</small>
+                        @endif
+                    </div>
+
         </div>
 
         <!-- Three colored cards: Entités, Secteurs, Sections -->
@@ -153,6 +183,38 @@
                             <small class="text-muted">Aucune section associée à ce service.</small>
                         @endif
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="">
+            <div class="card border-success shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="h6 mb-0">
+                        <i class="bi bi-diagram-3 me-2"></i>
+                        employés
+                    </h5>
+                </div>
+                <div class="card-body pt-3 px-4 pb-4">
+                    @if($service->affectations->isNotEmpty())
+                        <div class="row col-12">
+                            @foreach($service->affectations as $affectation)
+                                @if ($affectation->state)
+                                    <div class="col-4">
+                                        @php $employee = $affectation->employee; @endphp
+                                        <x-employee-card :employee="$employee" detach="true" unity_type="service" unity_id="{{ $service->id }}" unity_name="{{ $service->title }}" />
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                        <x-delete-model
+                            href="{{ route('employees.delete', $affectation->employee->id) }}"
+                            message="Voulez-vous vraiment supprimer ce agent ?"
+                            title="Confiramtion"
+                            target="deleteEmployeeModal" />
+                    @else
+                        <small class="text-muted">Aucun employés associé à ce service.</small>
+                    @endif
                 </div>
             </div>
         </div>

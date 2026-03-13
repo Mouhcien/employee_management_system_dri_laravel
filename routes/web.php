@@ -53,6 +53,19 @@ Route::prefix('locals')->group(function(){
     Route::get('/delete/{id}', [LocalController::class, 'delete'])->name('locals.delete');
 });
 
+Route::prefix('affectations')->group(function(){
+    Route::get('/', [AffectationController::class, 'index'])->name('affectations.index');
+    Route::post('/store', [AffectationController::class, 'store'])->name('affectations.store');
+    Route::get('/{id}', [AffectationController::class, 'show'])->name('affectations.show');
+    Route::post('/import/section', [AffectationController::class, 'import_section'])->name('affectations.sections.import');
+    Route::post('/import/sector', [AffectationController::class, 'import_sector'])->name('affectations.sectors.import');
+    Route::post('/import/entity', [AffectationController::class, 'import_entity'])->name('affectations.entities.import');
+    Route::post('/import/service', [AffectationController::class, 'import_service'])->name('affectations.services.import');
+    Route::post('/update/{id}', [AffectationController::class, 'update'])->name('affectations.update');
+    Route::get('/delete/{id}', [AffectationController::class, 'delete'])->name('affectations.delete');
+    Route::get('/edit/{employee_id}/{affectation_id}', [AffectationController::class, 'edit'])->name('affectations.edit');
+});
+
 Route::prefix('services')->group(function(){
     Route::get('/', [ServiceController::class, 'index'])->name('services.index');
     Route::post('/store', [ServiceController::class, 'store'])->name('services.store');
@@ -201,19 +214,6 @@ Route::prefix('competences')->group(function(){
     Route::post('/store', [CompetenceController::class, 'store'])->name('competences.store');
     Route::get('/{id}', [CompetenceController::class, 'show'])->name('competences.show');
     Route::get('/delete/{id}', [CompetenceController::class, 'delete'])->name('competences.delete');
-});
-
-Route::prefix('affectations')->group(function(){
-    Route::get('/', [AffectationController::class, 'index'])->name('affectations.index');
-    Route::post('/store', [AffectationController::class, 'store'])->name('affectations.store');
-    Route::post('/import/section', [AffectationController::class, 'import_section'])->name('affectations.sections.import');
-    Route::post('/import/sector', [AffectationController::class, 'import_sector'])->name('affectations.sectors.import');
-    Route::post('/import/entity', [AffectationController::class, 'import_entity'])->name('affectations.entities.import');
-    Route::post('/import/service', [AffectationController::class, 'import_service'])->name('affectations.services.import');
-    Route::get('/{id}', [AffectationController::class, 'show'])->name('affectations.show');
-    Route::get('/edit/{employee_id}/{affectation_id}', [AffectationController::class, 'edit'])->name('affectations.edit');
-    Route::post('/update/{id}', [AffectationController::class, 'update'])->name('affectations.update');
-    Route::get('/delete/{id}', [AffectationController::class, 'delete'])->name('affectations.delete');
 });
 
 Route::prefix('chefs')->group(function(){

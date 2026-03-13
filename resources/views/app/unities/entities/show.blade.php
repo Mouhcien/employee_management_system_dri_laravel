@@ -105,55 +105,55 @@
                 </div>
 
                 <div class="col-12 col-lg-6">
-                <div class="card border-info shadow-sm mb-2">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="h6 mb-0">
-                            <i class="bi bi-journal-text me-2"></i>
-                            Importer les employées
-                        </h5>
-                    </div>
-                    <div class="card-body pt-3 px-4 pb-4">
-                        <form action="{{ route('affectations.entities.import') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <input type="hidden" name="entity_id" value="{{ $entity->id }}">
-                            <label class="form-label mb-2">Fichier Excel des PPR</label>
-                            <input type="file" class="form-control mb-2" name="file">
-                            <button class="btn btn-primary"><i class="bi bi-save me-2"></i> Charger</button>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="card border-success shadow-sm">
-                        <div class="card-header bg-success text-white">
+                    <div class="card border-info shadow-sm mb-2">
+                        <div class="card-header bg-primary text-white">
                             <h5 class="h6 mb-0">
-                                <i class="bi bi-diagram-3 me-2"></i>
-                                employés
+                                <i class="bi bi-journal-text me-2"></i>
+                                Importer les employées
                             </h5>
                         </div>
                         <div class="card-body pt-3 px-4 pb-4">
-                            @if($entity->affectations->isNotEmpty())
-                                <div class="row col-12">
-                                    @foreach($entity->affectations as $affectation)
-                                        @if ($affectation->state)
-                                            <div class="col-4">
-                                                @php $employee = $affectation->employee; @endphp
-                                                <x-employee-card :employee="$employee" detach="true" unity_type="entity" unity_id="{{ $entity->id }}" unity_name="{{ $entity->title }}" />
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </div>
-                                <x-delete-model
-                                    href="{{ route('employees.delete', $affectation->employee->id) }}"
-                                    message="Voulez-vous vraiment supprimer ce agent ?"
-                                    title="Confiramtion"
-                                    target="deleteEmployeeModal" />
-                            @else
-                                <small class="text-muted">Aucun employés associé à ce service.</small>
-                            @endif
+                            <form action="{{ route('affectations.entities.import') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="entity_id" value="{{ $entity->id }}">
+                                <label class="form-label mb-2">Fichier Excel des PPR</label>
+                                <input type="file" class="form-control mb-2" name="file">
+                                <button class="btn btn-primary"><i class="bi bi-save me-2"></i> Charger</button>
+                            </form>
                         </div>
                     </div>
 
-            </div>
+                    <div class="card border-success shadow-sm">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="h6 mb-0">
+                                    <i class="bi bi-diagram-3 me-2"></i>
+                                    employés
+                                </h5>
+                            </div>
+                            <div class="card-body pt-3 px-4 pb-4">
+                                @if($entity->affectations->isNotEmpty())
+                                    <div class="row col-12">
+                                        @foreach($entity->affectations as $affectation)
+                                            @if ($affectation->state)
+                                                <div class="col-4">
+                                                    @php $employee = $affectation->employee; @endphp
+                                                    <x-employee-card :employee="$employee" detach="true" unity_type="entity" unity_id="{{ $entity->id }}" unity_name="{{ $entity->title }}" />
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                    <x-delete-model
+                                        href="{{ route('employees.delete', $affectation->employee->id) }}"
+                                        message="Voulez-vous vraiment supprimer ce agent ?"
+                                        title="Confiramtion"
+                                        target="deleteEmployeeModal" />
+                                @else
+                                    <small class="text-muted">Aucun employés associé à ce service.</small>
+                                @endif
+                            </div>
+                        </div>
+
+                </div>
         </div>
     </div>
 </x-layout>

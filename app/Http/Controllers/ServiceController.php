@@ -90,6 +90,7 @@ class ServiceController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $data = $request->validate($this->rules);
 
         $service = $this->serviceEntityService->getOneById($id);

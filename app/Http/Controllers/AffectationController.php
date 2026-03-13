@@ -243,6 +243,7 @@ class AffectationController extends Controller
 
     public function import_service(Request $request) {
         try {
+
             $service_id = $request->input('service_id');
 
             if ($request->hasFile('file')) {
@@ -272,13 +273,13 @@ class AffectationController extends Controller
                 }
 
                 if ($count == count($rows[0])) {
-                    return redirect()->route('entities.show', $service_id)->with('success', "Importation est bien faite!!  " . $count . "/" . count($rows[0]) . " !");
+                    return redirect()->route('services.show', $service_id)->with('success', "Importation est bien faite!!  " . $count . "/" . count($rows[0]) . " !");
                 } else {
-                    return redirect()->route('entities.show', $service_id)->with('error', "Employé sont affecté " . $count . "/" . count($rows[0]) . " !");
+                    return redirect()->route('services.show', $service_id)->with('error', "Employé sont affecté " . $count . "/" . count($rows[0]) . " !");
                 }
 
             } else {
-                return redirect()->route('entities.show', $service_id)->with('error', "Merci de spécifier le fichier excel contenant les employés");
+                return redirect()->route('services.show', $service_id)->with('error', "Merci de spécifier le fichier excel contenant les employés");
             }
 
         }catch (\Exception $exception) {
