@@ -116,7 +116,8 @@
         </button>
         <div class="collapse {{ request()->routeIs('chefs.*') ? 'show' : '' }}" id="menuChefs">
             <ul class="nav flex-column ms-2 mt-1">
-                <li><a href="{{ route('chefs.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('chefs.index') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Consulter</a></li>
+                <li><a href="{{ route('chefs.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('chefs.index') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Consulter les chefs</a></li>
+                <li><a href="{{ route('temps.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('temps.index') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Consulter les intérimaires</a></li>
             </ul>
         </div>
     </div>

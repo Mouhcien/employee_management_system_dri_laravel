@@ -131,6 +131,42 @@
             });
         }
 
+        // Toastr Configuration
+        window.addEventListener('load', function() {
+            // Configure Toastr
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-bottom-right",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut",
+                "preventDuplicates": true,
+                "newestOnTop": true
+            };
+
+            // Display Session Messages
+            @if(Session::has('success'))
+            toastr.success("{{ session('success') }}", "Succès");
+            @endif
+
+            @if(Session::has('error'))
+            toastr.error("{{ session('error') }}", "Erreur");
+            @endif
+
+            @if(Session::has('info'))
+            toastr.info("{{ session('info') }}", "Information");
+            @endif
+
+            @if(Session::has('warning'))
+            toastr.warning("{{ session('warning') }}", "Attention");
+            @endif
+        });
+
+
     });
 </script>
 </body>

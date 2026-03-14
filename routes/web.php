@@ -20,6 +20,7 @@ use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SectorController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\TempController;
 use App\Http\Controllers\WorkController;
 use Illuminate\Support\Facades\Route;
 
@@ -223,6 +224,16 @@ Route::prefix('chefs')->group(function(){
     Route::get('/edit/{id}', [ChefController::class, 'edit'])->name('chefs.edit');
     Route::post('/update/{id}', [ChefController::class, 'update'])->name('chefs.update');
     Route::get('/delete/{id}', [ChefController::class, 'delete'])->name('chefs.delete');
+});
+
+Route::prefix('temps')->group(function(){
+    Route::get('/', [TempController::class, 'index'])->name('temps.index');
+    Route::post('/store', [TempController::class, 'store'])->name('temps.store');
+    Route::get('/create', [TempController::class, 'create'])->name('temps.create');
+    Route::get('/{id}', [TempController::class, 'show'])->name('temps.show');
+    Route::get('/edit/{id}', [TempController::class, 'edit'])->name('temps.edit');
+    Route::post('/update/{id}', [TempController::class, 'update'])->name('temps.update');
+    Route::get('/delete/{id}', [TempController::class, 'delete'])->name('temps.delete');
 });
 
 Route::middleware('auth')->group(function () {
