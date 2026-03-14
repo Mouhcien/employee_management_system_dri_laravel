@@ -192,6 +192,51 @@
             target="deleteServiceModal-{{ $service->id }}" />
     @endforeach
 
+    {{-- Create Service Modal --}}
+    <div class="modal fade" id="createServiceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <form action="{{ route('services.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-header border-0 bg-primary bg-gradient p-4 text-white">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-white bg-opacity-20 p-2 rounded-circle me-3 shadow-sm text-dark">
+                                <i class="bi bi-plus-lg fs-3"></i>
+                            </div>
+                            <div>
+                                <h5 class="modal-title fw-bold mb-0">Définir un service</h5>
+                                <small class="text-white text-opacity-75">Classification administrative du personnel</small>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body p-4 bg-white">
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-muted text-uppercase ls-1">Intitulé du service <span class="text-danger">*</span></label>
+                            <div class="input-group input-group-lg border rounded-3 overflow-hidden shadow-sm transition-base">
+                                <span class="input-group-text bg-white border-0 text-primary"><i class="bi bi-tag"></i></span>
+                                <input type="text" class="form-control border-0 bg-white shadow-none @error('title') is-invalid @enderror" id="categoryTitle" name="title" placeholder="Ex: Service RH, PM..." required>
+                            </div>
+                        </div>
+
+                        <div class="bg-primary-subtle rounded-4 p-3 d-none" id="previewSection">
+                            <div class="d-flex align-items-center text-primary fw-bold">
+                                <i class="bi bi-check2-circle me-2"></i>
+                                <span id="previewTitle" class="small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer border-0 bg-light px-4 py-3">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm transition-base">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     @push('styles')
         <style>
             .hover-row:hover { background-color: #f8faff !important; }

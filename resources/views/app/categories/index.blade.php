@@ -205,7 +205,7 @@
                         @csrf
                         <div class="modal-header border-0 bg-primary bg-gradient p-4 text-white">
                             <div class="d-flex align-items-center">
-                                <div class="bg-white bg-opacity-20 p-2 rounded-circle me-3 shadow-sm">
+                                <div class="bg-white bg-opacity-20 p-2 rounded-circle me-3 shadow-sm text-dark">
                                     <i class="bi bi-plus-lg fs-3"></i>
                                 </div>
                                 <div>

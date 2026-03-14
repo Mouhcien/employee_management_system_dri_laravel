@@ -73,11 +73,17 @@
                                         >
                                             <option value="">Choisir un type...</option>
                                             @foreach($types as $type)
+                                                @if (isset($entity))
                                                 <option value="{{ $type->id }}"
-                                                    {{ (isset($entity) && $type->id == $entity->type_id) || old('type_id') == $entity->id ? 'selected' : '' }}
+                                                    {{ ($type->id == $entity->type_id) || old('type_id') == $entity->id ? 'selected' : '' }}
                                                 >
                                                     {{ $type->title }}
                                                 </option>
+                                                @else
+                                                    <option value="{{ $type->id }}">
+                                                        {{ $type->title }}
+                                                    </option>
+                                                @endif
                                             @endforeach
                                         </select>
                                         @error('type_id')
