@@ -220,6 +220,8 @@ Route::prefix('chefs')->group(function(){
     Route::get('/', [ChefController::class, 'index'])->name('chefs.index');
     Route::post('/store', [ChefController::class, 'store'])->name('chefs.store');
     Route::get('/{id}', [ChefController::class, 'show'])->name('chefs.show');
+    Route::get('/edit/{id}', [ChefController::class, 'edit'])->name('chefs.edit');
+    Route::post('/update/{id}', [ChefController::class, 'update'])->name('chefs.update');
     Route::get('/delete/{id}', [ChefController::class, 'delete'])->name('chefs.delete');
 });
 

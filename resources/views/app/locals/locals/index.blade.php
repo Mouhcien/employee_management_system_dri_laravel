@@ -1,185 +1,148 @@
 <x-layout>
     @section('title', 'Gestion des locaux - HR Management')
 
-    <div class="d-flex flex-column gap-4">
-        {{-- Page Header --}}
-        <div class="bg-gradient-primary-to-secondary rounded-4 p-4 mb-4 text-white shadow-lg" >
-            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
-                <div>
-                    <h1 class="h2 fw-bold text-dark mb-1">Gestion des locaux</h1>
-                    <p class="text-muted mb-0">Gérez efficacement vos locaux et leurs associations</p>
-                </div>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createLocalModal">
-                        <i class="bi bi-plus-circle me-2"></i>
-                        Nouveau local
-                    </button>
-                    <button class="btn btn-outline-secondary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#bulkActions">
-                        <i class="bi bi-download me-2"></i>
-                        Exporter
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        {{-- Stats Cards --}}
-        <div class="row g-3 mb-4">
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <div class="h2 fw-bold text-primary mb-1">{{ $total ?? 0 }}</div>
-                        <div class="text-muted small">Locaux total</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <div class="h2 fw-bold text-success mb-1">{{ $totalCities ?? 0 }}</div>
-                        <div class="text-muted small">Villes</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <div class="h2 fw-bold text-info mb-1">{{ $totalEmployees ?? 0 }}</div>
-                        <div class="text-muted small">Employés</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <div class="h2 fw-bold text-warning mb-1">{{ $activeLocals ?? 0 }}</div>
-                        <div class="text-muted small">Locaux actifs</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Advanced Filters --}}
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-transparent border-0 pb-0">
-                <h5 class="card-title mb-2"><i class="bi bi-funnel me-2"></i>Filtres & Recherche</h5>
-            </div>
-            <div class="card-body pt-0">
-                <form method="GET" action="{{ route('locals.index') }}" class="row g-3">
-                    <div class="col-lg-4 col-md-6">
-                        <label class="form-label small fw-semibold text-muted">Recherche</label>
-                        <div class="position-relative">
-                            <div class="position-absolute top-50 start-0 translate-middle-y ps-3">
-                                <i class="bi bi-search text-muted"></i>
-                            </div>
-                            <input type="text" name="search" value="{{ request('search') }}"
-                                   class="form-control ps-5" placeholder="Nom du local ou ville...">
+    <div class="container-fluid py-4">
+        {{-- Glassmorphic Page Header --}}
+        <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+            <div class="card-body p-0">
+                <div class="bg-primary bg-gradient p-4 text-white">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="fw-bold mb-1">Infrastructures Locales</h2>
+                            <p class="opacity-75 mb-0">Pilotez les locaux techniques et administratifs de votre réseau</p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <button class="btn btn-white btn-rounded shadow-sm fw-bold px-4 me-2" data-bs-toggle="modal" data-bs-target="#createLocalModal">
+                                <i class="bi bi-plus-lg me-2"></i>Nouveau Local
+                            </button>
+                            <button class="btn btn-primary-light btn-rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#bulkActions">
+                                <i class="bi bi-download"></i>
+                            </button>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-6">
-                        <label class="form-label small fw-semibold text-muted">Filtrer par ville</label>
-                        <select name="department" class="form-select">
+                </div>
+            </div>
+        </div>
+
+        {{-- Dynamic Stats Grid --}}
+        <div class="row g-3 mb-4">
+            @php
+                $stats = [
+                    ['label' => 'Locaux Totaux', 'count' => $locals->total(), 'color' => 'primary', 'icon' => 'bi-building-fill'],
+                    ['label' => 'Villes Couvertes', 'count' => $totalCities, 'color' => 'success', 'icon' => 'bi-geo-alt-fill'],
+                    ['label' => 'Effectif Total', 'count' => 0, 'color' => 'info', 'icon' => 'bi-people-fill'],
+                    ['label' => 'Locaux Actifs', 'count' => 0, 'color' => 'warning', 'icon' => 'bi-check-circle-fill']
+                ];
+            @endphp
+            @foreach($stats as $stat)
+                <div class="col-xl-3 col-sm-6">
+                    <div class="card border-0 shadow-sm rounded-4 hover-lift h-100">
+                        <div class="card-body p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-{{ $stat['color'] }}-subtle text-{{ $stat['color'] }} rounded-4 p-3 me-3">
+                                    <i class="bi {{ $stat['icon'] }} fs-4"></i>
+                                </div>
+                                <div>
+                                    <h4 class="fw-bold mb-0 text-dark">{{ $stat['count'] ?? 0 }}</h4>
+                                    <p class="text-muted small mb-0 fw-medium text-uppercase ls-1">{{ $stat['label'] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        {{-- Advanced Filter Bar --}}
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-body p-4">
+                <form method="GET" action="{{ route('locals.index') }}" class="row g-3 align-items-end">
+                    <div class="col-lg-4">
+                        <label class="form-label fw-bold small text-uppercase text-muted">Recherche</label>
+                        <div class="input-group bg-light border-0 rounded-3">
+                            <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text" name="search" value="{{ request('search') }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Nom du local ou ville...">
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <label class="form-label fw-bold small text-uppercase text-muted">Filtrer par ville</label>
+                        <select name="department" class="form-select border-0 bg-light rounded-3 shadow-none">
                             <option value="">Toutes les villes</option>
                             @foreach($cities as $city)
-                                <option value="{{ $city->id }}" {{ request('department') == $city->id ? 'selected' : '' }}>
-                                    {{ $city->title }}
-                                </option>
+                                <option value="{{ $city->id }}" {{ request('department') == $city->id ? 'selected' : '' }}>{{ $city->title }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-lg-2 col-md-6">
-                        <label class="form-label small fw-semibold text-muted">Statut</label>
-                        <select name="status" class="form-select">
+                    <div class="col-lg-2">
+                        <label class="form-label fw-bold small text-uppercase text-muted">Statut</label>
+                        <select name="status" class="form-select border-0 bg-light rounded-3 shadow-none">
                             <option value="">Tous</option>
                             <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Actif</option>
                             <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactif</option>
                         </select>
                     </div>
-                    <div class="col-lg-3 col-md-6 d-flex align-items-end gap-2">
-                        <button type="submit" class="btn btn-primary flex-fill">
-                            <i class="bi bi-funnel me-1"></i> Filtrer
-                        </button>
-                        <a href="{{ route('locals.index') }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </a>
+                    <div class="col-lg-3 d-flex gap-2">
+                        <button type="submit" class="btn btn-dark w-100 rounded-3"><i class="bi bi-funnel me-1"></i>Filtrer</button>
+                        <a href="{{ route('locals.index') }}" class="btn btn-outline-secondary rounded-3 border-light-subtle bg-white shadow-sm"><i class="bi bi-arrow-clockwise"></i></a>
                     </div>
                 </form>
             </div>
         </div>
 
-        {{-- Main Table --}}
-        <div class="card shadow-lg border-0 overflow-hidden">
-            <div class="card-header bg-white border-bottom py-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-semibold">
-                        <i class="bi bi-building text-primary me-2"></i>
-                        Liste des locaux ({{ $locals->total() ?? 0 }})
-                    </h5>
-                    <div class="d-flex gap-2">
-                        <div class="dropdown">
-                            <button class="btn btn-outline-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
-                                <i class="bi bi-download me-1"></i>Exporter
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#" class="dropdown-item text-success"><i class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
-                                <li><a href="#" class="dropdown-item text-success"><i class="bi bi-bar-chart me-2"></i>Statistiques Excel</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a href="#" class="dropdown-item text-danger"><i class="bi bi-file-earmark-pdf me-2"></i>PDF</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+        {{-- Locals Table Card --}}
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="card-header bg-white py-3 px-4 border-bottom-0 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-building-fill text-primary me-2"></i>Répertoire des Locaux</h5>
+                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 fw-bold">Total: {{ $locals->total() }}</span>
             </div>
             <div class="table-responsive">
-                <table class="table mb-0 align-middle">
-                    <thead class="table-light">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light-subtle">
                     <tr>
-                        <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Local</th>
-                        <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Ville</th>
-                        <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Employés</th>
-                        <th class="border-0 py-3 px-4 text-end small fw-semibold text-muted text-uppercase ls-1">Actions</th>
+                        <th class="ps-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Nom du Local</th>
+                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Ville de Rattachement</th>
+                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-center">Effectif RH</th>
+                        <th class="pe-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-end">Actions</th>
                     </tr>
                     </thead>
-                    <tbody class="border-top">
-                    @forelse($locals ?? [] as $local)
-                        <tr class="hover-table-row">
-                            <td class="py-3 px-4">
+                    <tbody>
+                    @forelse($locals as $local)
+                        <tr class="hover-row transition-base">
+                            <td class="ps-4 py-3">
                                 <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-sm bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3">
-                                        <i class="bi bi-building fs-6"></i>
+                                    <div class="bg-success-subtle text-success rounded-3 p-2 me-3 d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;">
+                                        <i class="bi bi-building"></i>
                                     </div>
-                                    <div>
-                                        <div class="fw-semibold text-dark small">{{ $local->title }}</div>
-                                    </div>
+                                    <div class="fw-bold text-dark">{{ $local->title }}</div>
                                 </div>
                             </td>
-                            <td class="py-3 px-4">
-                                <div class="fw-semibold text-primary">{{ $local->city->title ?? 'Non assignée' }}</div>
+                            <td class="py-3">
+                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 fw-semibold">
+                                    <i class="bi bi-geo-alt me-1"></i>{{ $local->city->title ?? 'Indépendant' }}
+                                </span>
                             </td>
-                            <td class="py-3 px-4">
-                                <div class="d-flex align-items-center gap-2">
-                                    @if($local->employees->isNotEmpty())
-                                        <span class="badge bg-info small px-3 py-2">{{ count($local->employees) }}</span>
-                                    @else
-                                        <span class="badge bg-danger small px-3 py-2">0</span>
-                                    @endif
+                            <td class="py-3 text-center">
+                                <div class="badge bg-{{ $local->employees->count() > 0 ? 'info' : 'danger' }}-subtle text-{{ $local->employees->count() > 0 ? 'info' : 'danger' }} rounded-pill px-3 py-2 fw-bold">
+                                    <i class="bi bi-people-fill me-1"></i>
+                                    {{ $local->employees->count() }}
                                 </div>
                             </td>
-                            <td class="py-3 px-4 text-end">
-                                <div class="btn-group" role="group">
-                                    <a href="{{ route('locals.show', $local) }}" class="btn btn-sm btn-outline-primary" title="Voir">
-                                        <i class="bi bi-eye"></i>
+                            <td class="pe-4 py-3 text-end">
+                                <div class="d-flex justify-content-end gap-1">
+                                    <a href="{{ route('locals.show', $local) }}" class="btn btn-sm btn-outline-primary border-0 rounded-circle p-2" title="Consulter">
+                                        <i class="bi bi-eye-fill fs-5"></i>
                                     </a>
                                     <div class="dropdown">
-                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                            <i class="bi bi-three-dots-vertical"></i>
+                                        <button class="btn btn-sm btn-light border-0 shadow-xs rounded-circle p-2" data-bs-toggle="dropdown">
+                                            <i class="bi bi-three-dots-vertical fs-5"></i>
                                         </button>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><a href="#" class="dropdown-item"><i class="bi bi-envelope me-2"></i>Email</a></li>
-                                            <li><a href="#" class="dropdown-item"><i class="bi bi-file-earmark-pdf me-2"></i>PDF</a></li>
-                                            <li><hr class="dropdown-divider"></li>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 overflow-hidden">
+                                            <li><a class="dropdown-item py-2 small" href="#"><i class="bi bi-envelope me-2 text-info"></i>Notifier le local</a></li>
+                                            <li><a class="dropdown-item py-2 small" href="#"><i class="bi bi-file-earmark-pdf me-2 text-danger"></i>Export Fiche (PDF)</a></li>
+                                            <li><hr class="dropdown-divider opacity-50"></li>
                                             <li>
-                                                <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteLocalModal">
-                                                    <i class="bi bi-trash me-2"></i>Supprimer
+                                                <button class="dropdown-item py-2 small text-danger fw-bold" data-bs-toggle="modal" data-bs-target="#deleteLocalModal-{{ $local->id }}">
+                                                    <i class="bi bi-trash3 me-2"></i>Supprimer
                                                 </button>
                                             </li>
                                         </ul>
@@ -190,19 +153,9 @@
                     @empty
                         <tr>
                             <td colspan="4" class="text-center py-5">
-                                <div class="d-flex flex-column align-items-center gap-3">
-                                    <div class="avatar avatar-lg bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                        <i class="bi bi-building-fill fs-1 text-muted"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="h4 fw-semibold text-muted mb-1">Aucun local trouvé</h3>
-                                        <p class="text-muted mb-0">Commencez par ajouter votre premier local</p>
-                                    </div>
-                                    <a href="{{ route('locals.create') }}" class="btn btn-primary btn-lg px-4">
-                                        <i class="bi bi-plus-circle me-2"></i>
-                                        Ajouter un local
-                                    </a>
-                                </div>
+                                <i class="bi bi-building-x fs-1 text-muted opacity-25"></i>
+                                <h5 class="mt-3 text-muted">Aucun local n'est encore enregistré</h5>
+                                <button class="btn btn-primary rounded-pill px-4 mt-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#createLocalModal">Ajouter le premier local</button>
                             </td>
                         </tr>
                     @endforelse
@@ -210,185 +163,127 @@
                 </table>
             </div>
 
-            @foreach($locals as $local)
-                <x-delete-model
-                    href="{{ route('locals.delete', $local->id) }}"
-                    message="Voulez-vous vraiment supprimer ce local ?"
-                    title="Confiramtion"
-                    target="deleteLocalModal" />
-            @endforeach
-
-
-            {{-- Pagination --}}
+            {{-- Pagination Footer --}}
             @if(isset($locals) && $locals->hasPages())
-                <div class="card-footer bg-white border-top py-4">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <div class="small text-muted">
-                                Affichage de {{ $locals->firstItem() }} à {{ $locals->lastItem() }}
-                                sur {{ $locals->total() }} résultats
-                            </div>
+                <div class="card-footer bg-white border-top-0 py-4 px-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                        <div class="text-muted small order-2 order-md-1">
+                            Affichage <span class="fw-bold">{{ $locals->firstItem() }}</span> - <span class="fw-bold">{{ $locals->lastItem() }}</span> sur <span class="fw-bold">{{ $locals->total() }}</span> résultats
                         </div>
-                        <div class="col-md-6">
-                            <nav aria-label="Pagination">
-                                {{--
-                                {{ $locals->appends(request()->query())->links([
-                                    'class' => 'pagination-sm justify-content-end mb-0'
-                                ]) }}
-                                --}}
-                                {{ $locals->links() }}
-                            </nav>
+                        <div class="order-1 order-md-2">
+                            {{ $locals->links() }}
                         </div>
                     </div>
                 </div>
             @endif
-
-
         </div>
     </div>
 
-    {{-- Bulk Actions Modal --}}
-    <div class="modal fade" id="bulkActions" tabindex="-1">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Exporter les données</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="list-group list-group-flush">
-                            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
-                                <i class="bi bi-file-earmark-excel text-success me-3 fs-4"></i>
-                                <div>
-                                    <div class="fw-semibold">Excel complet</div>
-                                    <small class="text-muted">Tous les locaux et statistiques</small>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
-                                <i class="bi bi-bar-chart text-success me-3 fs-4"></i>
-                                <div>
-                                    <div class="fw-semibold">Statistiques Excel</div>
-                                    <small class="text-muted">Graphiques et résumés</small>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
-                                <i class="bi bi-file-earmark-pdf text-danger me-3 fs-4"></i>
-                                <div>
-                                    <div class="fw-semibold">Rapport PDF</div>
-                                    <small class="text-muted">Document professionnel</small>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    {{-- Individual Delete Modals --}}
+    @foreach($locals as $local)
+        <x-delete-model
+            href="{{ route('locals.delete', $local->id) }}"
+            message="Attention : La suppression du local '{{ $local->title }}' entraînera la dissociation de tout le personnel y étant rattaché."
+            title="Confirmation de Suppression"
+            target="deleteLocalModal-{{ $local->id }}" />
+    @endforeach
 
     {{-- Create Local Modal --}}
-    <div class="modal fade" id="createLocalModal" tabindex="-1" aria-labelledby="createLocalModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createLocalModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
                 <form action="{{ route('locals.store') }}" method="POST">
                     @csrf
-
-                    <div class="modal-header border-0 pb-0">
+                    <div class="modal-header border-0 bg-primary bg-gradient p-4 text-white">
                         <div class="d-flex align-items-center">
-                            <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3">
-                                <i class="bi bi-geo-alt-fill text-primary fs-4"></i>
+                            <div class="bg-white bg-opacity-20 p-2 rounded-circle me-3 shadow-sm">
+                                <i class="bi bi-building-add fs-3 text-white"></i>
                             </div>
                             <div>
-                                <h5 class="modal-title fw-bold mb-0" id="createCityModalLabel">Nouveau Local</h5>
-                                <small class="text-muted">Ajoutez un nouveau local à votre structure</small>
+                                <h5 class="modal-title fw-bold mb-0">Nouveau Local</h5>
+                                <small class="text-white text-opacity-75">Paramétrage d'infrastructure</small>
                             </div>
                         </div>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal"></button>
                     </div>
 
-                    <div class="modal-body pt-0 px-4">
-                        {{-- Title Field --}}
+                    <div class="modal-body p-4 bg-white">
                         <div class="mb-4">
-                            <label for="cityTitle" class="form-label fw-semibold text-dark mb-2">
-                                Nom du local <span class="text-danger">*</span>
-                            </label>
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-text bg-white border-end-0">
-                                    <i class="bi bi-building text-primary"></i>
-                                </span>
-                                    <input type="text"
-                                           class="form-control form-control-lg border-start-0 shadow-sm @error('title') is-invalid @enderror"
-                                           id="cityTitle"
-                                           name="title"
-                                           placeholder="Ex: Local Sud, Nord, Marrakech 1..."
-                                           value="{{ old('title') }}"
-                                           required>
-                                    @error('title')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
+                            <label class="form-label small fw-bold text-muted text-uppercase ls-1">Désignation du local <span class="text-danger">*</span></label>
+                            <div class="input-group input-group-lg border rounded-3 overflow-hidden shadow-sm transition-base mb-3">
+                                <span class="input-group-text bg-white border-0 text-primary"><i class="bi bi-building"></i></span>
+                                <input type="text" class="form-control border-0 bg-white shadow-none @error('title') is-invalid @enderror" name="title" placeholder="Ex: Bureau Central, Annexe Nord..." required>
                             </div>
-                            <small class="text-muted mt-1">Le nom doit être unique et descriptif</small>
-                            <hr>
-                            <label for="cityTitle" class="form-label fw-semibold text-dark mb-2">
-                                Ville <span class="text-danger">*</span>
-                            </label>
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-text bg-white border-end-0">
-                                    <i class="bi bi-geo-alt text-primary"></i>
-                                </span>
-                                <select name="city_id" class="form-select">
-                                    <option value="">Toutes les villes</option>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label small fw-bold text-muted text-uppercase ls-1">Ville de rattachement <span class="text-danger">*</span></label>
+                            <div class="input-group input-group-lg border rounded-3 overflow-hidden shadow-sm transition-base">
+                                <span class="input-group-text bg-white border-0 text-primary"><i class="bi bi-geo-alt"></i></span>
+                                <select name="city_id" class="form-select border-0 bg-white shadow-none" required>
+                                    <option value="">Sélectionnez la ville...</option>
                                     @foreach($cities as $city)
-                                        <option value="{{ $city->id }}">
-                                            {{ $city->title }}
-                                        </option>
+                                        <option value="{{ $city->id }}">{{ $city->title }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-
-                        {{-- Quick Preview --}}
-                        <div class="bg-light rounded-3 p-3 mb-3 d-none" id="previewSection">
-                            <small class="text-muted mb-2 d-block">Aperçu:</small>
-                            <div class="d-flex align-items-center">
-                                <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-2">
-                                    <i class="bi bi-geo-alt-fill text-primary"></i>
-                                </div>
-                                <div class="fw-semibold text-dark" id="previewTitle">Tapez un nom...</div>
-                            </div>
-                        </div>
                     </div>
 
-                    <div class="modal-footer border-0 bg-light px-4 py-3 rounded-bottom">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            <i class="bi bi-x-circle me-1"></i>Annuler
-                        </button>
-                        <button type="submit" class="btn btn-primary px-4">
-                            <i class="bi bi-check-circle me-2"></i>
-                            Créer le local
-                        </button>
+                    <div class="modal-footer border-0 bg-light px-4 py-3">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm"><i class="bi bi-check-lg me-2"></i>Créer le local</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    {{-- Export Modal --}}
+    <div class="modal fade" id="bulkActions" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header bg-dark text-white p-4">
+                    <h5 class="modal-title fw-bold">Exportation des Infrastructures</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0 border-bottom">
+                            <i class="bi bi-file-earmark-excel-fill text-success fs-2 me-4"></i>
+                            <div>
+                                <div class="fw-bold">Registre des Locaux (Excel)</div>
+                                <small class="text-muted">Tableau détaillé avec effectifs par localité</small>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0">
+                            <i class="bi bi-file-earmark-pdf-fill text-danger fs-2 me-4"></i>
+                            <div>
+                                <div class="fw-bold">Rapport d'Implantation (PDF)</div>
+                                <small class="text-muted">Document officiel de la structure immobilière</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('styles')
         <style>
-            .hover-table-row:hover {
-                background-color: rgba(0,123,255,.075) !important;
-                transform: scale(1.001);
-                transition: all 0.2s ease;
-            }
-            .avatar {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .avatar-sm { font-size: .875em; }
-            .avatar-lg { font-size: 1.25em; }
-            .ls-1 { letter-spacing: 0.025em; }
-            .extra-small { font-size: .75em; }
-            .table th:first-child, .table td:first-child { border-left: 0; }
-            .table th:last-child, .table td:last-child { border-right: 0; }
+            .hover-row:hover { background-color: #f8faff !important; }
+            .transition-base { transition: all 0.2s ease-in-out; }
+            .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important; }
+            .btn-white { background: #fff; color: #0d6efd; border: none; }
+            .btn-white:hover { background: #f0f4ff; color: #0a58ca; }
+            .btn-primary-light { background: rgba(255,255,255,0.15); border: none; color: #fff; }
+            .btn-primary-light:hover { background: rgba(255,255,255,0.25); }
+            .btn-rounded { border-radius: 50px; }
+            .ls-1 { letter-spacing: 0.5px; }
+            .shadow-xs { box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+            .bg-success-subtle { background-color: #f0fdf4 !important; }
+            .bg-info-subtle { background-color: #ecfeff !important; }
+            .bg-primary-subtle { background-color: #eef2ff !important; }
         </style>
     @endpush
 </x-layout>

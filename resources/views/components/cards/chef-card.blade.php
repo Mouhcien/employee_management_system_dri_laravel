@@ -1,118 +1,123 @@
-
 @props(['employee', 'detach' => false, 'chef'])
 
-<div class="card mb-2 border shadow-sm rounded-4 overflow-hidden employee-card">
-    {{-- Card Top Banner --}}
-    <div class="position-relative" style="height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden hover-lift transition-base h-100 mb-3">
+    {{-- Card Top Banner (Gradient plus doux) --}}
+    <div class="position-relative" style="height: 50px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
         {{-- Gender Badge --}}
-        <span class="position-absolute top-0 start-0 m-2">
+        <div class="position-absolute top-0 start-0 m-2">
             @if ($employee->gender == 'M')
-                <i class="bi bi-gender-male text-white fs-5"></i>
+                <span class="badge bg-white bg-opacity-20 rounded-pill text-dark border border-white border-opacity-25 px-2 py-1 small">
+                    <i class="bi bi-gender-male me-1"></i>M
+                </span>
             @elseif($employee->gender == 'F')
-                <i class="bi bi-gender-female text-white fs-5"></i>
+                <span class="badge bg-white bg-opacity-20 rounded-pill text-dark border border-white border-opacity-25 px-2 py-1 small">
+                    <i class="bi bi-gender-female me-1"></i>F
+                </span>
             @endif
-        </span>
+        </div>
 
         {{-- Action Dropdown --}}
         <div class="position-absolute top-0 end-0 m-2 dropdown">
             <button
-                class="btn btn-sm btn-light rounded-circle p-1 lh-1 shadow-sm dropdown-toggle-no-caret"
+                class="btn btn-sm btn-white rounded-circle p-0 d-flex align-items-center justify-content-center shadow-sm"
                 type="button"
                 data-bs-toggle="dropdown"
-                aria-expanded="false"
-                style="width:28px; height:28px;"
+                style="width:26px; height:26px; background: white; border:none;"
             >
-                <i class="bi bi-three-dots-vertical text-dark" style="font-size: 0.75rem;"></i>
+                <i class="bi bi-three-dots-vertical text-dark small"></i>
             </button>
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                <li>
-                    @if($detach)
-                        <a class="dropdown-item py-2 text-success" href="{{ route('employees.show', $employee) }}" data-bs-toggle="modal" data-bs-target="#affectChefModal">
-                            <i class="bi bi-star-fill me-2 text-success"></i>Mettre Chef
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
+                <li><a class="dropdown-item py-2 small" href="{{ route('employees.show', $employee) }}"><i class="bi bi-person-lines-fill me-2 text-primary"></i>Voir Profil</a></li>
+                @if($detach)
+                    <li><hr class="dropdown-divider opacity-50"></li>
+                    <li>
+                        <a class="dropdown-item py-2 small text-warning" href="#" data-bs-toggle="modal" data-bs-target="#affectChefModal">
+                            <i class="bi bi-star-fill me-2"></i>Promouvoir Chef
                         </a>
-
-                        <a class="dropdown-item py-2 text-danger" href="{{ route('employees.show', $employee) }}">
-                            <i class="bi bi-x me-2 text-danger"></i>Détacher
+                    </li>
+                    <li>
+                        <a class="dropdown-item py-2 small text-danger" href="#">
+                            <i class="bi bi-person-dash-fill me-2"></i>Détacher du service
                         </a>
-                    @endif
-                </li>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
 
-    {{-- Avatar --}}
-    <div class="d-flex justify-content-center" style="margin-top: -28px;">
+    {{-- Avatar with Glow --}}
+    <div class="d-flex justify-content-center" style="margin-top: -30px;">
         <div class="position-relative">
             @if($employee->photo)
                 <img
-                    class="rounded-circle border border-3 border-white shadow object-fit-cover employee-photo-thumb"
-                    width="56" height="56"
+                    class="rounded-circle border border-3 border-white shadow-sm object-fit-cover bg-white"
+                    width="60" height="60"
                     src="{{ Storage::url($employee->photo) }}"
-                    data-full="{{ Storage::url($employee->photo) }}"
                     alt="{{ $employee->firstname }}"
                 >
             @else
-                <div class="rounded-circle border border-3 border-white shadow d-flex align-items-center justify-content-center text-white fw-bold"
-                     style="width:56px; height:56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size: 1.1rem;">
+                <div class="rounded-circle border border-3 border-white shadow-sm d-flex align-items-center justify-content-center text-white fw-bold"
+                     style="width:60px; height:60px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); font-size: 1.2rem;">
                     {{ strtoupper(substr($employee->firstname, 0, 1)) }}{{ strtoupper(substr($employee->lastname, 0, 1)) }}
                 </div>
             @endif
-            {{-- Status dot --}}
-            @if ($employee->status == 1)
-                <span class="position-absolute bottom-0 end-0 p-1 bg-success border border-2 border-white rounded-circle"
-                      style="width:14px; height:14px;" title="Actif"></span>
-            @else
-                <span class="position-absolute bottom-0 end-0 p-1 bg-danger border border-2 border-white rounded-circle"
-                      style="width:14px; height:14px;" title="Inactif"></span>
-            @endif
+
+            {{-- Status dot pulse effect --}}
+            <span class="position-absolute bottom-0 end-0 p-1 bg-{{ $employee->status == 1 ? 'success' : 'danger' }} border border-2 border-white rounded-circle shadow-sm"
+                  style="width:15px; height:15px;" title="{{ $employee->status == 1 ? 'Actif' : 'Inactif' }}"></span>
         </div>
     </div>
 
     {{-- Card Body --}}
     <div class="card-body text-center pt-2 pb-3 px-3">
-        {{-- Name --}}
-        <h6 class="fw-bold text-dark mb-0">
-            {{ $employee->firstname }} {{ $employee->lastname }} <br>
-            {{ $employee->firstname_arab }} {{ $employee->lastname_arab }}
-        </h6>
-
-        {{-- PPR & CIN badges --}}
-        <div class="d-flex justify-content-center gap-2 mt-2 flex-wrap">
-                                                    <span class="badge bg-dark bg-opacity-10 text-dark font-monospace small">
-                                                        <i class="bi bi-hash me-1"></i>{{ $employee->ppr }}
-                                                    </span>
-            <span class="badge bg-secondary bg-opacity-10 text-secondary font-monospace small">
-                                                        {{ $employee->cin }}
-                                                    </span>
+        <div class="mb-2">
+            <h6 class="fw-bold text-dark mb-0 ls-n1">{{ $employee->firstname }} {{ $employee->lastname }}</h6>
+            <small class="text-muted fw-semibold" dir="rtl">{{ $employee->firstname_arab }} {{ $employee->lastname_arab }}</small>
         </div>
 
-        <hr class="my-2">
+        <div class="d-flex justify-content-center gap-1 mb-3">
+            <span class="badge bg-light text-secondary border rounded-pill px-2 py-1 extra-small">
+                PPR: {{ $employee->ppr }}
+            </span>
+            <span class="badge bg-light text-secondary border rounded-pill px-2 py-1 extra-small">
+                CIN: {{ $employee->cin }}
+            </span>
+        </div>
 
-        {{-- Details --}}
-        <ul class="list-unstyled text-start small mb-0">
-            <li class="d-flex align-items-center gap-2 mb-2 text-muted">
-                <i class="bi bi-calendar3 text-info flex-shrink-0"></i>
-                <span>{{ \Carbon\Carbon::parse($employee->hiring_date)->format('d/m/Y') }}</span>
-            </li>
-            <li class="d-flex align-items-center gap-2 mb-2 text-muted">
-                <i class="bi bi-telephone text-success flex-shrink-0"></i>
-                <span>{{ $employee->tel ?? '—' }}</span>
-            </li>
-            <li class="d-flex align-items-center gap-2 text-muted">
-                <i class="bi bi-envelope text-warning flex-shrink-0"></i>
-                <a href="mailto:{{ $employee->email }}"
-                   class="text-decoration-none text-dark text-truncate"
-                   style="max-width: 160px;"
-                   title="{{ $employee->email }}">
-                    {{ $employee->email }}
-                </a>
-            </li>
-        </ul>
+        <div class="bg-light rounded-3 p-2 mb-0">
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="bi bi-calendar3 text-primary" style="font-size: 0.8rem;"></i>
+                <span class="extra-small text-dark fw-medium">Recruté le {{ \Carbon\Carbon::parse($employee->hiring_date)->format('d/m/Y') }}</span>
+            </div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="bi bi-telephone text-success" style="font-size: 0.8rem;"></i>
+                <span class="extra-small text-dark fw-medium">{{ $employee->tel ?? '—' }}</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-envelope text-info" style="font-size: 0.8rem;"></i>
+                <span class="extra-small text-dark text-truncate d-inline-block" style="max-width: 140px;">{{ $employee->email }}</span>
+            </div>
+        </div>
     </div>
 
-    {{-- Card Footer --}}
-    <div class="card-footer bg-white border-top py-2 px-3 d-flex justify-content-between gap-2">
-        <a href="{{ Storage::url($chef->decision_file) }}" target="_blank"> La Decision </a>
+    {{-- Footer avec bouton "Décision" --}}
+    <div class="card-footer bg-white border-top-0 px-3 pb-3 pt-0">
+        @if(isset($chef) && $chef->decision_file)
+            <a href="{{ Storage::url($chef->decision_file) }}" target="_blank" class="btn btn-outline-danger btn-sm w-100 rounded-pill fw-bold py-1">
+                <i class="bi bi-file-earmark-pdf-fill me-1"></i>Voir Décision
+            </a>
+        @else
+            <button class="btn btn-light btn-sm w-100 rounded-pill disabled py-1" style="font-size: 0.75rem;">
+                Aucun document
+            </button>
+        @endif
     </div>
-
 </div>
+
+<style>
+    .transition-base { transition: all 0.2s ease-in-out; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important; }
+    .extra-small { font-size: 0.72rem; }
+    .ls-n1 { letter-spacing: -0.2px; }
+    .dropdown-toggle-no-caret::after { display: none; }
+</style>

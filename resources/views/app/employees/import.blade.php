@@ -1,186 +1,126 @@
 
-    {{-- Custom Styles --}}
-    <style>
-
-        .details-row td {
-            border-top: none;
-        }
-
-        .employee-row:hover {
-            background-color: rgba(0,0,0,0.02);
-        }
-
-
-        .hover-primary:hover {
-            color: #667eea !important;
-        }
-
-        .fw-mono {
-            font-family: 'SF Mono', Monaco, monospace;
-            font-size: 0.85em;
-        }
-
-        .object-fit-cover {
-            object-fit: cover;
-        }
-
-        .dropdown-menu {
-            border-radius: 0.75rem;
-        }
-
-        .dropdown-item {
-            border-radius: 0.5rem;
-            margin: 0.125rem 0.5rem;
-            padding: 0.5rem 1rem;
-        }
-
-        .dropdown-item:hover {
-            background-color: rgba(102, 126, 234, 0.1);
-        }
-
-        .btn-light {
-            background-color: #f8f9fa;
-            border-color: #e9ecef;
-        }
-
-        .btn-light:hover {
-            background-color: #e9ecef;
-            border-color: #dee2e6;
-        }
-
-        .badge {
-            font-weight: 500;
-            padding: 0.5em 0.75em;
-        }
-
-        .table th {
-            letter-spacing: 0.5px;
-        }
-
-        .card {
-            border-radius: 1rem;
-        }
-
-        .card-header {
-            border-radius: 1rem 1rem 0 0 !important;
-        }
-
-        .rounded-4 {
-            border-radius: 1rem !important;
-        }
-
-        .table tbody tr {
-            border-left: 3px solid transparent;
-        }
-
-        .table tbody tr:hover {
-            border-left-color: #667eea;
-        }
-
-
-        /* Status indicator pulse animation */
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
-        }
-
-        .position-absolute.bg-success {
-            animation: pulse 2s infinite;
-        }
-
-        .table-responsive {
-            overflow-x: visible;  /* or hidden, instead of auto */
-        }
-
-        #employee-photo-preview {
-            position: fixed;
-            display: none;
-            pointer-events: none;           /* mouse passes through */
-            z-index: 2000;                  /* above table & dropdowns */
-            padding: 6px;
-            background: #fff;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
-            border: 1px solid rgba(148, 163, 184, 0.5);
-        }
-
-        #employee-photo-preview img {
-            display: block;
-            max-width: 360px;
-            max-height: 360px;
-            border-radius: 0.75rem;
-            object-fit: cover;
-        }
-
-    </style>
-
-    @section('title', 'Employees - HR Management')
-
     <div class="container-fluid py-4">
         <form action="{{ route('employees.importation') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="bg-gradient-primary-to-secondary rounded-4 p-4 mb-4 text-white shadow-lg">
-                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
-                    <div class="row col-12">
-                        <div class="col-4">
-                            <h1 class="h3 mb-1 fw-bold"><i class="bi bi-file-earmark-excel-fill me-2"></i>Importer les agents par local</h1>
-                            <p class="text-white-50 small mb-0"><i class="bi bi-geo-alt-fill me-1"></i>DRI-Marrakech | Administration du personnel</p>
-                        </div>
-                        <div class="col-4">
-                            <select name="local_id" class="form-control">
-                                <option value="-1">Séléctionnez le local</option>
-                                @foreach($locals as $local)
-                                    <option value="{{ $local->id }}">{{ $local->title }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-4">
-                            <input type="file" name="file" class="form-control d-inline-flex align-items-center shadow-sm fw-semibold" />
+
+            {{-- Header & Control Panel Premium --}}
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+                <div class="card-body p-0">
+                    <div class="bg-primary bg-gradient p-4 text-white">
+                        <div class="row align-items-center g-4">
+                            {{-- Titre et Contexte --}}
+                            <div class="col-xl-4 col-lg-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-white bg-opacity-20 rounded-3 p-3 me-3 shadow-sm">
+                                        <i class="bi bi-file-earmark-spreadsheet-fill fs-3 text-dark"></i>
+                                    </div>
+                                    <div>
+                                        <h1 class="h4 fw-bold mb-1 text-white">Importation Massive</h1>
+                                        <p class="text-white text-opacity-75 small mb-0">
+                                            <i class="bi bi-geo-alt-fill me-1"></i>DRI-Marrakech | Administration
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Sélection du Local --}}
+                            <div class="col-xl-3 col-md-6">
+                                <label class="form-label small fw-bold text-uppercase text-white text-opacity-75">Local de destination</label>
+                                <div class="input-group border-0 shadow-sm rounded-3 overflow-hidden">
+                                    <span class="input-group-text bg-white border-0 text-primary"><i class="bi bi-building"></i></span>
+                                    <select name="local_id" class="form-select border-0 bg-white shadow-none" required>
+                                        <option value="-1">Sélectionner le local...</option>
+                                        @foreach($locals as $local)
+                                            <option value="{{ $local->id }}">{{ $local->title }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            {{-- Upload de fichier --}}
+                            <div class="col-xl-3 col-md-6">
+                                <label class="form-label small fw-bold text-uppercase text-white text-opacity-75">Fichier Excel / CSV</label>
+                                <input type="file" name="file" class="form-control border-0 bg-white shadow-none py-2" required />
+                            </div>
+
+                            {{-- Bouton d'action --}}
+                            <div class="col-xl-2 col-md-12 text-xl-end">
+                                <button type="submit" class="btn btn-white btn-rounded shadow-sm fw-bold px-4 py-2 w-100 transition-base">
+                                    <i class="bi bi-cloud-arrow-up-fill me-2 text-primary"></i>Lancer l'import
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-success mb-2">
-                <i class="bi bi-save"> Importer </i>
-            </button>
+            {{-- Guide de Structure & Aperçu --}}
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-white py-3 px-4 border-bottom d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-table text-primary me-2"></i>Structure du fichier attendue</h6>
+                        <small class="text-muted">Assurez-vous que l'ordre des colonnes correspond exactement à ce modèle.</small>
+                    </div>
+                    <span class="badge bg-info-subtle text-info rounded-pill px-3 py-2 fw-bold">
+                        <i class="bi bi-info-circle me-1"></i> 14 Colonnes requises
+                    </span>
+                </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-light">
-                    <tr>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">PPR</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">CIN</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Date de naissance</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Lieu de naissance</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Genre</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Situation familliale</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Date de recrutement</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Adresse</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Tel</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Email</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Nom FR</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Prénom FR</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Nom ARB</th>
-                        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">Prénom ARB</th>
-                    </tr>
-                    </thead>
-                    <tbody class="bg-white">
-                    @for($i=0;$i<3;$i++)
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle mb-0">
+                        <thead class="bg-light-subtle">
                         <tr>
-                            <td> XXX </td><td> XXX </td>
-                            <td> XXX </td><td> XXX </td>
-                            <td> XXX </td><td> XXX </td>
-                            <td> XXX </td><td> XXX </td>
-                            <td> XXX </td><td>  XXX@XX.XX </td>
-                            <td> XXX </td><td> XXX </td>
-                            <td> XXX </td><td> XXX </td>
+                            @php
+                                $headers = ['PPR','CIN','Naissance','Lieu','Genre','Situation','Recrutement','Adresse','Tel','Email','Nom (FR)','Prénom (FR)','Nom (AR)','Prénom (AR)'];
+                            @endphp
+                            @foreach($headers as $header)
+                                <th class="text-muted extra-small fw-bold text-uppercase ls-1 px-3 py-3 border-0">{{ $header }}</th>
+                            @endforeach
                         </tr>
-                    @endfor
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="bg-white border-top-0">
+                        @for($i=0;$i<2;$i++)
+                            <tr class="opacity-50">
+                                @foreach($headers as $h)
+                                    <td class="px-3 py-3 small text-muted border-0">Exemple</td>
+                                @endforeach
+                            </tr>
+                        @endfor
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card-footer bg-light border-0 p-3">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center small text-muted">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i> Formats acceptés: .xlsx, .xls, .csv
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center small text-muted">
+                                <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i> Taille max: 5 Mo
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <a href="#" class="text-primary fw-bold text-decoration-none small">
+                                <i class="bi bi-download me-1"></i> Télécharger le modèle vide
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
 
+    <style>
+        .transition-base { transition: all 0.2s ease-in-out; }
+        .btn-white { background: #fff; color: #4f46e5; border: none; }
+        .btn-white:hover { background: #f8f9fa; color: #3730a3; transform: translateY(-2px); }
+        .btn-rounded { border-radius: 50px; }
+        .ls-1 { letter-spacing: 0.5px; }
+        .extra-small { font-size: 0.65rem; }
+        .bg-light-subtle { background-color: #f8f9fa !important; }
+        .form-select, .form-control { border-radius: 8px; font-size: 0.9rem; }
+        .table th { white-space: nowrap; }
+    </style>

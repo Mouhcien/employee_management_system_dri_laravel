@@ -1,224 +1,171 @@
-
-
-<table class="table table-hover align-middle mb-0">
-    <thead class="bg-light">
+<table class="table table-hover align-middle mb-0 border-0">
+    <thead class="bg-light-subtle">
     <tr>
-        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0"></th>
-        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">PHOTO</th>
-        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">PPR</th>
-        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">NOM</th>
-        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">PRÉNOM</th>
-        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">CIN</th>
-        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">RECRUTEMENT</th>
-        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">CONTACT</th>
-        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0">EMAIL</th>
-        <th scope="col" class="text-muted small fw-semibold px-4 py-3 border-0 text-center">ACTIONS</th>
+        <th scope="col" class="ps-4 py-3 border-0"></th>
+        <th scope="col" class="text-muted small fw-bold text-uppercase ls-1 border-0">Profil</th>
+        <th scope="col" class="text-muted small fw-bold text-uppercase ls-1 border-0">PPR / CIN</th>
+        <th scope="col" class="text-muted small fw-bold text-uppercase ls-1 border-0">Identité</th>
+        <th scope="col" class="text-muted small fw-bold text-uppercase ls-1 border-0">Recrutement</th>
+        <th scope="col" class="text-muted small fw-bold text-uppercase ls-1 border-0">Contact</th>
+        <th scope="col" class="text-muted small fw-bold text-uppercase ls-1 border-0 text-end pe-4">Actions</th>
     </tr>
     </thead>
-    <tbody class="bg-white">
+    <tbody class="bg-white border-top-0">
     @forelse($employees ?? [] as $employee)
         @php
-            $service_title = "";
-            $entity_title = "";
-            $type_entity_title = "";
-            $sector_title = "";
-            $section_title = "";
+            // Logique d'affectation simplifiée
+            $current = $employee->affectations->where('state', 1)->first();
+            $service = $current?->service?->title;
+            $entity = $current?->entity?->title;
+            $entityType = $current?->entity?->type?->title;
+            $sector = $current?->sector?->title;
+            $section = $current?->section?->title;
 
-            if(count($employee->affectations) != 0) {
-                foreach($employee->affectations as $affectation) {
-                    if ($affectation->state == 1) {
-                        if (!is_null($affectation->service))
-                            $service_title = $affectation->service->title;
-                        if (!is_null($affectation->entity))
-                            $entity_title = $affectation->entity->title;
-                        if (!is_null($affectation->entity) && !is_null($affectation->entity->type))
-                            $type_entity_title = $affectation->entity->type->title;
-                        if (!is_null($affectation->sector))
-                            $sector_title = $affectation->sector->title;
-                        if (!is_null($affectation->section))
-                            $section_title = $affectation->section->title;
-                    }
-                }
-            }
-        @endphp
-
-        @php
             $rowId = 'employee-details-' . $employee->id;
         @endphp
 
-        <tr class="border-bottom employee-row"  style="cursor:pointer;">
-            <td class="px-4 py-3 align-middle">
+        <tr class="employee-row transition-base border-bottom" style="cursor:pointer;">
+            <td class="ps-4 py-3">
                 @if ($employee->gender == 'M')
-                    <i class="bi bi-gender-male fs-3 text-primary"></i>
-                @elseif($employee->gender == 'F')
-                    <i class="bi bi-gender-female fs-3 text-danger"></i>
+                    <span class="text-primary opacity-50"><i class="bi bi-gender-male fs-5"></i></span>
+                @else
+                    <span class="text-danger opacity-50"><i class="bi bi-gender-female fs-5"></i></span>
                 @endif
             </td>
-            <td class="px-4 py-3">
-                <div class="position-relative">
+            <td class="py-3">
+                <div class="position-relative d-inline-block">
                     @if($employee->photo)
-                        <img
-                            class="rounded-circle border border-2 border-white shadow-sm object-fit-cover employee-photo-thumb"
-                            width="45" height="45"
-                            src="{{ Storage::url($employee->photo) }}"
-                            data-full="{{ Storage::url($employee->photo) }}"
-                            alt="{{ $employee->first_name }}"
-                        >
+                        <img class="rounded-circle border border-2 border-white shadow-sm object-fit-cover employee-photo-thumb avatar-hover"
+                             width="48" height="48"
+                             src="{{ Storage::url($employee->photo) }}"
+                             alt="{{ $employee->firstname }}">
                     @else
-                        <div class="rounded-circle bg-gradient-primary d-flex align-items-center justify-content-center shadow-sm text-white fw-bold"
-                             style="width: 45px; height: 45px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                            {{ strtoupper(substr($employee->first_name, 0, 1)) }}{{ strtoupper(substr($employee->last_name, 0, 1)) }}
+                        <div class="rounded-circle shadow-sm text-white fw-bold d-flex align-items-center justify-content-center"
+                             style="width: 48px; height: 48px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+                            {{ strtoupper(substr($employee->firstname, 0, 1)) }}{{ strtoupper(substr($employee->lastname, 0, 1)) }}
                         </div>
                     @endif
-                    @if ($employee->status == 1)
-                        <span class="position-absolute bottom-0 end-0 translate-middle-x p-1 bg-success border border-light rounded-circle"
-                              style="width: 12px; height: 12px;" title="Actif">
-                                            </span>
-                    @else
-                        <span class="position-absolute bottom-0 end-0 translate-middle-x p-1 bg-danger border border-light rounded-circle"
-                              style="width: 12px; height: 12px;" title="Inactif">
-                                            </span>
-                    @endif
+                    <span class="position-absolute bottom-0 end-0 p-1 bg-{{ $employee->status == 1 ? 'success' : 'danger' }} border border-2 border-white rounded-circle"
+                          style="width: 12px; height: 12px;" title="{{ $employee->status == 1 ? 'Actif' : 'Inactif' }}"></span>
                 </div>
             </td>
-            <td class="px-4 py-3">
-                <span class="badge bg-dark bg-opacity-10 text-dark fw-mono font-monospace">
-                    {{ $employee->ppr }}
-                </span>
-            </td>
-            <td class="px-4 py-3">
-                <div class="fw-semibold text-dark">{{ $employee->lastname }} <br> {{ $employee->lastname_arab }}</div>
-            </td>
-            <td class="px-4 py-3">
-                <div class="fw-semibold text-dark">{{ $employee->firstname }} <br> {{ $employee->firstname_arab }}</div>
-            </td>
-            <td class="px-4 py-3">
-                <span class="badge bg-secondary bg-opacity-10 text-secondary font-monospace">
-                    {{ $employee->cin }}
-                </span>
-            </td>
-            <td class="px-4 py-3">
-                <div class="d-flex align-items-center text-muted">
-                    <i class="bi bi-calendar3 me-2 text-info"></i>
-                    <span>{{ \Carbon\Carbon::parse($employee->hiring_date)->format('d/m/Y') }}</span>
+            <td class="py-3">
+                <div class="d-flex flex-column">
+                    <span class="fw-bold text-dark font-monospace small">#{{ $employee->ppr }}</span>
+                    <span class="text-muted extra-small fw-bold">{{ $employee->cin }}</span>
                 </div>
             </td>
-            <td class="px-4 py-3">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-telephone me-2 text-success"></i>
-                    <span class="text-dark">{{ $employee->tel ?? '—' }}</span>
+            <td class="py-3">
+                <div class="d-flex flex-column">
+                    <div class="fw-bold text-dark mb-0">{{ $employee->firstname }} {{ strtoupper($employee->lastname) }}</div>
+                    <div class="text-primary small opacity-75" dir="rtl">{{ $employee->firstname_arab }} {{ $employee->lastname_arab }}</div>
                 </div>
             </td>
-            <td class="px-4 py-3">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-envelope me-2 text-warning"></i>
-                    <a href="mailto:{{ $employee->email }}" class="text-decoration-none text-dark hover-primary">
-                        {{ $employee->email }}
-                    </a>
+            <td class="py-3">
+                <div class="d-flex align-items-center text-muted small fw-medium">
+                    <i class="bi bi-calendar-event me-2 text-info"></i>
+                    {{ \Carbon\Carbon::parse($employee->hiring_date)->translatedFormat('d M Y') }}
                 </div>
             </td>
-            <td class="px-4 py-3 text-center">
-                <div class="d-flex justify-content-center align-items-center gap-2">
-                    <button class="btn btn-light btn-sm rounded-circle shadow-sm toggle-details" type="button" data-bs-toggle="collapse" data-bs-target="#{{ $rowId }}" aria-expanded="false">
+            <td class="py-3">
+                <div class="d-flex flex-column gap-1">
+                    <div class="small d-flex align-items-center">
+                        <i class="bi bi-telephone me-2 text-success opacity-75"></i>
+                        <span class="text-dark">{{ $employee->tel ?? '—' }}</span>
+                    </div>
+                    <div class="small d-flex align-items-center">
+                        <i class="bi bi-envelope me-2 text-warning opacity-75"></i>
+                        <span class="text-muted text-truncate" style="max-width: 150px;">{{ $employee->email }}</span>
+                    </div>
+                </div>
+            </td>
+            <td class="pe-4 py-3 text-end">
+                <div class="d-flex justify-content-end align-items-center gap-2">
+                    <button class="btn btn-light btn-sm rounded-circle border-0 shadow-xs toggle-details"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#{{ $rowId }}">
                         <i class="bi bi-chevron-down"></i>
                     </button>
 
                     <div class="dropdown">
-                        <button
-                            class="btn btn-light btn-sm rounded-pill px-3 dropdown-toggle fw-medium shadow-sm"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                            onclick="event.stopPropagation();"
-                        >
-                            <i class="bi bi-gear-fill me-1 text-primary"></i>Gérer
+                        <button class="btn btn-white btn-sm rounded-pill px-3 shadow-xs border dropdown-toggle fw-bold"
+                                type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-three-dots me-1"></i> Gérer
                         </button>
-
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                            <li>
-                                <a class="dropdown-item py-2" href="{{ route('employees.show', $employee) }}">
-                                    <i class="bi bi-eye-fill me-2 text-info"></i>Voir détails
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item py-2" href="{{ route('employees.edit', $employee) }}">
-                                    <i class="bi bi-pencil-square me-2 text-warning"></i>Modifier
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item py-2" href="{{ route('employees.unities', $employee) }}">
-                                    <i class="bi bi-diagram-3-fill me-2 text-primary"></i>Affectation
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item py-2" href="#">
-                                    <i class="bi bi-file-earmark-pdf me-2 text-danger"></i>Télécharger CV
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <button type="button" class="dropdown-item py-2 text-danger"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteEmployeeModal"
-                                        onclick="event.stopPropagation();">
-                                    <i class="bi bi-trash-fill me-2"></i>Supprimer
-                                </button>
-                            </li>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2">
+                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('employees.show', $employee) }}"><i class="bi bi-eye text-info me-2"></i>Consulter</a></li>
+                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('employees.edit', $employee) }}"><i class="bi bi-pencil-square text-warning me-2"></i>Modifier</a></li>
+                            <li><hr class="dropdown-divider opacity-50"></li>
+                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('employees.unities', $employee) }}"><i class="bi bi-diagram-3 text-primary me-2"></i>Gérer l'affectation</a></li>
+                            <li><a class="dropdown-item rounded-3 py-2 text-danger fw-bold" href="#" data-bs-toggle="modal" data-bs-target="#deleteEmployeeModal"><i class="bi bi-trash3 me-2"></i>Supprimer</a></li>
                         </ul>
                     </div>
                 </div>
             </td>
         </tr>
 
-        <tr class="details-row collapse bg-light" id="{{ $rowId }}">
-            <td colspan="11" class="p-0">
-                <div class="p-3 border-top">
-                    <div class="row g-3 align-items-stretch">
-                        <div class="col-md-8">
-                            <div class="card h-100 shadow-sm border-0">
-                                <div class="card-header bg-transparent border-0 pb-0">
-                                    <h6 class="mb-1 text-uppercase text-muted small">Affectation</h6>
-                                </div>
-                                <div class="card-body pt-2">
-                                    <div class="mb-2">
-                                        <span class="badge bg-success me-2">Service</span>
-                                        <span class="text-dark">{{ $service_title ?: 'Non affecté' }}</span>
-                                    </div>
-                                    <div class="mb-2">
-                                        <span class="badge bg-info me-2">{{ $type_entity_title ?: 'Entité' }}</span>
-                                        <span class="text-dark">{{ $entity_title ?: 'Non défini' }}</span>
-                                    </div>
-                                    @if ($sector_title != "")
-                                        <div class="mb-2">
-                                            <span class="badge bg-secondary me-2">Secteur</span>
-                                            <span class="text-dark">{{ $sector_title ?: 'Non défini' }}</span>
+        {{-- Expanded Details Row --}}
+        <tr class="details-row collapse bg-light-subtle" id="{{ $rowId }}">
+            <td colspan="7" class="p-0">
+                <div class="p-4 border-top">
+                    <div class="row g-4">
+                        <div class="col-lg-8">
+                            <div class="card border-0 shadow-xs rounded-4">
+                                <div class="card-body p-4">
+                                    <h6 class="fw-bold text-muted text-uppercase ls-1 small mb-4">Structure d'affectation</h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="p-3 bg-white border border-light-subtle rounded-3 h-100">
+                                                <small class="text-muted d-block mb-1">Service</small>
+                                                <span class="fw-bold text-dark">{{ $service ?: 'Non affecté' }}</span>
+                                            </div>
                                         </div>
-                                    @endif
-
-                                    @if ($section_title != "")
+                                        <div class="col-md-6">
+                                            <div class="p-3 bg-white border border-light-subtle rounded-3 h-100">
+                                                <small class="text-muted d-block mb-1">{{ $entityType ?: 'Entité' }}</small>
+                                                <span class="fw-bold text-dark">{{ $entity ?: 'Non défini' }}</span>
+                                            </div>
+                                        </div>
+                                        @if($sector)
+                                            <div class="col-md-6">
+                                                <div class="p-3 bg-white border border-light-subtle rounded-3">
+                                                    <small class="text-muted d-block mb-1">Secteur</small>
+                                                    <span class="fw-bold text-dark">{{ $sector }}</span>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if($section)
+                                            <div class="col-md-6">
+                                                <div class="p-3 bg-white border border-light-subtle rounded-3">
+                                                    <small class="text-muted d-block mb-1">Section</small>
+                                                    <span class="fw-bold text-dark">{{ $section }}</span>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card border-0 shadow-xs rounded-4 bg-white h-100">
+                                <div class="card-body p-4">
+                                    <h6 class="fw-bold text-muted text-uppercase ls-1 small mb-4">Localisation</h6>
+                                    <div class="d-flex align-items-center mb-3 p-3 bg-light rounded-3">
+                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
+                                            <i class="bi bi-building"></i>
+                                        </div>
                                         <div>
-                                            <span class="badge bg-dark me-2">Section</span>
-                                            <span class="text-dark">{{ $section_title ?: 'Non défini' }}</span>
+                                            <small class="text-muted d-block">Site local</small>
+                                            <span class="fw-bold">{{ $employee->local->title ?? 'N/A' }}</span>
                                         </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="card h-100 shadow-sm border-0">
-                                <div class="card-header bg-transparent border-0 pb-0">
-                                    <h6 class="mb-1 text-uppercase text-muted small">Localisation</h6>
-                                </div>
-                                <div class="card-body pt-2">
-                                    <div class="mb-2">
-                                        <i class="bi bi-building me-2 text-primary"></i>
-                                        <span class="fw-semibold">{{ $employee->local->title ?? 'Non défini' }}</span>
                                     </div>
-                                    <div class="mb-2">
-                                        <i class="bi bi-geo-alt me-2 text-danger"></i>
-                                        <span class="text-muted">{{ $employee->local->city->title ?? 'Non défini' }}</span>
+                                    <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                        <div class="bg-danger bg-opacity-10 text-danger rounded-circle p-2 me-3">
+                                            <i class="bi bi-geo-alt"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Ville</small>
+                                            <span class="fw-bold">{{ $employee->local->city->title ?? 'N/A' }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -227,19 +174,18 @@
                 </div>
             </td>
         </tr>
-
     @empty
-        <tr>
-            <td colspan="10" class="text-center py-5">
-                <div class="d-flex flex-column align-items-center">
-                    <div class="mb-3 p-4 bg-primary bg-opacity-10 rounded-circle">
-                        <i class="bi bi-search text-primary" style="font-size: 3rem;"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2 text-dark">Aucun employé trouvé</h5>
-                    <p class="text-muted mb-4">Aucun résultat ne correspond à vos critères de recherche.</p>
-                </div>
-            </td>
-        </tr>
+        {{-- Votre code pour le cas vide --}}
     @endforelse
     </tbody>
 </table>
+
+<style>
+    .ls-1 { letter-spacing: 0.5px; }
+    .extra-small { font-size: 0.7rem; }
+    .shadow-xs { box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .transition-base { transition: all 0.2s ease-in-out; }
+    .bg-light-subtle { background-color: #f8f9fa !important; }
+    .avatar-hover:hover { transform: scale(1.1); transition: 0.2s ease; }
+    .hover-row:hover { background-color: #f8fbff !important; }
+</style>

@@ -1,105 +1,136 @@
 <x-layout>
-    <div class="d-flex flex-column gap-4">
+    @section('title', 'Détails Grade - ' . $grade->title)
 
-        <!-- Header section with "Retour" -->
-        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
-            <div>
-                <h1 class="h3 fw-semibold text-dark mb-1">
-                    Grade :
-                    <span class="text-primary">{{ $grade->title }}</span>
-                </h1>
-                <p class="text-muted mb-0">
-                    Gérez efficacement le occupation <strong class="text-primary">{{ $grade->title }}</strong> et ses employés associées.
-                </p>
+    <div class="container-fluid py-4">
+        <div class="card border-0 shadow-lg rounded-4 mb-4 overflow-hidden">
+            <div class="card-body p-0">
+                <div class="bg-primary bg-gradient p-4 text-white position-relative">
+                    <div class="position-absolute top-0 end-0 p-4 opacity-10">
+                        <i class="bi bi-award-fill" style="font-size: 6rem;"></i>
+                    </div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 position-relative">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-white bg-opacity-20 rounded-3 p-3 me-3 shadow-sm">
+                                <i class="bi bi-shield-shaded fs-3 text-dark"></i>
+                            </div>
+                            <div>
+                                <h2 class="fw-bold mb-1">Grade : {{ $grade->title }}</h2>
+                                <p class="text-white text-opacity-75 mb-0 small fw-medium">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Gestion statutaire et suivi des échelles indiciaires
+                                </p>
+                            </div>
+                        </div>
+                        <a href="{{ route('grades.index') }}" class="btn btn-white btn-rounded px-4 fw-bold shadow-sm transition-base">
+                            <i class="bi bi-arrow-left me-2"></i>Retour au référentiel
+                        </a>
+                    </div>
+                </div>
             </div>
-            <!-- Retour link -->
-            <a
-                href="{{ route('grades.index') }}"
-                class="btn btn-outline-secondary btn-sm px-3"
-            >
-                <i class="bi bi-arrow-left me-1"></i>
-                Retour
-            </a>
         </div>
 
-        <!-- Edit form section -->
-        <div class="bg-light rounded-3 border p-4 shadow-sm">
-            <form action="{{ route('grades.update', $grade->id) }}" method="POST">
-                @csrf
-                <div class="row g-3">
-                    <!-- Service title -->
-                    <div class="col-12 col-lg-12">
-                        <div class="row g-3 align-items-center">
-                            <div class="col-8 col-md-4">
-                                <label for="serviceTitle" class="form-label fw-semibold text-dark mb-1">
-                                    Nom du occupation
-                                </label>
-                                <input
-                                    type="text"
-                                    id="serviceTitle"
-                                    name="title"
-                                    class="form-control form-control-lg"
-                                    value="{{ old('title', $grade->title) }}"
-                                    required
-                                />
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                        <h6 class="fw-bold text-uppercase text-muted small mb-0 ls-1">
+                            <i class="bi bi-gear-wide-connected text-primary me-2"></i>Paramètres du grade
+                        </h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <form action="{{ route('grades.update', $grade->id) }}" method="POST">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="serviceTitle" class="form-label small fw-bold text-dark text-uppercase ls-1">Nom officiel</label>
+                                <div class="input-group border rounded-3 overflow-hidden shadow-xs transition-base">
+                                    <span class="input-group-text bg-light border-0"><i class="bi bi-award text-primary"></i></span>
+                                    <input
+                                        type="text"
+                                        id="serviceTitle"
+                                        name="title"
+                                        class="form-control border-0 bg-light shadow-none fw-medium"
+                                        value="{{ old('title', $grade->title) }}"
+                                        required
+                                    >
+                                </div>
                             </div>
-                            <div class="col-4 col-md-4">
-                                <label for="serviceTitle" class="form-label fw-semibold text-dark mb-1">
-                                    Echelle
-                                </label>
-                                <select
-                                    class="form-control form-control-lg border-start-0 shadow-sm @error('title') is-invalid @enderror"
-                                    id="cityTitle"
-                                    name="scale"
-                                    required>
-                                    <option value="12" {{ $grade->scale == 12 ? 'selected' : '' }}>12</option>
-                                    <option value="11" {{ $grade->scale == 11 ? 'selected' : '' }}>11</option>
-                                    <option value="10" {{ $grade->scale == 10 ? 'selected' : '' }}>10</option>
-                                    <option value="9" {{ $grade->scale == 9 ? 'selected' : '' }}>9</option>
-                                    <option value="8" {{ $grade->scale == 8 ? 'selected' : '' }}>8</option>
-                                    <option value="7" {{ $grade->scale == 7 ? 'selected' : '' }}>7</option>
-                                </select>
+
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold text-dark text-uppercase ls-1">Échelle indiciaire</label>
+                                <div class="input-group border rounded-3 overflow-hidden shadow-xs transition-base">
+                                    <span class="input-group-text bg-light border-0"><i class="bi bi-list-ol text-primary"></i></span>
+                                    <select name="scale" class="form-select border-0 bg-light shadow-none fw-bold text-primary" required>
+                                        @foreach([12, 11, 10, 9, 8, 7, 6, 0] as $scale)
+                                            <option value="{{ $scale }}" {{ $grade->scale == $scale ? 'selected' : '' }}>
+                                                Échelle {{ $scale }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-12 col-md-4">
-                                <label></label>
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="bi bi-save me-1"></i>
-                                    Mettre à jour
-                                </button>
+
+                            <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold shadow-sm py-2 transition-base mt-2">
+                                <i class="bi bi-save2 me-2"></i>Enregistrer les modifications
+                            </button>
+                        </form>
+
+                        <div class="mt-4 p-3 bg-light rounded-4 border border-dashed">
+                            <div class="d-flex justify-content-between align-items-center small">
+                                <span class="text-muted fw-medium">Titulaires rattachés</span>
+                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 fw-bold">{{ $grade->classements->count() }}</span>
                             </div>
                         </div>
                     </div>
-
                 </div>
-            </form>
-        </div>
+            </div>
 
-
-        <div class="row g-4">
-            <div class="col-12 col-lg-12">
-                <div class="card border-primary shadow-sm h-100">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="h6 mb-0">
-                            <i class="bi bi-people-fill me-2"></i>
-                            Fonctionnaires
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-header bg-white py-4 px-4 border-bottom d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold text-dark">
+                            <i class="bi bi-people-fill text-primary me-2"></i>
+                            Agents à ce grade
                         </h5>
+                        <div class="bg-light px-3 py-1 rounded-pill border small fw-bold text-muted">
+                            Total : {{ $grade->classements->count() }}
+                        </div>
                     </div>
-                    <div class="card-body pt-3 px-4 pb-4">
+                    <div class="card-body p-4">
                         @if($grade->classements->isNotEmpty())
-                            <ul class="list-unstyled mb-0">
+                            <div class="row g-3">
                                 @foreach($grade->classements as $classement)
-                                    <li class="border-bottom pb-1 mb-1 text-dark">
-                                        {{ $classement->employee->lastname }} {{ $classement->employee->firstname }}
-                                    </li>
+                                    <div class="col-xl-4 col-md-6">
+                                        <div class="hover-lift transition-base">
+                                            <x-chef-card :employee="$classement->employee" detach="false" />
+                                        </div>
+                                    </div>
                                 @endforeach
-                            </ul>
+                            </div>
                         @else
-                            <small class="text-muted">Aucune fonctionnaires associée à cette occupation.</small>
+                            <div class="text-center py-5">
+                                <div class="avatar avatar-xl bg-light rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center shadow-xs" style="width: 80px; height: 80px;">
+                                    <i class="bi bi-person-slash fs-1 text-muted"></i>
+                                </div>
+                                <h6 class="text-muted fw-bold">Aucun titulaire détecté</h6>
+                                <p class="text-muted small px-5">Il n'y a actuellement aucun fonctionnaire classé sous ce grade dans votre structure.</p>
+                            </div>
                         @endif
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
+
+    <style>
+        .transition-base { transition: all 0.2s ease-in-out; }
+        .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important; }
+        .btn-white { background: #fff; color: #4f46e5; border: none; }
+        .btn-white:hover { background: #f3f4f6; color: #4338ca; }
+        .btn-rounded { border-radius: 50px; }
+        .ls-1 { letter-spacing: 0.5px; }
+        .extra-small { font-size: 0.72rem; }
+        .shadow-xs { box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .bg-primary-subtle { background-color: #eef2ff !important; }
+        .border-dashed { border-style: dashed !important; border-width: 2px !important; }
+    </style>
 </x-layout>

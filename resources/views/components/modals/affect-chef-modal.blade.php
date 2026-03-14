@@ -1,71 +1,106 @@
-
 @props(['employee', 'unity_type', 'unity_id', 'unity_name'])
 
-<div class="modal fade" id="affectChefModal-{{$employee->id}}" tabindex="-1" aria-labelledby="affectChefModalLabel" aria-hidden="true">
+<div class="modal fade" id="affectChefModal-{{$employee->id}}" tabindex="-1" aria-labelledby="affectChefModalLabel-{{$employee->id}}" aria-hidden="true" >
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
             <form action="{{ route('chefs.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                <div class="modal-header border-0 pb-0">
+                {{-- Header avec dégradé moderne --}}
+                <div class="modal-header border-0 bg-primary bg-gradient p-4 text-white">
                     <div class="d-flex align-items-center">
-                        <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3">
-                            <i class="bi bi-star-fill text-primary fs-4"></i>
+                        <div class="bg-white bg-opacity-20 p-2 rounded-circle me-3 shadow-sm">
+                            <i class="bi bi-person-badge-fill fs-3 text-white"></i>
                         </div>
                         <div>
-                            <h5 class="modal-title fw-bold mb-0" id="affectChefModalLabel">Nouvelle Affectation</h5>
-                            <small class="text-muted">Affecter Chef</small>
+                            <h5 class="modal-title fw-bold mb-0" id="affectChefModalLabel-{{$employee->id}}">Nomination de Chef</h5>
+                            <small class="text-white text-opacity-75">Nouvelle affectation structurelle</small>
                         </div>
                     </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal"  aria-label="Annuler"></button>
                 </div>
 
-                <div class="modal-body pt-0 px-4">
-                    {{-- Title Field --}}
+                <div class="modal-body p-4 bg-white">
+                    {{-- Récapitulatif de l'action --}}
+                    <div class="bg-light rounded-4 p-3 mb-4 text-center border">
+                        <div class="small text-muted text-uppercase fw-bold ls-1 mb-2">Action de promotion</div>
+                        <div class="d-flex align-items-center justify-content-center gap-2 flex-wrap">
+                            <span class="badge bg-dark rounded-pill px-3 py-2 fs-6">
+                                {{ $employee->lastname }} {{ $employee->firstname }}
+                            </span>
+                            <i class="bi bi-arrow-right text-primary fs-5"></i>
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2 fs-6">
+                                {!! html_entity_decode($unity_name) !!}
+                            </span>
+                        </div>
+                    </div>
+
+                    {{-- Hidden Inputs --}}
+                    <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+                    <input type="hidden" name="unity_id" value="{{ $unity_id }}">
+                    <input type="hidden" name="unity_type" value="{{ $unity_type }}">
+
+                    {{-- Date de commencement --}}
                     <div class="mb-4">
-                        <p class="text-dark fw-bolder"> Mettre <span class="badge bg-info"> {{ $employee->lastname }} {{ $employee->firstname }}</span> </p>
-                        <p>Chef de </p>
-                        <p><span class="badge bg-primary"> {!! html_entity_decode($unity_name) !!} </span></p>
-
-                        <input type="hidden" name="employee_id" value="{{ $employee->id }}">
-                        <input type="hidden" name="unity_id" value="{{ $unity_id }}">
-                        <input type="hidden" name="unity_type" value="{{ $unity_type }}">
-
-                        <label for="workTitle" class="form-label fw-semibold text-dark mb-2">
-                            Date de commencement <span class="text-danger"></span>
+                        <label for="starting_date-{{$employee->id}}" class="form-label small fw-bold text-muted text-uppercase">
+                            Date de prise de fonction <span class="text-danger">*</span>
                         </label>
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-text bg-white border-end-0">
-                                <i class="bi bi-calendar text-primary"></i>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0 text-primary">
+                                <i class="bi bi-calendar-event"></i>
                             </span>
-                            <x-date-input id="starting_date"
+                            <x-date-input id="starting_date-{{$employee->id}}"
                                           name="starting_date"
-                                          value="null" />
+                                          class="form-control border-start-0 ps-0 shadow-none bg-white"
+                                          value="null"
+                                          required />
                         </div>
+                    </div>
 
-                        <label for="decision_file" class="form-label fw-semibold text-dark mb-2 mt-2">
-                            Décision <span class="text-danger"></span>
+                    {{-- Fichier de décision --}}
+                    <div class="mb-2">
+                        <label for="decision_file-{{$employee->id}}" class="form-label small fw-bold text-muted text-uppercase">
+                            Acte de nomination (PDF) <span class="text-danger">*</span>
                         </label>
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-text bg-white border-end-0">
-                                <i class="bi bi-file text-primary"></i>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0 text-danger">
+                                <i class="bi bi-file-earmark-pdf"></i>
                             </span>
-                            <input type="file" name="decision_file" class="form-control" id="decision_file">
+                            <input type="file"
+                                   name="decision_file"
+                                   class="form-control border-start-0 ps-0 shadow-none"
+                                   id="decision_file-{{$employee->id}}"
+                                   accept=".pdf"
+                                   required>
                         </div>
-
+                        <div class="form-text small mt-2">
+                            <i class="bi bi-info-circle me-1"></i> Veuillez joindre la copie numérisée de la décision officielle.
+                        </div>
                     </div>
                 </div>
 
-                <div class="modal-footer border-0 bg-light px-4 py-3 rounded-bottom">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle me-1"></i>Annuler
+                {{-- Footer épuré --}}
+                <div class="modal-footer border-0 bg-light px-4 py-3">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold" data-bs-dismiss="modal" aria-label="Annuler">
+                        Annuler
                     </button>
-                    <button type="submit" class="btn btn-primary px-4">
-                        <i class="bi bi-save me-2"></i>
-                        Enregistrer
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm transition-base">
+                        <i class="bi bi-check-lg me-2"></i>Confirmer la nomination
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<style>
+    .ls-1 { letter-spacing: 0.5px; }
+    .transition-base { transition: all 0.2s ease-in-out; }
+    .input-group:focus-within {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1) !important;
+    }
+    .input-group:focus-within .input-group-text,
+    .input-group:focus-within .form-control {
+        border-color: #0d6efd !important;
+    }
+</style>

@@ -1,195 +1,158 @@
 <x-layout>
-    @section('title', 'Employees - HR Management')
+    @section('title', 'Gestion des Catégories - HR Management')
 
     <div class="container-fluid py-4">
-        {{-- Page Header with Gradient Background --}}
-        <div class="bg-gradient-primary-to-secondary rounded-4 p-4 mb-4 text-white shadow-lg">
-            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
-                <div>
-                    <h1 class="h3 mb-1 fw-bold"><i class="bi bi-people-fill me-2"></i>Gestion des catégories des employées</h1>
-                    <p class="text-white-50 small mb-0"><i class="bi bi-geo-alt-fill me-1"></i>DRI-Marrakech | Administration du personnel</p>
-                </div>
-                <a href="{{ route('employees.create') }}" class="btn btn-light btn-lg d-inline-flex align-items-center shadow-sm fw-semibold" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
-                    <i class="bi bi-plus-circle-fill me-2 text-primary"></i>
-                    Nouveau Catégories
-                </a>
-            </div>
-        </div>
-
-        {{-- Statistics Cards --}}
-        <div class="row g-3 mb-4">
-            {{-- Total employés --}}
-            <div class="col-md-3 col-sm-6">
-                <div class="card border-0 shadow-sm h-100 bg-primary bg-opacity-10 border-start border-primary border-4">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="flex-shrink-0 bg-primary bg-opacity-25 rounded-3 p-3 text-primary">
-                            <i class="bi bi-people fs-3"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h6 class="card-title text-muted small mb-1 text-uppercase">Total catégories de employés</h6>
-                            <h4 class="mb-0 fw-bold text-primary">{{ $categories->total() ?? 0 }}</h4>
-                        </div>
+        {{-- Header Premium avec effet de profondeur --}}
+        <div class="card border-0 shadow-lg rounded-4 mb-4 overflow-hidden">
+            <div class="card-body p-0">
+                <div class="bg-primary bg-gradient p-4 text-white position-relative">
+                    {{-- Icône décorative en filigrane --}}
+                    <div class="position-absolute top-0 end-0 p-4 opacity-10">
+                        <i class="bi bi-tags-fill" style="font-size: 8rem;"></i>
                     </div>
-                </div>
-            </div>
-
-            {{-- Femmes --}}
-            <div class="col-md-3 col-sm-6">
-                <div class="card border-0 shadow-sm h-100 bg-pink bg-opacity-10 border-start border-pink border-4">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="flex-shrink-0 bg-pink bg-opacity-25 rounded-3 p-3" style="color:#d63384;">
-                            <i class="bi bi-gender-female fs-3"></i>
+                    <div class="row align-items-center position-relative">
+                        <div class="col-md-8">
+                            <h2 class="fw-bold mb-1 text-white">Référentiel des Catégories</h2>
+                            <p class="text-white text-opacity-75 mb-0 fw-medium">
+                                <i class="bi bi-shield-check me-2"></i>Administration des classes et groupements professionnels
+                            </p>
                         </div>
-                        <div class="ms-3">
-                            <h6 class="card-title text-muted small mb-1 text-uppercase">
-                                <a href="#" class="text-decoration-none text-muted" id="sl_employee_female">
-                                    Femmes
-                                </a>
-                            </h6>
-                            <h4 class="mb-0 fw-bold" style="color:#d63384;">{{  0 }}</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Hommes --}}
-            <div class="col-md-3 col-sm-6">
-                <div class="card border-0 shadow-sm h-100 bg-info bg-opacity-10 border-start border-info border-4">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="flex-shrink-0 bg-info bg-opacity-25 rounded-3 p-3 text-info">
-                            <i class="bi bi-gender-male fs-3"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h6 class="card-title text-muted small mb-1 text-uppercase">
-                                <a href="#" class="text-decoration-none text-muted" id="sl_employee_male">
-                                    Hommes
-                                </a>
-                            </h6>
-                            <h4 class="mb-0 fw-bold text-info">{{  0 }}</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Locaux --}}
-            <div class="col-md-3 col-sm-6">
-                <div class="card border-0 shadow-sm h-100 bg-warning bg-opacity-10 border-start border-warning border-4">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="flex-shrink-0 bg-warning bg-opacity-25 rounded-3 p-3 text-warning">
-                            <i class="bi bi-building fs-3"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h6 class="card-title text-muted small mb-1 text-uppercase">Locaux</h6>
-                            <h4 class="mb-0 fw-bold text-warning">{{  0 }}</h4>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <button class="btn btn-white btn-rounded shadow-sm fw-bold px-4 transition-base" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
+                                <i class="bi bi-plus-circle-fill me-2"></i>Nouvelle Catégorie
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- Advanced Filters --}}
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-transparent border-0 pb-0">
-                <h5 class="card-title mb-2"><i class="bi bi-funnel me-2"></i>Filtres & Recherche</h5>
-            </div>
-            <div class="card-body pt-0">
-                <form method="GET" action="{{ route('categories.index') }}" class="row g-3">
-                    <div class="col-lg-8 col-md-6">
-                        <label class="form-label small fw-semibold text-muted">Recherche</label>
-                        <div class="position-relative">
-                            <div class="position-absolute top-50 start-0 translate-middle-y ps-3">
-                                <i class="bi bi-search text-muted"></i>
+        {{-- Grid de Statistiques avec bordures colorées --}}
+        <div class="row g-4 mb-4">
+            @php
+                $stats = [
+                    ['label' => 'Total Catégories', 'count' => $categories->total(), 'color' => 'primary', 'icon' => 'bi-list-ul'],
+                    ['label' => 'Effectif Féminin', 'count' => 0, 'color' => 'danger', 'icon' => 'bi-gender-female'], // Couleur danger pour le rose
+                    ['label' => 'Effectif Masculin', 'count' => 0, 'color' => 'info', 'icon' => 'bi-gender-male'],
+                    ['label' => 'Locaux Actifs', 'count' => 0, 'color' => 'warning', 'icon' => 'bi-building']
+                ];
+            @endphp
+            @foreach($stats as $stat)
+                <div class="col-xl-3 col-sm-6">
+                    <div class="card border-0 shadow-sm rounded-4 hover-lift h-100 border-start border-4 border-{{ $stat['color'] }}">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-{{ $stat['color'] }} bg-opacity-10 rounded-3 p-3 text-{{ $stat['color'] }}">
+                                    <i class="bi {{ $stat['icon'] }} fs-3"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h4 class="fw-bold mb-0 text-dark">{{ $stat['count'] }}</h4>
+                                    <p class="text-muted small mb-0 fw-bold text-uppercase ls-1">{{ $stat['label'] }}</p>
+                                </div>
                             </div>
-                            <input type="text" name="search" value="{{ request('search') }}"
-                                   class="form-control ps-5" placeholder="Nom de ville ou local...">
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 d-flex align-items-end gap-2">
-                        <button type="submit" class="btn btn-primary flex-fill">
-                            <i class="bi bi-funnel me-1"></i> Filtrer
-                        </button>
-                        <a href="{{ route('categories.index') }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </a>
+                </div>
+            @endforeach
+        </div>
+
+        {{-- Barre de recherche et filtres --}}
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-body p-4">
+                <form method="GET" action="{{ route('categories.index') }}" class="row g-3 align-items-end">
+                    <div class="col-lg-9 col-md-8">
+                        <label class="form-label small fw-bold text-muted text-uppercase ls-1">Filtrer par libellé</label>
+                        <div class="input-group bg-light border-0 rounded-3">
+                            <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text" name="search" value="{{ request('search') }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Rechercher une catégorie (ex: Fonctionnaire)...">
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4">
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-dark flex-fill rounded-3 py-2 fw-bold transition-base shadow-sm">
+                                <i class="bi bi-filter-left me-2"></i>Filtrer
+                            </button>
+                            <a href="{{ route('categories.index') }}" class="btn btn-outline-secondary rounded-3 py-2">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </a>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
 
-        {{-- Main Table --}}
-        <div class="card shadow-lg border-0 overflow-hidden">
-            <div class="card-header bg-white border-bottom py-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-semibold">
-                        <i class="bi bi-geo-alt-fill text-primary me-2"></i>
-                        Liste des catégories ({{ $categories->total() ?? 0 }})
-                    </h5>
-                    <div class="d-flex gap-2">
-                        <div class="dropdown">
-                            <button class="btn btn-outline-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
-                                <i class="bi bi-download me-1"></i>Exporter
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#" class="dropdown-item text-success"><i class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
-                                <li><a href="#" class="dropdown-item text-success"><i class="bi bi-file-earmark-excel me-2"></i>Statistiques Excel</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a href="#" class="dropdown-item text-danger"><i class="bi bi-file-earmark-pdf me-2"></i>PDF</a></li>
-                            </ul>
-                        </div>
-                    </div>
+        {{-- Table Card Premium --}}
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="card-header bg-white py-4 px-4 border-bottom-0 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-dark d-flex align-items-center">
+                    <span class="bg-primary-subtle text-primary rounded-3 p-2 me-3">
+                        <i class="bi bi-bookmark-star fs-5"></i>
+                    </span>
+                    Registre des Catégories
+                </h5>
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3 dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bi bi-download me-1"></i>Exporter
+                    </button>
+                    <ul class="dropdown-menu shadow border-0 rounded-4 overflow-hidden">
+                        <li><a href="#" class="dropdown-item text-success py-2 small"><i class="bi bi-file-earmark-excel me-2"></i>Format Excel</a></li>
+                        <li><a href="#" class="dropdown-item text-danger py-2 small"><i class="bi bi-file-earmark-pdf me-2"></i>Format PDF</a></li>
+                    </ul>
                 </div>
             </div>
+
             <div class="table-responsive">
-                <table class="table mb-0 align-middle">
-                    <thead class="table-light">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light-subtle">
                     <tr>
-                        <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Catégorie</th>
-                        <th class="border-0 py-3 px-4 text-start small fw-semibold text-muted text-uppercase ls-1">Employés</th>
-                        <th class="border-0 py-3 px-4 text-end small fw-semibold text-muted text-uppercase ls-1">Actions</th>
+                        <th class="ps-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Libellé</th>
+                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-center">Occupation Relative</th>
+                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-center">Nombre d'agents</th>
+                        <th class="pe-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-end">Actions</th>
                     </tr>
                     </thead>
-                    <tbody class="border-top">
-                    @forelse($categories ?? [] as $category)
-                        <tr class="hover-table-row">
-                            <td class="py-3 px-4">
+                    <tbody>
+                    @forelse($categories as $category)
+                        <tr class="hover-row transition-base">
+                            <td class="ps-4 py-3">
                                 <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3">
-                                        <i class="bi bi-geo-alt fs-6"></i>
+                                    <div class="bg-primary-subtle text-primary rounded-circle p-2 me-3 shadow-xs d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="bi bi-tag"></i>
                                     </div>
                                     <div>
-                                        <div class="fw-semibold text-dark small">{{ $category->title }}</div>
+                                        <div class="fw-bold text-dark fs-6">{{ $category->title }}</div>
+                                        <small class="text-muted extra-small">ID: #CAT-{{ $category->id }}</small>
                                     </div>
                                 </div>
                             </td>
-                            <td class="py-3 px-4">
-                                @if($category->employees->count() > 0)
-                                    <div class="d-flex flex-column gap-1">
-                                        @foreach($category->employees as $employee)
-                                            <span class="badge bg-light text-dark small px-2 py-1 rounded-pill">
-                                                {{ $employee->ppr }}
-                                            </span>
-                                        @endforeach
+                            <td class="py-3 text-center">
+                                @php $count = $category->employees->count(); @endphp
+                                <div class="d-flex align-items-center justify-content-center px-4">
+                                    <div class="progress rounded-pill flex-grow-1" style="height: 6px; max-width: 100px; background-color: #eee;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $count > 0 ? '75' : '0' }}%"></div>
                                     </div>
-                                @else
-                                    <span class="badge bg-secondary small px-3 py-2">Aucun employé</span>
-                                @endif
+                                </div>
                             </td>
-                            <td class="py-3 px-4 text-end">
-                                <div class="btn-group" role="group">
-                                    <a href="{{ route('categories.show', $category) }}" class="btn btn-sm btn-outline-primary" title="Voir">
-                                        <i class="bi bi-eye"></i>
+                            <td class="py-3 text-center">
+                                    <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-3 py-2 fw-bold">
+                                        <i class="bi bi-people-fill me-1"></i> {{ $count }} Agents
+                                    </span>
+                            </td>
+                            <td class="pe-4 py-3 text-end">
+                                <div class="d-flex justify-content-end gap-1">
+                                    <a href="{{ route('categories.show', $category) }}" class="btn btn-sm btn-outline-primary border-0 rounded-circle p-2" title="Gérer">
+                                        <i class="bi bi-eye-fill fs-5"></i>
                                     </a>
                                     <div class="dropdown">
-                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                            <i class="bi bi-three-dots-vertical"></i>
+                                        <button class="btn btn-sm btn-light border-0 shadow-xs rounded-circle p-2" data-bs-toggle="dropdown">
+                                            <i class="bi bi-three-dots-vertical fs-5"></i>
                                         </button>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><a href="#" class="dropdown-item"><i class="bi bi-envelope me-2"></i>Email</a></li>
-                                            <li><a href="#" class="dropdown-item"><i class="bi bi-file-earmark-pdf me-2"></i>PDF</a></li>
-                                            <li><hr class="dropdown-divider"></li>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 overflow-hidden">
+                                            <li><a class="dropdown-item py-2 small" href="#"><i class="bi bi-pencil-square me-2 text-warning"></i>Éditer</a></li>
+                                            <li><hr class="dropdown-divider opacity-50"></li>
                                             <li>
-                                                <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal-{{ $category->id }}">
-                                                    <i class="bi bi-trash me-2"></i>Supprimer
+                                                <button class="dropdown-item py-2 small text-danger fw-bold" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal-{{ $category->id }}">
+                                                    <i class="bi bi-trash3 me-2"></i>Supprimer
                                                 </button>
                                             </li>
                                         </ul>
@@ -200,19 +163,9 @@
                     @empty
                         <tr>
                             <td colspan="4" class="text-center py-5">
-                                <div class="d-flex flex-column align-items-center gap-3">
-                                    <div class="avatar avatar-lg bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                        <i class="bi bi-geo-alt-fill fs-1 text-muted"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="h4 fw-semibold text-muted mb-1">Aucune ville trouvée</h3>
-                                        <p class="text-muted mb-0">Commencez par ajouter votre première ville</p>
-                                    </div>
-                                    <button class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createCityModal">
-                                        <i class="bi bi-plus-circle me-2"></i>
-                                        Nouvelle Ville
-                                    </button>
-                                </div>
+                                <i class="bi bi-tag-x fs-1 text-muted opacity-25"></i>
+                                <h5 class="mt-3 text-muted fw-bold">Aucune catégorie n'est encore définie</h5>
+                                <button class="btn btn-primary rounded-pill px-4 mt-3" data-bs-toggle="modal" data-bs-target="#createCategoryModal">Commencer le paramétrage</button>
                             </td>
                         </tr>
                     @endforelse
@@ -220,184 +173,110 @@
                 </table>
             </div>
 
-            {{-- Pagination --}}
+            {{-- Pagination Footer --}}
             @if(isset($categories) && $categories->hasPages())
-                <div class="card-footer bg-white border-top py-4">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <div class="small text-muted">
-                                Affichage de {{ $categories->firstItem() }} à {{ $categories->lastItem() }}
-                                sur {{ $categories->total() }} résultats
-                            </div>
+                <div class="card-footer bg-white border-top-0 py-4 px-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                        <div class="text-muted small order-2 order-md-1">
+                            Classification <span class="fw-bold">{{ $categories->firstItem() }}</span> à <span class="fw-bold">{{ $categories->lastItem() }}</span> sur <span class="fw-bold">{{ $categories->total() }}</span>
                         </div>
-                        <div class="col-md-6">
-                            <nav aria-label="Pagination">
-                                {{--
-                                {{ $categories->appends(request()->query())->links([
-                                    'class' => 'pagination-sm justify-content-end mb-0'
-                                ]) }}
-                                --}}
-                                {{ $categories->links() }}
-                            </nav>
+                        <div class="order-1 order-md-2">
+                            {{ $categories->links() }}
                         </div>
                     </div>
                 </div>
             @endif
         </div>
 
-
-
+        {{-- Modals de Suppression Individuels --}}
         @foreach($categories as $category)
             <x-delete-model
                 href="{{ route('categories.delete', $category->id) }}"
-                message="Voulez-vous vraiment supprimer ce catégorie ?"
-                title="Confiramtion"
+                message="Attention : La suppression de la catégorie '{{ $category->title }}' entraînera la désaffectation de tous les employés associés. Continuer ?"
+                title="Confirmation Statutaire"
                 target="deleteCategoryModal-{{ $category->id }}" />
         @endforeach
 
-        {{-- Bulk Actions Modal --}}
-        <div class="modal fade" id="bulkActions" tabindex="-1">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Exporter les données</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="list-group list-group-flush">
-                            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
-                                <i class="bi bi-file-earmark-excel text-success me-3 fs-4"></i>
-                                <div>
-                                    <div class="fw-semibold">Excel complet</div>
-                                    <small class="text-muted">Toutes les villes et statistiques</small>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
-                                <i class="bi bi-bar-chart text-success me-3 fs-4"></i>
-                                <div>
-                                    <div class="fw-semibold">Statistiques Excel</div>
-                                    <small class="text-muted">Graphiques et résumés</small>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
-                                <i class="bi bi-file-earmark-pdf text-danger me-3 fs-4"></i>
-                                <div>
-                                    <div class="fw-semibold">Rapport PDF</div>
-                                    <small class="text-muted">Document professionnel</small>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Create City Modal --}}
-        <div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCityModalLabel" aria-hidden="true">
+        {{-- Create Category Modal --}}
+        <div class="modal fade" id="createCategoryModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0 shadow-lg">
+                <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
                     <form action="{{ route('categories.store') }}" method="POST">
                         @csrf
-
-                        <div class="modal-header border-0 pb-0">
+                        <div class="modal-header border-0 bg-primary bg-gradient p-4 text-white">
                             <div class="d-flex align-items-center">
-                                <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3">
-                                    <i class="bi bi-geo-alt-fill text-primary fs-4"></i>
+                                <div class="bg-white bg-opacity-20 p-2 rounded-circle me-3 shadow-sm">
+                                    <i class="bi bi-plus-lg fs-3"></i>
                                 </div>
                                 <div>
-                                    <h5 class="modal-title fw-bold mb-0" id="createCityModalLabel">Nouveau Catégories</h5>
-                                    <small class="text-muted">Ajoutez un nouveau catégorie d'employé à votre structure</small>
+                                    <h5 class="modal-title fw-bold mb-0">Définir une Catégorie</h5>
+                                    <small class="text-white text-opacity-75">Classification administrative du personnel</small>
                                 </div>
                             </div>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal"></button>
                         </div>
 
-                        <div class="modal-body pt-0 px-4">
-                            {{-- Title Field --}}
+                        <div class="modal-body p-4 bg-white">
                             <div class="mb-4">
-                                <label for="cityTitle" class="form-label fw-semibold text-dark mb-2">
-                                    Nom de la catégoire <span class="text-danger">*</span>
-                                </label>
-                                <div class="input-group input-group-lg">
-                            <span class="input-group-text bg-white border-end-0">
-                                <i class="bi bi-geo-alt text-primary"></i>
-                            </span>
-                                    <input type="text"
-                                           class="form-control form-control-lg border-start-0 shadow-sm @error('title') is-invalid @enderror"
-                                           id="categoryTitle"
-                                           name="title"
-                                           placeholder="Ex: Fonctionnaire, Agent..."
-                                           value="{{ old('title') }}"
-                                           required>
-                                    @error('title')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
+                                <label class="form-label small fw-bold text-muted text-uppercase ls-1">Intitulé de la catégorie <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg border rounded-3 overflow-hidden shadow-sm transition-base">
+                                    <span class="input-group-text bg-white border-0 text-primary"><i class="bi bi-tag"></i></span>
+                                    <input type="text" class="form-control border-0 bg-white shadow-none @error('title') is-invalid @enderror" id="categoryTitle" name="title" placeholder="Ex: Agent de Maîtrise, Cadre..." required>
                                 </div>
-                                <small class="text-muted mt-1">Le nom doit être unique et descriptif</small>
                             </div>
 
-                            {{-- Quick Preview --}}
-                            <div class="bg-light rounded-3 p-3 mb-3 d-none" id="previewSection">
-                                <small class="text-muted mb-2 d-block">Aperçu:</small>
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-2">
-                                        <i class="bi bi-geo-alt-fill text-primary"></i>
-                                    </div>
-                                    <div class="fw-semibold text-dark" id="previewTitle">Tapez un nom...</div>
+                            <div class="bg-primary-subtle rounded-4 p-3 d-none" id="previewSection">
+                                <div class="d-flex align-items-center text-primary fw-bold">
+                                    <i class="bi bi-check2-circle me-2"></i>
+                                    <span id="previewTitle" class="small"></span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="modal-footer border-0 bg-light px-4 py-3 rounded-bottom">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                <i class="bi bi-x-circle me-1"></i>Annuler
-                            </button>
-                            <button type="submit" class="btn btn-primary px-4">
-                                <i class="bi bi-check-circle me-2"></i>
-                                Créer la catégorie
-                            </button>
+                        <div class="modal-footer border-0 bg-light px-4 py-3">
+                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm transition-base">Enregistrer</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+    </div>
 
-        @push('scripts')
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const titleInput = document.getElementById('cityTitle');
-                    const previewSection = document.getElementById('previewSection');
-                    const previewTitle = document.getElementById('previewTitle');
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const titleInput = document.getElementById('categoryTitle');
+                const previewSection = document.getElementById('previewSection');
+                const previewTitle = document.getElementById('previewTitle');
 
+                if(titleInput) {
                     titleInput.addEventListener('input', function() {
                         const value = this.value.trim();
-                        previewTitle.textContent = value || 'Tapez un nom...';
+                        previewTitle.textContent = value;
                         previewSection.classList.toggle('d-none', !value);
                     });
-                });
-            </script>
-        @endpush
-
-        @push('styles')
-            <style>
-                .hover-table-row:hover {
-                    background-color: rgba(0,123,255,.075) !important;
-                    transform: scale(1.001);
-                    transition: all 0.2s ease;
                 }
-                .avatar {
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                .avatar-sm { font-size: .875em; }
-                .avatar-lg { font-size: 1.25em; }
-                .ls-1 { letter-spacing: 0.025em; }
-                .extra-small { font-size: .75em; }
-                .table th:first-child, .table td:first-child { border-left: 0; }
-                .table th:last-child, .table td:last-child { border-right: 0; }
-            </style>
-        @endpush
+            });
+        </script>
+    @endpush
 
-    </div>
+    @push('styles')
+        <style>
+            .hover-row:hover { background-color: #f8fbff !important; }
+            .transition-base { transition: all 0.2s ease-in-out; }
+            .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important; }
+            .btn-white { background: #fff; color: #4f46e5; border: none; }
+            .btn-white:hover { background: #f3f4f6; color: #4338ca; }
+            .btn-primary-light { background: rgba(255,255,255,0.15); border: none; color: #fff; }
+            .btn-primary-light:hover { background: rgba(255,255,255,0.25); }
+            .btn-rounded { border-radius: 50px; }
+            .ls-1 { letter-spacing: 0.5px; }
+            .extra-small { font-size: 0.7rem; }
+            .shadow-xs { box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+            .bg-light-subtle { background-color: #f9fafb !important; }
+            .bg-primary-subtle { background-color: #eef2ff !important; }
+            .bg-info-subtle { background-color: #e0f2fe !important; }
+        </style>
+    @endpush
 </x-layout>

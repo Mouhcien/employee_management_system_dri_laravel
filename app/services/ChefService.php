@@ -50,33 +50,28 @@ class ChefService
         if (is_null($obj))
             return null;
 
-        $obj->service_id = $data['service_id'];
+        if (isset($data['service_id']))
+            $obj->service_id = $data['service_id'];
 
-        if ($data['entity_id'] == 'null')
-            $obj->entity_id = null;
-        else
+        if (isset($data['entity_id']))
             $obj->entity_id = $data['entity_id'];
 
-        if ($data['sector_id'] == 'null')
-            $obj->sector_id = null;
-        else
+        if (isset($data['sector_id']))
             $obj->sector_id = $data['sector_id'];
 
-        if ($data['section_id'] == 'null')
-            $obj->section_id = null;
-        else
+        if (isset($data['section_id']))
             $obj->section_id = $data['section_id'];
 
-        if ($data['decision_file'] != 'null')
-            $obj->decision_file = null;
-        else
+        if (isset($data['decision_file']))
             $obj->decision_file = $data['decision_file'];
 
-        $obj->employee_id = $data['employee_id'];
+        if (isset($data['employee_id']))
+            $obj->employee_id = $data['employee_id'];
 
-        $obj->starting_date = $data['starting_date'];
+        if (isset($data['starting_date']))
+            $obj->starting_date = $data['starting_date'];
 
-        if ($data['finishing_date'] == 'null')
+        if (isset($data['finishing_date']))
             $obj->finishing_date = $data['finishing_date'];
 
         return $this->chefRepository->Update($obj);

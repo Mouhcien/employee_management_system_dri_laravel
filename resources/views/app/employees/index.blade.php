@@ -1,256 +1,165 @@
 <x-layout>
-    {{-- Custom Styles --}}
-    <style>
+    {{-- Styles optimisés --}}
+    @push('styles')
+        <style>
+            .hover-row-highlight:hover {
+                background-color: rgba(79, 70, 229, 0.04) !important;
+                border-left: 4px solid #4f46e5 !important;
+                transition: all 0.2s ease;
+            }
 
-        .details-row td {
-            border-top: none;
-        }
+            .avatar-hover {
+                transition: transform 0.2s;
+                cursor: zoom-in;
+            }
 
-        .btn-light {
-            background-color: #f8f9fa;
-            border-color: #e9ecef;
-        }
+            .avatar-hover:hover {
+                transform: scale(1.1);
+            }
 
-        .btn-light:hover {
-            background-color: #e9ecef;
-            border-color: #dee2e6;
-        }
+            #employee-photo-preview {
+                position: fixed;
+                display: none;
+                pointer-events: none;
+                z-index: 9999;
+                padding: 8px;
+                background: #fff;
+                border-radius: 1rem;
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                border: 1px solid #e2e8f0;
+            }
 
-        .table th {
-            letter-spacing: 0.5px;
-        }
+            #employee-photo-preview img {
+                display: block;
+                max-width: 320px;
+                max-height: 320px;
+                border-radius: 0.75rem;
+                object-fit: cover;
+            }
 
-        .card {
-            border-radius: 1rem;
-        }
+            .ls-1 { letter-spacing: 0.5px; }
+        </style>
+    @endpush
 
-        .card-header {
-            border-radius: 1rem 1rem 0 0 !important;
-        }
-
-        .rounded-4 {
-            border-radius: 1rem !important;
-        }
-
-        .table tbody tr {
-            border-left: 3px solid transparent;
-        }
-
-        .table tbody tr:hover {
-            border-left-color: #667eea;
-        }
-
-
-        /* Status indicator pulse animation */
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
-        }
-
-        .table-responsive {
-            overflow-x: visible;  /* or hidden, instead of auto */
-        }
-
-        #employee-photo-preview {
-            position: fixed;
-            display: none;
-            pointer-events: none;           /* mouse passes through */
-            z-index: 2000;                  /* above table & dropdowns */
-            padding: 6px;
-            background: #fff;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
-            border: 1px solid rgba(148, 163, 184, 0.5);
-        }
-
-        #employee-photo-preview img {
-            display: block;
-            max-width: 360px;
-            max-height: 360px;
-            border-radius: 0.75rem;
-            object-fit: cover;
-        }
-
-    </style>
-
-    @section('title', 'Employees - HR Management')
+    @section('title', 'Gestion des Agents - HR Management')
 
     <div class="container-fluid py-4">
-        {{-- Page Header with Gradient Background --}}
-        <div class="bg-gradient-primary-to-secondary rounded-4 p-4 mb-4 text-white shadow-lg">
-            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
-                <div>
-                    <h1 class="h3 mb-1 fw-bold"><i class="bi bi-people-fill me-2"></i>Gestion des Agents</h1>
-                    <p class="text-white-50 small mb-0"><i class="bi bi-geo-alt-fill me-1"></i>DRI-Marrakech | Administration du personnel</p>
-                </div>
-                <a href="{{ route('employees.create') }}" class="btn btn-light btn-lg d-inline-flex align-items-center shadow-sm fw-semibold">
-                    <i class="bi bi-plus-circle-fill me-2 text-primary"></i>
-                    Nouvel employé
-                </a>
-            </div>
-        </div>
-
-        {{-- Statistics Cards --}}
-        <div class="row g-3 mb-4">
-            {{-- Total employés --}}
-            <div class="col-md-3 col-sm-6">
-                <div class="card border-0 shadow-sm h-100 bg-primary bg-opacity-10 border-start border-primary border-4">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="flex-shrink-0 bg-primary bg-opacity-25 rounded-3 p-3 text-primary">
-                            <i class="bi bi-people fs-3"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h6 class="card-title text-muted small mb-1 text-uppercase">Total employés</h6>
-                            <h4 class="mb-0 fw-bold text-primary">{{ $total_employee ?? 0 }}</h4>
-                        </div>
+        {{-- Header Premium --}}
+        <div class="card border-0 shadow-lg rounded-4 mb-4 overflow-hidden">
+            <div class="card-body p-0">
+                <div class="bg-primary bg-gradient p-4 text-white position-relative">
+                    <div class="position-absolute top-0 end-0 p-4 opacity-10">
+                        <i class="bi bi-people-fill" style="font-size: 8rem;"></i>
                     </div>
-                </div>
-            </div>
-
-            {{-- Femmes --}}
-            <div class="col-md-3 col-sm-6">
-                <div class="card border-0 shadow-sm h-100 bg-pink bg-opacity-10 border-start border-pink border-4">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="flex-shrink-0 bg-pink bg-opacity-25 rounded-3 p-3" style="color:#d63384;">
-                            <i class="bi bi-gender-female fs-3"></i>
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 position-relative">
+                        <div>
+                            <h1 class="h3 fw-bold mb-1 text-white">Répertoire des Agents</h1>
+                            <p class="text-white text-opacity-75 mb-0 small">
+                                <i class="bi bi-geo-alt-fill me-1"></i>DRI-Marrakech | Administration du personnel
+                            </p>
                         </div>
-                        <div class="ms-3">
-                            <h6 class="card-title text-muted small mb-1 text-uppercase">
-                                <a href="#" class="text-decoration-none text-muted" id="sl_employee_female">
-                                Femmes
-                                </a>
-                            </h6>
-                            <h4 class="mb-0 fw-bold" style="color:#d63384;">{{ $femaleCount ?? 0 }}</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Hommes --}}
-            <div class="col-md-3 col-sm-6">
-                <div class="card border-0 shadow-sm h-100 bg-info bg-opacity-10 border-start border-info border-4">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="flex-shrink-0 bg-info bg-opacity-25 rounded-3 p-3 text-info">
-                            <i class="bi bi-gender-male fs-3"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h6 class="card-title text-muted small mb-1 text-uppercase">
-                                <a href="#" class="text-decoration-none text-muted" id="sl_employee_male">
-                                    Hommes
-                                </a>
-                            </h6>
-                            <h4 class="mb-0 fw-bold text-info">{{ $maleCount ?? 0 }}</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Locaux --}}
-            <div class="col-md-3 col-sm-6">
-                <div class="card border-0 shadow-sm h-100 bg-warning bg-opacity-10 border-start border-warning border-4">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="flex-shrink-0 bg-warning bg-opacity-25 rounded-3 p-3 text-warning">
-                            <i class="bi bi-building fs-3"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h6 class="card-title text-muted small mb-1 text-uppercase">Locaux</h6>
-                            <h4 class="mb-0 fw-bold text-warning">{{ $locals->count() ?? 0 }}</h4>
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('employees.create') }}" class="btn btn-white btn-rounded shadow-sm fw-bold px-4 transition-base">
+                                <i class="bi bi-plus-circle-fill me-2"></i>Nouvel Employé
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        {{-- Grid de Statistiques --}}
+        <div class="row g-4 mb-4">
+            @php
+                $metrics = [
+                    ['label' => 'Total Agents', 'count' => $total_employee, 'color' => 'primary', 'icon' => 'bi-people-fill'],
+                    ['label' => 'Femmes', 'count' => $femaleCount, 'color' => 'danger', 'icon' => 'bi-gender-female'],
+                    ['label' => 'Hommes', 'count' => $maleCount, 'color' => 'info', 'icon' => 'bi-gender-male'],
+                    ['label' => 'Sites / Locaux', 'count' => $locals->count(), 'color' => 'warning', 'icon' => 'bi-building-fill']
+                ];
+            @endphp
+            @foreach($metrics as $metric)
+                <div class="col-xl-3 col-sm-6">
+                    <div class="card border-0 shadow-sm rounded-4 hover-lift h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-{{ $metric['color'] }} bg-opacity-10 rounded-4 p-3 text-{{ $metric['color'] }}">
+                                    <i class="bi {{ $metric['icon'] }} fs-3"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h4 class="fw-bold mb-0 text-dark">{{ $metric['count'] ?? 0 }}</h4>
+                                    <p class="text-muted small mb-0 fw-bold text-uppercase ls-1">{{ $metric['label'] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
 
-        {{-- Filters --}}
-        <div class="card shadow-sm mb-4 border-0">
-            <div class="card-header bg-white border-bottom py-3">
-                <h5 class="mb-0 text-muted"><i class="bi bi-funnel-fill me-2 text-info"></i>Filtres de recherche</h5>
-            </div>
-            <div class="card-body">
-                <form method="POST" action="{{ route('employees.search') }}" class="row g-3">
+        {{-- Panneau de Recherche Avancé --}}
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-body p-4">
+                <form method="POST" action="{{ route('employees.search') }}" class="row g-3 align-items-end">
                     @csrf
-                    <div class="col-lg-3 col-md-6">
-                        <label for="search" class="form-label small fw-semibold text-muted">Recherche</label>
-                        <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0 text-muted">
-                            <i class="bi bi-search"></i>
-                        </span>
-                            <input type="text" name="employee_search" id="employee-search" value="{{ $filter_val ? $filter_val : '' }}"
-                                   placeholder="Nom, prénom, email, PPR..." class="form-control border-start-0 bg-light">
-
-                            {{-- spinner --}}
-                            <span class="input-group-text bg-white" id="search-spinner" style="display:none;">
-                                <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-                            </span>
+                    <div class="col-xl-4 col-lg-6">
+                        <label class="form-label small fw-bold text-muted text-uppercase ls-1">Recherche globale</label>
+                        <div class="input-group bg-light rounded-3 overflow-hidden border">
+                            <span class="input-group-text bg-transparent border-0"><i class="bi bi-search"></i></span>
+                            <input type="text" name="employee_search" value="{{ $filter_val }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Nom, PPR, Email...">
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-12 d-flex align-items-end gap-2">
-                        <button type="submit" class="btn btn-primary flex-fill">
-                            <i class="bi bi-funnel me-1"></i>Filtrer
-                        </button>
-                        <a href="{{ route('employees.index') }}" class="btn btn-outline-secondary" title="Réinitialiser">
-                            <i class="bi bi-arrow-counterclockwise"></i>
-                        </a>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <label for="department" class="form-label small fw-semibold text-muted">Local</label>
-                        <select name="local_id" id="sl_employee_local" class="form-select bg-light">
+                    <div class="col-xl-3 col-lg-6">
+                        <label class="form-label small fw-bold text-muted text-uppercase ls-1">Localisation</label>
+                        <select name="local_id" class="form-select border-0 bg-light rounded-3 shadow-none">
                             <option value="-1">Tous les locaux</option>
                             @foreach($locals as $local)
-                                <option value="{{ $local->id }}" {{ $local_id == $local->id ? 'selected' : '' }}>
-                                    {{ $local->title }}
-                                </option>
+                                <option value="{{ $local->id }}" {{ $local_id == $local->id ? 'selected' : '' }}>{{ $local->title }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-lg-3 col-md-6">
-                        <label for="status" class="form-label small fw-semibold text-muted">Ville</label>
-                        <select name="city_id" id="sl_employee_city" class="form-select bg-light">
+                    <div class="col-xl-3 col-lg-6">
+                        <label class="form-label small fw-bold text-muted text-uppercase ls-1">Ville</label>
+                        <select name="city_id" class="form-select border-0 bg-light rounded-3 shadow-none">
                             <option value="-1">Toutes les villes</option>
                             @foreach($cities as $city)
-                                <option value="{{ $city->id }}" {{ $city_id == $city->id ? 'selected' : '' }}>
-                                    {{ $city->title }}
-                                </option>
+                                <option value="{{ $city->id }}" {{ $city_id == $city->id ? 'selected' : '' }}>{{ $city->title }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-lg-1 col-md-12 d-flex align-items-end gap-2">
-                        <button type="submit" class="btn btn-success flex-fill" title="Filtrer par untité structurelle">
-                            <i class="bi bi-funnel me-1"></i>
-                            <i class="bi bi-diagram-3-fill me-1"></i>
+                    <div class="col-xl-2 col-lg-6 d-flex gap-2">
+                        <button type="submit" class="btn btn-dark flex-fill rounded-3 py-2 fw-bold transition-base">
+                            <i class="bi bi-funnel-fill me-2"></i>Filtrer
                         </button>
+                        <a href="{{ route('employees.index') }}" class="btn btn-outline-secondary rounded-3 py-2">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </a>
                     </div>
                 </form>
             </div>
         </div>
 
-        {{-- Employees Table --}}
-        <div class="card shadow border-0">
-
-            <div class="table-responsive">
-                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-list-ul me-2 text-primary"></i>Liste des employés</h5>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.print()">
-                            <i class="bi bi-printer me-1"></i>Imprimer
-                        </button>
-                        <button type="button" class="btn btn-outline-success btn-sm">
-                            <i class="bi bi-file-excel me-1"></i>Exporter
-                        </button>
-                        @if (session('opt') == 'list')
-                            <a href="{{ route('employees.index') }}?opt=cards" class="btn btn-outline-info btn-sm">
-                                <i class="bi bi-card-list me-1"></i>
-                            </a>
-                        @else
-                            <a href="{{ route('employees.index') }}?opt=list" class="btn btn-outline-info btn-sm">
-                                <i class="bi bi-list me-1"></i>
-                            </a>
-                        @endif
+        {{-- Table Card --}}
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="card-header bg-white py-3 px-4 border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-list-stars text-primary me-2"></i>Effectif Actif</h5>
+                <div class="d-flex gap-2">
+                    <div class="btn-group rounded-pill overflow-hidden shadow-xs">
+                        <button class="btn btn-light border-end" onclick="window.print()"><i class="bi bi-printer"></i></button>
+                        <button class="btn btn-light"><i class="bi bi-file-earmark-excel"></i></button>
+                    </div>
+                    <div class="btn-group rounded-pill overflow-hidden shadow-xs ms-2">
+                        <a href="{{ route('employees.index') }}?opt=list" class="btn btn-{{ session('opt') == 'list' || !session('opt') ? 'primary' : 'light' }}">
+                            <i class="bi bi-list"></i>
+                        </a>
+                        <a href="{{ route('employees.index') }}?opt=cards" class="btn btn-{{ session('opt') == 'cards' ? 'primary' : 'light' }}">
+                            <i class="bi bi-grid-fill"></i>
+                        </a>
                     </div>
                 </div>
+            </div>
 
+            <div class="table-responsive">
                 @if (session('opt') == 'cards')
                     @include('app.employees._cards')
                 @else
@@ -258,14 +167,12 @@
                 @endif
             </div>
 
-            {{-- Pagination --}}
+            {{-- Footer Pagination --}}
             @if(isset($employees) && $employees->hasPages())
-                <div class="card-footer bg-white border-top py-3">
+                <div class="card-footer bg-white border-top-0 py-4 px-4">
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
                         <div class="text-muted small">
-                            Affichage de <span class="fw-bold text-dark">{{ $employees->firstItem() }}</span> à
-                            <span class="fw-bold text-dark">{{ $employees->lastItem() }}</span> sur
-                            <span class="fw-bold text-dark">{{ $employees->total() }}</span> employés
+                            Agents <span class="fw-bold text-dark">{{ $employees->firstItem() }}</span> - <span class="fw-bold text-dark">{{ $employees->lastItem() }}</span> sur <span class="fw-bold text-dark">{{ $employees->total() }}</span>
                         </div>
                         <div>
                             {{ $employees->appends(request()->query())->links() }}
@@ -275,77 +182,74 @@
             @endif
         </div>
 
+        {{-- Modals de suppression --}}
         @foreach($employees as $employee)
             <x-delete-model
                 href="{{ route('employees.delete', $employee->id) }}"
-                message="Voulez-vous vraiment supprimer ce agent ?"
-                title="Confiramtion"
+                message="Attention : La suppression de l'agent #{{ $employee->ppr }} est irréversible."
+                title="Confirmation de Suppression"
                 target="deleteEmployeeModal" />
         @endforeach
-
     </div>
 
+    {{-- Preview Photo flottante --}}
     <div id="employee-photo-preview">
         <img src="" alt="Aperçu employé">
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const previewBox = document.getElementById('employee-photo-preview');
-            const previewImg = previewBox.querySelector('img');
-            const offsetX = 20;  // distance from cursor
-            const offsetY = 20;
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Gestion du preview photo
+                const previewBox = document.getElementById('employee-photo-preview');
+                const previewImg = previewBox.querySelector('img');
+                const offsetX = 25;
+                const offsetY = 25;
 
-            document.querySelectorAll('.employee-photo-thumb').forEach(function (img) {
-                img.addEventListener('mouseenter', function (e) {
-                    const src = img.dataset.full || img.src;
-                    previewImg.src = src;
-                    previewBox.style.display = 'block';
-                    movePreview(e);
+                document.querySelectorAll('.employee-photo-thumb').forEach(function (img) {
+                    img.addEventListener('mouseenter', function (e) {
+                        const src = img.dataset.full || img.src;
+                        previewImg.src = src;
+                        previewBox.style.display = 'block';
+                        movePreview(e);
+                    });
+
+                    img.addEventListener('mousemove', movePreview);
+                    img.addEventListener('mouseleave', () => previewBox.style.display = 'none');
                 });
 
-                img.addEventListener('mousemove', function (e) {
-                    movePreview(e);
-                });
+                function movePreview(e) {
+                    previewBox.style.left = (e.clientX + offsetX) + 'px';
+                    previewBox.style.top  = (e.clientY + offsetY) + 'px';
+                }
 
-                img.addEventListener('mouseleave', function () {
-                    previewBox.style.display = 'none';
-                });
-            });
+                // Gestion des lignes extensibles (Détails)
+                document.querySelectorAll('.employee-row').forEach(row => {
+                    row.classList.add('hover-row-highlight');
+                    row.addEventListener('click', function (e) {
+                        if (e.target.closest('.dropdown') || e.target.closest('a') || e.target.closest('button')) return;
 
-            function movePreview(e) {
-                const x = e.clientX + offsetX;
-                const y = e.clientY + offsetY;
-
-                previewBox.style.left = x + 'px';
-                previewBox.style.top  = y + 'px';
-            }
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.employee-row').forEach(function (row) {
-                row.addEventListener('click', function (e) {
-                    // Ignore clicks on dropdown/links
-                    if (e.target.closest('.dropdown-menu') || e.target.closest('.dropdown-toggle') || e.target.closest('a')) {
-                        return;
-                    }
-                    const targetId = row.getAttribute('data-bs-target');
-                    const detailsRow = document.querySelector(targetId);
-                    if (!detailsRow) return;
-
-                    const collapse = new bootstrap.Collapse(detailsRow, { toggle: true });
-
-                    const icon = row.querySelector('.toggle-details i');
-                    if (icon) {
-                        icon.classList.toggle('bi-chevron-down');
-                        icon.classList.toggle('bi-chevron-up');
-                    }
+                        const targetId = this.getAttribute('data-bs-target');
+                        const detailsRow = document.querySelector(targetId);
+                        if (detailsRow) {
+                            new bootstrap.Collapse(detailsRow, { toggle: true });
+                            const icon = this.querySelector('.toggle-details i');
+                            if (icon) {
+                                icon.classList.toggle('bi-chevron-down');
+                                icon.classList.toggle('bi-chevron-up');
+                            }
+                        }
+                    });
                 });
             });
-        });
-    </script>
+        </script>
+    @endpush
 
-
+    <style>
+        .hover-lift:hover { transform: translateY(-3px); transition: transform 0.2s; }
+        .btn-white { background: #fff; color: #4f46e5; border: none; }
+        .btn-white:hover { background: #f8f9fa; color: #4338ca; }
+        .btn-rounded { border-radius: 50px; }
+        .shadow-xs { box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    </style>
 </x-layout>
