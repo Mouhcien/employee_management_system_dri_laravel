@@ -10,6 +10,7 @@ use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
 use App\services\TempService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TempController extends Controller
 {
@@ -125,6 +126,107 @@ class TempController extends Controller
 
         }catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function edit(Request $request, $id) {
+        try {
+
+            $temp = $this->tempService->getOneById($id);
+            if (is_null($temp))
+                return back()->with('error', 'chef par interim introuvable !!');
+
+            $chefs = $this->chefService->getAll(0);
+            $services = $this->serviceEntityService->getAll(0);
+            $entities = $this->entityService->getAll(0);
+            $sections = $this->sectionEntityService->getAll(0);
+            $sectors = $this->sectorEntityService->getAll(0);
+
+            $employees = $this->employeeService->getAll(0);
+
+            return view('app.temps.insert', [
+                'temp' => $temp,
+                'chefs' => $chefs,
+                'services' => $services,
+                'entities' => $entities,
+                'sections' => $sections,
+                'sectors' => $sectors,
+                'employees' => $employees
+            ]);
+        }catch (\Exception $exception) {
+            return back()->with('error',$exception->getMessage());
+        }
+    }
+
+    public function update(Request $request, $id) {
+        try {
+
+            $temp = $this->tempService->getOneById($id);
+            if (is_null($temp))
+                return back()->with('error', 'chef par interim introuvable !!');
+
+            $employee_id = $request->input('employee_id');
+            $chef_id = $request->input('chef_id');
+
+            $employee = $this->employeeService->getOneById($employee_id);
+            if (is_null($employee)) {
+                return back()->with('error', 'Employé introuvable !!!');
+            }
+
+            $chef = $this->chefService->getOneById($chef_id);
+            if (is_null($chef)) {
+                return back()->with('error', 'Chef introuvable !!!');
+            }
+
+            $data['employee_id'] = $employee_id;
+            $data['chef_id'] = $chef_id;
+            $data['starting_date'] = $request->input('starting_date');
+            $data['finished_date'] = $request->input('finished_date');
+
+            $data['file'] = null;
+            if ($request->hasFile('decision_file')) {
+                $file = $request->file('decision_file');
+
+                $filename = time() . '_chef_interim_' . $chef_id . '_' . $employee_id . uniqid() . '.' . $file->extension();
+                $path = $file->storeAs('photos/temps', $filename, 'public');
+
+                $data['file'] = $path;
+            }
+
+            if (!is_null($temp->file)) {
+                Storage::delete($temp->file);
+            }
+
+            $result = $this->tempService->update($id, $data);
+
+            if ($result) {
+                return redirect()->route('temps.index')->with('success', "L'affectation est bien faite !!");
+            }else{
+                return back()->with('error', "erreur lors de l'affectation !!");
+            }
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function delete($id) {
+        try {
+
+            $temp = $this->tempService->getOneById($id);
+            if (is_null($temp))
+                return back()->with('error', 'chef par interim introuvable !!');
+
+            $result = $this->tempService->delete($id);
+
+            if ($result) {
+                return redirect()->route('temps.index')->with('success', "La suppression est bien faite !!");
+            }else{
+                return back()->with('error', "erreur lors de la suppression !!");
+            }
+
+        }catch (\Exception $exception) {
+            return back()->with('error',$exception->getMessage());
         }
     }
 

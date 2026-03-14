@@ -49,7 +49,7 @@
                                             <select class="form-control" name="employee_id" id="employee_id" >
                                                 <option class="-1">Séléctionnez l'employé</option>
                                                 @foreach($employees->sortBy('lastname') as $employee)
-                                                    <option value="{{ $employee->id }}">
+                                                    <option value="{{ $employee->id }}" {{ $employee->id == $temp->employee_id ? 'selected' : '' }}>
                                                         {{ $employee->lastname }} {{ $employee->firstname }}
                                                     </option>
                                                 @endforeach
@@ -68,7 +68,7 @@
                                             <select class="form-control" name="chef_id" id="chef_id" >
                                                 <option class="-1">Séléctionnez chef</option>
                                                 @foreach($chefs->sortBy('employee.lastname') as $chef)
-                                                    <option value="{{ $chef->id }}"> {{ $chef->employee->lastname }} {{ $chef->employee->firstname }}</option>
+                                                    <option value="{{ $chef->id }}" {{ $chef->id == $temp->chef_id ? 'selected' : '' }}> {{ $chef->employee->lastname }} {{ $chef->employee->firstname }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -88,7 +88,7 @@
                                             <x-date-input id="starting_date"
                                                           name="starting_date"
                                                           class="form-control border-start-0 ps-0 shadow-none bg-white"
-                                                          value="null"
+                                                          value="{{ !is_null($temp->starting_date) ? $temp->starting_date : 'null' }}"
                                                           required />
                                         </div>
                                     </div>
@@ -105,7 +105,7 @@
                                             <x-date-input id="finished_date"
                                                           name="finished_date"
                                                           class="form-control border-start-0 ps-0 shadow-none bg-white"
-                                                          value="null"
+                                                          value="{{ !is_null($temp->finished_date) ? $temp->finished_date : 'null' }}"
                                                           required />
                                         </div>
                                     </div>

@@ -185,7 +185,7 @@
                                         <li><a class="dropdown-item py-2" href="#"><i class="bi bi-clock-history text-info me-2"></i>Historique</a></li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li>
-                                            <button class="dropdown-item py-2 text-danger" data-bs-toggle="modal" data-bs-target="#deleteTempModal-{{ $temp->id }}">
+                                            <button class="dropdown-item py-2 text-danger" data-bs-toggle="modal" data-bs-target="#deleteChefTempModal-{{ $temp->id }}">
                                                 <i class="bi bi-trash3 me-2"></i>Supprimer
                                             </button>
                                         </li>
@@ -195,7 +195,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center py-5">
+                            <td colspan="7" class="text-center py-5">
                                 <i class="bi bi-search fs-1 text-muted opacity-25"></i>
                                 <p class="mt-3 text-muted">Aucun chef par intérim ne correspond à votre recherche.</p>
                             </td>
@@ -226,10 +226,10 @@
     {{-- Delete Modals --}}
     @foreach($temps as $temp)
         <x-delete-model
-            href="{{ route('entities.delete', $temp->chef->id) }}"
+            href="{{ route('temps.delete', $temp->id) }}"
             message="Attention: La suppression de ce responsable est irréversible."
             title="Supprimer le responsable"
-            target="deleteChefModal-{{ $temp->chef->id }}" />
+            target="deleteChefTempModal-{{ $temp->id }}" />
     @endforeach
 
     <style>
