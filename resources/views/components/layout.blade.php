@@ -44,14 +44,14 @@
 <div class="d-flex">
     {{-- Sidebar --}}
     <aside id="sidebar" class="flex-column shadow-sm bg-white border-end d-flex">
-        <div class="d-flex align-items-center justify-content-between p-3 mb-2 border-bottom" style="height: 65px;">
+        <div class="d-flex align-items-center justify-content-between p-3 mb-2 border-bottom" style="height: 57px;">
             <span class="fs-5 fw-bold text-dark" id="sidebarBrandFull">
                 RH-<span class="text-primary">DRI-Marrakech</span>
             </span>
             <span class="fs-4 fw-bold text-primary d-none" id="sidebarBrandMini">R</span>
         </div>
 
-        <div class="flex-grow-1 overflow-y-auto overflow-x-hidden">
+        <div class="flex-grow-1 overflow-y-auto overflow-x-hidden" >
             <x-nav />
         </div>
     </aside>

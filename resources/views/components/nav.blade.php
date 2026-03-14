@@ -5,7 +5,7 @@
     <div class="sidebar-section-title mt-2 mb-1 px-3">Principal</div>
     <a href="{{ route('dashboard0') }}"
        class="nav-link sidebar-link rounded-3 px-3 py-2 d-flex align-items-center mb-1 transition-base
-              {{ request()->routeIs('dashboard*') ? 'active shadow-sm' : '' }}">
+              {{ request()->routeIs('dashboard0*') ? 'shadow-sm text-primary bg-primary-subtle' : '' }}">
         <i class="bi bi-grid-1x2-fill me-2 fs-5"></i>
         <span class="sidebar-text fw-semibold">Tableau de bord</span>
     </a>
