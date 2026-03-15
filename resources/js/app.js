@@ -1,7 +1,8 @@
-//import './bootstrap';
-import './bootstrap'; // Import de base de Laravel
-import * as bootstrap from 'bootstrap'; // Import complet de Bootstrap
-window.bootstrap = bootstrap; // Rend Bootstrap accessible partout !
+
+import './bootstrap';
+import 'bootstrap';
+//import * as bootstrap from 'bootstrap'; // Import complet de Bootstrap
+//window.bootstrap = bootstrap; // Rend Bootstrap accessible partout !
 
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';

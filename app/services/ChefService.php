@@ -22,6 +22,26 @@ class ChefService
         return $this->chefRepository->All(Chef::class, $this->with, $pages);
     }
 
+    public function getAllByService($service_id, $pages=0){
+        return $this->chefRepository->AllByService($service_id, $this->with, $pages);
+    }
+
+    public function getAllByEntity($entity_id, $pages=0){
+        return $this->chefRepository->AllByEntity($entity_id, $this->with, $pages);
+    }
+
+    public function getAllBySector($sector_id, $pages=0){
+        return $this->chefRepository->AllBySector($sector_id, $this->with, $pages);
+    }
+
+    public function getAllBySection($section_id, $pages=0){
+        return $this->chefRepository->AllBySection($section_id, $this->with, $pages);
+    }
+
+    public function getAllByFilter($filter, $pages=0){
+        return $this->chefRepository->AllByFilter($filter, $this->with, $pages);
+    }
+
     public function getOneById($id){
         return $this->chefRepository->One(Chef::class, $this->with, $id);
     }

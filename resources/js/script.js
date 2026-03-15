@@ -105,6 +105,107 @@ $(function() {
         window.location.href = href;
     });
 
+    // Chef part
+    $("#sl_chef_service_id").on('change', function () {
+        let href = '/chefs/?';
+        const srv = $(this).val();
+        if (srv != '-1') {
+            href += 'srv='+srv;
+        }
+
+        const ent = $("#sl_chef_entity_id").val();
+        if (ent != '-1') {
+            href += '&ent='+ent;
+        }
+
+        const sectr = $("#sl_chef_sector_id").val();
+        if (sectr != '-1') {
+            href += '&sectr='+sectr;
+        }
+
+        const sect = $("#sl_chef_section_id").val();
+        if (sect != '-1') {
+            href += '&sect='+sect;
+        }
+
+        window.location.href = href;
+    });
+
+    $("#sl_chef_entity_id").on('change', function () {
+        let href = '/chefs/?';
+        const ent = $(this).val();
+        if (ent != '-1') {
+            href += 'ent='+ent;
+        }
+
+        const srv = $('#sl_chef_service_id').val();
+        if (srv != '-1') {
+            href += '&srv='+srv;
+        }
+
+        const sectr = $("#sl_chef_sector_id").val();
+        if (sectr != '-1') {
+            href += '&sectr='+sectr;
+        }
+
+        const sect = $("#sl_chef_section_id").val();
+        if (sect != '-1') {
+            href += '&sect='+sect;
+        }
+
+        window.location.href = href;
+    });
+
+    $("#sl_chef_section_id").on('change', function () {
+        let href = '/chefs/?';
+        const sect = $(this).val();
+        if (sect != '-1') {
+            href += 'sect='+sect;
+        }
+
+        const srv = $('#sl_chef_service_id').val();
+        if (srv != '-1') {
+            href += '&srv='+srv;
+        }
+
+        const ent = $("#sl_chef_entity_id").val();
+        if (ent != '-1') {
+            href += '&ent='+ent;
+        }
+
+        const sectr = $("#sl_chef_sector_id").val();
+        if (sectr != '-1') {
+            href += '&sectr='+sectr;
+        }
+
+        window.location.href = href;
+    });
+
+    $("#sl_chef_sector_id").on('change', function () {
+        let href = '/chefs/?';
+        const sectr = $(this).val();
+        if (sectr != '-1') {
+            href += 'sectr='+sectr;
+        }
+
+        const srv = $('#sl_chef_service_id').val();
+        if (srv != '-1') {
+            href += '&srv='+srv;
+        }
+
+        const ent = $("#sl_chef_entity_id").val();
+        if (ent != '-1') {
+            href += '&ent='+ent;
+        }
+
+        const sect = $("#sl_chef_section_id").val();
+        if (sect != '-1') {
+            href += '&sect='+sect;
+        }
+
+        window.location.href = href;
+    });
+
 
 
 });

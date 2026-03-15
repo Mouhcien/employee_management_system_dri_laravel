@@ -12,9 +12,10 @@
                             <p class="opacity-75 mb-0">Supervision et suivi des chefs d'unités structurelles</p>
                         </div>
                         <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                            <button class="btn btn-primary-light btn-rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#bulkActions">
+                            <a class="btn btn-primary-light btn-rounded shadow-sm" href="{{ route('chefs.download') }}" >
                                 <i class="bi bi-download"></i>
-                            </button>
+                            </a>
+                            <a href="{{ route('chefs.index') }}" class="btn btn-white btn-rounded"><i class="bi bi-arrow-clockwise"></i></a>
                         </div>
                     </div>
                 </div>
@@ -53,28 +54,61 @@
         {{-- Filter Section --}}
         <div class="card border-0 shadow-sm rounded-4 mb-4">
             <div class="card-body p-4">
-                <form method="GET" action="{{ route('entities.index') }}" class="row g-3 align-items-end">
-                    <div class="col-lg-4">
-                        <label class="form-label fw-bold small text-uppercase">Recherche Rapide</label>
-                        <div class="input-group border rounded-3 overflow-hidden">
-                            <span class="input-group-text bg-white border-0"><i class="bi bi-search"></i></span>
-                            <input type="text" name="search" value="{{ request('search') }}" class="form-control border-0 shadow-none" placeholder="Nom, prénom ou unité...">
+                <form method="GET" action="{{ route('chefs.index') }}" class="row g-3 align-items-end">
+                    <div class="row col-12">
+                        <div class="col-6">
+                            <label class="form-label fw-bold small text-uppercase">Recherche Rapide</label>
+                            <div class="input-group border rounded-3 overflow-hidden">
+                                <span class="input-group-text bg-white border-0"><i class="bi bi-search"></i></span>
+                                <input type="text" name="search" value="{{ $filter }}" class="form-control border-0 shadow-none" placeholder="Nom, prénom...">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <label class="form-label fw-bold small text-uppercase">Département</label>
-                        <select name="department" class="form-select border rounded-3">
-                            <option value="">Tous les services</option>
-                            @foreach($services as $service)
-                                <option value="{{ $service->id }}" {{ request('department') == $service->id ? 'selected' : '' }}>{{ $service->title }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-lg-5 d-flex gap-2 mt-4 mt-lg-0">
-                        <button type="submit" class="btn btn-dark w-100 rounded-3"><i class="bi bi-filter me-2"></i>Filtrer</button>
-                        <a href="{{ route('entities.index') }}" class="btn btn-outline-secondary rounded-3"><i class="bi bi-arrow-clockwise"></i></a>
+                        <div class="col-6">
+                            <label class="form-label fw-bold small text-uppercase"></label>
+                            <button type="submit" class="btn btn-dark w-100 rounded-3 mt-1"><i class="bi bi-filter me-2"></i>Filtrer</button>
+                        </div>
+
                     </div>
                 </form>
+                    <hr>
+                    <div class="row col-12">
+                        <div class="col-lg-3">
+                            <label class="form-label fw-bold small text-uppercase">Services</label>
+                            <select name="chef_service_id" id="sl_chef_service_id" class="form-select border rounded-3">
+                                <option value="-1">Tous les services</option>
+                                @foreach($services as $service)
+                                    <option value="{{ $service->id }}" {{ $service_id == $service->id ? 'selected' : '' }}>{{ $service->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-lg-3">
+                            <label class="form-label fw-bold small text-uppercase">Entité</label>
+                            <select name="chef_service_id" id="sl_chef_entity_id" class="form-select border rounded-3">
+                                <option value="-1">Tous les entités</option>
+                                @foreach($entities as $entity)
+                                    <option value="{{ $entity->id }}" {{ $entity_id == $entity->id ? 'selected' : '' }}>{{ $entity->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-lg-3">
+                            <label class="form-label fw-bold small text-uppercase">Secteurs</label>
+                            <select name="chef_service_id" id="sl_chef_sector_id" class="form-select border rounded-3">
+                                <option value="-1">Tous les secteurs</option>
+                                @foreach($sectors as $sector)
+                                    <option value="{{ $sector->id }}" {{ $sector_id == $sector->id ? 'selected' : '' }}>{{ $sector->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-lg-3">
+                            <label class="form-label fw-bold small text-uppercase">Sections</label>
+                            <select name="chef_service_id" id="sl_chef_section_id" class="form-select border rounded-3">
+                                <option value="-1">Tous les sections</option>
+                                @foreach($sections as $section)
+                                    <option value="{{ $section->id }}" {{ $section_id == $section->id ? 'selected' : '' }}>{{ $section->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
             </div>
         </div>
 
