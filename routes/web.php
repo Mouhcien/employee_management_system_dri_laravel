@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChefController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompetenceController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiplomaController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EntityController;
@@ -28,9 +29,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard0', function () {
-    return view('app.dashboard');
-})->name('dashboard0');
+Route::get('/dashboard0', [DashboardController::class, 'index'])->name('dashboard0');
 
 
 Route::get('/dashboard', function () {
@@ -71,6 +70,8 @@ Route::prefix('services')->group(function(){
     Route::get('/', [ServiceController::class, 'index'])->name('services.index');
     Route::post('/store', [ServiceController::class, 'store'])->name('services.store');
     Route::post('/import', [ServiceController::class, 'import'])->name('services.import');
+    Route::post('/search', [ServiceController::class, 'search'])->name('services.search');
+    Route::get('/download', [ServiceController::class, 'download'])->name('services.download');
     Route::get('/{id}', [ServiceController::class, 'show'])->name('services.show');
     Route::post('/update/{id}', [ServiceController::class, 'update'])->name('services.update');
     Route::get('/delete/{id}', [ServiceController::class, 'delete'])->name('services.delete');
@@ -81,6 +82,8 @@ Route::prefix('entities')->group(function(){
     Route::get('/create', [EntityController::class, 'create'])->name('entities.create');
     Route::post('/store', [EntityController::class, 'store'])->name('entities.store');
     Route::post('/import', [EntityController::class, 'import'])->name('entities.import');
+    Route::post('/search', [EntityController::class, 'search'])->name('entities.search');
+    Route::get('/download', [EntityController::class, 'download'])->name('entities.download');
     Route::get('/{id}', [EntityController::class, 'show'])->name('entities.show');
     Route::get('/edit/{id}', [EntityController::class, 'edit'])->name('entities.edit');
     Route::post('/update/{id}', [EntityController::class, 'update'])->name('entities.update');

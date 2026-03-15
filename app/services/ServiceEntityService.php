@@ -22,6 +22,10 @@ class ServiceEntityService
         return $this->serviceEntityRepository->All(Service::class, $this->with, $pages);
     }
 
+    public function getAllByFilter($filter, $pages=0){
+        return $this->serviceEntityRepository->AllByFilter($filter, $this->with, $pages);
+    }
+
     public function getOneById($id){
         return $this->serviceEntityRepository->One(Service::class, $this->with, $id);
     }

@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\EntityExport;
+use App\Exports\ServiceExport;
 use App\services\EntityService;
 use App\services\SectionEntityService;
 use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
 use App\services\TypeEntityService;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreEntityRequest;
 use App\Http\Requests\UpdateEntityRequest;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EntityController extends Controller
 {
@@ -38,7 +42,7 @@ class EntityController extends Controller
         $this->sectionEntityService = $sectionEntityService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $services = $this->serviceEntityService->getAll(0);
         $entities = $this->entityService->getAll($this->pages);
@@ -46,13 +50,34 @@ class EntityController extends Controller
         $sectors = $this->sectorEntityService->getAll(0);
         $sections = $this->sectionEntityService->getAll(0);
 
+        $filter = "";
+        if ($request->has('search')) {
+            $filter = $request->query('search');
+            $entities = $this->entityService->getAllByFilter($filter, $this->pages);
+        }
+
+        $type_id = null;
+        if ($request->has('cat')) {
+            $type_id = $request->query('cat');
+            $entities = $this->entityService->getAllByType($type_id, $this->pages);
+        }
+
+        $service_id = null;
+        if ($request->has('srv')) {
+            $service_id = $request->query('srv');
+            $entities = $this->entityService->getAllByService($service_id, $this->pages);
+        }
+
         return view('app.unities.entities.index', [
             'services' => $services,
             'entities' => $entities,
             'types' => $types,
             'total_service' => $services->count(),
             'total_sector' => $sectors->count(),
-            'total_section' => $sections->count()
+            'total_section' => $sections->count(),
+            'filter' => $filter,
+            'service_id' => $service_id,
+            'type_id' => $type_id
         ]);
     }
 
@@ -138,6 +163,45 @@ class EntityController extends Controller
         }
 
         return back()->with('error', 'Erreur suppression entité !!!');
+    }
+
+
+    public function download() {
+        try {
+
+            //['#', 'Type', 'Entity', 'Service', 'Résponsable', 'Nombre effectif'];
+            $data = [];
+            $entities = $this->entityService->getAll(0);
+
+            $i = 1;
+            foreach ($entities as $entity) {
+
+                $entityData[0] = $i;
+                $entityData[1] = $entity->type->title;
+                $entityData[2] = $entity->title;
+                $entityData[3] = $entity->service->title;
+                if (count($entity->chefs) != 0) {
+                    foreach ($entity->chefs as $chef) {
+                        if ($chef->state)
+                            $entityData[4] = $chef->employee->lastname." ".$chef->employee->firstname;
+                    }
+                }else{
+                    $entityData[4] ="";
+                }
+
+                $entityData[5] = count($entity->affectations);
+
+                $data[] = $entityData;
+                $i++;
+            }
+
+            $date = new DateTime();
+            $current_date =  $date->format('d-m-Y H:i:s');
+            return Excel::download(new EntityExport($data), 'list_entités_'.$current_date.'.xlsx');
+
+        }catch (\Exception $exception){
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
 

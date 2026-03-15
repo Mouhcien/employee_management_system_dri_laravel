@@ -9,15 +9,15 @@
                     <div class="row align-items-center">
                         <div class="col-md-8">
                             <h2 class="fw-bold mb-1">Architecture des Services</h2>
-                            <p class="opacity-75 mb-0">Pilotez et organisez les départements de votre structure</p>
+                            <p class="opacity-75 mb-0">Pilotez et organisez les services de votre structure</p>
                         </div>
                         <div class="col-md-4 text-md-end mt-3 mt-md-0">
                             <button class="btn btn-white btn-rounded shadow-sm fw-bold px-4 me-2" data-bs-toggle="modal" data-bs-target="#createServiceModal">
                                 <i class="bi bi-plus-lg me-2"></i>Nouveau Service
                             </button>
-                            <button class="btn btn-primary-light btn-rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#bulkActions">
+                            <a class="btn btn-light btn-rounded shadow-sm" href="{{ route('services.download') }}">
                                 <i class="bi bi-download"></i>
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                     <div class="col-lg-9 col-md-8">
                         <div class="input-group bg-light border-0 rounded-3">
                             <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
-                            <input type="text" name="search" value="{{ request('search') }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Rechercher un service par nom...">
+                            <input type="text" name="search" value="{{ $filter }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Rechercher un service par nom...">
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-4 d-flex gap-2">

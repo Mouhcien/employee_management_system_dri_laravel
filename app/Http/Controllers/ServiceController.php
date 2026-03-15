@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\serviceExport;
 use App\services\EntityService;
 use App\services\SectionEntityService;
 use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
+use DateTime;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ServiceController extends Controller
 {
@@ -34,18 +37,25 @@ class ServiceController extends Controller
         $this->sectionEntityService = $sectionEntityService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $services = $this->serviceEntityService->getAll($this->pages);
         $entities = $this->entityService->getAll(0);
         $sectors = $this->sectorEntityService->getAll(0);
         $sections = $this->sectionEntityService->getAll(0);
 
+        $filter = "";
+        if ($request->has('search')) {
+            $filter = $request->query('search');
+            $services = $this->serviceEntityService->getAllByFilter($filter, $this->pages);
+        }
+
         return view('app.unities.services.index', [
             'services' => $services,
             'total_entity' => $entities->count(),
             'total_sector' => $sectors->count(),
-            'total_section' => $sections->count()
+            'total_section' => $sections->count(),
+            'filter' => $filter
         ]);
     }
 
@@ -104,6 +114,41 @@ class ServiceController extends Controller
         }
 
         return back()->with('error', 'Erreur midification service !!!');
+    }
+
+    public function download() {
+        try {
+            //['#', 'Service', 'Résponsable', 'Nombre effectif'];
+            $data = [];
+            $services = $this->serviceEntityService->getAll(0);
+
+            $i = 1;
+            foreach ($services as $service) {
+
+                $serviceData[0] = $i;
+                $serviceData[1] = $service->title;
+                if (count($service->chefs) != 0) {
+                    foreach ($service->chefs as $chef) {
+                        if ($chef->state)
+                            $serviceData[2] = $chef->employee->lastname." ".$chef->employee->firstname;
+                    }
+                }else{
+                    $serviceData[2] ="";
+                }
+
+                $serviceData[3] = count($service->affectations);
+
+                $data[] = $serviceData;
+                $i++;
+            }
+
+            $date = new DateTime();
+            $current_date =  $date->format('Y-m-d H:i:s');
+            return Excel::download(new ServiceExport($data), 'list_services_'.$current_date.'.xlsx');
+
+        }catch (\Exception $exception){
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
 }

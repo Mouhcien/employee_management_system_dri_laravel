@@ -15,9 +15,9 @@
                             <a href="{{ route('entities.create') }}" class="btn btn-white btn-rounded shadow-sm fw-bold px-4 me-2">
                                 <i class="bi bi-plus-lg me-2"></i>Nouvelle Entité
                             </a>
-                            <button class="btn btn-primary-light btn-rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#bulkActions">
+                            <a class="btn btn-light btn-rounded shadow-sm" href="{{ route('entities.download') }}" >
                                 <i class="bi bi-download"></i>
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -66,19 +66,19 @@
                     </div>
                     <div class="col-lg-3">
                         <label class="form-label fw-bold small text-muted text-uppercase">Service Parent</label>
-                        <select name="department" class="form-select border-0 bg-light rounded-3 shadow-none">
-                            <option value="">Tous les services</option>
+                        <select name="service_id" id="sl_entity_service_id" class="form-select border-0 bg-light rounded-3 shadow-none">
+                            <option value="-1">Tous les services</option>
                             @foreach($services as $service)
-                                <option value="{{ $service->id }}" {{ request('department') == $service->id ? 'selected' : '' }}>{{ $service->title }}</option>
+                                <option value="{{ $service->id }}" {{ $service_id == $service->id ? 'selected' : '' }}>{{ $service->title }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-lg-3">
                         <label class="form-label fw-bold small text-muted text-uppercase">Catégorie</label>
-                        <select name="status" class="form-select border-0 bg-light rounded-3 shadow-none">
-                            <option value="">Toutes catégories</option>
+                        <select name="type_id" id="sl_entity_type_id" class="form-select border-0 bg-light rounded-3 shadow-none">
+                            <option value="-1">Toutes catégories</option>
                             @foreach($types as $type)
-                                <option value="{{ $type->id }}" {{ request('status') == $type->id ? 'selected' : '' }}>{{ $type->title }}</option>
+                                <option value="{{ $type->id }}" {{ $type_id == $type->id ? 'selected' : '' }}>{{ $type->title }}</option>
                             @endforeach
                         </select>
                     </div>
