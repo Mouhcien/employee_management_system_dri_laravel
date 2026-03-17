@@ -95,6 +95,7 @@ Route::prefix('sectors')->group(function(){
     Route::get('/create', [SectorController::class, 'create'])->name('sectors.create');
     Route::post('/store', [SectorController::class, 'store'])->name('sectors.store');
     Route::post('/import', [SectorController::class, 'import'])->name('sectors.import');
+    Route::get('/download', [SectorController::class, 'download'])->name('sectors.download');
     Route::get('/{id}', [SectorController::class, 'show'])->name('sectors.show');
     Route::get('/edit/{id}', [SectorController::class, 'edit'])->name('sectors.edit');
     Route::post('/update/{id}', [SectorController::class, 'update'])->name('sectors.update');
@@ -105,6 +106,7 @@ Route::prefix('sections')->group(function(){
     Route::get('/', [SectionController::class, 'index'])->name('sections.index');
     Route::get('/create', [SectionController::class, 'create'])->name('sections.create');
     Route::post('/store', [SectionController::class, 'store'])->name('sections.store');
+    Route::get('/download', [SectionController::class, 'download'])->name('sections.download');
     Route::get('/{id}', [SectionController::class, 'show'])->name('sections.show');
     Route::get('/edit/{id}', [SectionController::class, 'edit'])->name('sections.edit');
     Route::post('/update/{id}', [SectionController::class, 'update'])->name('sections.update');

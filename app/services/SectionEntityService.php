@@ -26,6 +26,18 @@ class SectionEntityService
         return $this->sectionEntityRepository->getAllByEntity($entity_id, $pages);
     }
 
+    public function getAllByFilter($filter, $pages=0){
+        return $this->sectionEntityRepository->AllByFilter($filter, $pages);
+    }
+
+    public function getAllByService($service_id, $pages=0){
+        return $this->sectionEntityRepository->AllByService($service_id, $pages);
+    }
+
+    public function getAllByAllFilters($data, $pages=0){
+        return $this->sectionEntityRepository->AllByAllFilters($data, $pages);
+    }
+
     public function getOneById($id){
         return $this->sectionEntityRepository->One(Section::class, $this->with, $id);
     }

@@ -15,9 +15,25 @@
                             <a href="{{ route('entities.create') }}" class="btn btn-white btn-rounded shadow-sm fw-bold px-4 me-2">
                                 <i class="bi bi-plus-lg me-2"></i>Nouvelle Entité
                             </a>
-                            <a class="btn btn-light btn-rounded shadow-sm" href="{{ route('entities.download') }}" >
-                                <i class="bi bi-download"></i>
-                            </a>
+                            @php
+                                $query = 'query';
+                                if (request('search'))
+                                    $query .= '&search='.request('search');
+                                if (request('cat'))
+                                    $query .= '&cat='.request('cat');
+                                if (request('srv'))
+                                    $query .= '&srv='.request('srv');
+                            @endphp
+
+                            @if (request('srv') ||request('cat') || request('search'))
+                                <a class="btn btn-light btn-rounded shadow-sm" href="{{ route('entities.download') }}?{{ $query }}" >
+                                    <i class="bi bi-download"></i>
+                                </a>
+                            @else
+                                <a class="btn btn-light btn-rounded shadow-sm" href="{{ route('entities.download') }}" >
+                                    <i class="bi bi-download"></i>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -66,7 +82,7 @@
                     </div>
                     <div class="col-lg-3">
                         <label class="form-label fw-bold small text-muted text-uppercase">Service Parent</label>
-                        <select name="service_id" id="sl_entity_service_id" class="form-select border-0 bg-light rounded-3 shadow-none">
+                        <select name="srv" id="sl_entity_service_id" class="form-select border-0 bg-light rounded-3 shadow-none">
                             <option value="-1">Tous les services</option>
                             @foreach($services as $service)
                                 <option value="{{ $service->id }}" {{ $service_id == $service->id ? 'selected' : '' }}>{{ $service->title }}</option>
@@ -75,7 +91,7 @@
                     </div>
                     <div class="col-lg-3">
                         <label class="form-label fw-bold small text-muted text-uppercase">Catégorie</label>
-                        <select name="type_id" id="sl_entity_type_id" class="form-select border-0 bg-light rounded-3 shadow-none">
+                        <select name="cat" id="sl_entity_type_id" class="form-select border-0 bg-light rounded-3 shadow-none">
                             <option value="-1">Toutes catégories</option>
                             @foreach($types as $type)
                                 <option value="{{ $type->id }}" {{ $type_id == $type->id ? 'selected' : '' }}>{{ $type->title }}</option>
@@ -193,7 +209,7 @@
                             Affichage <span class="fw-bold">{{ $entities->firstItem() }}</span> - <span class="fw-bold">{{ $entities->lastItem() }}</span> sur <span class="fw-bold">{{ $entities->total() }}</span> entités
                         </div>
                         <div class="order-1 order-md-2">
-                            {{ $entities->links() }}
+                            {{ $entities->appends(request()->query())->links() }}
                         </div>
                     </div>
                 </div>

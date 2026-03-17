@@ -175,7 +175,7 @@
                             Affichage <span class="fw-bold">{{ $services->firstItem() }}</span> - <span class="fw-bold">{{ $services->lastItem() }}</span> sur <span class="fw-bold">{{ $services->total() }}</span> services
                         </div>
                         <div class="order-1 order-md-2">
-                            {{ $services->links() }}
+                            {{ $services->appends(request()->query())->links() }}
                         </div>
                     </div>
                 </div>

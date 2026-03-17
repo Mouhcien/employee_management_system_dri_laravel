@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Employee;
+use App\Exports\SectionExport;
 use App\services\EntityService;
 use App\services\SectionEntityService;
 use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
+use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreSectionRequest;
 use App\Http\Requests\UpdateSectionRequest;
 use Maatwebsite\Excel\Facades\Excel;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class SectionController extends Controller
 {
@@ -39,12 +38,41 @@ class SectionController extends Controller
         $this->sectorEntityService = $sectorEntityService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $services = $this->serviceEntityService->getAll(0);
         $entities = $this->entityService->getAll(0);
         $sectors = $this->sectorEntityService->getAll(0);
         $sections = $this->sectionEntityService->getAll($this->pages);
+
+        $filter = "";
+        if ($request->has('search')) {
+            $filter = $request->query('search');
+            $sections = $this->sectionEntityService->getAllByFilter($filter, $this->pages);
+        }
+
+        $entity_id = null;
+        if ($request->has('ent')) {
+            $entity_id = $request->query('ent');
+            $sections = $this->sectionEntityService->getAllByEntity($entity_id, $this->pages);
+        }
+
+        $service_id = null;
+        if ($request->has('srv')) {
+            $service_id = $request->query('srv');
+            $sections = $this->sectionEntityService->getAllByService($service_id, $this->pages);
+            $entities = $this->entityService->getAllByService($service_id, 0);
+        }
+
+        $data_filter = null;
+        if ( $request->has('srv') || $request->has('ent') || $request->has('search')) {
+            $data_filter['filter'] = $filter;
+            if ($entity_id != "-1")
+                $data_filter['entity_id'] = $entity_id;
+            if ($service_id != "-1")
+                $data_filter['service_id'] = $service_id;
+            $sections = $this->sectionEntityService->getAllByAllFilters($data_filter, $this->pages);
+        }
 
         return view('app.unities.sections.index', [
             'services' => $services,
@@ -52,7 +80,10 @@ class SectionController extends Controller
             'sections' => $sections,
             'total_service' => $services->count(),
             'total_entity' => $entities->count(),
-            'total_sector' => $sectors->count()
+            'total_sector' => $sectors->count(),
+            'filter' => $filter,
+            'entity_id' => $entity_id,
+            'service_id' => $service_id
         ]);
     }
 
@@ -154,5 +185,73 @@ class SectionController extends Controller
         ]);
 
         return back()->with('error', 'Erreur suppression secteur');
+    }
+
+    public function download(Request $request) {
+        try {
+
+            //['#', 'Section', 'Entity', 'Service', 'Résponsable', 'Nombre effectif'];
+            $data = [];
+
+            $sections = $this->sectionEntityService->getAll(0);
+
+            $filter = "";
+            if ($request->has('search')) {
+                $filter = $request->query('search');
+                $sections = $this->sectionEntityService->getAllByFilter($filter, $this->pages);
+            }
+
+            $entity_id = null;
+            if ($request->has('ent')) {
+                $entity_id = $request->query('ent');
+                $sections = $this->sectionEntityService->getAllByEntity($entity_id, $this->pages);
+            }
+
+            $service_id = null;
+            if ($request->has('srv')) {
+                $service_id = $request->query('srv');
+                $sections = $this->sectionEntityService->getAllByService($service_id, $this->pages);
+                $entities = $this->entityService->getAllByService($service_id, 0);
+            }
+
+            $data_filter = null;
+            if ( $request->has('srv') || $request->has('ent') || $request->has('search')) {
+                $data_filter['filter'] = $filter;
+                if ($entity_id != "-1")
+                    $data_filter['entity_id'] = $entity_id;
+                if ($service_id != "-1")
+                    $data_filter['service_id'] = $service_id;
+                $sections = $this->sectionEntityService->getAllByAllFilters($data_filter, $this->pages);
+            }
+
+            $i = 1;
+            foreach ($sections as $section) {
+
+                $sectionData[0] = $i;
+                $sectionData[1] = $section->title;
+                $sectionData[2] = $section->entity->title;
+                $sectionData[3] = $section->entity->service->title;
+                if (count($section->chefs) != 0) {
+                    foreach ($section->chefs as $chef) {
+                        if ($chef->state)
+                            $sectionData[4] = $chef->employee->lastname." ".$chef->employee->firstname;
+                    }
+                }else{
+                    $sectionData[4] ="";
+                }
+
+                $sectionData[5] = count($section->affectations);
+
+                $data[] = $sectionData;
+                $i++;
+            }
+
+            $date = new DateTime();
+            $current_date =  $date->format('d-m-Y H:i:s');
+            return Excel::download(new SectionExport($data), 'list_sections_'.$current_date.'.xlsx');
+
+        }catch (\Exception $exception){
+            return back()->with('error', $exception->getMessage());
+        }
     }
 }

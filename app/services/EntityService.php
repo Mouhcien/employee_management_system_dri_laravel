@@ -38,6 +38,11 @@ class EntityService
         return $this->entityRepository->AllByType($type_id, $pages);
     }
 
+    public function getAllByAllFilters($date, $pages = 0)
+    {
+        return $this->entityRepository->AllByAllFilters($date, $pages);
+    }
+
     public function getAllEntityByService($service_id, $pages = 0)
     {
         return $this->getAllByService($service_id, $pages);

@@ -30,4 +30,21 @@ class EntityRepository extends MainRepository
 
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
+
+    public function AllByAllFilters($data, $pages) {
+        $query = Entity::with(['type', 'sectors', 'sections', 'affectations', 'service'])
+            ->orderBy('title', 'ASC');
+
+        if (isset($data['type_id']))
+            $query->where('type_id', '=', $data['type_id']);
+
+        if (isset($data['service_id']))
+            $query->where('service_id', '=', $data['service_id']);
+
+        if (isset($data['filter']))
+            $query->where('title', 'LIKE', "%".$data['filter']."%");
+
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
+    }
+
 }

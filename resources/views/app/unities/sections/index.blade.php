@@ -15,9 +15,25 @@
                             <a href="{{ route('sections.create') }}" class="btn btn-white btn-rounded shadow-sm fw-bold px-4 me-2">
                                 <i class="bi bi-plus-lg me-2"></i>Nouvelle Section
                             </a>
-                            <button class="btn btn-primary-light btn-rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#bulkActions">
-                                <i class="bi bi-download"></i>
-                            </button>
+                            @php
+                                $query = 'query';
+                                if (request('search'))
+                                    $query .= '&search='.request('search');
+                                if (request('ent'))
+                                    $query .= '&ent='.request('ent');
+                                if (request('srv'))
+                                    $query .= '&srv='.request('srv');
+                            @endphp
+
+                            @if (request('srv') ||request('ent') || request('search'))
+                                <a class="btn btn-light btn-rounded shadow-sm" href="{{ route('sections.download') }}?{{ $query }}" >
+                                    <i class="bi bi-download"></i>
+                                </a>
+                            @else
+                                <a class="btn btn-light btn-rounded shadow-sm" href="{{ route('sections.download') }}" >
+                                    <i class="bi bi-download"></i>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -61,24 +77,24 @@
                         <label class="form-label fw-bold small text-uppercase text-muted">Recherche</label>
                         <div class="input-group bg-light border-0 rounded-3">
                             <span class="input-group-text bg-transparent border-0"><i class="bi bi-search"></i></span>
-                            <input type="text" name="search" value="{{ request('search') }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Nom de la section ou entité...">
+                            <input type="text" name="search" value="{{ $filter }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Nom de la section ou entité...">
                         </div>
                     </div>
                     <div class="col-lg-3">
                         <label class="form-label fw-bold small text-uppercase text-muted">Service Parent</label>
-                        <select name="department" class="form-select border-0 bg-light rounded-3 shadow-none">
-                            <option value="">Tous les services</option>
+                        <select name="srv" id="sl_section_service_id" class="form-select border-0 bg-light rounded-3 shadow-none">
+                            <option value="-1">Tous les services</option>
                             @foreach($services as $service)
-                                <option value="{{ $service->id }}" {{ request('department') == $service->id ? 'selected' : '' }}>{{ $service->title }}</option>
+                                <option value="{{ $service->id }}" {{ $service_id == $service->id ? 'selected' : '' }}>{{ $service->title }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-lg-3">
                         <label class="form-label fw-bold small text-uppercase text-muted">Entité</label>
-                        <select name="status" class="form-select border-0 bg-light rounded-3 shadow-none">
-                            <option value="">Toutes les entités</option>
+                        <select name="ent" id="sl_section_entity_id" class="form-select border-0 bg-light rounded-3 shadow-none">
+                            <option value="-1">Toutes les entités</option>
                             @foreach($entities as $entity)
-                                <option value="{{ $entity->id }}" {{ request('status') == $entity->id ? 'selected' : '' }}>{{ $entity->title }}</option>
+                                <option value="{{ $entity->id }}" {{ $entity_id == $entity->id ? 'selected' : '' }}>{{ $entity->title }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -199,7 +215,7 @@
                             Affichage <span class="fw-bold">{{ $sections->firstItem() }}</span> - <span class="fw-bold">{{ $sections->lastItem() }}</span> sur <span class="fw-bold">{{ $sections->total() }}</span> résultats
                         </div>
                         <div class="order-1 order-md-2">
-                            {{ $sections->links() }}
+                            {{ $sections->appends(request()->query())->links() }}
                         </div>
                     </div>
                 </div>

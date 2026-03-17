@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Exports\EntityExport;
-use App\Exports\ServiceExport;
 use App\services\EntityService;
 use App\services\SectionEntityService;
 use App\services\SectorEntityService;
@@ -11,7 +10,6 @@ use App\services\ServiceEntityService;
 use App\services\TypeEntityService;
 use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreEntityRequest;
 use App\Http\Requests\UpdateEntityRequest;
 use Maatwebsite\Excel\Facades\Excel;
@@ -50,6 +48,7 @@ class EntityController extends Controller
         $sectors = $this->sectorEntityService->getAll(0);
         $sections = $this->sectionEntityService->getAll(0);
 
+        $data = null;
         $filter = "";
         if ($request->has('search')) {
             $filter = $request->query('search');
@@ -66,6 +65,13 @@ class EntityController extends Controller
         if ($request->has('srv')) {
             $service_id = $request->query('srv');
             $entities = $this->entityService->getAllByService($service_id, $this->pages);
+        }
+
+        if ( $request->has('srv') || $request->has('cat') || $request->has('search')) {
+            $data['filter'] = $filter;
+            $data['type_id'] = $type_id;
+            $data['service_id'] = $service_id;
+            $entities = $this->entityService->getAllByAllFilters($data, $this->pages);
         }
 
         return view('app.unities.entities.index', [
@@ -166,12 +172,39 @@ class EntityController extends Controller
     }
 
 
-    public function download() {
+    public function download(Request $request) {
         try {
 
             //['#', 'Type', 'Entity', 'Service', 'Résponsable', 'Nombre effectif'];
             $data = [];
+
             $entities = $this->entityService->getAll(0);
+
+            $filter = "";
+            if ($request->has('search')) {
+                $filter = $request->query('search');
+                $entities = $this->entityService->getAllByFilter($filter, $this->pages);
+            }
+
+            $type_id = null;
+            if ($request->has('cat')) {
+                $type_id = $request->query('cat');
+                $entities = $this->entityService->getAllByType($type_id, $this->pages);
+            }
+
+            $service_id = null;
+            if ($request->has('srv')) {
+                $service_id = $request->query('srv');
+                $entities = $this->entityService->getAllByService($service_id, $this->pages);
+            }
+
+            $data_filter = null;
+            if ( $request->has('srv') || $request->has('cat') || $request->has('search')) {
+                $data_filter['filter'] = $filter;
+                $data_filter['type_id'] = $type_id;
+                $data_filter['service_id'] = $service_id;
+                $entities = $this->entityService->getAllByAllFilters($data_filter, $this->pages);
+            }
 
             $i = 1;
             foreach ($entities as $entity) {

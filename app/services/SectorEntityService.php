@@ -27,6 +27,18 @@ class SectorEntityService
         return $this->sectorEntityRepository->AllByByEntity($entity_id, $pages);
     }
 
+    public function getAllByFilter($filter, $pages=0){
+        return $this->sectorEntityRepository->AllByFilter($filter, $pages);
+    }
+
+    public function getAllByService($service_id, $pages=0){
+        return $this->sectorEntityRepository->AllByService($service_id, $pages);
+    }
+
+    public function getAllByAllFilters($data, $pages=0){
+        return $this->sectorEntityRepository->AllByAllFilters($data, $pages);
+    }
+
     public function getOneById($id){
         return $this->sectorEntityRepository->One(Sector::class, $this->with, $id);
     }

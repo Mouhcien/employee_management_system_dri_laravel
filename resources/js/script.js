@@ -93,4 +93,65 @@ $(function() {
 
         window.location.href = `${url}?${params.toString()}`;
     });
+
+    // To refactor
+    $("#sl_sector_service_id").on('change', function () {
+        let href = '/sectors/?';
+        const srv_val = $(this).val();
+        if (srv_val != '-1') {
+            href += 'srv='+srv_val;
+        }
+
+        const ent_val = $('#sl_sector_entity_id').val();
+        if (ent_val != '-1') {
+            href += '&ent='+ent_val;
+        }
+
+        window.location.href = href;
+    });
+
+    $("#sl_sector_entity_id").on('change', function () {
+        let href = '/sectors/?';
+        const ent_val = $(this).val();
+        if (ent_val != '-1') {
+            href += 'ent='+ent_val;
+        }
+
+        const srv_val = $('#sl_sector_service_id').val();
+        if (srv_val != '-1') {
+            href += '&srv='+srv_val;
+        }
+
+        window.location.href = href;
+    });
+
+    $("#sl_section_service_id").on('change', function () {
+        let href = '/sections/?';
+        const srv_val = $(this).val();
+        if (srv_val != '-1') {
+            href += 'srv='+srv_val;
+        }
+
+        const ent_val = $('#sl_section_entity_id').val();
+        if (ent_val != '-1') {
+            href += '&ent='+ent_val;
+        }
+
+        window.location.href = href;
+    });
+
+    $("#sl_section_entity_id").on('change', function () {
+        let href = '/sections/?';
+        const ent_val = $(this).val();
+        if (ent_val != '-1') {
+            href += 'ent='+ent_val;
+        }
+
+        const srv_val = $('#sl_section_service_id').val();
+        if (srv_val != '-1') {
+            href += '&srv='+srv_val;
+        }
+
+        window.location.href = href;
+    });
 });
