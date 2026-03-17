@@ -1,157 +1,120 @@
 $(function() {
     /**
-     * Helper to update URL based on a set of selectors
-     * @param {string} baseUrl - The base path (e.g., '/chefs/')
-     * @param {object} filters - Key-value pair of { queryParam: selector }
+     * core Navigation Engine
+     * Dynamically builds a URL based on a base path and a map of query params to selectors.
      */
-    const updateFilters = (baseUrl, filters) => {
+    const navigateWithFilters = (baseUrl, filterMap) => {
         const params = new URLSearchParams();
 
-        Object.keys(filters).forEach(key => {
-            const val = $(filters[key]).val();
-            // Only add to URL if value is valid and not the default -1
+        Object.entries(filterMap).forEach(([queryParam, selector]) => {
+            const val = $(selector).val();
+            // Standardize exclusion: skip null, undefined, empty, or '-1'
             if (val && val !== "-1") {
-                params.append(key, val);
+                params.append(queryParam, val);
             }
         });
 
         const queryString = params.toString();
-        window.location.href = baseUrl + (queryString ? '?' + queryString : '');
+        const finalUrl = baseUrl + (queryString ? `?${queryString}` : '');
+
+        // Prevent reloading if the URL hasn't changed
+        if (window.location.search !== `?${queryString}`) {
+            window.location.href = finalUrl;
+        }
     };
 
-    // --- CHEF FILTERS ---
-    const chefFilters = {
-        srv: '#sl_chef_service_id',
-        ent: '#sl_chef_entity_id',
-        sectr: '#sl_chef_sector_id',
-        sect: '#sl_chef_section_id'
+    /**
+     * Automatic Event Binder
+     * Binds 'change' events to groups of filters.
+     */
+    const bindFilterGroup = (baseUrl, filterMap) => {
+        const selectors = Object.values(filterMap).join(',');
+        $(selectors).on('change', () => navigateWithFilters(baseUrl, filterMap));
     };
 
-    $(Object.values(chefFilters).join(',')).on('change', function() {
-        updateFilters('/chefs/', chefFilters);
+    // --- Configuration Maps ---
+
+    const routes = {
+        chefs: {
+            srv: '#sl_chef_service_id',
+            ent: '#sl_chef_entity_id',
+            sectr: '#sl_chef_sector_id',
+            sect: '#sl_chef_section_id'
+        },
+        employees: {
+            lc: '#sl_employee_local',
+            ct: '#sl_employee_city'
+        },
+        entities: {
+            srv: '#sl_entity_service_id',
+            cat: '#sl_entity_type_id'
+        },
+        sectors: {
+            srv: '#sl_sector_service_id',
+            ent: '#sl_sector_entity_id'
+        },
+        sections: {
+            srv: '#sl_section_service_id',
+            ent: '#sl_section_entity_id'
+        },
+        cities: {
+            lc: '#sl_city_local_id'
+        },
+        locals: {
+            cty: '#sl_local_city_id'
+        }
+    };
+
+    // Initialize standard filters
+    Object.entries(routes).forEach(([path, map]) => {
+        bindFilterGroup(`/${path}/`, map);
     });
 
-    // --- EMPLOYEE FILTERS ---
-    const empFilters = {
-        lc: '#sl_employee_local',
-        ct: '#sl_employee_city'
-    };
+    // --- Special Cases & Dynamic Routes ---
 
-    $('#sl_employee_local, #sl_employee_city').on('change', function() {
-        updateFilters('/employees/', empFilters);
-    });
-
-    // Gender Clicks (Special Case)
+    // Gender Clicks
     $('#sl_employee_male, #sl_employee_female').on('click', function() {
         const gender = $(this).attr('id') === 'sl_employee_male' ? 'ml' : 'fml';
+        const filters = { ...routes.employees, gr: null }; // Base map + placeholder
+
         const params = new URLSearchParams();
         params.append('gr', gender);
 
-        // Add existing city/local if present
+        // Use logic from existing map to keep consistency
         if ($('#sl_employee_city').val() !== "-1") params.append('ct', $('#sl_employee_city').val());
         if ($('#sl_employee_local').val() !== "-1") params.append('lc', $('#sl_employee_local').val());
 
-        window.location.href = '/employees/?' + params.toString();
+        window.location.href = `/employees/?${params.toString()}`;
     });
 
-    // --- ENTITY FILTERS ---
-    $('#sl_entity_service_id, #sl_entity_type_id').on('change', function() {
-        updateFilters('/entities/', {
-            srv: '#sl_entity_service_id',
-            cat: '#sl_entity_type_id'
-        });
-    });
-
-    // --- DYNAMIC PATH ROUTES (Sectors/Sections) ---
-    // Uses data attributes for cleaner HTML (e.g., data-opt, data-ident)
+    // Dynamic Path Routes (Sectors/Sections via Service Change)
     $('#service_id, #sect_service_id').on('change', function() {
         const $el = $(this);
-        const srv = $el.val();
+        const isSector = $el.attr('id') === 'service_id';
+        const path = isSector ? 'sectors' : 'sections';
         const opt = $el.attr('opt');
         const id = $el.attr('ident');
-        const path = $el.attr('id') === 'service_id' ? 'sectors' : 'sections';
 
         let url = `/${path}/${opt}`;
         if (id) url += `/${id}`;
 
-        window.location.href = `${url}?srv=${srv}`;
+        window.location.href = `${url}?srv=${$el.val()}`;
     });
 
-    // --- AFFECTATIONS ---
+    // Affectations
     $('#sl_aff_service_id, #sl_aff_entity_id').on('change', function() {
         const srv = $('#sl_aff_service_id').val();
         const ent = $('#sl_aff_entity_id').val();
-        const opt = $(this).attr('opt');
         const empId = $(this).attr('employee_id');
+        const opt = $(this).attr('opt');
 
-        let url = (opt === 'edit')
+        const baseUrl = (opt === 'edit')
             ? `/affectations/edit/${empId}/${$(this).attr('affectation_id')}`
             : `/employees/unities/${empId}`;
 
         const params = new URLSearchParams({ srv });
-        if (ent) params.append('ent', ent);
+        if (ent && ent !== "-1") params.append('ent', ent);
 
-        window.location.href = `${url}?${params.toString()}`;
-    });
-
-    // To refactor
-    $("#sl_sector_service_id").on('change', function () {
-        let href = '/sectors/?';
-        const srv_val = $(this).val();
-        if (srv_val != '-1') {
-            href += 'srv='+srv_val;
-        }
-
-        const ent_val = $('#sl_sector_entity_id').val();
-        if (ent_val != '-1') {
-            href += '&ent='+ent_val;
-        }
-
-        window.location.href = href;
-    });
-
-    $("#sl_sector_entity_id").on('change', function () {
-        let href = '/sectors/?';
-        const ent_val = $(this).val();
-        if (ent_val != '-1') {
-            href += 'ent='+ent_val;
-        }
-
-        const srv_val = $('#sl_sector_service_id').val();
-        if (srv_val != '-1') {
-            href += '&srv='+srv_val;
-        }
-
-        window.location.href = href;
-    });
-
-    $("#sl_section_service_id").on('change', function () {
-        let href = '/sections/?';
-        const srv_val = $(this).val();
-        if (srv_val != '-1') {
-            href += 'srv='+srv_val;
-        }
-
-        const ent_val = $('#sl_section_entity_id').val();
-        if (ent_val != '-1') {
-            href += '&ent='+ent_val;
-        }
-
-        window.location.href = href;
-    });
-
-    $("#sl_section_entity_id").on('change', function () {
-        let href = '/sections/?';
-        const ent_val = $(this).val();
-        if (ent_val != '-1') {
-            href += 'ent='+ent_val;
-        }
-
-        const srv_val = $('#sl_section_service_id').val();
-        if (srv_val != '-1') {
-            href += '&srv='+srv_val;
-        }
-
-        window.location.href = href;
+        window.location.href = `${baseUrl}?${params.toString()}`;
     });
 });

@@ -21,6 +21,14 @@ class CityService
         return $this->cityRepository->All(City::class, ['locals'], $pages);
     }
 
+    public function getAllByLocal($local_id, $pages=0){
+        return $this->cityRepository->AllByLocal($local_id, $pages);
+    }
+
+    public function getAllByFilter($filter, $pages=0){
+        return $this->cityRepository->AllByFilter($filter, $pages);
+    }
+
     public function getOneById($id){
         return $this->cityRepository->One(City::class, ['locals'], $id);
     }

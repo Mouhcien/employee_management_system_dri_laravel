@@ -22,8 +22,12 @@ class LocalService
         return $this->localRepository->All(Local::class, ['city'], $pages);
     }
 
-    public function getAllByCity($city_id){
-        return $this->localRepository->AllByCity($city_id);
+    public function getAllByCity($city_id, $pages){
+        return $this->localRepository->AllByCity($city_id, $pages);
+    }
+
+    public function getAllByFilter($filter, $pages){
+        return $this->localRepository->AllByFilter($filter, $pages);
     }
 
     public function getOneById($id){

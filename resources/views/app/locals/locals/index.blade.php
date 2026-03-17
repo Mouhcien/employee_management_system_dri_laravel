@@ -30,7 +30,7 @@
                 $stats = [
                     ['label' => 'Locaux Totaux', 'count' => $locals->total(), 'color' => 'primary', 'icon' => 'bi-building-fill'],
                     ['label' => 'Villes Couvertes', 'count' => $totalCities, 'color' => 'success', 'icon' => 'bi-geo-alt-fill'],
-                    ['label' => 'Effectif Total', 'count' => 0, 'color' => 'info', 'icon' => 'bi-people-fill'],
+                    ['label' => 'Effectif Total', 'count' => $totalEmployee, 'color' => 'info', 'icon' => 'bi-people-fill'],
                     ['label' => 'Locaux Actifs', 'count' => 0, 'color' => 'warning', 'icon' => 'bi-check-circle-fill']
                 ];
             @endphp
@@ -57,28 +57,20 @@
         <div class="card border-0 shadow-sm rounded-4 mb-4">
             <div class="card-body p-4">
                 <form method="GET" action="{{ route('locals.index') }}" class="row g-3 align-items-end">
-                    <div class="col-lg-4">
+                    <div class="col-lg-5">
                         <label class="form-label fw-bold small text-uppercase text-muted">Recherche</label>
                         <div class="input-group bg-light border-0 rounded-3">
                             <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Nom du local ou ville...">
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
                         <label class="form-label fw-bold small text-uppercase text-muted">Filtrer par ville</label>
-                        <select name="department" class="form-select border-0 bg-light rounded-3 shadow-none">
-                            <option value="">Toutes les villes</option>
+                        <select name="cty" id="sl_local_city_id" class="form-select border-0 bg-light rounded-3 shadow-none">
+                            <option value="-1">Toutes les villes</option>
                             @foreach($cities as $city)
-                                <option value="{{ $city->id }}" {{ request('department') == $city->id ? 'selected' : '' }}>{{ $city->title }}</option>
+                                <option value="{{ $city->id }}" {{ $city_id == $city->id ? 'selected' : '' }}>{{ $city->title }}</option>
                             @endforeach
-                        </select>
-                    </div>
-                    <div class="col-lg-2">
-                        <label class="form-label fw-bold small text-uppercase text-muted">Statut</label>
-                        <select name="status" class="form-select border-0 bg-light rounded-3 shadow-none">
-                            <option value="">Tous</option>
-                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Actif</option>
-                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactif</option>
                         </select>
                     </div>
                     <div class="col-lg-3 d-flex gap-2">
@@ -249,18 +241,11 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="list-group list-group-flush">
-                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0 border-bottom">
+                        <a href="{{ route('locals.download') }}" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0 border-bottom">
                             <i class="bi bi-file-earmark-excel-fill text-success fs-2 me-4"></i>
                             <div>
                                 <div class="fw-bold">Registre des Locaux (Excel)</div>
                                 <small class="text-muted">Tableau détaillé avec effectifs par localité</small>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0">
-                            <i class="bi bi-file-earmark-pdf-fill text-danger fs-2 me-4"></i>
-                            <div>
-                                <div class="fw-bold">Rapport d'Implantation (PDF)</div>
-                                <small class="text-muted">Document officiel de la structure immobilière</small>
                             </div>
                         </a>
                     </div>

@@ -30,7 +30,7 @@
                 $stats = [
                     ['label' => 'Villes Totales', 'count' => $cities->total(), 'color' => 'primary', 'icon' => 'bi-geo-alt-fill'],
                     ['label' => 'Locaux Actifs', 'count' => $total_locals, 'color' => 'success', 'icon' => 'bi-house-door-fill'],
-                    ['label' => 'Effectif Total', 'count' => 0, 'color' => 'info', 'icon' => 'bi-people-fill'],
+                    ['label' => 'Ville avec max local', 'count' => 0, 'color' => 'info', 'icon' => 'bi-people-fill'],
                     ['label' => 'Villes Actives', 'count' => 0, 'color' => 'warning', 'icon' => 'bi-pin-map-fill']
                 ];
             @endphp
@@ -61,15 +61,15 @@
                         <label class="form-label fw-bold small text-uppercase text-muted">Recherche géographique</label>
                         <div class="input-group bg-light border-0 rounded-3">
                             <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
-                            <input type="text" name="search" value="{{ request('search') }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Nom de ville ou local spécifique...">
+                            <input type="text" name="search" value="{{ $filter }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Nom de ville ou local spécifique...">
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <label class="form-label fw-bold small text-uppercase text-muted">Filtrer par localité</label>
-                        <select name="department" class="form-select border-0 bg-light rounded-3 shadow-none">
-                            <option value="">Tous les locaux</option>
+                        <select name="lc" id="sl_city_local_id" class="form-select border-0 bg-light rounded-3 shadow-none">
+                            <option value="-1">Tous les locaux</option>
                             @foreach($locals as $local)
-                                <option value="{{ $local->id }}" {{ request('department') == $local->id ? 'selected' : '' }}>{{ $local->title }}</option>
+                                <option value="{{ $local->id }}" {{ $local_id == $local->id ? 'selected' : '' }}>{{ $local->title }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -248,18 +248,11 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="list-group list-group-flush">
-                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0 border-bottom">
+                        <a href="{{ route('cities.download') }}" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0 border-bottom">
                             <i class="bi bi-file-earmark-excel-fill text-success fs-2 me-4"></i>
                             <div>
-                                <div class="fw-bold">Données Excel (PPR/Locaux)</div>
+                                <div class="fw-bold">Données Excel</div>
                                 <small class="text-muted">Tableau complet avec statistiques par ville</small>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0">
-                            <i class="bi bi-file-earmark-pdf-fill text-danger fs-2 me-4"></i>
-                            <div>
-                                <div class="fw-bold">Rapport de Structure (PDF)</div>
-                                <small class="text-muted">Document officiel de déploiement régional</small>
                             </div>
                         </a>
                     </div>

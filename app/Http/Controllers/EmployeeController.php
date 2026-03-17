@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\services\CategoryService;
 use App\services\CityService;
 use App\services\EntityService;
 use App\services\LevelService;
@@ -36,6 +37,7 @@ class EmployeeController extends Controller
     private EntityService $entityService;
     private SectionEntityService $sectionEntityService;
     private SectorEntityService $sectorEntityService;
+    private CategoryService $categoryService;
     private $pages = 10;
 
     /**
@@ -54,7 +56,8 @@ class EmployeeController extends Controller
         ServiceEntityService $serviceEntityService,
         EntityService $entityService,
         SectionEntityService $sectionEntityService,
-        SectorEntityService $sectorEntityService
+        SectorEntityService $sectorEntityService,
+        CategoryService $categoryService
     ) {
         $this->employeeService = $employeeService;
         $this->localService = $localService;
@@ -67,6 +70,7 @@ class EmployeeController extends Controller
         $this->entityService = $entityService;
         $this->sectionEntityService = $sectionEntityService;
         $this->sectorEntityService = $sectorEntityService;
+        $this->categoryService = $categoryService;
     }
 
 
@@ -96,6 +100,7 @@ class EmployeeController extends Controller
         $male_employees = $this->employeeService->getAllByFilter(['col' => 'gender', 'val' => 'M'], 0);
         $female_employees = $this->employeeService->getAllByFilter(['col' => 'gender', 'val' => 'F'], 0);
         $cities = $this->cityService->getAll(0);
+        $categories = $this->categoryService->getAll(0);
 
         $local_id = null;
         $city_id = null;
@@ -127,6 +132,7 @@ class EmployeeController extends Controller
             'locals' => $locals,
             'employees' => $employees,
             'cities' => $cities,
+            'categories' => $categories,
             'femaleCount' => $female_employees->count(),
             'maleCount' => $male_employees->count(),
             'total_employee' => $employees->total(),
@@ -140,9 +146,11 @@ class EmployeeController extends Controller
     {
         try {
             $locals = $this->localService->getAll(0);
+            $categories = $this->categoryService->getAll(0);
 
             return view('app.employees.insert', [
-                'locals' => $locals
+                'locals' => $locals,
+                'categories' => $categories,
             ]);
 
         } catch (\Exception $exception) {
@@ -198,13 +206,16 @@ class EmployeeController extends Controller
         try {
             $locals = $this->localService->getAll(0);
             $employee = $this->employeeService->getOneById($id);
+            $categories = $this->categoryService->getAll(0);
+
             if (is_null($employee)) {
                 return back()->with('error', 'Employé introuvable');
             }
 
             return view('app.employees.insert', [
                 'locals' => $locals,
-                'employee' => $employee
+                'employee' => $employee,
+                'categories' => $categories,
             ]);
 
         } catch (\Exception $exception) {

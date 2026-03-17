@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CityExport;
+use App\Exports\ServiceExport;
 use App\services\CityService;
 use App\services\LocalService;
+use DateTime;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CityController extends Controller
 {
@@ -24,16 +28,30 @@ class CityController extends Controller
         $this->localService = $localService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $cities = $this->cityService->getAll($this->pages);
         $locals = $this->localService->getAll(0);
+
+        $local_id = null;
+        if ($request->has('lc')) {
+            $local_id = $request->query('lc');
+            $cities = $this->cityService->getAllByLocal($local_id, $this->pages);
+        }
+
+        $filter = "";
+        if ($request->has('search')) {
+            $filter = $request->query('search');
+            $cities = $this->cityService->getAllByFilter($filter, $this->pages);
+        }
 
         return view('app.locals.cities.index', [
             'cities' => $cities,
             'locals' => $locals,
             'total' => $cities->total(),
-            'total_locals' => count($locals)
+            'total_locals' => count($locals),
+            'local_id' => $local_id,
+            'filter' => $filter
         ]);
     }
 
@@ -91,6 +109,37 @@ class CityController extends Controller
         }
 
         return back()->with('error', 'Erreur modification ville !!!');
+    }
+
+    public function download() {
+        try {
+            //['#', 'Ville', 'Nombre des locaux', 'Nombre effectif'];
+            $data = [];
+            $cities = $this->cityService->getAll(0);
+
+            $i = 1;
+            foreach ($cities as $city) {
+
+                $cityData[0] = $i;
+                $cityData[1] = $city->title;
+                $cityData[2] = count($city->locals);
+                $total_locals = 0;
+                foreach ($city->locals as $local) {
+                    $total_locals += count($local->employees);
+                }
+                $cityData[3] = $total_locals;
+                $data[] = $cityData;
+                $i++;
+
+            }
+
+            $date = new DateTime();
+            $current_date =  $date->format('Y-m-d H:i:s');
+            return Excel::download(new CityExport($data), 'list_villes_DRI-Marrakech_'.$current_date.'.xlsx');
+
+        }catch (\Exception $exception){
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
 

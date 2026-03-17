@@ -39,6 +39,8 @@ Route::get('/dashboard', function () {
 Route::prefix('cities')->group(function(){
     Route::get('/', [CityController::class, 'index'])->name('cities.index');
     Route::post('/store', [CityController::class, 'store'])->name('cities.store');
+    Route::get('/download', [CityController::class, 'download'])->name('cities.download');
+    Route::get('/{id}', [CityController::class, 'show'])->name('cities.show');
     Route::get('/show/{id}', [CityController::class, 'show'])->name('cities.show');
     Route::get('/edit/{id}', [CityController::class, 'edit'])->name('cities.edit');
     Route::post('/update/{id}', [CityController::class, 'update'])->name('cities.update');
@@ -48,6 +50,7 @@ Route::prefix('cities')->group(function(){
 Route::prefix('locals')->group(function(){
     Route::get('/', [LocalController::class, 'index'])->name('locals.index');
     Route::post('/store', [LocalController::class, 'store'])->name('locals.store');
+    Route::get('/download', [LocalController::class, 'download'])->name('locals.download');
     Route::get('/{id}', [LocalController::class, 'show'])->name('locals.show');
     Route::post('/update/{id}', [LocalController::class, 'update'])->name('locals.update');
     Route::get('/delete/{id}', [LocalController::class, 'delete'])->name('locals.delete');

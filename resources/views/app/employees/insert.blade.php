@@ -164,6 +164,18 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Catégorie</label>
+                            <select class="form-select border-0 bg-light shadow-none py-2" name="category_id">
+                                @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('category_id', $employee->category_id ?? '') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->title }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="mb-0">
                             <label class="form-label small fw-bold text-muted">Date de prise de service</label>
                             <x-date-input id="hiring_date" name="hiring_date" value="{{ old('hiring_date', $employee->hiring_date ?? '') }}" />
