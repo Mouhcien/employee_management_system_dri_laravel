@@ -34,7 +34,7 @@
             </td>
             <td class="py-3">
                 <div class="position-relative d-inline-block">
-                    @if($employee->photo)
+                    @if($employee->photo && Storage::disk('public')->exists($employee->photo))
                         <img class="rounded-circle border border-2 border-white shadow-sm object-fit-cover employee-photo-thumb avatar-hover"
                              width="48" height="48"
                              src="{{ Storage::url($employee->photo) }}"

@@ -48,7 +48,7 @@
                     {{-- Avatar Section --}}
                     <div class="d-flex justify-content-center" style="margin-top: -30px;">
                         <div class="position-relative">
-                            @if($employee->photo)
+                            @if($employee->photo && Storage::disk('public')->exists($employee->photo))
                                 <img src="{{ Storage::url($employee->photo) }}" class="rounded-circle border border-3 border-white shadow-sm object-fit-cover avatar-hover" width="65" height="65">
                             @else
                                 <div class="rounded-circle border border-3 border-white shadow-sm d-flex align-items-center justify-content-center text-white fw-bold"

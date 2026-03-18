@@ -92,6 +92,11 @@
         <main class="flex-grow-1 p-4">
             {{ $slot }}
         </main>
+
+        <div id="global-loader" style="display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.7); z-index: 9999; justify-content: center; align-items: center;">
+            <div class="spinner"></div>
+        </div>
+
     </div>
 </div>
 
@@ -99,37 +104,44 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const sidebar = document.getElementById('sidebar');
-        const mainWrapper = document.getElementById('main-wrapper');
-        const toggleBtn = document.getElementById('sidebarToggle');
 
-        // Initial State Logic
-        const isMiniStored = localStorage.getItem('sidebar-mini') === 'true';
+        const loader = document.getElementById('global-loader');
 
-        if (isMiniStored) {
-            sidebar.classList.add('sidebar-compressed');
-            mainWrapper.style.marginLeft = '85px';
-        } else {
-            sidebar.classList.remove('sidebar-compressed');
-            mainWrapper.style.marginLeft = '280px';
-        }
+        const showLoader = () => {
+            loader.style.display = 'flex';
+        };
 
-        // Toggle Action
-        if(toggleBtn) {
-            toggleBtn.addEventListener('click', function () {
-                const isNowOpening = sidebar.classList.contains('sidebar-compressed');
+        // 1. All Form Submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', showLoader);
+        });
 
-                if (isNowOpening) {
-                    sidebar.classList.remove('sidebar-compressed');
-                    mainWrapper.style.marginLeft = '280px';
-                    localStorage.setItem('sidebar-mini', 'false');
-                } else {
-                    sidebar.classList.add('sidebar-compressed');
-                    mainWrapper.style.marginLeft = '85px';
-                    localStorage.setItem('sidebar-mini', 'true');
+        // 2. All Links (except external or hash links)
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Only show loader if it's a normal internal navigation
+                if (
+                    link.href &&
+                    link.getAttribute('target') !== '_blank' &&
+                    !link.href.includes('#') &&
+                    link.origin === window.location.origin
+                ) {
+                    showLoader();
                 }
             });
-        }
+        });
+
+        // 3. Custom Buttons (like "Refresh" or specific actions)
+        document.querySelectorAll('.trigger-loader').forEach(btn => {
+            btn.addEventListener('click', showLoader);
+        });
+
+        // 4. Hide loader if the user hits the "Back" button
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                document.getElementById('global-loader').style.display = 'none';
+            }
+        };
 
         // Toastr Configuration
         window.addEventListener('load', function() {
@@ -165,7 +177,6 @@
             toastr.warning("{{ session('warning') }}", "Attention");
             @endif
         });
-
 
     });
 </script>

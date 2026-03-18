@@ -83,14 +83,20 @@ class EmployeeController extends Controller
             } elseif ($request->query('opt') == 'cards') {
                 $this->pages = 12;
                 $request->session()->put('opt', 'cards');
+            }elseif ($request->query('opt') == 'empcrd') {
+                $this->pages = 0;
+                $request->session()->put('opt', 'empcrd');
             }
         } else {
             if ($request->session()->has('opt')) {
                 if ($request->session()->get('opt') == 'list') {
                     $request->session()->put('opt', 'list');
-                } elseif ($request->session()->get('opt') == 'cards') {
+                }elseif ($request->session()->get('opt') == 'cards') {
                     $this->pages = 12;
                     $request->session()->put('opt', 'cards');
+                }elseif ($request->session()->get('opt') == 'empcrd') {
+                    $this->pages = 0;
+                    $request->session()->put('opt', 'empcrd');
                 }
             }
         }
@@ -126,6 +132,12 @@ class EmployeeController extends Controller
             $employees = $this->employeeService->getAllByFilterAdvanced($filter, $this->pages);
         }
 
+        $employeeObj = null;
+        if ($request->has('emp')) {
+            $employee_id = $request->query('emp');
+            $employeeObj = $this->employeeService->getOneById($employee_id);
+        }
+
         $template = 'app.employees.index';
 
         return view($template, [
@@ -135,10 +147,11 @@ class EmployeeController extends Controller
             'categories' => $categories,
             'femaleCount' => $female_employees->count(),
             'maleCount' => $male_employees->count(),
-            'total_employee' => $employees->total(),
+            'total_employee' => $this->pages == 0 ? $employees->count() : $employees->total(),
             'local_id' => $local_id,
             'city_id' => $city_id,
-            'filter_val' => null
+            'filter_val' => null,
+            'employeeObj' => $employeeObj
         ]);
     }
 

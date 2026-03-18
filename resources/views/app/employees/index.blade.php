@@ -97,11 +97,11 @@
             @endforeach
         </div>
 
+        @if(session('opt') != 'empcrd')
         {{-- Panneau de Recherche Avancé --}}
         <div class="card border-0 shadow-sm rounded-4 mb-4">
             <div class="card-body p-4">
-                <form method="POST" action="{{ route('employees.search') }}" class="row g-3 align-items-end">
-                    @csrf
+                <form method="GET" action="{{ route('employees.search') }}" class="row g-3 align-items-end">
                     <div class="col-xl-4 col-lg-6">
                         <label class="form-label small fw-bold text-muted text-uppercase ls-1">Recherche globale</label>
                         <div class="input-group bg-light rounded-3 overflow-hidden border">
@@ -111,7 +111,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-6">
                         <label class="form-label small fw-bold text-muted text-uppercase ls-1">Localisation</label>
-                        <select name="local_id" class="form-select border-0 bg-light rounded-3 shadow-none">
+                        <select name="local_id" id="sl_employee_local" class="form-select border-0 bg-light rounded-3 shadow-none">
                             <option value="-1">Tous les locaux</option>
                             @foreach($locals as $local)
                                 <option value="{{ $local->id }}" {{ $local_id == $local->id ? 'selected' : '' }}>{{ $local->title }}</option>
@@ -120,7 +120,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-6">
                         <label class="form-label small fw-bold text-muted text-uppercase ls-1">Ville</label>
-                        <select name="city_id" class="form-select border-0 bg-light rounded-3 shadow-none">
+                        <select name="city_id" id="sl_employee_city" class="form-select border-0 bg-light rounded-3 shadow-none">
                             <option value="-1">Toutes les villes</option>
                             @foreach($cities as $city)
                                 <option value="{{ $city->id }}" {{ $city_id == $city->id ? 'selected' : '' }}>{{ $city->title }}</option>
@@ -138,9 +138,11 @@
                 </form>
             </div>
         </div>
+        @endif
 
         {{-- Table Card --}}
         <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
             <div class="card-header bg-white py-3 px-4 border-bottom d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-list-stars text-primary me-2"></i>Effectif Actif</h5>
                 <div class="d-flex gap-2">
@@ -155,6 +157,9 @@
                         <a href="{{ route('employees.index') }}?opt=cards" class="btn btn-{{ session('opt') == 'cards' ? 'primary' : 'light' }}">
                             <i class="bi bi-grid-fill"></i>
                         </a>
+                        <a href="{{ route('employees.index') }}?opt=empcrd" class="btn btn-{{ session('opt') == 'empcrd' ? 'primary' : 'light' }}">
+                            <i class="bi bi-person-badge"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -162,23 +167,27 @@
             <div class="table-responsive">
                 @if (session('opt') == 'cards')
                     @include('app.employees._cards')
-                @else
+                @elseif(session('opt') == 'list')
                     @include('app.employees._list')
+                @elseif(session('opt') == 'empcrd')
+                    @include('app.employees._employee_card')
                 @endif
             </div>
 
             {{-- Footer Pagination --}}
-            @if(isset($employees) && $employees->hasPages())
-                <div class="card-footer bg-white border-top-0 py-4 px-4">
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                        <div class="text-muted small">
-                            Agents <span class="fw-bold text-dark">{{ $employees->firstItem() }}</span> - <span class="fw-bold text-dark">{{ $employees->lastItem() }}</span> sur <span class="fw-bold text-dark">{{ $employees->total() }}</span>
-                        </div>
-                        <div>
-                            {{ $employees->appends(request()->query())->links() }}
+            @if($employees instanceof \Illuminate\Pagination\AbstractPaginator)
+                @if(isset($employees) && $employees->hasPages())
+                    <div class="card-footer bg-white border-top-0 py-4 px-4">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                            <div class="text-muted small">
+                                Agents <span class="fw-bold text-dark">{{ $employees->firstItem() }}</span> - <span class="fw-bold text-dark">{{ $employees->lastItem() }}</span> sur <span class="fw-bold text-dark">{{ $employees->total() }}</span>
+                            </div>
+                            <div>
+                                {{ $employees->appends(request()->query())->links() }}
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
             @endif
         </div>
 
