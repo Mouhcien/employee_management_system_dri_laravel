@@ -66,11 +66,19 @@ class EmployeeRepository extends MainRepository
     }
 
     public function allByCategory($category_id, $with, $pages) {
-        $query =  Employee::with($this->with)
+        $query =  Employee::with($with)
             ->where('category_id', '=', $category_id)
             ->orderBy('lastname', 'ASC');
 
         return $pages == 0 ? $query->get() : $query->paginate($pages);
+    }
+
+    public function allTotalByCategory() {
+        return Employee::query()
+            ->join('categories', 'categories.id', '=', 'employees.category_id')
+            ->selectRaw('employees.category_id, categories.title, COUNT(employees.id) AS total')
+            ->groupBy('employees.category_id', 'categories.title')
+            ->get();
     }
 
 

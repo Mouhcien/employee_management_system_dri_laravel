@@ -11,7 +11,7 @@
             <div class="col-md-6 text-md-end">
                 <div class="badge bg-white text-dark border p-2 px-3 shadow-sm">
                     <i class="bi bi-calendar3 me-2 text-primary"></i>
-                    {{ now()->translatedFormat('l d F Y') }}
+                    {{ now()->locale('fr')->translatedFormat('l d F Y') }}
                 </div>
             </div>
         </div>
@@ -21,10 +21,20 @@
             @php
                 $stats = [
                     ['label' => 'Total Employés', 'value' => $totalEmployees ?? 142, 'icon' => 'bi-people', 'color' => 'primary', 'trend' => '+5 ce mois'],
-                    ['label' => 'Présents Aujourd\'hui', 'value' => $presentToday ?? 128, 'icon' => 'bi-check2-circle', 'color' => 'success', 'trend' => '90% de présence'],
-                    ['label' => 'En Congé', 'value' => $onLeave ?? 12, 'icon' => 'bi-door-open', 'color' => 'warning', 'trend' => '8 en attente'],
-                    ['label' => 'Locaux', 'value' => $totalLocals ?? 5, 'icon' => 'bi-geo-alt', 'color' => 'info', 'trend' => 'Actifs']
                 ];
+
+                foreach($employeesByCategory as $item) {
+                    $stats[] = [
+                        'label' => $item->title,
+                        'value' => $item->total,
+                        'icon'  => 'bi-people', // Changed to distinguish from 'Total'
+                        'color' => 'secondary', // Use a different color for categories
+                        'trend' => 'Répartition par catégorie'
+                    ];
+                }
+
+                $stats[] = ['label' => 'Locaux', 'value' => $totalLocals ?? 5, 'icon' => 'bi-geo-alt', 'color' => 'info', 'trend' => 'Actifs'];
+
             @endphp
 
             @foreach($stats as $stat)
@@ -49,6 +59,38 @@
                     </div>
                 </div>
             @endforeach
+        </div>
+
+        <div class="row col-12 mb-4">
+            {{-- Comparison Chart --}}
+            <div class="col-lg-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-transparent border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0">Comparaison des Effectifs par Catégorie</h5>
+                        <i class="bi bi-bar-chart text-muted"></i>
+                    </div>
+                    <div class="card-body px-4 pb-4">
+                        <div style="position: relative; height:300px;">
+                            <canvas id="employeeComparisonChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Doughnut Chart: Distribution --}}
+            <div class="col-lg-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-transparent border-0 pt-4 px-4">
+                        <h5 class="fw-bold mb-0">Répartition (%)</h5>
+                    </div>
+                    <div class="card-body d-flex align-items-center justify-content-center">
+                        <div style="height: 280px; width: 100%;">
+                            <canvas id="employeeCircleChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="row g-4">
@@ -93,15 +135,15 @@
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-transparent border-0 pt-4 px-4">
-                        <h5 class="fw-bold mb-0">Départements</h5>
+                        <h5 class="fw-bold mb-0">Entités Structurelles</h5>
                     </div>
                     <div class="card-body px-4">
                         @php
                             $depts = [
-                                ['name' => 'Ingénierie', 'count' => 45, 'color' => 'primary'],
-                                ['name' => 'Ventes & Marketing', 'count' => 32, 'color' => 'success'],
-                                ['name' => 'Opérations', 'count' => 28, 'color' => 'warning'],
-                                ['name' => 'RH & Finance', 'count' => 18, 'color' => 'danger']
+                                ['name' => 'Services', 'count' => $totalService - 1, 'color' => 'primary'],
+                                ['name' => 'Entités', 'count' => $totalEntity, 'color' => 'success'],
+                                ['name' => 'Secteurs', 'count' => $totalSector, 'color' => 'warning'],
+                                ['name' => 'Sections', 'count' => $totalSection, 'color' => 'danger']
                             ];
                         @endphp
                         @foreach($depts as $dept)
@@ -109,7 +151,7 @@
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0 small fw-bold">{{ $dept['name'] }}</h6>
                                     <div class="progress mt-2" style="height: 6px;">
-                                        <div class="progress-bar bg-{{ $dept['color'] }}" role="progressbar" style="width: {{ ($dept['count'] / 142) * 100 }}%"></div>
+                                        <div class="progress-bar bg-{{ $dept['color'] }}" role="progressbar" style="width: {{ ($dept['count'] / $totalEmployees) * 100 }}%"></div>
                                     </div>
                                 </div>
                                 <span class="ms-3 fw-bold">{{ $dept['count'] }}</span>
@@ -165,4 +207,94 @@
         .transition-all:hover { background-color: #f8f9fa; transform: translateY(-3px); }
         .smaller { font-size: 0.75rem; }
     </style>
+
+    {{-- Chart Initialization Script --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('employeeComparisonChart').getContext('2d');
+
+            // Preparing data from PHP
+            const labels = {!! json_encode($employeesByCategory->pluck('title')) !!};
+            const data = {!! json_encode($employeesByCategory->pluck('total')) !!};
+            const dataValues = {!! json_encode($employeesByCategory->pluck('total')) !!};
+
+            new Chart(ctx, {
+                type: 'bar', // You can change this to 'doughnut' or 'line'
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Nombre d\'employés',
+                        data: data,
+                        backgroundColor: 'rgba(13, 110, 253, 0.2)', // Bootstrap Primary Subtille
+                        borderColor: '#0d6efd', // Bootstrap Primary
+                        borderWidth: 2,
+                        borderRadius: 5,
+                        barThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { display: false },
+                            ticks: { stepSize: 1 }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // Professional color palette
+            const colors = [
+                '#0d6efd', '#6610f2', '#6f42c1', '#d63384',
+                '#dc3545', '#fd7e14', '#ffc107', '#198754'
+            ];
+
+
+            // --- Circle (Doughnut) Chart ---
+            const ctxCircle = document.getElementById('employeeCircleChart').getContext('2d');
+            new Chart(ctxCircle, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataValues,
+                        backgroundColor: colors,
+                        hoverOffset: 10,
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { size: 12 }
+                            }
+                        }
+                    },
+                    cutout: '70%' // Makes it a thin doughnut
+                }
+            });
+
+        });
+    </script>
+
+    <style>
+        /* Your existing styles... */
+        .card { transition: transform 0.2s; }
+    </style>
+
 </x-layout>

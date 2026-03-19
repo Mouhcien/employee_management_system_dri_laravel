@@ -26,6 +26,11 @@ class EmployeeService
         return $this->employeeRepository->allByCategory($category_id, $this->with, $pages);
     }
 
+    public function getTotalByCategory()
+    {
+        return $this->employeeRepository->allTotalByCategory();
+    }
+
     public function getAllByFilter($filter, $pages = 0)
     {
         return $this->employeeRepository->allByFilter($filter, $pages);
