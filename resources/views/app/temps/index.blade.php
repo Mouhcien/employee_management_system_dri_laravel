@@ -109,7 +109,7 @@
                             <td class="ps-4 py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="position-relative me-3">
-                                        @if($temp->employee->photo)
+                                        @if($temp->employee->photo && Storage::disk('public')->exists($temp->employee->photo))
                                             <img src="{{ Storage::url($temp->employee->photo) }}" class="rounded-circle border border-2 border-primary-subtle shadow-sm" width="50" height="50">
                                         @else
                                             <div class="rounded-circle bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
@@ -182,7 +182,7 @@
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
                                         <li><a class="dropdown-item py-2" href="{{ route('temps.edit', $temp) }}"><i class="bi bi-pencil-square text-warning me-2"></i>Modifier</a></li>
-                                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-clock-history text-info me-2"></i>Historique</a></li>
+                                        <li><a class="dropdown-item py-2" href="{{ route('temps.decision', $temp) }}" target="_blank"><i class="bi bi-clock-history text-info me-2"></i>Décision</a></li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li>
                                             <button class="dropdown-item py-2 text-danger" data-bs-toggle="modal" data-bs-target="#deleteChefTempModal-{{ $temp->id }}">

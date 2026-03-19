@@ -239,6 +239,7 @@ Route::prefix('temps')->group(function(){
     Route::get('/', [TempController::class, 'index'])->name('temps.index');
     Route::post('/store', [TempController::class, 'store'])->name('temps.store');
     Route::get('/create', [TempController::class, 'create'])->name('temps.create');
+    Route::get('/decision/{id}', [TempController::class, 'decision'])->name('temps.decision');
     Route::get('/{id}', [TempController::class, 'show'])->name('temps.show');
     Route::get('/edit/{id}', [TempController::class, 'edit'])->name('temps.edit');
     Route::post('/update/{id}', [TempController::class, 'update'])->name('temps.update');

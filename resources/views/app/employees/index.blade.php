@@ -167,10 +167,10 @@
             <div class="table-responsive">
                 @if (session('opt') == 'cards')
                     @include('app.employees._cards')
-                @elseif(session('opt') == 'list')
-                    @include('app.employees._list')
                 @elseif(session('opt') == 'empcrd')
                     @include('app.employees._employee_card')
+                @else
+                    @include('app.employees._list')
                 @endif
             </div>
 

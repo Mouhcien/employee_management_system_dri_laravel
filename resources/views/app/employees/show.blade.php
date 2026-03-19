@@ -15,7 +15,7 @@
                         <div class="d-flex align-items-center gap-4">
                             {{-- Photo avec indicateur de statut --}}
                             <div class="position-relative">
-                                @if($employee->photo)
+                                @if($employee->photo && Storage::disk('public')->exists($employee->photo))
                                     <img src="{{ Storage::url($employee->photo) }}" alt="{{ $employee->firstname }}"
                                          class="rounded-circle border border-4 border-white shadow-lg object-fit-cover" width="100" height="100">
                                 @else
@@ -154,6 +154,15 @@
                                     <div>
                                         <small class="text-muted text-uppercase extra-small fw-bold">Départ à la retraite</small>
                                         <div class="fw-bold text-dark">{{ $employee->retiring_date ? \Carbon\Carbon::parse($employee->retiring_date)->format('d F Y') : '—' }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-light rounded-3 p-3 me-3 text-info"><i class="bi bi-calendar-check fs-4"></i></div>
+                                    <div>
+                                        <small class="text-muted text-uppercase extra-small fw-bold">Date de commencement au fonction publique</small>
+                                        <div class="fw-bold text-dark">{{ $employee->hiring_public_date ? \Carbon\Carbon::parse($employee->hiring_public_date)->format('d F Y') : '—' }}</div>
                                     </div>
                                 </div>
                             </div>

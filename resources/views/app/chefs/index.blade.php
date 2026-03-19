@@ -137,7 +137,7 @@
                             <td class="ps-4 py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="position-relative me-3">
-                                        @if($chef->employee->photo)
+                                        @if($chef->employee->photo && Storage::disk('public')->exists($chef->employee->photo))
                                             <img src="{{ Storage::url($chef->employee->photo) }}" class="rounded-circle border border-2 border-primary-subtle shadow-sm" width="50" height="50">
                                         @else
                                             <div class="rounded-circle bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">

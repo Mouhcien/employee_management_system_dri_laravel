@@ -34,6 +34,7 @@ return new class extends Migration
             $table->string('gender', ['M', 'F'])->nullable();
             $table->string('sit', ['C', 'D', 'M'])->nullable();
             $table->date('hiring_date')->nullable();
+            $table->date('hiring_public_date')->nullable(); // Date de commencement au fonction publique
             $table->foreignIdFor(Local::class, 'local_id')->nullable()->constrained()->cascadeOnDelete();
             $table->date('disposition_date')->nullable();
             $table->string('disposition_reason')->nullable();
@@ -46,7 +47,7 @@ return new class extends Migration
             $table->string('tel')->nullable();
             $table->string('email')->nullable();
             $table->string('photo')->nullable();
-            $table->string('status')->nullable();
+            $table->integer('status')->default(1); //1=active, 0=mise a disposition, -1=retired, -2=fired
             $table->foreignIdFor(Category::class, 'category_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

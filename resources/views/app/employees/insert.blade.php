@@ -176,9 +176,14 @@
                             </select>
                         </div>
 
-                        <div class="mb-0">
+                        <div class="mb-3">
                             <label class="form-label small fw-bold text-muted">Date de prise de service</label>
                             <x-date-input id="hiring_date" name="hiring_date" value="{{ old('hiring_date', $employee->hiring_date ?? '') }}" />
+                        </div>
+
+                        <div class="mb-0">
+                            <label class="form-label small fw-bold text-muted">Date de commencement au fonction publique</label>
+                            <x-date-input id="hiring_public_date" name="hiring_public_date" value="{{ old('hiring_public_date', $employee->hiring_public_date ?? '') }}" />
                         </div>
                     </div>
                 </div>

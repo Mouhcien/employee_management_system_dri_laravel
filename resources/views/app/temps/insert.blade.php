@@ -44,17 +44,42 @@
                                         </label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-white border-end-0 text-primary">
-                                                <i class="bi bi-calendar-event"></i>
+                                                <i class="bi bi-search"></i>
                                             </span>
-                                            <select class="form-control" name="employee_id" id="employee_id" >
-                                                <option class="-1">Séléctionnez l'employé</option>
+                                            <input type="text"
+                                                   id="employee_search"
+                                                   class="form-control border-start-0 ps-0 shadow-none"
+                                                   placeholder="Rechercher un employé..."
+                                                   onkeyup="filterEmployees()">
+
+                                            <select class="form-control" name="employee_id" id="employee_id" required>
+                                                <option value="">Séléctionnez l'employé</option>
                                                 @foreach($employees->sortBy('lastname') as $employee)
-                                                    <option value="{{ $employee->id }}" {{ $employee->id == $temp->employee_id ? 'selected' : '' }}>
-                                                        {{ $employee->lastname }} {{ $employee->firstname }}
+                                                    <option value="{{ $employee->id }}"
+                                                        {{ (isset($temp) && $employee->id == $temp->employee_id) ? 'selected' : '' }}>
+                                                        {{ strtoupper($employee->lastname) }} {{ $employee->firstname }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
+
+                                        <script>
+                                            function filterEmployees() {
+                                                const input = document.getElementById('employee_search');
+                                                const filter = input.value.toLowerCase();
+                                                const select = document.getElementById('employee_id');
+                                                const options = select.getElementsByTagName('option');
+
+                                                for (let i = 1; i < options.length; i++) { // Start at 1 to skip the placeholder
+                                                    const txtValue = options[i].textContent || options[i].innerText;
+                                                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                                                        options[i].style.display = "";
+                                                    } else {
+                                                        options[i].style.display = "none";
+                                                    }
+                                                }
+                                            }
+                                        </script>
                                     </div>
 
                                     <div class="mb-4">
@@ -63,15 +88,46 @@
                                         </label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-white border-end-0 text-primary">
-                                                <i class="bi bi-calendar-event"></i>
+                                                <i class="bi bi-person-badge"></i>
                                             </span>
-                                            <select class="form-control" name="chef_id" id="chef_id" >
-                                                <option class="-1">Séléctionnez chef</option>
-                                                @foreach($chefs->sortBy('employee.lastname') as $chef)
-                                                    <option value="{{ $chef->id }}" {{ $chef->id == $temp->chef_id ? 'selected' : '' }}> {{ $chef->employee->lastname }} {{ $chef->employee->firstname }}</option>
+                                            <input type="text"
+                                                   id="chef_search"
+                                                   class="form-control border-start-0 ps-0 shadow-none"
+                                                   placeholder="Filtrer par nom..."
+                                                   onkeyup="filterChefs()">
+
+                                            <select class="form-control" name="chef_id" id="chef_id" required>
+                                                <option value="">Séléctionnez le chef</option>
+                                                @foreach($chefs->sortBy(fn($chef) => $chef->employee->lastname ?? '') as $chef)
+                                                    @if($chef->employee)
+                                                        <option value="{{ $chef->id }}"
+                                                            {{ (isset($temp) && $chef->id == $temp->chef_id) ? 'selected' : '' }}>
+                                                            {{ strtoupper($chef->employee->lastname) }} {{ $chef->employee->firstname }}
+                                                        </option>
+                                                    @endif
                                                 @endforeach
                                             </select>
                                         </div>
+
+                                        <script>
+                                            function filterChefs() {
+                                                const input = document.getElementById('chef_search');
+                                                const filter = input.value.toLowerCase();
+                                                const select = document.getElementById('chef_id');
+                                                const options = select.getElementsByTagName('option');
+
+                                                for (let i = 1; i < options.length; i++) {
+                                                    const text = options[i].textContent || options[i].innerText;
+                                                    const matches = text.toLowerCase().indexOf(filter) > -1;
+                                                    options[i].style.display = matches ? "" : "none";
+
+                                                    // Optional: Auto-select if there's an exact match
+                                                    if (filter !== "" && text.toLowerCase().trim() === filter.trim()) {
+                                                        select.value = options[i].value;
+                                                    }
+                                                }
+                                            }
+                                        </script>
                                     </div>
 
                                 </div>
@@ -86,17 +142,17 @@
                                                 <i class="bi bi-calendar-event"></i>
                                             </span>
                                             <x-date-input id="starting_date"
-                                                          name="starting_date"
-                                                          class="form-control border-start-0 ps-0 shadow-none bg-white"
-                                                          value="{{ !is_null($temp->starting_date) ? $temp->starting_date : 'null' }}"
-                                                          required />
+                                                  name="starting_date"
+                                                  class="form-control border-start-0 ps-0 shadow-none bg-white"
+                                                  value="{{ isset($temp) && $temp->starting_date ? $temp->starting_date : '' }}"
+                                                  required />
                                         </div>
                                     </div>
 
                                     {{-- Date de fin --}}
                                     <div class="mb-4">
                                         <label for="finished_date" class="form-label small fw-bold text-muted text-uppercase">
-                                            Date de fin de fonction <span class="text-danger"></span>
+                                            Date de fin d'intérim
                                         </label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-white border-end-0 text-primary">
@@ -105,8 +161,7 @@
                                             <x-date-input id="finished_date"
                                                           name="finished_date"
                                                           class="form-control border-start-0 ps-0 shadow-none bg-white"
-                                                          value="{{ !is_null($temp->finished_date) ? $temp->finished_date : 'null' }}"
-                                                          required />
+                                                          value="{{ isset($temp) && $temp->finished_date ? $temp->finished_date : '' }}" />
                                         </div>
                                     </div>
 
@@ -116,9 +171,9 @@
                                             Acte de nomination (PDF) <span class="text-danger">*</span>
                                         </label>
                                         <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0 text-danger">
-                                <i class="bi bi-file-earmark-pdf"></i>
-                            </span>
+                                            <span class="input-group-text bg-white border-end-0 text-danger">
+                                                <i class="bi bi-file-earmark-pdf"></i>
+                                            </span>
                                             <input type="file"
                                                    name="decision_file"
                                                    class="form-control border-start-0 ps-0 shadow-none"

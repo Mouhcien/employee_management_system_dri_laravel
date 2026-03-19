@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Echellon;
 use App\Models\Employee;
 use App\Models\Grade;
 use App\Models\Level;
@@ -19,6 +20,7 @@ return new class extends Migration
             $table->foreignIdFor(Employee::class, 'employee_id')->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Level::class, 'level_id')->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Grade::class, 'grade_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Echellon::class, 'echellon_id')->nullable()->constrained()->cascadeOnDelete();
             $table->date('starting_date')->nullable();
             $table->date('finished_date')->nullable();
             $table->timestamps();

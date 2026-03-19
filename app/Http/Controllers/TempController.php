@@ -9,6 +9,7 @@ use App\services\SectionEntityService;
 use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
 use App\services\TempService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -227,6 +228,70 @@ class TempController extends Controller
 
         }catch (\Exception $exception) {
             return back()->with('error',$exception->getMessage());
+        }
+    }
+
+    public function decision($id) {
+        try {
+
+            $temp = $this->tempService->getOneById($id);
+
+            if (is_null($temp)) {
+                return back()->with('error', 'Intérim est introuvable !!');
+            }
+
+            $entity_responsable = "";
+            $responsable = $temp->chef;
+            if (!is_null($responsable->section)) {
+                $entity_responsable = $responsable->section->title;
+            }
+            if (!is_null($responsable->sector)) {
+                $entity_responsable = $responsable->sector->title;
+            }
+            if (!is_null($responsable->entity)) {
+                $entity_responsable = $responsable->entity->title;
+            }
+            if (!is_null($responsable->service)) {
+                $entity_responsable = $responsable->service->title;
+            }
+
+            $entity_employee = "";
+            $employee = $temp->employee;
+            foreach ($employee->affectations as $affectation) {
+                if ($affectation->state) {
+                    if (!is_null($affectation->section)) {
+                        $entity_employee = $affectation->section->title;
+                        break;
+                    }
+                    if (!is_null($affectation->sector)) {
+                        $entity_employee = $affectation->sector->title;
+                        break;
+                    }
+                    if (!is_null($affectation->entity)) {
+                        $entity_employee = $affectation->entity->title;
+                        break;
+                    }
+                    if (!is_null($affectation->service)) {
+                        $entity_employee = $affectation->service->title;
+                        break;
+                    }
+                }
+            }
+
+            $pdf = Pdf::loadView('app.temps.decision', [
+                'temp' => $temp,
+                'entity_responsable' => $entity_responsable,
+                'entity_employee' => $entity_employee
+                ]
+            )->setPaper('a4', 'portrait');;
+
+            // Download the file
+            //return $pdf->download('invoice.pdf');
+
+            return $pdf->stream();
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
     }
 
