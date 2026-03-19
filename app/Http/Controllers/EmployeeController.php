@@ -77,29 +77,7 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
 
-        if ($request->has('opt')) {
-            if ($request->query('opt') == 'list') {
-                $request->session()->put('opt', 'list');
-            } elseif ($request->query('opt') == 'cards') {
-                $this->pages = 12;
-                $request->session()->put('opt', 'cards');
-            }elseif ($request->query('opt') == 'empcrd') {
-                $this->pages = 0;
-                $request->session()->put('opt', 'empcrd');
-            }
-        } else {
-            if ($request->session()->has('opt')) {
-                if ($request->session()->get('opt') == 'list') {
-                    $request->session()->put('opt', 'list');
-                }elseif ($request->session()->get('opt') == 'cards') {
-                    $this->pages = 12;
-                    $request->session()->put('opt', 'cards');
-                }elseif ($request->session()->get('opt') == 'empcrd') {
-                    $this->pages = 0;
-                    $request->session()->put('opt', 'empcrd');
-                }
-            }
-        }
+        $this->pages = $this->setEmployeeCardSession($request);
 
         $locals = $this->localService->getAll(0);
         $employees = $this->employeeService->getAll($this->pages);

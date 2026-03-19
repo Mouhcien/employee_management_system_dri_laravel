@@ -9,9 +9,6 @@
                 </div>
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-white border-bottom py-3">
-                        <h6 class="fw-bold text-primary mb-3">
-                            <i class="bi bi-people-fill me-2"></i>Employee Directory
-                        </h6>
                         <div class="input-group input-group-sm">
                             <span class="input-group-text bg-light border-end-0" id="search-addon">
                                 <i class="bi bi-search text-muted"></i>

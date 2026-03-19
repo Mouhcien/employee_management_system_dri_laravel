@@ -13,7 +13,7 @@ class EmployeeRepository extends MainRepository
 
         $query =  Employee::with($this->with)
             ->where($filter['col'], '=', $filter['val'])
-            ->orderBy('birth_date', 'DESC');
+            ->orderBy('lastname', 'ASC');
 
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
@@ -63,6 +63,14 @@ class EmployeeRepository extends MainRepository
         return Employee::with($this->with)
             ->where('ppr', '=', $ppr)
             ->first();
+    }
+
+    public function allByCategory($category_id, $with, $pages) {
+        $query =  Employee::with($this->with)
+            ->where('category_id', '=', $category_id)
+            ->orderBy('lastname', 'ASC');
+
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
 
 

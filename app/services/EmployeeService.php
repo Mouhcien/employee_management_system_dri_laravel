@@ -21,6 +21,11 @@ class EmployeeService
         return $this->employeeRepository->all(Employee::class, $this->with, $pages);
     }
 
+    public function getAllByCategory($category_id, $pages = 0)
+    {
+        return $this->employeeRepository->allByCategory($category_id, $this->with, $pages);
+    }
+
     public function getAllByFilter($filter, $pages = 0)
     {
         return $this->employeeRepository->allByFilter($filter, $pages);
