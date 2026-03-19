@@ -184,17 +184,19 @@ class EmployeeController extends Controller
             $data['gender'] = $request->input('gender');
             $data['sit'] = $request->input('sit');
             $data['hiring_date'] = $request->input('hiring_date');
+            $data['hiring_public_date'] = $request->input('hiring_public_date');
             $data['address'] = $request->input('address');
             $data['tel'] = $request->input('tel');
             $data['city'] = $request->input('city');
             $data['email'] = $request->input('email');
+            $data['category_id'] = $request->input('category_id');
             $data['status'] = Employee::STATUS_ACTIVE;
 
             $data['photo'] = null;
             if ($request->hasFile('photo')) {
                 $file = $request->file('photo');
 
-                $filename = time() . '_' . $data['lastname'] . '_' . $data['firstname'] . uniqid() . '.' . $file->extension();
+                $filename = $data['ppr'].$file->extension();
                 $path = $file->storeAs('photos/employees', $filename, 'public');
 
                 $data['photo'] = $path;
@@ -254,10 +256,13 @@ class EmployeeController extends Controller
             $data['gender'] = $request->input('gender');
             $data['sit'] = $request->input('sit');
             $data['hiring_date'] = $request->input('hiring_date');
+            $data['hiring_public_date'] = $request->input('hiring_public_date');
             $data['address'] = $request->input('address');
             $data['tel'] = $request->input('tel');
             $data['city'] = $request->input('city');
             $data['email'] = $request->input('email');
+            $data['category_id'] = $request->input('category_id');
+            $data['status'] = Employee::STATUS_ACTIVE;
 
             if ($request->hasFile('photo')) {
                 // Delete old photo if exists

@@ -48,7 +48,21 @@ class EmployeeService
     public function create(array $data): ?bool
     {
         $employee = new Employee();
-        $employee->fill($this->filterData($data));
+
+        $employee->firstname_arab = $data['firstname_arab'];
+        $employee->lastname_arab = $data['lastname_arab'];
+        $employee->birth_date = $data['birth_date'];
+        $employee->birth_city = $data['birth_city'];
+        $employee->gender = $data['gender'];
+        $employee->sit = $data['sit'];
+        $employee->hiring_date = $data['hiring_date'];
+        $employee->hiring_public_date = $data['hiring_public_date'];
+        $employee->address = $data['address'];
+        $employee->tel = $data['tel'];
+        $employee->city = $data['city'];
+        $employee->email = $data['email'];
+        $employee->category_id = $data['category_id'];
+        $employee->status = $data['status'];
 
         return $this->employeeRepository->add($employee);
     }
@@ -61,7 +75,20 @@ class EmployeeService
             return null;
         }
 
-        $employee->fill($this->filterData($data));
+        $employee->firstname_arab = $data['firstname_arab'];
+        $employee->lastname_arab = $data['lastname_arab'];
+        $employee->birth_date = $data['birth_date'];
+        $employee->birth_city = $data['birth_city'];
+        $employee->gender = $data['gender'];
+        $employee->sit = $data['sit'];
+        $employee->hiring_date = $data['hiring_date'];
+        $employee->hiring_public_date = $data['hiring_public_date'];
+        $employee->address = $data['address'];
+        $employee->tel = $data['tel'];
+        $employee->city = $data['city'];
+        $employee->email = $data['email'];
+        $employee->category_id = $data['category_id'];
+        $employee->status = $data['status'];
 
         return $this->employeeRepository->update($employee);
     }
@@ -102,7 +129,9 @@ class EmployeeService
             'tel',
             'email',
             'photo',
-            'status'
+            'status',
+            'hiring_public_date',
+            'category_id'
         ])->toArray();
     }
 }

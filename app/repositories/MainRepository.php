@@ -9,7 +9,7 @@ class MainRepository
         $query = $class::with($relations);
 
         if ($class === 'Employee')
-            $query->orderBy('birth_date', 'DESC');
+            $query->orderBy('lastname', 'ASC');
 
         if ($pages != 0)
             return $query->paginate($pages);
