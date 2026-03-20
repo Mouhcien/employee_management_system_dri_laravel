@@ -10,6 +10,7 @@ use App\Http\Controllers\DiplomaController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\EntityTypeController;
+use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\LocalController;
@@ -25,16 +26,17 @@ use App\Http\Controllers\TempController;
 use App\Http\Controllers\WorkController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard0');
 Route::get('/dashboard0', [DashboardController::class, 'index'])->name('dashboard0');
 
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::prefix('search')->group(function(){
+    Route::get('/', [GlobalSearchController::class, 'index'])->name('global');
+});
 
 Route::prefix('cities')->group(function(){
     Route::get('/', [CityController::class, 'index'])->name('cities.index');

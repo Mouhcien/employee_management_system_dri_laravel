@@ -31,6 +31,8 @@ abstract class Controller
                 }elseif ($request->session()->get('opt') == 'empcrd') {
                     $request->session()->put('opt', 'empcrd');
                 }
+            }else{
+                $pages = 10;
             }
         }
         return $pages;

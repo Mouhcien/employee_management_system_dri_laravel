@@ -27,3 +27,32 @@
             </div>
         </div>
     </div>
+
+
+
+    <div class="row col-12">
+                                    <div class="col-4">
+                                        Employés <span class="badge bg-info">total</span>
+                                    </div>
+                                    <div class="col-6">
+                                        liste des employé trouvés
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row col-12">
+                                    <div class="col-4">
+                                        Services <span class="badge bg-info">total</span>
+                                    </div>
+                                    <div class="col-6">
+                                        liste des services trouvés
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row col-12">
+                                    <div class="col-4">
+                                        Entité <span class="badge bg-info">total</span>
+                                    </div>
+                                    <div class="col-6">
+                                        liste des entité trouvés
+                                    </div>
+                                </div>
