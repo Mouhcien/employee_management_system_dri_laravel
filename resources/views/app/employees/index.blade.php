@@ -59,6 +59,9 @@
                             </p>
                         </div>
                         <div class="d-flex gap-2">
+                            <a href="{{ route('employees.advance') }}" class="btn btn-info btn-rounded shadow-sm fw-bold px-4 transition-base">
+                                <i class="bi bi-search me-2"></i>Recherche Avancée
+                            </a>
                             <a href="{{ route('employees.create') }}" class="btn btn-white btn-rounded shadow-sm fw-bold px-4 transition-base">
                                 <i class="bi bi-plus-circle-fill me-2"></i>Nouvel Employé
                             </a>

@@ -467,4 +467,52 @@ class EmployeeController extends Controller
         }
     }
 
+    public function advance(Request $request) {
+        try {
+
+            $locals = $this->localService->getAll(0);
+            $cities = $this->cityService->getAll(0);
+            $services = $this->serviceEntityService->getAll(0);
+            $entities = $this->entityService->getAll(0);
+            $sectors = $this->sectorEntityService->getAll(0);
+            $sections = $this->sectionEntityService->getAll(0);
+
+            return view('app.employees.search', [
+                'locals' => $locals,
+                'cities' => $cities,
+                'services' => $services,
+                'entities' => $entities,
+                'sectors' => $sectors,
+                'sections' => $sections
+            ]);
+
+
+        }catch (\Exception $exception) {
+
+        }
+    }
+
+    public function result(Request $request) {
+        try {
+
+            $filter['services'] = $request->services;
+            $filter['entities'] = $request->entities;
+            $filter['sectors'] = $request->sectors;
+            $filter['sections'] = $request->sections;
+            $filter['cities'] = $request->cities;
+            $filter['locals'] = $request->locals;
+            $employees = $this->employeeService->getAllByAdvanceFilter($filter, 0);
+
+
+            if ($request->ajax()) {
+                return view('app.employees.search-result', compact('employees'))->render();
+            }
+
+        }catch (\Exception $exception) {
+
+        }
+    }
+
 }
+
+

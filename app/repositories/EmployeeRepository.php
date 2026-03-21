@@ -58,6 +58,39 @@ class EmployeeRepository extends MainRepository
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
 
+    public function getAllByAdvanceFilter($filter, $pages){
+        $query =  Employee::with($this->with)
+            ->join('affectations', 'affectations.employee_id', '=', 'employees.id');
+
+        if (isset($filter['services']))
+            $query->whereIn('affectations.service_id', $filter['services']);
+
+        if (isset($filter['entities']))
+            $query->whereIn('affectations.entity_id', $filter['entities']);
+
+        if (isset($filter['sectors']))
+            $query->whereIn('affectations.sector_id', $filter['sectors']);
+
+        if (isset($filter['sections']))
+            $query->whereIn('affectations.section_id', $filter['sections']);
+
+        if (isset($filter['locals']))
+            $query->whereIn('local_id', $filter['locals']);
+
+        if (isset($filter['cities'])) {
+            $query->join('locals', 'locals.id', '=', 'employees.local_id');
+            $query->whereIn('locals.city_id', $filter['cities']);
+        }
+
+        if (isset($filter['gender']))
+            $query->where('gender', '=', $filter['gender']);
+
+        $query->where('affectations.state', '=', '1');
+        $query->orderBy('employees.lastname', 'ASC');
+
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
+    }
+
 
     public function getOneByPPR($ppr) {
         return Employee::with($this->with)
