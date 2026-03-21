@@ -87,7 +87,7 @@
                     </div>
 
                     <div id="box_result_search" class="d-none shadow-lg rounded-3 border bg-white text-dark p-0 position-absolute w-100 mt-2" style="z-index: 1050; max-height: 400px; overflow-y: auto;">
-                        <div id="searchContent">
+                        <div id="searchContent" class="sticky-top">
                         </div>
                     </div>
                 </div>

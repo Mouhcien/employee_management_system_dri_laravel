@@ -12,7 +12,8 @@
                 $section = $current?->section?->title;
             @endphp
 
-            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3 card_items">
+
                 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden employee-card hover-lift ms-1">
 
                     {{-- Banner Top --}}
@@ -62,26 +63,26 @@
 
                     {{-- Card Content --}}
                     <div class="card-body text-center pt-2 pb-3">
-                        <h6 class="fw-bold text-dark mb-1">{{ $employee->firstname }} {{ strtoupper($employee->lastname) }}</h6>
-                        <div class="text-primary small mb-2" dir="rtl">{{ $employee->firstname_arab }} {{ $employee->lastname_arab }}</div>
+                        <h6 class="fw-bold text-dark mb-1" id="employee_fullname">{{ $employee->firstname }} {{ strtoupper($employee->lastname) }}</h6>
+                        <div class="text-primary small mb-2" dir="rtl" id="employee_fullname_arabic">{{ $employee->firstname_arab }} {{ $employee->lastname_arab }}</div>
 
                         <div class="d-flex justify-content-center gap-1 mb-3">
-                            <span class="badge bg-light text-dark border font-monospace extra-small">#{{ $employee->ppr }}</span>
-                            <span class="badge bg-light text-muted border font-monospace extra-small">{{ $employee->cin }}</span>
+                            <span class="badge bg-light text-dark border font-monospace extra-small" id="employee_ppr">#{{ $employee->ppr }}</span>
+                            <span class="badge bg-light text-muted border font-monospace extra-small" id="employee_cin">{{ $employee->cin }}</span>
                         </div>
 
                         <ul class="list-unstyled text-start small mb-3 border rounded-3 p-2 bg-light-subtle">
                             <li class="d-flex align-items-center gap-2 mb-1">
                                 <i class="bi bi-calendar-check text-info"></i>
-                                <span class="text-muted">{{ \Carbon\Carbon::parse($employee->hiring_date)->format('d/m/Y') }}</span>
+                                <span class="text-muted" id="employee_hiring_date">{{ \Carbon\Carbon::parse($employee->hiring_date)->format('d/m/Y') }}</span>
                             </li>
                             <li class="d-flex align-items-center gap-2 mb-1">
                                 <i class="bi bi-telephone text-success"></i>
-                                <span class="text-dark">{{ $employee->tel ?? '—' }}</span>
+                                <span class="text-dark" id="employee_tel">{{ $employee->tel ?? '—' }}</span>
                             </li>
                             <li class="d-flex align-items-center gap-2">
                                 <i class="bi bi-envelope text-warning"></i>
-                                <span class="text-truncate" title="{{ $employee->email }}">{{ $employee->email }}</span>
+                                <span class="text-truncate" title="{{ $employee->email }}" id="employee_email">{{ $employee->email }}</span>
                             </li>
                         </ul>
 
@@ -114,7 +115,9 @@
                         </div>
                     </div>
                 </div>
+
             </div>
+
         @empty
             <div class="col-12 text-center py-5">
                 <i class="bi bi-person-x fs-1 text-muted opacity-25"></i>
