@@ -1,10 +1,10 @@
 <x-layout>
 
-    @include('app.employees.import')
+    {{-- @include('app.employees.import') --}}
 
     <hr>
 
-    @include('app.occupations.import')
+    {{--  @include('app.occupations.import')  --}}
 
     <hr>
 

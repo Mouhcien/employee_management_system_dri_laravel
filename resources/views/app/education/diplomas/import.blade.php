@@ -21,32 +21,11 @@
                                 </div>
                             </div>
 
-                            {{-- Filtres de sélection --}}
-                            <div class="col-xl-3 col-md-6">
-                                <label class="form-label small fw-bold text-uppercase text-white text-opacity-75">Type de Diplôme</label>
-                                <select name="diploma_id" class="form-select border-0 bg-white shadow-none" required>
-                                    <option value="null">Choisir le diplôme...</option>
-                                    @foreach($diplomas as $diploma)
-                                        <option value="{{ $diploma->id }}">{{ $diploma->title }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="col-xl-3 col-md-6">
-                                <label class="form-label small fw-bold text-uppercase text-white text-opacity-75">Spécialité / Filière</label>
-                                <select name="option_id" class="form-select border-0 bg-white shadow-none" required>
-                                    <option value="null">Choisir la filière...</option>
-                                    @foreach($options as $option)
-                                        <option value="{{ $option->id }}">{{ $option->title }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
                             {{-- Upload & Action --}}
                             <div class="col-xl-3 col-md-12">
                                 <label class="form-label small fw-bold text-uppercase text-white text-opacity-75">Fichier Excel</label>
                                 <div class="d-flex gap-2">
-                                    <input type="file" name="file" class="form-control border-0 bg-white shadow-none" required />
+                                    <input type="file" name="file_qualification" class="form-control border-0 bg-white shadow-none" required />
                                     <button type="submit" class="btn btn-white fw-bold shadow-sm px-3">
                                         <i class="bi bi-cloud-arrow-up-fill text-primary"></i>
                                     </button>
@@ -72,6 +51,14 @@
                                 </li>
                                 <li class="d-flex align-items-center mb-3">
                                     <span class="badge bg-primary-subtle text-primary rounded-circle me-2" style="width: 20px; height: 20px; font-size: 10px;">2</span>
+                                    <strong>Diplôme</strong> (ex: identifiant du diplôme)
+                                </li>
+                                <li class="d-flex align-items-center mb-3">
+                                    <span class="badge bg-primary-subtle text-primary rounded-circle me-2" style="width: 20px; height: 20px; font-size: 10px;">2</span>
+                                    <strong>Filière</strong> (ex: identifiant du filière)
+                                </li>
+                                <li class="d-flex align-items-center mb-3">
+                                    <span class="badge bg-primary-subtle text-primary rounded-circle me-2" style="width: 20px; height: 20px; font-size: 10px;">2</span>
                                     <strong>Année</strong> (ex: 2024)
                                 </li>
                             </ul>
@@ -94,13 +81,17 @@
                                 <thead class="bg-light-subtle">
                                 <tr>
                                     <th scope="col" class="text-muted small text-uppercase ls-1 fw-bold px-4 py-3 border-0">Colonne A (PPR)</th>
-                                    <th scope="col" class="text-muted small text-uppercase ls-1 fw-bold px-4 py-3 border-0">Colonne B (Année)</th>
+                                    <th scope="col" class="text-muted small text-uppercase ls-1 fw-bold px-4 py-3 border-0">Colonne B (diplôme)</th>
+                                    <th scope="col" class="text-muted small text-uppercase ls-1 fw-bold px-4 py-3 border-0">Colonne C (Filière)</th>
+                                    <th scope="col" class="text-muted small text-uppercase ls-1 fw-bold px-4 py-3 border-0">Colonne D (Année)</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @for($i=1;$i<4;$i++)
                                     <tr class="transition-base">
                                         <td class="px-4 py-3 text-primary fw-bold">XXXXXX</td>
+                                        <td class="px-4 py-3 text-muted">{{ $i }}</td>
+                                        <td class="px-4 py-3 text-muted">{{ $i+2 }}</td>
                                         <td class="px-4 py-3 text-muted">202{{ $i }}</td>
                                     </tr>
                                 @endfor

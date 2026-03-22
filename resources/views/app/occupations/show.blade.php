@@ -94,7 +94,7 @@
                                 @foreach($occupation->works as $work)
                                     <div class="col-xl-4 col-md-6">
                                         <div class="hover-lift transition-base h-100">
-                                            <x-chef-card :employee="$work->employee" detach="false" />
+                                            <x-employee-card :employee="$work->employee" detach="false" />
                                         </div>
                                     </div>
                                 @endforeach

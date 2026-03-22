@@ -24,12 +24,19 @@ class OptionController extends Controller
         $this->optionService = $optionService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $options = $this->optionService->getAll($this->pages);
 
+        $value = "";
+        if ($request->has('q')) {
+            $value = $request->query('q');
+            $options = $this->optionService->getAllByFilter($value, $this->pages);
+        }
+
         return view('app.education.options.index', [
-            'options' => $options
+            'options' => $options,
+            'value' => $value
         ]);
     }
 

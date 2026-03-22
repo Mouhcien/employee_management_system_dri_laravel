@@ -44,21 +44,24 @@ class QualificationController extends Controller
 
     public function importation(Request $request)
     {
-        if ($request->hasFile('file')) {
+        if ($request->hasFile('file_qualification')) {
 
             $request->validate([
-                'file' => 'required|file|mimes:xlsx,csv,xls'
+                'file_qualification' => 'required|file|mimes:xlsx,csv,xls'
             ]);
 
             // Read data into array
-            $rows = Excel::toArray([], $request->file('file'));
+            $rows = Excel::toArray([], $request->file('file_qualification'));
 
             $count = 0;
             foreach ($rows[0] as $rr) {
                 $employee = $this->employeeService->getOneByPPR($rr[0]);
 
-                $data['diploma_id'] = $request->input('diploma_id');
-                $data['option_id'] = $request->input('option_id');
+                $data['diploma_id'] = $rr[1];
+                if ($rr[1] == "" || $rr[1] == null)
+                    $data['option_id'] = null;
+                else
+                    $data['option_id'] = $rr[2];
                 $data['employee_id'] = $employee->id;
 
                 $this->qualificationService->create($data);
@@ -72,7 +75,7 @@ class QualificationController extends Controller
             }
 
         } else {
-            return redirect()->route('employees.import')->with('error', "Merci de spécifier le fichier excel contenant les employés avec les diplômes");
+            return redirect()->route('settings.importation')->with('error', "Merci de spécifier le fichier excel contenant les employés avec les diplômes");
         }
     }
 }

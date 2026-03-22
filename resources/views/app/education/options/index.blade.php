@@ -38,7 +38,9 @@
                         <label class="form-label small fw-bold text-muted text-uppercase ls-1">Recherche par intitulé</label>
                         <div class="input-group bg-light border-0 rounded-3">
                             <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
-                            <input type="text" name="search" value="{{ request('search') }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Rechercher une spécialité (ex: Informatique, Gestion)...">
+                            <input type="text" name="q" value="{{ request('q') }}"
+                                   class="form-control bg-transparent border-0 shadow-none py-2"
+                                   placeholder="Rechercher une spécialité (ex: Informatique, Gestion)...">
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-4">
@@ -84,6 +86,7 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light-subtle">
                     <tr>
+                        <th class="ps-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0">#</th>
                         <th class="ps-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Intitulé de la Filière</th>
                         <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Employés Titulaires</th>
                         <th class="pe-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-end">Actions</th>
@@ -92,6 +95,9 @@
                     <tbody>
                     @forelse($options as $option)
                         <tr class="hover-row transition-base">
+                            <td class="align-content-center text-center">
+                                {{ $option->id }}
+                            </td>
                             <td class="ps-4 py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-primary-subtle text-primary rounded-circle p-2 me-3 shadow-xs d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
@@ -161,7 +167,7 @@
                             Filières <span class="fw-bold">{{ $options->firstItem() }}</span> - <span class="fw-bold">{{ $options->lastItem() }}</span> sur <span class="fw-bold">{{ $options->total() }}</span>
                         </div>
                         <div class="order-1 order-md-2">
-                            {{ $options->links() }}
+                            {{ $options->appends(request()->query())->links() }}
                         </div>
                     </div>
                 </div>

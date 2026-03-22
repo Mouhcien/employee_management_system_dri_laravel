@@ -11,6 +11,11 @@ class MainRepository
         if ($class === 'Employee')
             $query->orderBy('lastname', 'ASC');
 
+        /*
+        else
+            $query->orderBy('title', 'ASC');
+        */
+
         if ($pages != 0)
             return $query->paginate($pages);
 
