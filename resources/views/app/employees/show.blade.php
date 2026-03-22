@@ -264,8 +264,8 @@
                                         @forelse($employee->qualifications as $qualification)
                                             <tr>
                                                 <td class="fw-bold text-dark border-0">{{ $qualification->diploma->title }}</td>
-                                                <td class="fw-bold text-dark border-0">{{ $qualification->option->title }}</td>
-                                                <td class="text-center border-0"><span class="badge bg-secondary rounded-pill px-3">{{ $qualification->year }}</span></td>
+                                                <td class="fw-bold text-dark border-0">{{ $qualification->option->title ?? '-' }}</td>
+                                                <td class="text-center border-0"><span class="badge bg-secondary rounded-pill px-3">{{ $qualification->year ?? '-' }}</span></td>
                                                 <td class="text-end border-0">
                                                     <button class="btn btn-sm btn-light border-0 rounded-circle text-danger shadow-xs"><i class="bi bi-trash-fill"></i></button>
                                                 </td>

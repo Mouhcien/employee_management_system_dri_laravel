@@ -48,7 +48,10 @@
     {{-- Avatar with Glow --}}
     <div class="d-flex justify-content-center" style="margin-top: -30px;">
         <div class="position-relative">
-            @if($employee->photo)
+            @php
+                $photoExists = $employee->photo && Storage::disk('public')->exists($employee->photo);
+            @endphp
+            @if($photoExists)
                 <img
                     class="rounded-circle border border-3 border-white shadow-sm object-fit-cover bg-white"
                     width="60" height="60"

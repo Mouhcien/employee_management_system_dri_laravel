@@ -90,7 +90,7 @@
                                 @foreach($option->qualifications as $qualification)
                                     <div class="col-xl-6 col-md-12">
                                         <div class="hover-lift transition-base h-100 shadow-sm">
-                                            <x-chef-card :employee="$qualification->employee" detach="false" />
+                                            <x-employee-card :employee="$qualification->employee" detach="false" />
                                         </div>
                                     </div>
                                 @endforeach
