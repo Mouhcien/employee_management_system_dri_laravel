@@ -3,10 +3,25 @@
 namespace App\Http\Controllers;
 
 
+use App\services\ConfigService;
 use Illuminate\Http\Request;
 
 abstract class Controller
 {
+    private ConfigService $configService;
+
+    /**
+     * @param ConfigService $configService
+     */
+    public function __construct(ConfigService $configService)
+    {
+        $this->configService = $configService;
+
+        if (!session()->has('configs')) {
+            $configs = $this->configService->getAll(0);
+            session()->put('configs', $configs);
+        }
+    }
 
     public function setEmployeeCardSession(Request $request) {
         $pages = 0;

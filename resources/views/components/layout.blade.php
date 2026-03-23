@@ -7,124 +7,55 @@
 
     @vite(['resources/css/app.css', 'resources/css/toastr.min.css'])
 
-    <style>
-        :root {
-            --sidebar-width: 280px;
-            --sidebar-mini-width: 85px; /* Ajustez selon vos besoins */
-        }
-
-        #sidebar {
-            width: var(--sidebar-width);
-            position: fixed; /* Garde la barre à gauche */
-            height: 100vh;
-            transition: width 0.3s ease;
-        }
-
-        #main-wrapper {
-            /* C'est ici que la magie opère */
-            margin-left: var(--sidebar-width);
-            transition: margin-left 0.3s ease;
-            width: auto;
-        }
-
-        /* Quand la sidebar est réduite */
-        #box_result_search {
-            max-height: 500px;
-            overflow-y: auto;
-            border: 1px solid #dee2e6;
-            background-color: #ffffff;
-        }
-
-        .search-result-item:hover {
-            background-color: #f8f9fa;
-            border-left: 3px solid #0dcaf0; /* Cyan highlight matching your badge */
-            padding-left: 8px !important;
-            transition: all 0.2s ease;
-        }
-
-        /* Slim scrollbar for a modern look */
-        #box_result_search::-webkit-scrollbar {
-            width: 5px;
-        }
-        #box_result_search::-webkit-scrollbar-thumb {
-            background: #ced4da;
-            border-radius: 10px;
-        }
-    </style>
 </head>
 <body class="bg-light">
 
-<div class="d-flex">
-    {{-- Sidebar --}}
-    <aside id="sidebar" class="flex-column shadow-sm bg-white border-end d-flex">
-        <div class="d-flex align-items-center justify-content-between p-3 mb-2 border-bottom" style="height: 57px;">
+@if (session()->has('configs'))
+    @php
+        $configs = session()->get('configs');
+    @endphp
+@endif
+
+@if ($configs[0]->value == 'Horizontal')
+    <x-horz-nav />
+@endif
+
+{{-- Sidebar --}}
+@if ($configs[0]->value == 'Vertical')
+    <aside id="sidebar0" class="flex-column shadow-sm bg-white border-end container-fluid">
+        <div class="container-fluid align-items-center justify-content-between p-3 mb-2 border-bottom" style="height: 57px;">
             <span class="fs-5 fw-bold text-dark" id="sidebarBrandFull">
-                RH-<span class="text-primary">DRI-Marrakech</span>
+               RH APP
             </span>
-            <span class="fs-4 fw-bold text-primary d-none" id="sidebarBrandMini">R</span>
         </div>
 
         <div class="flex-grow-1 overflow-y-auto overflow-x-hidden" >
             <x-nav />
         </div>
+
     </aside>
+@endif
 
-    {{-- Main area --}}
-    <div id="main-wrapper" class="flex-grow-1">
+{{-- Main area --}}
+
+{{-- The outer container-fluid needs to be a flex column --}}
+<div @if ($configs[0]->value == 'Vertical') id="main-wrapper" @endif class="container-fluid">
+
+    @if ($configs[0]->value == 'Vertical')
         <header class="navbar navbar-expand bg-white border-bottom px-4 top-navbar sticky-top">
-
-            {{--}}
-            <button id="sidebarToggle" class="btn btn-light shadow-sm rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                <i class="bi bi-list fs-5"></i>
-            </button>
-            --}}
-
-            <div class="row col-12">
-                <div class="col-6 position-relative">
-                    <div class="input-group bg-white rounded-3 overflow-hidden border border-light-subtle shadow-sm">
-                        <span class="input-group-text bg-transparent border-0 text-muted"><i class="bi bi-search"></i></span>
-                        <input type="text" id="mainSearch" class="form-control bg-transparent border-0 shadow-none py-2 text-dark" placeholder="Recherche...">
-                    </div>
-
-                    <div id="box_result_search" class="d-none shadow-lg rounded-3 border bg-white text-dark p-0 position-absolute w-100 mt-2" style="z-index: 1050; max-height: 400px; overflow-y: auto;">
-                        <div id="searchContent" class="sticky-top">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ms-auto d-flex align-items-center gap-4">
-                {{-- Notifications & User Dropdown remains the same --}}
-                <div class="dropdown">
-                    <button class="btn btn-link d-flex align-items-center text-decoration-none dropdown-toggle p-0"
-                            type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name ?? 'Admin' }}&background=4F46E5&color=fff"
-                             class="rounded-circle border border-2 border-primary-subtle" width="38" height="38">
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
-                        <li><a class="dropdown-item" href="#">Profil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('settings.importation') }}">Importation</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="dropdown-item text-danger fw-bold">Déconnexion</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            <x-search />
+            <x-profil />
         </header>
+    @endif
 
-        <main class="flex-grow-1 p-4">
-            {{ $slot }}
-        </main>
-
-        <div id="global-loader" style="display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.7); z-index: 9999; justify-content: center; align-items: center;">
-            <div class="spinner"></div>
-        </div>
-
+    <div class="p-4">
+        {{ $slot }}
     </div>
+
+    <div id="global-loader" style="display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.7); z-index: 9999; justify-content: center; align-items: center;">
+        <div class="spinner"></div>
+    </div>
+
 </div>
 
 @vite(['resources/js/jquery-3.7.1.js', 'resources/js/app.js', 'resources/js/toastr.min.js', 'resources/js/script.js', 'resources/js/chart.js'])

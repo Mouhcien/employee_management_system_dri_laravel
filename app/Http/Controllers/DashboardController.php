@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\services\ConfigService;
 use App\Services\EmployeeService;
 use App\services\EntityService;
 use App\services\LocalService;
@@ -18,6 +19,7 @@ class DashboardController extends Controller
     private EntityService $entityService;
     private SectorEntityService $sectorEntityService;
     private SectionEntityService $sectionEntityService;
+    private ConfigService $configService;
 
     /**
      * @param EmployeeService $employeeService
@@ -28,8 +30,10 @@ class DashboardController extends Controller
                                 ServiceEntityService $serviceEntityService,
                                 EntityService $entityService,
                                 SectorEntityService $sectorEntityService,
-                                SectionEntityService $sectionEntityService)
+                                SectionEntityService $sectionEntityService,
+                                ConfigService $configService)
     {
+        parent::__construct($configService);
         $this->employeeService = $employeeService;
         $this->localService = $localService;
         $this->serviceEntityService = $serviceEntityService;

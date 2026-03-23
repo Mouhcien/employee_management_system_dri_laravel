@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChefController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompetenceController;
+use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiplomaController;
 use App\Http\Controllers\EmployeeController;
@@ -249,6 +250,17 @@ Route::prefix('temps')->group(function(){
     Route::get('/edit/{id}', [TempController::class, 'edit'])->name('temps.edit');
     Route::post('/update/{id}', [TempController::class, 'update'])->name('temps.update');
     Route::get('/delete/{id}', [TempController::class, 'delete'])->name('temps.delete');
+});
+
+Route::prefix('configs')->group(function(){
+    Route::get('/', [ConfigController::class, 'index'])->name('configs.index');
+    Route::post('/store', [ConfigController::class, 'store'])->name('configs.store');
+    Route::get('/create', [ConfigController::class, 'create'])->name('configs.create');
+    Route::get('/decision/{id}', [ConfigController::class, 'decision'])->name('configs.decision');
+    Route::get('/{id}', [ConfigController::class, 'show'])->name('configs.show');
+    Route::get('/edit/{id}', [ConfigController::class, 'edit'])->name('configs.edit');
+    Route::post('/update/{id}', [ConfigController::class, 'update'])->name('configs.update');
+    Route::get('/delete/{id}', [ConfigController::class, 'delete'])->name('configs.delete');
 });
 
 Route::middleware('auth')->group(function () {

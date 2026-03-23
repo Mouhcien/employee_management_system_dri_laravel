@@ -1,6 +1,52 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
+:root {
+    --sidebar-width: 280px;
+    --sidebar-mini-width: 85px;
+}
+
+#sidebar0 {
+    width: 292px;
+    position: fixed;
+    height: 100vh;
+    transition: width 0.3s ease;
+}
+
+#sidebar {
+    width: var(--sidebar-width);
+    position: fixed;
+    height: 100vh;
+    transition: width 0.3s ease;
+}
+
+#main-wrapper {
+    margin-left: var(--sidebar-width);
+    transition: margin-left 0.3s ease;
+    width: auto;
+}
+
+#box_result_search {
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    background-color: #ffffff;
+}
+
+.search-result-item:hover {
+    background-color: #f8f9fa;
+    border-left: 3px solid #0dcaf0; /* Cyan highlight matching your badge */
+    padding-left: 8px !important;
+    transition: all 0.2s ease;
+}
+
+#box_result_search::-webkit-scrollbar {
+    width: 5px;
+}
+#box_result_search::-webkit-scrollbar-thumb {
+    background: #ced4da;
+    border-radius: 10px;
+}
 
 .bg-gradient-primary-to-secondary {
     background: linear-gradient(135deg, #6980e1 0%, #460588 100%);
@@ -21,3 +67,4 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
