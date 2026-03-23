@@ -9,7 +9,7 @@ class CompetenceService
 {
 
     private CompetenceRepository $competenceRepository;
-    private $with = ['level', 'employee'];
+    private $with = ['level', 'employee', 'grade', 'echellon'];
 
     /**
      * @param CompetenceRepository $competenceRepository
@@ -33,7 +33,8 @@ class CompetenceService
         $obj->level_id = $data['level_id'];
         $obj->employee_id = $data['employee_id'];
         $obj->grade_id = $data['grade_id'];
-        $obj->starting_date = $data['starting_date'];
+        if (isset($data['starting_date']))
+            $obj->starting_date = $data['starting_date'];
 
         return $this->competenceRepository->Add($obj);
     }

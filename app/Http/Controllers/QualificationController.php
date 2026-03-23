@@ -58,10 +58,12 @@ class QualificationController extends Controller
                 $employee = $this->employeeService->getOneByPPR($rr[0]);
 
                 $data['diploma_id'] = $rr[1];
-                if ($rr[1] == "" || $rr[1] == null)
+
+                if ($rr[2] == "" || $rr[2] == null)
                     $data['option_id'] = null;
                 else
                     $data['option_id'] = $rr[2];
+
                 $data['employee_id'] = $employee->id;
 
                 $this->qualificationService->create($data);

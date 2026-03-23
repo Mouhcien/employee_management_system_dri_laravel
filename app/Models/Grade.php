@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Grade extends Model
 {
-    public function classements() {
-        return $this->hasMany(Classement::class);
+    public function competences() {
+        return $this->hasMany(Competence::class);
     }
 }

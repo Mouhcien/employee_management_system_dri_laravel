@@ -77,7 +77,7 @@
                         <div class="mt-4 p-3 bg-light rounded-4 border border-dashed">
                             <div class="d-flex justify-content-between align-items-center small">
                                 <span class="text-muted fw-medium">Titulaires rattachés</span>
-                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 fw-bold">{{ $grade->classements->count() }}</span>
+                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 fw-bold">{{ $grade->competences->count() }}</span>
                             </div>
                         </div>
                     </div>
@@ -92,13 +92,13 @@
                             Agents à ce grade
                         </h5>
                         <div class="bg-light px-3 py-1 rounded-pill border small fw-bold text-muted">
-                            Total : {{ $grade->classements->count() }}
+                            Total : {{ $grade->competences->count() }}
                         </div>
                     </div>
                     <div class="card-body p-4">
-                        @if($grade->classements->isNotEmpty())
+                        @if($grade->competences->isNotEmpty())
                             <div class="row g-3">
-                                @foreach($grade->classements as $classement)
+                                @foreach($grade->competences as $classement)
                                     <div class="col-xl-4 col-md-6">
                                         <div class="hover-lift transition-base">
                                             <x-chef-card :employee="$classement->employee" detach="false" />

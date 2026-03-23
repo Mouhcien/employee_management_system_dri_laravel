@@ -22,12 +22,19 @@ class GradeController extends Controller
         $this->gradeService = $gradeService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $grades = $this->gradeService->getAll($this->pages);
 
+        $value = "";
+        if ($request->has('q')){
+            $value = $request->query('q');
+            $grades = $this->gradeService->getAllByfilter($value, $this->pages);
+        }
+
         return view('app.grades.index', [
-            'grades' => $grades
+            'grades' => $grades,
+            'value' => $value
         ]);
     }
 

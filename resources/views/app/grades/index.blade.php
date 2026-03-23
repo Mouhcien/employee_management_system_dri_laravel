@@ -62,17 +62,22 @@
         <div class="card border-0 shadow-sm rounded-4 mb-4">
             <div class="card-body p-4">
                 <form method="GET" action="{{ route('grades.index') }}" class="row g-3 align-items-end">
-                    <div class="col-lg-10 col-md-8">
+                    <div class="col-lg-8 col-md-7">
                         <label class="form-label small fw-bold text-muted text-uppercase ls-1">Filtrer par intitulé</label>
                         <div class="input-group bg-light border-0 rounded-3">
                             <span class="input-group-text bg-transparent border-0"><i class="bi bi-search"></i></span>
-                            <input type="text" name="search" value="{{ request('search') }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Rechercher un grade (ex: Administrateur)...">
+                            <input type="text" name="q" value="{{ request('q') }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Rechercher un grade (ex: Administrateur)...">
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-4">
+                    <div class="col-lg-3 col-md-4">
                         <button type="submit" class="btn btn-dark w-100 rounded-3 py-2 fw-bold transition-base shadow-sm">
                             <i class="bi bi-filter-left me-2"></i>Filtrer
                         </button>
+                    </div>
+                    <div class="col-lg-1 col-md-1">
+                        <a href="{{ route('grades.index') }}" class="btn btn-light w-100 rounded-3 py-2 fw-bold transition-base shadow-sm" title="Actualiser" >
+                            <i class="bi bi-circle"></i>
+                        </a>
                     </div>
                 </form>
             </div>
@@ -96,8 +101,9 @@
                     <thead class="bg-light-subtle">
                     <tr>
                         <th class="ps-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Grade officiel</th>
-                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-center">Échelle indiciaire</th>
-                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-center">Occupation</th>
+                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-center">Échelle</th>
+                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-center">Échellon</th>
+                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-center">Employées</th>
                         <th class="pe-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-end">Actions</th>
                     </tr>
                     </thead>
@@ -111,7 +117,7 @@
                                     </div>
                                     <div>
                                         <div class="fw-bold text-dark">{{ $grade->title }}</div>
-                                        <small class="text-muted extra-small">Grade de catégorie {{ $grade->scale >= 10 ? 'A' : 'B' }}</small>
+                                        <small class="text-muted extra-small">Grade ID {{ $grade->id }}</small>
                                     </div>
                                 </div>
                             </td>
@@ -121,7 +127,12 @@
                                 </span>
                             </td>
                             <td class="py-3 text-center">
-                                @php $count = count($grade->classements ?? []); @endphp
+                                <span class="badge bg-primary rounded-pill px-3 py-2 fw-bold shadow-sm" style="min-width: 90px;">
+                                    Échellon {{ $grade->competences[0]->echellon->title ?? 'N/A' }}
+                                </span>
+                            </td>
+                            <td class="py-3 text-center">
+                                @php $count = count($grade->competences ?? []); @endphp
                                 <div class="d-flex align-items-center justify-content-center gap-2">
                                     <div class="progress rounded-pill flex-grow-0" style="height: 6px; width: 80px; background: #eee;">
                                         <div class="progress-bar bg-info" style="width: {{ $count > 0 ? '70' : '0' }}%"></div>

@@ -227,6 +227,7 @@ Route::prefix('competences')->group(function(){
     Route::post('/store', [CompetenceController::class, 'store'])->name('competences.store');
     Route::get('/{id}', [CompetenceController::class, 'show'])->name('competences.show');
     Route::get('/delete/{id}', [CompetenceController::class, 'delete'])->name('competences.delete');
+    Route::post('/importation', [CompetenceController::class, 'importation'])->name('competences.importation');
 });
 
 Route::prefix('chefs')->group(function(){

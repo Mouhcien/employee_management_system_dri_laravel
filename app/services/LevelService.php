@@ -25,6 +25,10 @@ class LevelService
         return $this->levelRepository->One(Level::class, ['competences'], $id);
     }
 
+    public function getOneByTitle($title){
+        return $this->levelRepository->OneByTitle(Level::class, ['competences'], $title);
+    }
+
     public function create($data){
         $obj = new Level();
 

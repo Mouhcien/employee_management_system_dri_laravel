@@ -228,8 +228,9 @@
                                 @forelse($employee->competences as $competence)
                                     <div class="p-3 bg-light rounded-3 border mb-2 d-flex justify-content-between align-items-center">
                                         <div>
-                                            <span class="badge bg-dark rounded-pill me-2">Échelle {{ $competence->level->title }}</span>
-                                            <span class="fw-bold text-dark">{{ $competence->grade->title }}</span>
+                                            <span class="fw-bold text-dark">{{ $competence->grade->title }}</span><br>
+                                            <span class="fw-bold text-success">échelle : {{ $competence->grade->scale }}</span><br>
+                                            <span class="fw-bold text-info">échellon : {{ $competence->echellon->title ?? 'N/A' }}</span>
                                         </div>
                                         <button class="btn btn-sm btn-outline-danger border-0"><i class="bi bi-trash3"></i></button>
                                     </div>

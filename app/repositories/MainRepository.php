@@ -26,6 +26,10 @@ class MainRepository
         return $class::with($relations)->find($id);
     }
 
+    public function OneByTitle($class, $relations, $title) {
+        return $class::with($relations)->where('title', '=', $title)->first();
+    }
+
     public function Add($object) {
         return $object->save();
     }

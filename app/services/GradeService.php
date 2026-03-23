@@ -18,11 +18,15 @@ class GradeService
     }
 
     public function getAll($pages=0){
-        return $this->gradeRepository->All(Grade::class, ['classements'], $pages);
+        return $this->gradeRepository->All(Grade::class, ['competences'], $pages);
+    }
+
+    public function getAllByFilter($value, $pages=0){
+        return $this->gradeRepository->AllByFilter($value, ['competences'], $pages);
     }
 
     public function getOneById($id){
-        return $this->gradeRepository->One(Grade::class, ['classements'], $id);
+        return $this->gradeRepository->One(Grade::class, ['competences'], $id);
     }
 
     public function create($data){
