@@ -104,7 +104,7 @@
         </div>
 
         {{-- search bar --}}
-        <div class="d-flex align-items-center ms-lg-3 position-relative me-4" style="min-width: 450px; max-width: 500px;">
+        <div class="d-flex align-items-center ms-lg-3 position-relative me-4" style="min-width: 270px; max-width: 400px;">
             <div class="input-group bg-light rounded-3 overflow-hidden border border-light-subtle shadow-sm">
                 <span class="input-group-text bg-transparent border-0 text-muted px-2">
                     <i class="bi bi-search"></i>

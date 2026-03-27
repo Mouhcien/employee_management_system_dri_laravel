@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Rule extends Model
+class Profile extends Model
 {
     public function habilitations() {
         return $this->hasMany(Habilitation::class);
