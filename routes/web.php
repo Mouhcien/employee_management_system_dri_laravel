@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AffectationController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChefController;
 use App\Http\Controllers\CityController;
@@ -26,6 +27,7 @@ use App\Http\Controllers\SectorController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TempController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkController;
 use Illuminate\Support\Facades\Route;
 
@@ -266,6 +268,16 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/edit/{id}', [ConfigController::class, 'edit'])->name('configs.edit');
         Route::post('/update/{id}', [ConfigController::class, 'update'])->name('configs.update');
         Route::get('/delete/{id}', [ConfigController::class, 'delete'])->name('configs.delete');
+    });
+
+    Route::prefix('users')->group(function(){
+        Route::get('/', [UserController::class, 'index'])->name('users.index');
+        Route::post('/store', [RegisteredUserController::class, 'store'])->name('users.store');
+        Route::get('/create', [UserController::class, 'create'])->name('users.create');
+        Route::get('/{id}', [UserController::class, 'show'])->name('users.show');
+        Route::get('/edit/{id}', [UserController::class, 'edit'])->name('users.edit');
+        Route::post('/update/{id}', [UserController::class, 'update'])->name('users.update');
+        Route::get('/delete/{id}', [UserController::class, 'delete'])->name('users.delete');
     });
 
     Route::prefix('profiles')->group(function(){
