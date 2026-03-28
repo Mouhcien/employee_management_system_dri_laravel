@@ -111,14 +111,14 @@
                 @if (auth()->user()->profile_id == 3)
                     <li class="nav-item dropdown">
                         <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
-                              {{ request()->routeIs('suivis.*') || request()->routeIs('temps.*') ? 'active-link' : 'text-secondary' }}"
+                              {{ request()->routeIs('audit.tables.*') || request()->routeIs('audit.periods.*') ? 'active-link' : 'text-secondary' }}"
                            href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-person-workspace me-2"></i>
                             <span class="fw-semibold">Gestion de suivi</span>
                         </a>
                         <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-4 mt-2">
-                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('chefs.index') }}">Les tableaux de suivi</a></li>
-                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('temps.index') }}">Intérimaires</a></li>
+                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('audit.tables.index') }}">Tableaux de suivi</a></li>
+                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('audit.periods.index') }}">Périodes de suivi</a></li>
                         </ul>
                     </li>
                 @endif

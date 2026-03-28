@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChefController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\ColumnController;
 use App\Http\Controllers\CompetenceController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\DashboardController;
@@ -19,15 +20,19 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\LocalController;
 use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\OptionController;
+use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QualificationController;
+use App\Http\Controllers\RelationController;
 use App\Http\Controllers\RuleController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SectorController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\TableController;
 use App\Http\Controllers\TempController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ValueController;
 use App\Http\Controllers\WorkController;
 use Illuminate\Support\Facades\Route;
 
@@ -308,6 +313,56 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/edit/{id}', [HabilitationController::class, 'edit'])->name('habilitations.edit');
         Route::post('/update/{id}', [HabilitationController::class, 'update'])->name('habilitations.update');
         Route::get('/delete/{id}', [HabilitationController::class, 'delete'])->name('habilitations.delete');
+    });
+
+    Route::prefix('audit/tables')->group(function(){
+        Route::get('/', [TableController::class, 'index'])->name('audit.tables.index');
+        Route::post('/store', [TableController::class, 'store'])->name('audit.tables.store');
+        Route::get('/create', [TableController::class, 'create'])->name('audit.tables.create');
+        Route::get('/{id}', [TableController::class, 'show'])->name('audit.tables.show');
+        Route::get('/edit/{id}', [TableController::class, 'edit'])->name('audit.tables.edit');
+        Route::post('/update/{id}', [TableController::class, 'update'])->name('audit.tables.update');
+        Route::get('/delete/{id}', [TableController::class, 'delete'])->name('audit.tables.delete');
+    });
+
+    Route::prefix('audit/columns')->group(function(){
+        Route::get('/', [ColumnController::class, 'index'])->name('audit.columns.index');
+        Route::post('/store', [ColumnController::class, 'store'])->name('audit.columns.store');
+        Route::get('/create', [ColumnController::class, 'create'])->name('audit.columns.create');
+        Route::get('/{id}', [ColumnController::class, 'show'])->name('audit.columns.show');
+        Route::get('/edit/{id}', [ColumnController::class, 'edit'])->name('audit.columns.edit');
+        Route::post('/update/{id}', [ColumnController::class, 'update'])->name('audit.columns.update');
+        Route::get('/delete/{id}', [ColumnController::class, 'delete'])->name('audit.columns.delete');
+    });
+
+    Route::prefix('audit/periods')->group(function(){
+        Route::get('/', [PeriodController::class, 'index'])->name('audit.periods.index');
+        Route::post('/store', [PeriodController::class, 'store'])->name('audit.periods.store');
+        Route::get('/create', [PeriodController::class, 'create'])->name('audit.periods.create');
+        Route::get('/{id}', [PeriodController::class, 'show'])->name('audit.periods.show');
+        Route::get('/edit/{id}', [PeriodController::class, 'edit'])->name('audit.periods.edit');
+        Route::post('/update/{id}', [PeriodController::class, 'update'])->name('audit.periods.update');
+        Route::get('/delete/{id}', [PeriodController::class, 'delete'])->name('audit.periods.delete');
+    });
+
+    Route::prefix('audit/relations')->group(function(){
+        Route::get('/', [RelationController::class, 'index'])->name('audit.relations.index');
+        Route::post('/store', [RelationController::class, 'store'])->name('audit.relations.store');
+        Route::get('/create', [RelationController::class, 'create'])->name('audit.relations.create');
+        Route::get('/{id}', [RelationController::class, 'show'])->name('audit.relations.show');
+        Route::get('/edit/{id}', [RelationController::class, 'edit'])->name('audit.relations.edit');
+        Route::post('/update/{id}', [RelationController::class, 'update'])->name('audit.relations.update');
+        Route::get('/delete/{id}', [RelationController::class, 'delete'])->name('audit.relations.delete');
+    });
+
+    Route::prefix('audit/values')->group(function(){
+        Route::get('/', [ValueController::class, 'index'])->name('audit.values.index');
+        Route::post('/store', [ValueController::class, 'store'])->name('audit.values.store');
+        Route::get('/create', [ValueController::class, 'create'])->name('audit.values.create');
+        Route::get('/{id}', [ValueController::class, 'show'])->name('audit.values.show');
+        Route::get('/edit/{id}', [ValueController::class, 'edit'])->name('audit.values.edit');
+        Route::post('/update/{id}', [ValueController::class, 'update'])->name('audit.values.update');
+        Route::get('/delete/{id}', [ValueController::class, 'delete'])->name('audit.values.delete');
     });
 
     /*
