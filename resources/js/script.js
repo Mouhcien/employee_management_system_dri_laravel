@@ -117,4 +117,13 @@ $(function() {
 
         window.location.href = `${baseUrl}?${params.toString()}`;
     });
+
+    $('#sl_table_performance').on('change', function() {
+
+        const table_id = $(this).val();
+
+        window.location.href = '/audit/values?tbl='+table_id;
+
+    });
+
 });
