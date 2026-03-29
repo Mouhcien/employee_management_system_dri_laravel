@@ -9,7 +9,7 @@ class PeriodService
 {
 
     private PeriodRepository $periodRepository;
-    private $with = ['relations'];
+    private $with = ['values'];
 
     /**
      * @param PeriodRepository $periodRepository
