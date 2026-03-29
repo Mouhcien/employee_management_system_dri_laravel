@@ -176,6 +176,12 @@ class ValueController extends Controller
                 $employees = $this->employeeService->getAllBySection($selected_section, 0);
             }
 
+            $selected_employee = null;
+            if ($request->has('emp')) {
+                $selected_employee = $request->query('emp');
+                $values = $this->valueService->getAllByEmployee($selected_employee, 0);
+            }
+
             return view('app.audit.values.consult', [
                 'tables' => $tables,
                 'periods' => $periods,
@@ -192,7 +198,8 @@ class ValueController extends Controller
                 'sections' => $sections,
                 'values' => $values,
                 'selected_period' => $selected_period,
-                'periodObj' => $periodObj
+                'periodObj' => $periodObj,
+                'selected_employee' => $selected_employee
             ]);
 
 

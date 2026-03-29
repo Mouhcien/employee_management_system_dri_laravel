@@ -30,4 +30,15 @@ class ValueRepository extends MainRepository
 
     }
 
+    public function AllByEmployee($employee_id, $with, $pages) {
+
+        $query = Value::with($with)
+            ->where('values.employee_id', '=', $employee_id)
+            ->select('values.*')
+            ->orderBy('values.period_id', 'DESC');
+
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
+
+    }
+
 }

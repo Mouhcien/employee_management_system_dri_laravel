@@ -139,15 +139,15 @@ $(function() {
             href += '&tbl='+table_id;
 
         const entity_id = $('#sl_audit_entity').val();
-        if (entity_id != "-1" && entity_id != 'undefined')
+        if (entity_id != "-1" && entity_id != undefined)
             href += '&ent='+entity_id;
 
         const sector_id = $('#sl_audit_sector').val();
-        if (sector_id != "-1" && sector_id != 'undefined')
+        if (sector_id != "-1" && sector_id != undefined)
             href += '&sectr='+sector_id;
 
         const section_id = $('#sl_audit_section').val();
-        if (section_id != "-1" && section_id != 'undefined')
+        if (section_id != "-1" && section_id != undefined)
             href += '&sect='+section_id;
 
         window.location.href = href;
@@ -172,11 +172,11 @@ $(function() {
             href += '&srv='+srv_id;
 
         const sector_id = $('#sl_audit_sector').val();
-        if (sector_id != "-1" && sector_id != 'undefined')
+        if (sector_id != "-1" && sector_id != undefined)
             href += '&sectr='+sector_id;
 
         const section_id = $('#sl_audit_section').val();
-        if (section_id != "-1" && section_id != 'undefined')
+        if (section_id != "-1" && section_id != undefined)
             href += '&sect='+section_id;
 
         window.location.href = href;
@@ -200,7 +200,7 @@ $(function() {
             href += '&srv='+srv_id;
 
         const entity_id = $('#sl_audit_entity').val();
-        if (entity_id != "-1" && entity_id != 'undefined')
+        if (entity_id != "-1" && entity_id != undefined)
             href += '&ent='+entity_id;
 
         window.location.href = href;
@@ -224,7 +224,7 @@ $(function() {
             href += '&srv='+srv_id;
 
         const entity_id = $('#sl_audit_entity').val();
-        if (entity_id != "-1" && entity_id != 'undefined')
+        if (entity_id != "-1" && entity_id != undefined)
             href += '&ent='+entity_id;
 
         window.location.href = href;
@@ -278,15 +278,15 @@ $(function() {
             href += '&tbl='+table_id;
 
         const entity_id = $('#sl_consult_audit_entity').val();
-        if (entity_id != "-1" && entity_id != 'undefined')
+        if (entity_id != "-1" && entity_id != undefined)
             href += '&ent='+entity_id;
 
         const sector_id = $('#sl_consult_audit_sector').val();
-        if (sector_id != "-1" && sector_id != 'undefined')
+        if (sector_id != "-1" && sector_id != undefined)
             href += '&sectr='+sector_id;
 
         const section_id = $('#sl_consult_audit_section').val();
-        if (section_id != "-1" && section_id != 'undefined')
+        if (section_id != "-1" && section_id != undefined)
             href += '&sect='+section_id;
 
         window.location.href = href;
@@ -311,11 +311,11 @@ $(function() {
             href += '&srv='+srv_id;
 
         const sector_id = $('#sl_consult_audit_sector').val();
-        if (sector_id != "-1" && sector_id != 'undefined')
+        if (sector_id != "-1" && sector_id != undefined)
             href += '&sectr='+sector_id;
 
         const section_id = $('#sl_consult_audit_section').val();
-        if (section_id != "-1" && section_id != 'undefined')
+        if (section_id != "-1" && section_id != undefined)
             href += '&sect='+section_id;
 
         window.location.href = href;
@@ -339,7 +339,7 @@ $(function() {
             href += '&srv='+srv_id;
 
         const entity_id = $('#sl_consult_audit_entity').val();
-        if (entity_id != "-1" && entity_id != 'undefined')
+        if (entity_id != "-1" && entity_id != undefined)
             href += '&ent='+entity_id;
 
         window.location.href = href;
@@ -363,8 +363,40 @@ $(function() {
             href += '&srv='+srv_id;
 
         const entity_id = $('#sl_consult_audit_entity').val();
-        if (entity_id != "-1" && entity_id != 'undefined')
+        if (entity_id != "-1" && entity_id != undefined)
             href += '&ent='+entity_id;
+
+        window.location.href = href;
+
+    });
+
+    $('#employee_list_consult').on('change', function() {
+
+        let href = '/audit/values/consult?';
+
+        const employee_id = $(this).val();
+        if (employee_id != "-1")
+            href += 'emp='+employee_id;
+
+        const table_id = $('#sl_consult_table_performance').val();
+        if (table_id != "-1")
+            href += '&tbl='+table_id;
+
+        const srv_id = $('#sl_consult_audit_service').val();
+        if (srv_id != "-1")
+            href += '&srv='+srv_id;
+
+        const entity_id = $('#sl_consult_audit_entity').val();
+        if (entity_id != "-1" && entity_id != undefined)
+            href += '&ent='+entity_id;
+
+        const sector_id = $('#sl_consult_audit_sector').val();
+        if (sector_id != "-1" && sector_id != undefined)
+            href += '&sectr='+sector_id;
+
+        const section_id = $('#sl_consult_audit_section').val();
+        if (section_id != "-1" && section_id != undefined)
+            href += '&sect='+section_id;
 
         window.location.href = href;
 

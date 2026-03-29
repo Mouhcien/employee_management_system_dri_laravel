@@ -31,6 +31,10 @@ class ValueService
         return $this->valueRepository->AllByPeriod($period_id, $this->with, $pages);
     }
 
+    public function getAllByEmployee($employee_id, $pages=0){
+        return $this->valueRepository->AllByEmployee($employee_id, $this->with, $pages);
+    }
+
     public function getOneById($id){
         return $this->valueRepository->One(Value::class, $this->with, $id);
     }

@@ -41,28 +41,6 @@
             overflow-y: auto;
         }
 
-        /* Table Enhancements */
-        .table-entry-container {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid var(--saas-border);
-            overflow: hidden;
-        }
-
-        .table-input {
-            border: 1px solid #d1d3e2;
-            border-radius: 6px;
-            padding: 0.5rem;
-            text-align: center;
-            transition: all 0.2s ease;
-        }
-
-        .table-input:focus {
-            border-color: var(--saas-primary);
-            box-shadow: 0 0 0 0.2rem rgba(0, 97, 242, 0.1);
-            background-color: #fff;
-        }
-
         .sticky-header th {
             position: sticky;
             top: 0;
@@ -72,6 +50,7 @@
         }
 
         .x-small { font-size: 0.75rem; }
+
     </style>
 
     <div class="card profile-header-custom border-0 mb-4 text-white shadow-sm">
@@ -125,13 +104,13 @@
                     <label class="form-label-sm">Recherche Employé(e)</label>
                     <div class="input-group input-group-sm mb-0">
                         <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
-                        <input type="text" id="employee_selected" class="form-control border-0 bg-light" placeholder="Entrez un nom ou service...">
+                        <input type="text" id="employee_selected_consult" class="form-control border-0 bg-light" placeholder="Entrez un nom ou service...">
                     </div>
                     <div class="search-results-box bg-white">
-                        <select id="employee_list" class="form-select border-0 x-small" size="8" name="employee_id">
+                        <select id="employee_list_consult" class="form-select border-0 x-small" size="8" name="employee_id">
                             <option value="-1" disabled selected>En attente de saisie...</option>
                             @foreach($employees as $employee)
-                                <option value="{{ $employee->id }}" data-name="{{ strtolower($employee->firstname . ' ' . $employee->lastname) }}">
+                                <option value="{{ $employee->id }}" data-name="{{ strtolower($employee->firstname . ' ' . $employee->lastname) }}" {{ $selected_employee == $employee->id ? 'selected' : '' }}>
                                     {{ strtoupper($employee->lastname) }} {{ $employee->firstname }}
                                 </option>
                             @endforeach
@@ -184,7 +163,7 @@
 
         <div class="card shadow-sm border-0">
             <div class="card-body p-0">
-
+                @php $i=0 @endphp
                 @foreach($values->groupBy('period.title') as $periodTitle => $valuesInPeriod)
                     <div class="bg-primary bg-opacity-10 px-4 py-2 fw-bold text-primary border-bottom">
                         <i class="bi bi-calendar3 me-2"></i> Période : {{ $periodTitle }}
@@ -198,7 +177,14 @@
 
                         <div class="table-responsive">
                             <table class="table table-sm table-hover align-middle mb-4">
-                                <thead></thead>
+                                <thead>
+                                @foreach($employeeEntries as $entry)
+                                    <th class="px-4 py-3 text-center border-0" >
+                                        {{ $entry->relation->column->title }}
+                                    </th>
+                                @endforeach
+                                    <th class="px-4 py-3 text-center border-0"></th>
+                                </thead>
                                 <tbody>
                                 <tr>
                                     @foreach($employeeEntries as $entry)
@@ -245,6 +231,10 @@
                                             </div>
                                         </td>
                                     @endforeach
+                                    <td class="px-4 py-3 text-center border-0" >
+                                        <a href="{{ route('audit.values.edit', $valuesInPeriod[$i]->relation_id) }}" class="btn btn-sm btn-warning" ><i class="bi bi-pencil-square"></i></a>
+                                        <a href="{{ route('audit.values.delete', $valuesInPeriod[$i]->relation_id) }}" class="btn btn-sm btn-danger" ><i class="bi bi-trash"></i></a>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -256,5 +246,56 @@
 
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('employee_selected_consult');
+            const list = document.getElementById('employee_list_consult');
+
+            // 1. Create a master "Source of Truth" array from the initial HTML
+            const masterOptions = Array.from(list.options)
+                .filter(opt => opt.value !== "-1")
+                .map(opt => ({
+                    value: opt.value,
+                    text: opt.text,
+                    searchName: opt.getAttribute('data-name') || opt.text.toLowerCase()
+                }));
+
+            input.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+
+                // 2. Clear the current list (except the first "Wait" option)
+                list.innerHTML = '';
+
+                // 3. Filter the master list
+                const filtered = masterOptions.filter(item => item.searchName.includes(query));
+
+                if (filtered.length > 0) {
+                    // 4. Re-inject matching options
+                    filtered.forEach(item => {
+                        const newOpt = new Option(item.text, item.value);
+                        list.add(newOpt);
+                    });
+
+                    // 5. Auto-select the first match if searching
+                    if (query !== "") {
+                        list.selectedIndex = 0;
+                    }
+                } else {
+                    // 6. Handle "No results" case
+                    const noRes = new Option("Aucun résultat trouvé...", "-1");
+                    noRes.disabled = true;
+                    list.add(noRes);
+                }
+            });
+
+            // Sync input text when list is clicked
+            list.addEventListener('change', function() {
+                if (this.selectedIndex !== -1 && this.value !== "-1") {
+                    input.value = this.options[this.selectedIndex].text.trim();
+                }
+            });
+
+        });
+    </script>
 
 </x-layout>
