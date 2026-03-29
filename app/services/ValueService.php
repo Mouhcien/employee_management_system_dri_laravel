@@ -23,6 +23,14 @@ class ValueService
         return $this->valueRepository->All(Value::class, $this->with, $pages);
     }
 
+    public function getAllByTable($table_id, $pages=0){
+        return $this->valueRepository->AllByTable($table_id, $this->with, $pages);
+    }
+
+    public function getAllByPeriod($period_id, $pages=0){
+        return $this->valueRepository->AllByPeriod($period_id, $this->with, $pages);
+    }
+
     public function getOneById($id){
         return $this->valueRepository->One(Value::class, $this->with, $id);
     }
@@ -33,6 +41,7 @@ class ValueService
         $obj->relation_id = $data['relation_id'];
         $obj->employee_id = $data['employee_id'];
         $obj->period_id = $data['period_id'];
+        $obj->value = $data['value'];
 
         return $this->valueRepository->Add($obj);
     }
@@ -50,6 +59,9 @@ class ValueService
 
         if (isset($data['period_id']))
             $obj->period_id = $data['period_id'];
+
+        if (isset($data['value']))
+            $obj->value = $data['value'];
 
         return $this->valueRepository->Update($obj);
     }

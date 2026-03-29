@@ -31,8 +31,10 @@ class PeriodService
         $obj = new Period();
 
         $obj->title = $data['title'];
-        $obj->starting_date = $data['starting_date'];
-        $obj->end_date = $data['end_date'];
+        if (isset($data['starting_date']))
+            $obj->starting_date = $data['starting_date'];
+        if (isset($data['end_date']))
+            $obj->end_date = $data['end_date'];
 
         return $this->periodRepository->Add($obj);
     }

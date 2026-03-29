@@ -2,14 +2,20 @@
 
 namespace App\repositories;
 
+use App\Models\Employee;
+use App\Models\Period;
+
 class MainRepository
 {
 
     public function All($class, $relations, $pages) {
         $query = $class::with($relations);
 
-        if ($class === 'Employee')
-            $query->orderBy('lastname', 'ASC');
+        if ($class === Employee::class)
+            $query->orderBy('employees.lastname', 'ASC');
+
+        if ($class === Period::class)
+            $query->orderBy('periods.title', 'ASC');
 
         /*
         else

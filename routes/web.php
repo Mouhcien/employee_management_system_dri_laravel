@@ -357,6 +357,7 @@ Route::middleware('check.auth')->group(function (){
 
     Route::prefix('audit/values')->group(function(){
         Route::get('/', [ValueController::class, 'index'])->name('audit.values.index');
+        Route::get('/consult', [ValueController::class, 'consult'])->name('audit.values.consult');
         Route::post('/store', [ValueController::class, 'store'])->name('audit.values.store');
         Route::get('/create', [ValueController::class, 'create'])->name('audit.values.create');
         Route::get('/{id}', [ValueController::class, 'show'])->name('audit.values.show');

@@ -41,6 +41,26 @@ class EmployeeService
         return $this->employeeRepository->allByFilterValue($val, $pages);
     }
 
+    public function getAllByService($service_id, $pages = 0)
+    {
+        return $this->employeeRepository->allByService($service_id, $pages);
+    }
+
+    public function getAllByEntity($entity_id, $pages = 0)
+    {
+        return $this->employeeRepository->allByEntity($entity_id, $pages);
+    }
+
+    public function getAllBySector($sector_id, $pages = 0)
+    {
+        return $this->employeeRepository->allBySector($sector_id, $pages);
+    }
+
+    public function getAllBySection($section_id, $pages = 0)
+    {
+        return $this->employeeRepository->allBySection($section_id, $pages);
+    }
+
     public function getAllByFilterAdvanced($filter, $pages = 0)
     {
         return $this->employeeRepository->allByFilterAdvanced($filter, $pages);

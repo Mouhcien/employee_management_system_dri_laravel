@@ -18,6 +18,54 @@ class EmployeeRepository extends MainRepository
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
 
+    public function allByService($service_id, $pages = 0)
+    {
+        $query =  Employee::with($this->with)
+            ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->where('affectations.service_id', '=', $service_id)
+            ->where('affectations.finished_date', '=', null)
+            ->select('employees.*')
+            ->orderBy('lastname', 'ASC');
+
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
+    }
+
+    public function allByEntity($entity_id, $pages = 0)
+    {
+        $query =  Employee::with($this->with)
+            ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->where('affectations.entity_id', '=', $entity_id)
+            ->where('affectations.finished_date', '=', null)
+            ->select('employees.*')
+            ->orderBy('lastname', 'ASC');
+
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
+    }
+
+    public function allBySector($sector_id, $pages = 0)
+    {
+        $query =  Employee::with($this->with)
+            ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->where('affectations.sector_id', '=', $sector_id)
+            ->where('affectations.finished_date', '=', null)
+            ->select('employees.*')
+            ->orderBy('lastname', 'ASC');
+
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
+    }
+
+    public function allBySection($section_id, $pages = 0)
+    {
+        $query =  Employee::with($this->with)
+            ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->where('affectations.section_id', '=', $section_id)
+            ->where('affectations.finished_date', '=', null)
+            ->select('employees.*')
+            ->orderBy('lastname', 'ASC');
+
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
+    }
+
     public function allByFilterValue($val, $pages = 0)
     {
         $query = Employee::with($this->with)

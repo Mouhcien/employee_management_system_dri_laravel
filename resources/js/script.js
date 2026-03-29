@@ -126,4 +126,248 @@ $(function() {
 
     });
 
+    $('#sl_audit_service').on('change', function() {
+
+        let href = '/audit/values?';
+
+        const srv_id = $(this).val();
+        if (srv_id != "-1")
+            href += 'srv='+srv_id;
+
+        const table_id = $('#sl_table_performance').val();
+        if (table_id != "-1")
+            href += '&tbl='+table_id;
+
+        const entity_id = $('#sl_audit_entity').val();
+        if (entity_id != "-1" && entity_id != 'undefined')
+            href += '&ent='+entity_id;
+
+        const sector_id = $('#sl_audit_sector').val();
+        if (sector_id != "-1" && sector_id != 'undefined')
+            href += '&sectr='+sector_id;
+
+        const section_id = $('#sl_audit_section').val();
+        if (section_id != "-1" && section_id != 'undefined')
+            href += '&sect='+section_id;
+
+        window.location.href = href;
+
+    });
+
+    $('#sl_audit_entity').on('change', function() {
+
+        let href = '/audit/values?';
+
+        const entity_id = $(this).val();
+        if (entity_id != "-1")
+            href += 'ent='+entity_id;
+
+
+        const table_id = $('#sl_table_performance').val();
+        if (table_id != "-1")
+            href += '&tbl='+table_id;
+
+        const srv_id = $('#sl_audit_service').val();
+        if (srv_id != "-1")
+            href += '&srv='+srv_id;
+
+        const sector_id = $('#sl_audit_sector').val();
+        if (sector_id != "-1" && sector_id != 'undefined')
+            href += '&sectr='+sector_id;
+
+        const section_id = $('#sl_audit_section').val();
+        if (section_id != "-1" && section_id != 'undefined')
+            href += '&sect='+section_id;
+
+        window.location.href = href;
+
+    });
+
+    $('#sl_audit_sector').on('change', function() {
+
+        let href = '/audit/values?';
+
+        const sector_id = $(this).val();
+        if (sector_id != "-1")
+            href += 'sectr='+sector_id;
+
+        const table_id = $('#sl_table_performance').val();
+        if (table_id != "-1")
+            href += '&tbl='+table_id;
+
+        const srv_id = $('#sl_audit_service').val();
+        if (srv_id != "-1")
+            href += '&srv='+srv_id;
+
+        const entity_id = $('#sl_audit_entity').val();
+        if (entity_id != "-1" && entity_id != 'undefined')
+            href += '&ent='+entity_id;
+
+        window.location.href = href;
+
+    });
+
+    $('#sl_audit_section').on('change', function() {
+
+        let href = '/audit/values?';
+
+        const section_id = $(this).val();
+        if (section_id != "-1")
+            href += 'sect='+section_id;
+
+        const table_id = $('#sl_table_performance').val();
+        if (table_id != "-1")
+            href += '&tbl='+table_id;
+
+        const srv_id = $('#sl_audit_service').val();
+        if (srv_id != "-1")
+            href += '&srv='+srv_id;
+
+        const entity_id = $('#sl_audit_entity').val();
+        if (entity_id != "-1" && entity_id != 'undefined')
+            href += '&ent='+entity_id;
+
+        window.location.href = href;
+
+    });
+
+    /**********/
+
+    $('#sl_consult_table_performance').on('change', function() {
+
+        let href = '/audit/values/consult?';
+
+        const table_id = $(this).val();
+        if (table_id != "-1")
+            href += "tbl="+table_id
+
+        const period_id = $('#sl_consult_period').val();
+        if (period_id != "-1")
+            href += "&perd="+period_id
+
+        window.location.href = href;
+
+    });
+
+    $('#sl_consult_period').on('change', function() {
+
+        let href = '/audit/values/consult?';
+
+        const period_id = $(this).val();
+        if (period_id != "-1")
+            href += "perd="+period_id
+
+        const table_id = $('#sl_consult_table_performance').val();
+        if (table_id != "-1")
+            href += "&tbl="+table_id
+
+        window.location.href = href;
+
+    });
+
+    $('#sl_consult_audit_service').on('change', function() {
+
+        let href = '/audit/values/consult?';
+
+        const srv_id = $(this).val();
+        if (srv_id != "-1")
+            href += 'srv='+srv_id;
+
+        const table_id = $('#sl_consult_table_performance').val();
+        if (table_id != "-1")
+            href += '&tbl='+table_id;
+
+        const entity_id = $('#sl_consult_audit_entity').val();
+        if (entity_id != "-1" && entity_id != 'undefined')
+            href += '&ent='+entity_id;
+
+        const sector_id = $('#sl_consult_audit_sector').val();
+        if (sector_id != "-1" && sector_id != 'undefined')
+            href += '&sectr='+sector_id;
+
+        const section_id = $('#sl_consult_audit_section').val();
+        if (section_id != "-1" && section_id != 'undefined')
+            href += '&sect='+section_id;
+
+        window.location.href = href;
+
+    });
+
+    $('#sl_consult_audit_entity').on('change', function() {
+
+        let href = '/audit/values/consult?';
+
+        const entity_id = $(this).val();
+        if (entity_id != "-1")
+            href += 'ent='+entity_id;
+
+
+        const table_id = $('#sl_consult_table_performance').val();
+        if (table_id != "-1")
+            href += '&tbl='+table_id;
+
+        const srv_id = $('#sl_consult_audit_service').val();
+        if (srv_id != "-1")
+            href += '&srv='+srv_id;
+
+        const sector_id = $('#sl_consult_audit_sector').val();
+        if (sector_id != "-1" && sector_id != 'undefined')
+            href += '&sectr='+sector_id;
+
+        const section_id = $('#sl_consult_audit_section').val();
+        if (section_id != "-1" && section_id != 'undefined')
+            href += '&sect='+section_id;
+
+        window.location.href = href;
+
+    });
+
+    $('#sl_consult_audit_sector').on('change', function() {
+
+        let href = '/audit/values/consult?';
+
+        const sector_id = $(this).val();
+        if (sector_id != "-1")
+            href += 'sectr='+sector_id;
+
+        const table_id = $('#sl_consult_table_performance').val();
+        if (table_id != "-1")
+            href += '&tbl='+table_id;
+
+        const srv_id = $('#sl_consult_audit_service').val();
+        if (srv_id != "-1")
+            href += '&srv='+srv_id;
+
+        const entity_id = $('#sl_consult_audit_entity').val();
+        if (entity_id != "-1" && entity_id != 'undefined')
+            href += '&ent='+entity_id;
+
+        window.location.href = href;
+
+    });
+
+    $('#sl_consult_audit_section').on('change', function() {
+
+        let href = '/audit/values/consult?';
+
+        const section_id = $(this).val();
+        if (section_id != "-1")
+            href += 'sect='+section_id;
+
+        const table_id = $('#sl_consult_table_performance').val();
+        if (table_id != "-1")
+            href += '&tbl='+table_id;
+
+        const srv_id = $('#sl_consult_audit_service').val();
+        if (srv_id != "-1")
+            href += '&srv='+srv_id;
+
+        const entity_id = $('#sl_consult_audit_entity').val();
+        if (entity_id != "-1" && entity_id != 'undefined')
+            href += '&ent='+entity_id;
+
+        window.location.href = href;
+
+    });
+
 });

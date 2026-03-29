@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Relation::class, 'relation_id')->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Period::class, 'period_id')->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Employee::class, 'employee_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Employee::class, 'employee_id')->constrained()->cascadeOnDelete();
             $table->string('value')->nullable();
             $table->timestamps();
         });
