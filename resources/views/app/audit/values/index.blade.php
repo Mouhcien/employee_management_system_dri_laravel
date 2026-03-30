@@ -104,18 +104,18 @@
                 <div class="col-md-3 border-end">
                     <label class="form-label-sm">Configuration de base</label>
                     <div class="mb-2">
-                        <select class="form-select form-select-sm border-0 bg-light" id="sl_table_performance" name="table_id">
-                            <option value="-1">Sélectionner le Tableau de suivi</option>
+                        <select class="form-select form-select-sm border-0 bg-light" id="sl_table_performance" name="table_id" required>
+                            <option value="">Sélectionner le Tableau de suivi</option>
                             @foreach($tables as $table)
                                 <option value="{{ $table->id }}" {{ $table->id == $selected_table ? 'selected': '' }}>{{ $table->title }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div>
-                        <select class="form-select form-select-sm border-0 bg-light" name="period_id">
-                            <option value="-1">Sélectionner la période de suivi</option>
+                        <select class="form-select form-select-sm border-0 bg-light" name="period_id" required>
+                            <option value="">Sélectionner la période de suivi</option>
                             @foreach($periods as $period)
-                                <option value="{{ $period->id }}">{{ $period->title }}</option>
+                                <option value="{{ $period->id }}">{{ $period->title }} {{$period->year}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -128,7 +128,7 @@
                         <input type="text" id="employee_selected" class="form-control border-0 bg-light" placeholder="Entrez un nom ou service...">
                     </div>
                     <div class="search-results-box bg-white">
-                        <select id="employee_list" class="form-select border-0 x-small" size="8" name="employee_id">
+                        <select id="employee_list" class="form-select border-0 x-small" size="8" name="employee_id" required>
                             <option value="-1" disabled selected>En attente de saisie...</option>
                             @foreach($employees as $employee)
                                 <option value="{{ $employee->id }}" data-name="{{ strtolower($employee->firstname . ' ' . $employee->lastname) }}">
@@ -176,7 +176,7 @@
                     @endif
 
                     <button type="button" class="btn btn-primary fw-bold py-2 shadow-sm mt-2">
-                        <i class="bi bi-download me-2"></i>Téléchaarger le fichier
+                        <i class="bi bi-download me-2"></i>Téléchaarger le modèle du fichier
                     </button>
                 </div>
             </div>
@@ -220,7 +220,7 @@
                                            name="values[]"
                                            class="form-control table-input fw-bold mx-auto"
                                            style="max-width: 120px;"
-                                           placeholder="000">
+                                           placeholder="000" required>
                                     <input type="hidden" name="relations[]" value="{{ $relation->id }}">
                                 </td>
                             @endforeach

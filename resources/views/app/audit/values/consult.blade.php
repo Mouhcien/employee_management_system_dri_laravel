@@ -94,7 +94,7 @@
                         <select class="form-select form-select-sm border-0 bg-light" name="period_id" id="sl_consult_period">
                             <option value="-1">Sélectionner la période de suivi</option>
                             @foreach($periods as $period)
-                                <option value="{{ $period->id }}" {{ $selected_period == $period->id ? 'selected' : '' }}>{{ $period->title }}</option>
+                                <option value="{{ $period->id }}" {{ $selected_period == $period->id ? 'selected' : '' }}>{{ $period->title }} {{$period->year}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -163,83 +163,114 @@
 
         <div class="card shadow-sm border-0">
             <div class="card-body p-0">
-                @php $i=0 @endphp
-                @foreach($values->groupBy('period.title') as $periodTitle => $valuesInPeriod)
-                    <div class="bg-primary bg-opacity-10 px-4 py-2 fw-bold text-primary border-bottom">
-                        <i class="bi bi-calendar3 me-2"></i> Période : {{ $periodTitle }}
+                {{-- 1. GROUP BY EMPLOYEE --}}
+                @foreach($values->groupBy(fn($item) => $item->employee->lastname . ' ' . $item->employee->firstname) as $employeeName => $employeeValues)
+
+                    <div class="px-4 py-3 bg-secondary bg-opacity-10 border-bottom d-flex align-items-center">
+                        <div class="bg-white p-2 rounded-circle shadow-sm me-3">
+                            <i class="bi bi-person-badge text-primary fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 fw-bold text-dark text-uppercase">{{ $employeeName }}</h5>
+                            <small class="text-muted small">Historique des performances</small>
+                        </div>
                     </div>
 
-                    @foreach($valuesInPeriod->groupBy(fn($item) => $item->employee->lastname . ' ' . $item->employee->firstname) as $employeeName => $employeeEntries)
-                        <div class="px-4 py-2 bg-light border-bottom d-flex align-items-center">
-                            <i class="bi bi-person-fill me-2 text-muted"></i>
-                            <span class="fw-bold small text-uppercase">{{ $employeeName }}</span>
+                    {{-- 2. GROUP BY PERIOD AND SORT DESCENDING --}}
+                    @foreach($employeeValues->groupBy('period.title')->sortByDesc(fn($group, $key) => $key) as $periodTitle => $valuesInPeriod)
+                        <div class="px-4 py-2 bg-light border-bottom">
+                    <span class="fw-bold small text-primary">
+                        <i class="bi bi-calendar3 me-2"></i> Période : {{ $periodTitle }} {{ $valuesInPeriod->first()->period->year }}
+                    </span>
                         </div>
 
-                        <div class="table-responsive">
-                            <table class="table table-sm table-hover align-middle mb-4">
-                                <thead>
-                                @foreach($employeeEntries as $entry)
-                                    <th class="px-4 py-3 text-center border-0" >
-                                        {{ $entry->relation->column->title }}
-                                    </th>
-                                @endforeach
-                                    <th class="px-4 py-3 text-center border-0"></th>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    @foreach($employeeEntries as $entry)
-                                        <td class="px-4 py-3 text-center border-0">
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <input type="number"
-                                                       class="form-control form-control-sm fw-bold text-center ajax-save-input"
-                                                       style="max-width: 90px;"
-                                                       data-id="{{ $entry->id }}"
-                                                       value="{{ $entry->value }}" disabled>
+                        <div class="p-4">
+                            {{-- 3. GROUP BY TABLE TITLE --}}
+                            @foreach($valuesInPeriod->groupBy(fn($item0) => $item0->relation->table->title) as $tableTitle => $tableEntries)
+                                <div class="card border shadow-sm mb-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle mb-0">
+                                            <thead class="bg-white">
+                                            <tr>
+                                                <th class="px-4 py-3 text-muted fw-bold border-0" style="width: 200px;">
+                                                    <span class="badge bg-primary px-3 text-uppercase">{{ $tableTitle }}</span>
+                                                </th>
+                                                @foreach($tableEntries as $entry)
+                                                    <th class="px-4 py-3 text-center border-0 text-uppercase x-small text-secondary">
+                                                        {{ $entry->relation->column->title }}
+                                                    </th>
+                                                @endforeach
+                                                <th class="px-4 py-3 text-end border-0"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td class="px-4 py-3 border-0 small text-muted fst-italic">
+                                                    Valeurs saisies
+                                                </td>
+                                                @foreach($tableEntries as $entry)
+                                                    <td class="px-4 py-3 text-center border-0">
+                                                        <div class="d-flex align-items-center justify-content-center">
+                                                            <input type="number"
+                                                                   class="form-control form-control-sm fw-bold text-center border-0 bg-light"
+                                                                   style="max-width: 80px; border-radius: 6px;"
+                                                                   value="{{ $entry->value }}" disabled>
 
-                                                {{-- COMPARISON LOGIC --}}
-                                                @php
-                                                    // 1. Find the previous period key (relative to current period loop)
-                                                    $periodKeys = $values->groupBy('period.title')->keys()->toArray();
-                                                    $currentIndex = array_search($periodTitle, $periodKeys);
-                                                    $prevPeriodTitle = $periodKeys[$currentIndex + 1] ?? null; // +1 because usually newest is first
+                                                            {{-- COMPARISON LOGIC --}}
+                                                            @php
+                                                                // Get period keys for this employee, sorted DESC
+                                                                $employeePeriodKeys = $employeeValues->groupBy('period.title')
+                                                                    ->sortByDesc(fn($group, $key) => $key)
+                                                                    ->keys()
+                                                                    ->toArray();
 
-                                                    $trend = null;
-                                                    if ($prevPeriodTitle) {
-                                                        // 2. Find the value for the same employee/column in that previous period
-                                                        $prevValue = $values->where('period.title', $prevPeriodTitle)
-                                                            ->where('employee_id', $entry->employee_id)
-                                                            ->where('relation_id', $entry->relation_id) // Match the specific metric/column
-                                                            ->first()?->value;
+                                                                $currentIndex = array_search($periodTitle, $employeePeriodKeys);
 
-                                                        if ($prevValue !== null) {
-                                                            if ($entry->value > $prevValue) $trend = 'up';
-                                                            elseif ($entry->value < $prevValue) $trend = 'down';
-                                                        }
-                                                    }
-                                                @endphp
+                                                                // Since it's DESC, the "Previous" period is the NEXT index (+1)
+                                                                $prevPeriodTitle = $employeePeriodKeys[$currentIndex + 1] ?? null;
 
-                                                {{-- TREND ARROW --}}
-                                                <span class="ms-2">
-                                                    @if($trend === 'up')
-                                                        <i class="bi bi-arrow-up-right-circle-fill text-success" title="Higher than previous period"></i>
-                                                    @elseif($trend === 'down')
-                                                        <i class="bi bi-arrow-down-right-circle-fill text-danger" title="Lower than previous period"></i>
-                                                    @else
-                                                        <i class="bi bi-dash-circle text-muted opacity-25"></i>
-                                                    @endif
-                                                </span>
-                                            </div>
-                                        </td>
-                                    @endforeach
-                                    <td class="px-4 py-3 text-center border-0" >
-                                        <a href="{{ route('audit.values.edit', $valuesInPeriod[$i]->relation_id) }}" class="btn btn-sm btn-warning" ><i class="bi bi-pencil-square"></i></a>
-                                        <a href="{{ route('audit.values.delete', $valuesInPeriod[$i]->relation_id) }}" class="btn btn-sm btn-danger" ><i class="bi bi-trash"></i></a>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                                                $trend = null;
+                                                                if ($prevPeriodTitle) {
+                                                                    $prevValue = $employeeValues->where('period.title', $prevPeriodTitle)
+                                                                        ->where('relation_id', $entry->relation_id)
+                                                                        ->first()?->value;
+
+                                                                    if ($prevValue !== null) {
+                                                                        if ($entry->value > $prevValue) $trend = 'up';
+                                                                        elseif ($entry->value < $prevValue) $trend = 'down';
+                                                                    }
+                                                                }
+                                                            @endphp
+
+                                                            <span class="ms-2">
+                                                        @if($trend === 'up')
+                                                                    <i class="bi bi-caret-up-fill text-success" title="Supérieur à {{ $prevPeriodTitle }}"></i>
+                                                                @elseif($trend === 'down')
+                                                                    <i class="bi bi-caret-down-fill text-danger" title="Inférieur à {{ $prevPeriodTitle }}"></i>
+                                                                @else
+                                                                    <i class="bi bi-dash text-muted opacity-50"></i>
+                                                                @endif
+                                                    </span>
+                                                        </div>
+                                                    </td>
+                                                @endforeach
+
+                                                <td class="px-4 py-3 text-end border-0">
+                                                    <div class="btn-group shadow-sm">
+                                                        <a href="{{ route('audit.values.edit', $entry->relation_id) }}" class="btn btn-sm btn-white border text-warning"><i class="bi bi-pencil-square"></i></a>
+                                                        <a href="{{ route('audit.values.delete', $entry->relation_id) }}" class="btn btn-sm btn-white border text-danger"><i class="bi bi-trash"></i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     @endforeach
+
+                    <div class="py-2 bg-white"></div> {{-- Spacer --}}
                 @endforeach
             </div>
         </div>

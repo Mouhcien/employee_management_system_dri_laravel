@@ -182,6 +182,16 @@ class ValueController extends Controller
                 $values = $this->valueService->getAllByEmployee($selected_employee, 0);
             }
 
+            if ($request->has('emp') || $request->has('perd') || $request->has('tbl')) {
+                $filter['table_id'] = $selected_table;
+                $filter['period_id'] = $selected_period;
+                $filter['employee_id'] = $selected_employee;
+
+                $values = $this->valueService->getAllByFilters($filter, 0);
+            }
+
+            //dd($values);
+
             return view('app.audit.values.consult', [
                 'tables' => $tables,
                 'periods' => $periods,

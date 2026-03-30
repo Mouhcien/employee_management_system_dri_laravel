@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->date('starting_date')->nullable();
             $table->date('end_date')->nullable();
+            $table->integer('year')->default(2026);
             $table->timestamps();
         });
     }

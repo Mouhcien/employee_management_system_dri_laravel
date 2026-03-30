@@ -78,6 +78,7 @@
                             <tr>
                                 <th class="ps-4">ID</th>
                                 <th>Période</th>
+                                <th>Année</th>
                                 <th>Dates (Début - Fin)</th>
                                 <th class="text-end pe-4">Actions</th>
                             </tr>
@@ -87,6 +88,7 @@
                                 <tr>
                                     <td class="ps-4 text-muted small">#{{ $period->id }}</td>
                                     <td><span class="fw-bold">{{ $period->title }}</span></td>
+                                    <td><span class="fw-bold">{{ $period->year }}</span></td>
                                     <td>
                                         <div class="small">
                                             <i class="bi bi-calendar3 text-primary me-1"></i>
@@ -125,6 +127,10 @@
                         <div class="mb-3">
                             <label class="form-label small fw-bold text-uppercase text-muted">Nom de la Période</label>
                             <input type="text" name="title" class="form-control" placeholder="ex: Trimestre 1" value="{{ is_null($periodObj) ? '' : $periodObj->title }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase text-muted">Année de la Période</label>
+                            <input type="number" name="year" class="form-control" placeholder="ex: 2025,2026,..." value="{{ is_null($periodObj) ? '' : $periodObj->year }}">
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">

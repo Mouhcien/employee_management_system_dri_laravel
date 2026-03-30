@@ -35,6 +35,8 @@ class PeriodService
             $obj->starting_date = $data['starting_date'];
         if (isset($data['end_date']))
             $obj->end_date = $data['end_date'];
+        if (isset($data['year']))
+            $obj->year = $data['year'];
 
         return $this->periodRepository->Add($obj);
     }
@@ -52,6 +54,9 @@ class PeriodService
 
         if (isset($data['end_date']))
             $obj->end_date = $data['end_date'];
+
+        if (isset($data['year']))
+            $obj->year = $data['year'];
 
         return $this->periodRepository->Update($obj);
     }

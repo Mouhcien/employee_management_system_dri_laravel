@@ -35,6 +35,11 @@ class ValueService
         return $this->valueRepository->AllByEmployee($employee_id, $this->with, $pages);
     }
 
+    public function getAllByFilters($filter, $pages=0){
+        return $this->valueRepository->AllByFilter($filter, $this->with, $pages);
+    }
+
+
     public function getOneById($id){
         return $this->valueRepository->One(Value::class, $this->with, $id);
     }

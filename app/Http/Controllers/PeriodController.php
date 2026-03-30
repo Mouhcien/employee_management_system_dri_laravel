@@ -43,6 +43,9 @@ class PeriodController extends Controller
             if (!is_null($request->end_date))
                 $data['end_date'] = $request->end_date;
 
+            if (!is_null($request->year))
+                $data['year'] = $request->year;
+
             $result = $this->periodService->create($data);
 
             if ($result)

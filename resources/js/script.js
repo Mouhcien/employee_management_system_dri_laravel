@@ -245,6 +245,10 @@ $(function() {
         if (period_id != "-1")
             href += "&perd="+period_id
 
+        const employee_id = $('#employee_list_consult').val();
+        if (employee_id != "-1")
+            href += "&emp="+employee_id
+
         window.location.href = href;
 
     });
@@ -260,6 +264,10 @@ $(function() {
         const table_id = $('#sl_consult_table_performance').val();
         if (table_id != "-1")
             href += "&tbl="+table_id
+
+        const employee_id = $('#employee_list_consult').val();
+        if (employee_id != "-1")
+            href += "&emp="+employee_id
 
         window.location.href = href;
 
@@ -370,7 +378,7 @@ $(function() {
 
     });
 
-    $('#employee_list_consult').on('change', function() {
+    $('#employee_list_consult').on('click', function() {
 
         let href = '/audit/values/consult?';
 
@@ -381,6 +389,10 @@ $(function() {
         const table_id = $('#sl_consult_table_performance').val();
         if (table_id != "-1")
             href += '&tbl='+table_id;
+
+        const period_id = $('#sl_consult_period').val();
+        if (period_id != "-1")
+            href += "&perd="+period_id
 
         const srv_id = $('#sl_consult_audit_service').val();
         if (srv_id != "-1")

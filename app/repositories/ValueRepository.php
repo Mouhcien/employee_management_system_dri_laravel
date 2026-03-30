@@ -41,4 +41,22 @@ class ValueRepository extends MainRepository
 
     }
 
+    public function AllByFilter($filter, $with, $pages) {
+
+        $query = Value::with($with)
+            ->join('relations', 'relations.id', '=', 'values.relation_id')
+            ->select('values.*')
+            ->orderBy('values.period_id', 'DESC');
+
+            if (isset($filter['table_id']))
+                $query->where('relations.table_id', '=', $filter['table_id']);
+            if (isset($filter['employee_id']))
+                $query->where('values.employee_id', '=', $filter['employee_id']);
+            if (isset($filter['period_id']))
+                $query->where('values.period_id', '=', $filter['period_id']);
+
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
+
+    }
+
 }
