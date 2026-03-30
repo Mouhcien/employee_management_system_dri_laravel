@@ -59,4 +59,15 @@ class ValueRepository extends MainRepository
 
     }
 
+    public function AllByIds($values_id, $with) {
+
+        $query = Value::with($with)
+            ->whereIn('values.id', $values_id)
+            ->select('values.*')
+            ->orderBy('values.period_id', 'DESC');
+
+        return $query->get();
+
+    }
+
 }

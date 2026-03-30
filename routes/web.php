@@ -361,9 +361,9 @@ Route::middleware('check.auth')->group(function (){
         Route::post('/store', [ValueController::class, 'store'])->name('audit.values.store');
         Route::get('/create', [ValueController::class, 'create'])->name('audit.values.create');
         Route::get('/{id}', [ValueController::class, 'show'])->name('audit.values.show');
-        Route::get('/edit/{id}', [ValueController::class, 'edit'])->name('audit.values.edit');
-        Route::post('/update/{id}', [ValueController::class, 'update'])->name('audit.values.update');
-        Route::get('/delete/{id}', [ValueController::class, 'delete'])->name('audit.values.delete');
+        Route::get('/edit/{id}/{attr}', [ValueController::class, 'edit'])->name('audit.values.edit');
+        Route::post('/update', [ValueController::class, 'update'])->name('audit.values.update');
+        Route::get('/delete/{attr}', [ValueController::class, 'delete'])->name('audit.values.delete');
     });
 
     /*

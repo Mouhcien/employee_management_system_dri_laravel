@@ -39,6 +39,9 @@ class ValueService
         return $this->valueRepository->AllByFilter($filter, $this->with, $pages);
     }
 
+    public function getAllByIds($values_id){
+        return $this->valueRepository->AllByIds($values_id, $this->with);
+    }
 
     public function getOneById($id){
         return $this->valueRepository->One(Value::class, $this->with, $id);

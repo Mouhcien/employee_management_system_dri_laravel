@@ -141,7 +141,7 @@
                         <div class="bg-light rounded-4 p-4 text-center border border-dashed border-secondary-subtle">
                             <i class="bi bi-layout-sidebar-inset text-muted opacity-50 fs-2"></i>
                             <p class="text-muted mb-0 mt-2 small">Aucune colonne n'a été attribuée à ce tableau.</p>
-                            <button class="btn btn-sm btn-link fw-bold text-decoration-none mt-1">Ajouter des colonnes</button>
+                            <a href="{{ route('audit.tables.edit', $table) }}" class="btn btn-sm btn-link fw-bold text-decoration-none mt-1">Ajouter des colonnes</a>
                         </div>
                     @endif
                 </div>

@@ -281,9 +281,9 @@
                     {{-- 2. GROUP BY PERIOD AND SORT DESCENDING --}}
                     @foreach($employeeValues->groupBy('period.title')->sortByDesc(fn($group, $key) => $key) as $periodTitle => $valuesInPeriod)
                         <div class="px-4 py-2 bg-light border-bottom">
-                    <span class="fw-bold small text-primary">
-                        <i class="bi bi-calendar3 me-2"></i> Période : {{ $periodTitle }} {{ $valuesInPeriod->first()->period->year }}
-                    </span>
+                            <span class="fw-bold small text-primary">
+                                <i class="bi bi-calendar3 me-2"></i> Période : {{ $periodTitle }} {{ $valuesInPeriod->first()->period->year }}
+                            </span>
                         </div>
 
                         <div class="p-4">
@@ -310,6 +310,7 @@
                                                 <td class="px-4 py-3 border-0 small text-muted fst-italic">
                                                     Valeurs saisies
                                                 </td>
+                                                @php $attr = ""; @endphp
                                                 @foreach($tableEntries as $entry)
                                                     <td class="px-4 py-3 text-center border-0">
                                                         <div class="d-flex align-items-center justify-content-center">
@@ -355,12 +356,15 @@
                                                             </span>
                                                         </div>
                                                     </td>
+                                                    @php $attr .= $entry->id."-"  @endphp
                                                 @endforeach
 
                                                 <td class="px-4 py-3 text-end border-0">
                                                     <div class="btn-group shadow-sm">
-                                                        <a href="{{ route('audit.values.edit', $entry->relation_id) }}" class="btn btn-sm btn-white border text-warning"><i class="bi bi-pencil-square"></i></a>
-                                                        <a href="{{ route('audit.values.delete', $entry->relation_id) }}" class="btn btn-sm btn-white border text-danger"><i class="bi bi-trash"></i></a>
+                                                        <a href="{{ route('audit.values.edit', ['id' => $entry->relation_id, 'attr' => $attr]) }}" class="btn btn-sm btn-white border text-warning"><i class="bi bi-pencil-square"></i></a>
+                                                        <button class="dropdown-item btn btn-sm btn-white border text-danger" data-bs-toggle="modal" data-bs-target="#deleteValueElementModal-{{ $tableEntries[0]->id }}">
+                                                            <i class="bi bi-trash3 me-2"></i>
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -370,6 +374,14 @@
                                 </div>
                             @endforeach
                         </div>
+
+                            @foreach($valuesInPeriod->groupBy(fn($item0) => $item0->relation->table->title) as $tableTitle => $tableEntries)
+                                <x-delete-model
+                                    href="{{ route('audit.values.delete', ['attr' => $attr]) }}"
+                                    message="Attention : La suppression de ces éléments est définitive."
+                                    title="Confirmation de Suppression"
+                                    target="deleteValueElementModal-{{ $tableEntries[0]->id }}" />
+                            @endforeach
                     @endforeach
 
                     <div class="py-2 bg-white"></div> {{-- Spacer --}}

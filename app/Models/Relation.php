@@ -14,4 +14,7 @@ class Relation extends Model
         return $this->belongsTo(Column::class);
     }
 
+    public function values() {
+        return $this->hasMany(Value::class);
+    }
 }

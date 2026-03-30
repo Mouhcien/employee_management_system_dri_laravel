@@ -97,7 +97,7 @@
         </div>
     </div>
 
-    <form action="{{ route('audit.values.store') }}" method="POST">
+    <form action="{{ is_null($values) ? route('audit.values.store') : route('audit.values.update') }}" method="POST">
         @csrf
         <div class="filter-section border-0 shadow-sm">
             <div class="row g-4 align-items-start">
@@ -115,7 +115,7 @@
                         <select class="form-select form-select-sm border-0 bg-light" name="period_id" required>
                             <option value="">Sélectionner la période de suivi</option>
                             @foreach($periods as $period)
-                                <option value="{{ $period->id }}">{{ $period->title }} {{$period->year}}</option>
+                                <option value="{{ $period->id }}" {{ $selected_period == $period->period_id ? 'selected' : '' }}>{{ $period->title }} {{$period->year}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -131,7 +131,8 @@
                         <select id="employee_list" class="form-select border-0 x-small" size="8" name="employee_id" required>
                             <option value="-1" disabled selected>En attente de saisie...</option>
                             @foreach($employees as $employee)
-                                <option value="{{ $employee->id }}" data-name="{{ strtolower($employee->firstname . ' ' . $employee->lastname) }}">
+                                <option value="{{ $employee->id }}" data-name="{{ strtolower($employee->firstname . ' ' . $employee->lastname) }}"
+                                    {{ (!is_null($values) && $values[0]->employee_id == $employee->id) ? 'selected' : '' }}>
                                     {{ strtoupper($employee->lastname) }} {{ $employee->firstname }}
                                 </option>
                             @endforeach
@@ -192,9 +193,15 @@
                 <button class="btn btn-light border btn-sm text-secondary px-3">
                     <i class="bi bi-file-earmark-excel me-1"></i>Modèle
                 </button>
-                <button type="submit" class="btn btn-success btn-sm px-4 fw-bold shadow-sm">
-                    <i class="bi bi-save2 me-2"></i>Enregistrer
-                </button>
+                @if (is_null($values))
+                    <button type="submit" class="btn btn-success btn-sm px-4 fw-bold shadow-sm">
+                        <i class="bi bi-save2 me-2"></i>Enregistrer
+                    </button>
+                @else
+                    <button type="submit" class="btn btn-warning btn-sm px-4 fw-bold shadow-sm">
+                        <i class="bi bi-save2 me-2"></i>Mettre à jour
+                    </button>
+                @endif
             </div>
         </div>
 
@@ -214,15 +221,21 @@
                         </thead>
                         <tbody>
                         <tr class="bg-light bg-opacity-50">
+                            @php $j = 0; @endphp
                             @foreach($tableObj->relations->unique('column_id') as $relation)
                                 <td class="px-4 py-4 text-center">
                                     <input type="number"
                                            name="values[]"
                                            class="form-control table-input fw-bold mx-auto"
                                            style="max-width: 120px;"
+                                           value="{{ $values[$j]->value ?? '' }}"
                                            placeholder="000" required>
                                     <input type="hidden" name="relations[]" value="{{ $relation->id }}">
+                                    @if (!is_null($values))
+                                        <input type="hidden" name="ids[]" value="{{ $values[$j]->id ?? '' }}">
+                                    @endif
                                 </td>
+                                @php $j++; @endphp
                             @endforeach
                         </tr>
                         </tbody>
