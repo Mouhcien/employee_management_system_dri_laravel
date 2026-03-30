@@ -170,6 +170,25 @@
         </div>
     @endif
 
+    @if (auth()->user()->profile_id == 4)
+        <div class="sidebar-section-title mt-3 mb-1 px-3">Performance</div>
+        <div class="sidebar-group mb-3">
+            <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('audit.values.*') ? 'text-primary bg-primary-subtle' : '' }}"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#menuPerformance">
+            <span class="d-flex align-items-center">
+                <i class="bi bi-person-workspace me-2 fs-5"></i>
+                <span class="sidebar-text fw-semibold">Évaluations Périodiques</span>
+            </span>
+                <i class="bi bi-chevron-down small transition-base"></i>
+            </button>
+            <div class="collapse {{ request()->routeIs('audit.values.*') ? 'show' : '' }}" id="menuPerformance">
+                <ul class="nav flex-column ms-2 mt-1">
+                    <li><a href="{{ route('audit.values.select') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.view') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Superviser l'évaluation</a></li>
+                </ul>
+            </div>
+        </div>
+    @endif
+
 
 </nav>
 

@@ -98,4 +98,94 @@ $(function() {
 
         navigateWithFilters(baseUrl, { srv: '#sl_aff_service_id', ent: '#sl_aff_entity_id' });
     });
+
+    $('#sl_audit_view_service').on('change', function() {
+
+        let href = '/audit/values/view?';
+
+        const srv = $(this).val();
+        if (srv != '-1' && srv != undefined) {
+            href += 'srv='+srv;
+        }
+
+        window.location.href = href;
+
+    });
+
+    $('#sl_audit_view_entity').on('change', function() {
+
+        let href = '/audit/values/view?';
+
+        const ent = $(this).val();
+
+        if (ent != '-1' && ent != undefined) {
+            href += 'ent='+ent;
+        }
+
+        const srv = $('#sl_audit_view_service').val();
+        if (srv != '-1' && srv != undefined) {
+            href += '&srv='+srv;
+        }
+
+        const sectr = $('#sl_audit_view_sector').val();
+        if (sectr != '-1' && sectr != undefined) {
+            href += '&sectr='+sectr;
+        }
+
+        const sect = $('#sl_audit_view_section').val();
+        if (sect != '-1' && sect != undefined) {
+            href += '&sect=' + sect;
+        }
+
+        window.location.href = href;
+
+    });
+
+    $('#sl_audit_view_sector').on('change', function() {
+
+        let href = '/audit/values/view?';
+
+        const sectr = $(this).val();
+        if (sectr != '-1' && sectr != undefined) {
+            href += 'sectr='+sectr;
+        }
+
+        const srv = $('#sl_audit_view_service').val();
+        if (srv != '-1' && srv != undefined) {
+            href += '&srv='+srv;
+        }
+
+        const ent = $('#sl_audit_view_entity').val();
+        if (ent != '-1' && ent != undefined) {
+            href += '&ent='+ent;
+        }
+
+        window.location.href = href;
+
+    });
+
+    $('#sl_audit_view_section').on('change', function() {
+
+        let href = '/audit/values/view?';
+
+        const sect = $(this).val();
+        if (sect != '-1' && sect != undefined) {
+            href += 'sect='+sect;
+        }
+
+        const srv = $('#sl_audit_view_service').val();
+        if (srv != '-1' && srv != undefined) {
+            href += '&srv='+srv;
+        }
+
+        const ent = $('#sl_audit_view_entity').val();
+        if (ent != '-1' && ent != undefined) {
+            href += '&ent='+ent;
+        }
+
+        window.location.href = href;
+
+    });
+
+
 });

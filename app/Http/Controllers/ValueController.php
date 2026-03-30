@@ -375,4 +375,61 @@ class ValueController extends Controller
             return back()->with('error', $exception->getMessage());
         }
     }
+
+    public function select(Request $request) {
+        try {
+            $this->pages = 10;
+
+            $periods = $this->periodService->getAll(0);
+            $employees = $this->employeeService->getAll($this->pages);
+            $services = $this->serviceEntityService->getAll(0);
+            $entities = $this->entityService->getAll(0);
+            $sectors = $this->sectorEntityService->getAll(0);
+            $sections = $this->sectionEntityService->getAll(0);
+
+            $selected_service = null;
+            if ($request->has('srv')) {
+                $selected_service = $request->query('srv');
+                $entities = $this->entityService->getAllByService($selected_service, 0);
+                $employees = $this->employeeService->getAllByService($selected_service, $this->pages);
+            }
+
+            $selected_entity = null;
+            if ($request->has('ent')) {
+                $selected_entity = $request->query('ent');
+                $sectors = $this->sectorEntityService->getAllByEntity($selected_entity, 0);
+                $sections = $this->sectionEntityService->getAllByEntity($selected_entity, 0);
+                $employees = $this->employeeService->getAllByEntity($selected_entity, $this->pages);
+            }
+
+            $selected_sector = null;
+            if ($request->has('sectr')) {
+                $selected_sector = $request->query('sectr');
+                $employees = $this->employeeService->getAllBySector($selected_sector, $this->pages);
+            }
+
+            $selected_section = null;
+            if ($request->has('sect')) {
+                $selected_section = $request->query('sect');
+                $employees = $this->employeeService->getAllBySection($selected_section, $this->pages);
+            }
+
+
+            return view('app.audit.values.select', [
+                'periods' => $periods,
+                'employees' => $employees,
+                'services' => $services,
+                'entities' => $entities,
+                'sectors' => $sectors,
+                'sections' => $sections,
+                'selected_service' => $selected_service,
+                'selected_entity' => $selected_entity,
+                'selected_sector' => $selected_sector,
+                'selected_section' => $selected_section,
+            ]);
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
 }
