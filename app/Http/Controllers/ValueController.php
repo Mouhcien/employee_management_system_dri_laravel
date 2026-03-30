@@ -27,6 +27,8 @@ class ValueController extends Controller
     private SectionEntityService $sectionEntityService;
     private PeriodService $periodService;
 
+    private $pages = 10;
+
     /**
      * @param ValueService $valueService
      */
@@ -123,7 +125,6 @@ class ValueController extends Controller
 
     public function consult(Request $request) {
         try {
-
             $tables = $this->tableService->getAll(0);
             $periods = $this->periodService->getAll(0);
             $employees = $this->employeeService->getAll(0);
@@ -131,7 +132,9 @@ class ValueController extends Controller
             $entities = $this->entityService->getAll(0);
             $sectors = $this->sectorEntityService->getAll(0);
             $sections = $this->sectionEntityService->getAll(0);
-            $values = $this->valueService->getAll(0);
+            //$values = $this->valueService->getAll($this->pages);
+
+            $values = [];
 
             $selected_table = null;
             $tableObj = null;

@@ -8,6 +8,11 @@
             --saas-border: #e3e6f0;
         }
 
+        .fw-800 { font-weight: 800; }
+        .tracking-tight { letter-spacing: -0.02em; }
+        .tracking-widest { letter-spacing: 0.1em; }
+        .bg-warning-emphasis { background-color: #fff3cd !important; color: #664d03 !important; }
+
         .profile-header-custom {
             background: linear-gradient(135deg, var(--saas-primary) 0%, var(--saas-secondary) 100%);
             border-radius: 12px;
@@ -51,6 +56,30 @@
 
         .x-small { font-size: 0.75rem; }
 
+
+        /* Fixed Button Styling */
+         .fixed-bottom-left {
+             position: fixed;
+             left: 25px;
+             bottom: 25px;
+             z-index: 1050; /* Above all tables */
+             transition: transform 0.3s ease;
+         }
+
+        .fixed-bottom-left:hover {
+            transform: scale(1.1);
+        }
+
+        /* Animation for the filter section */
+        #filterCollapse.collapsing {
+            transition: height 0.35s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        #filterCollapse.show {
+            opacity: 1;
+        }
+
     </style>
 
     <div class="card profile-header-custom border-0 mb-4 text-white shadow-sm">
@@ -68,17 +97,22 @@
                     </div>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <div class="d-inline-flex align-items-center bg-black bg-opacity-10 px-3 py-2 rounded-pill">
-                        <span class="pulse-indicator me-2"></span>
-                        <span class="small fw-bold">Session Active</span>
-                    </div>
+                    <a href="{{ route('audit.values.consult') }}"
+                       class="btn btn-light text-primary border shadow-sm rounded-pill px-3 fw-bold d-inline-flex align-items-center"
+                       title="Actualiser les données">
+                        <i class="bi bi-arrow-clockwise me-2"></i> Actualiser
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
     <div>
-        <div class="filter-section border-0 shadow-sm">
+        <div class="filter-section border-0 shadow-sm position-relative collapse show" id="filterCollapse">
+
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-3"
+                    data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-label="Close"></button>
+
             <div class="row g-4 align-items-start">
                 <div class="col-md-3 border-end">
                     <label class="form-label-sm">Configuration de base</label>
@@ -161,18 +195,86 @@
             </div>
         </div>
 
+        <button class="btn btn-primary rounded-circle shadow-lg d-flex align-items-center justify-content-center fixed-bottom-left"
+                id="btnShowFilters"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#filterCollapse"
+                style="width: 55px; height: 55px; display: none !important;">
+            <i class="bi bi-sliders2 fs-4"></i>
+        </button>
+
         <div class="card shadow-sm border-0">
             <div class="card-body p-0">
                 {{-- 1. GROUP BY EMPLOYEE --}}
+                @php $i=0; @endphp
+                @if (count($values) != 0)
                 @foreach($values->groupBy(fn($item) => $item->employee->lastname . ' ' . $item->employee->firstname) as $employeeName => $employeeValues)
 
-                    <div class="px-4 py-3 bg-secondary bg-opacity-10 border-bottom d-flex align-items-center">
-                        <div class="bg-white p-2 rounded-circle shadow-sm me-3">
-                            <i class="bi bi-person-badge text-primary fs-5"></i>
+                    <div class="px-4 py-4 bg-white border-bottom d-flex align-items-start position-relative" style="border-left: 4px solid var(--saas-primary);">
+                        <div class="flex-shrink-0">
+                            @if($employeeValues->first()->employee->photo && Storage::disk('public')->exists($employeeValues->first()->employee->photo))
+                                <img src="{{ Storage::url($employeeValues->first()->employee->photo) }}" class="rounded-circle border border-3 border-white shadow-sm object-fit-cover avatar-hover" width="65" height="65">
+                            @else
+                                <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center text-white"
+                                     style="width: 56px; height: 56px; background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);">
+                                    <i class="bi bi-person-badge fs-4"></i>
+                                </div>
+                            @endif
                         </div>
-                        <div>
-                            <h5 class="mb-0 fw-bold text-dark text-uppercase">{{ $employeeName }}</h5>
-                            <small class="text-muted small">Historique des performances</small>
+
+                        <div class="ms-4 flex-grow-1">
+                            <div class="d-flex align-items-center mb-2">
+                                <h5 class="mb-0 fw-800 text-dark text-uppercase tracking-tight me-3">{{ $employeeName }}</h5>
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">
+                                    <i class="bi bi-check-circle-fill me-1"></i> Actif
+                                </span>
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-2 align-items-center">
+                                @php
+                                    $activeAffectation = $employeeValues->first()->employee->affectations->where('state', 1)->first();
+                                @endphp
+
+                                @if($activeAffectation)
+                                    @if($activeAffectation->section)
+                                        <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary fw-bold px-3 py-2">
+                                            <i class="bi bi-diagram-3 me-1"></i> {{ $activeAffectation->section->title }}
+                                        </span>
+                                        <i class="bi bi-chevron-right text-muted opacity-50 small"></i>
+                                    @endif
+
+                                    @if($activeAffectation->sector)
+                                        <span class="badge rounded-pill bg-info bg-opacity-10 text-info fw-bold px-3 py-2">
+                                            <i class="bi bi-layers me-1"></i> {{ $activeAffectation->sector->title }}
+                                        </span>
+                                        <i class="bi bi-chevron-right text-muted opacity-50 small"></i>
+                                    @endif
+
+                                    <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning-emphasis fw-bold px-3 py-2">
+                                        <i class="bi bi-building me-1"></i> {{ $activeAffectation->entity->title }}
+                                    </span>
+
+                                    <i class="bi bi-chevron-right text-muted opacity-50 small"></i>
+
+                                    <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary fw-bold px-3 py-2">
+                                        <i class="bi bi-diagram-3-fill me-1"></i> {{ $activeAffectation->service->title }}
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="mt-2">
+                                <small class="text-muted fw-bold text-uppercase x-small tracking-widest">
+                                    <i class="bi bi-clock-history me-1"></i> Historique des performances par période
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="ms-auto d-none d-lg-block">
+                            <div class="text-end">
+                                <div class="text-muted x-small fw-bold text-uppercase">Dernière mise à jour</div>
+                                <div class="fw-bold text-dark">{{ now()->format('d/m/Y') }}</div>
+                            </div>
                         </div>
                     </div>
 
@@ -243,14 +345,14 @@
                                                             @endphp
 
                                                             <span class="ms-2">
-                                                        @if($trend === 'up')
+                                                                @if($trend === 'up')
                                                                     <i class="bi bi-caret-up-fill text-success" title="Supérieur à {{ $prevPeriodTitle }}"></i>
                                                                 @elseif($trend === 'down')
                                                                     <i class="bi bi-caret-down-fill text-danger" title="Inférieur à {{ $prevPeriodTitle }}"></i>
                                                                 @else
                                                                     <i class="bi bi-dash text-muted opacity-50"></i>
                                                                 @endif
-                                                    </span>
+                                                            </span>
                                                         </div>
                                                     </td>
                                                 @endforeach
@@ -271,7 +373,44 @@
                     @endforeach
 
                     <div class="py-2 bg-white"></div> {{-- Spacer --}}
+
+                    @php $i++; @endphp
                 @endforeach
+
+                @else
+                    <div class="card border-0 shadow-sm my-5 bg-white">
+                        <div class="card-body p-5 text-center">
+                            <div class="mb-4">
+                                <div class="bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px;">
+                                    <i class="bi bi-people-fill text-warning fs-1"></i>
+                                </div>
+                            </div>
+
+                            <div class="mx-auto" style="max-width: 450px;">
+                                <h5 class="fw-bold text-dark">Prêt à consulter les performances ?</h5>
+                                <p class="text-muted mb-4">
+                                    Veuillez sélectionner un employé dans le panneau de configuration ci-dessus pour générer l'historique complet de ses indicateurs et comparer ses résultats par période.
+                                </p>
+
+                                <div class="d-inline-flex align-items-center text-primary fw-bold small text-uppercase tracking-wider">
+                                    <i class="bi bi-arrow-up me-2 pulse-animation"></i>
+                                    Utilisez les filtres pour commencer
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <style>
+                        /* Subtle pulse to draw attention to the top filters */
+                        @keyframes pulse-y {
+                            0%, 100% { transform: translateY(0); }
+                            50% { transform: translateY(-5px); }
+                        }
+                        .pulse-animation {
+                            animation: pulse-y 2s infinite ease-in-out;
+                        }
+                    </style>
+                @endif
             </div>
         </div>
 
@@ -324,6 +463,21 @@
                 if (this.selectedIndex !== -1 && this.value !== "-1") {
                     input.value = this.options[this.selectedIndex].text.trim();
                 }
+            });
+
+
+            //Button hide/show filter div
+            const filterDiv = document.getElementById('filterCollapse');
+            const showBtn = document.getElementById('btnShowFilters');
+
+            // When the filters start to hide, show the floating button
+            filterDiv.addEventListener('hide.bs.collapse', function () {
+                showBtn.style.setProperty('display', 'flex', 'important');
+            });
+
+            // When the filters start to show, hide the floating button
+            filterDiv.addEventListener('show.bs.collapse', function () {
+                showBtn.style.setProperty('display', 'none', 'important');
             });
 
         });
