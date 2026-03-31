@@ -70,4 +70,60 @@ class ValueRepository extends MainRepository
 
     }
 
+    public function getAllByService($service_id, $with) {
+
+        $query = Value::with($with)
+            ->join('employees', 'employees.id', '=', 'values.employee_id')
+            ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->where('affectations.service_id', '=', $service_id)
+            ->where('affectations.state', '=', true)
+            ->select('values.*')
+            ->orderBy('values.period_id', 'DESC');
+
+        return $query->get();
+
+    }
+
+    public function getAllByEntity($entity_id, $with) {
+
+        $query = Value::with($with)
+            ->join('employees', 'employees.id', '=', 'values.employee_id')
+            ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->where('affectations.entity_id', '=', $entity_id)
+            ->where('affectations.state', '=', true)
+            ->select('values.*')
+            ->orderBy('values.period_id', 'DESC');
+
+        return $query->get();
+
+    }
+
+    public function getAllBySector($sector_id, $with) {
+
+        $query = Value::with($with)
+            ->join('employees', 'employees.id', '=', 'values.employee_id')
+            ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->where('affectations.sector_id', '=', $sector_id)
+            ->where('affectations.state', '=', true)
+            ->select('values.*')
+            ->orderBy('values.period_id', 'DESC');
+
+        return $query->get();
+
+    }
+
+    public function getAllBySection($section_id, $with) {
+
+        $query = Value::with($with)
+            ->join('employees', 'employees.id', '=', 'values.employee_id')
+            ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->where('affectations.section', '=', $section_id)
+            ->where('affectations.state', '=', true)
+            ->select('values.*')
+            ->orderBy('values.period_id', 'DESC');
+
+        return $query->get();
+
+    }
+
 }

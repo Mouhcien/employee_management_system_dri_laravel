@@ -458,4 +458,71 @@ class ValueController extends Controller
             return back()->with('error', $exception->getMessage());
         }
     }
+
+    public function view_entity ($entityName, $id){
+        try {
+
+            $employees = [];
+            $service = null;
+            $entity = null;
+            $sector = null;
+            $section = null;
+            $employee = null;
+            $values = [];
+            switch (strtolower($entityName)) {
+                case 'service':
+                    $service = $this->serviceEntityService->getOneById($id);
+                    if (is_null($service)) {
+                        return back()->with('error', "Service introuvable !!");
+                    }
+                    $employees = $this->employeeService->getAllByService($id);
+                    $employee = $service->chefs->where('state', "=", 1)->first()->employee;
+                    $values = $this->valueService->getAllByService($id);
+                    break;
+
+                case 'entité':
+                    $entity = $this->entityService->getOneById($id);
+                    if (is_null($entity)) {
+                        return back()->with('error', "Entité introuvable !!");
+                    }
+                    $employees = $this->employeeService->getAllByEntity($id);
+                    $employee = $entity->chefs->where('state', "=", 1)->first()->employee;
+                    $values = $this->valueService->getAllByEntity($id);
+                    break;
+
+                case 'secteur':
+                    $sector = $this->sectorEntityService->getOneById($id);
+                    if (is_null($sector)) {
+                        return back()->with('error', "Secteur introuvable !!");
+                    }
+                    $employees = $this->employeeService->getAllByService($id);
+                    $employee = $sector->chefs->where('state', "=", 1)->first()->employee;
+                    $values = $this->valueService->getAllBySector($id);
+                    break;
+
+                case 'section':
+                    $section = $this->sectionEntityService->getOneById($id);
+                    if (is_null($section)) {
+                        return back()->with('error', "Section introuvable !!");
+                    }
+                    $employees = $this->employeeService->getAllBySection($id);
+                    $employee = $section->chefs->where('state', "=", 1)->first()->employee;
+                    $values = $this->valueService->getAllBySection($id);
+                    break;
+            }
+
+            return view('app.audit.values.view-entity', [
+                'employees' => $employees,
+                'service' => $service,
+                'entity' => $entity,
+                'sector' => $sector,
+                'section' => $section,
+                'employee' => $employee,
+                'values' => $values
+            ]);
+
+        }catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
 }

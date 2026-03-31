@@ -167,7 +167,7 @@
                             elseif ($selected_service) { $entityName = "Service"; $selected_id = $selected_service;}
                         @endphp
 
-                        <a href="{{ route('audit.values.view.entity', ['entity'=>$entityName, 'id'=>$selected_id]) }}" class="btn btn-lg w-100 text-white fw-bold shadow-sm border-0 py-3"
+                        <a href="{{ route('audit.values.view.entity', ['entityName'=>$entityName, 'id'=>$selected_id]) }}" class="btn btn-lg w-100 text-white fw-bold shadow-sm border-0 py-3"
                                 style="background: {{ $btnColor }}; border-radius: 12px; transition: all 0.3s ease;">
                             <i class="bi bi-arrow-right-circle-fill me-2"></i>
                             Charger pour {{ $entityName }}

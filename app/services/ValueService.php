@@ -35,6 +35,22 @@ class ValueService
         return $this->valueRepository->AllByEmployee($employee_id, $this->with, $pages);
     }
 
+    public function getAllByService($service_id){
+        return $this->valueRepository->getAllByService($service_id, $this->with);
+    }
+
+    public function getAllByEntity($entity_id){
+        return $this->valueRepository->getAllByEntity($entity_id, $this->with);
+    }
+
+    public function getAllBySector($sector_id){
+        return $this->valueRepository->getAllBySector($sector_id, $this->with);
+    }
+
+    public function getAllBySection($section_id){
+        return $this->valueRepository->getAllBySection($section_id, $this->with);
+    }
+
     public function getAllByFilters($filter, $pages=0){
         return $this->valueRepository->AllByFilter($filter, $this->with, $pages);
     }
