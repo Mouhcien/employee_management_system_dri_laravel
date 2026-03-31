@@ -378,10 +378,10 @@ class ValueController extends Controller
 
     public function select(Request $request) {
         try {
-            $this->pages = 10;
 
             $periods = $this->periodService->getAll(0);
             $employees = $this->employeeService->getAll($this->pages);
+            $employees_all = $this->employeeService->getAll(0);
             $services = $this->serviceEntityService->getAll(0);
             $entities = $this->entityService->getAll(0);
             $sectors = $this->sectorEntityService->getAll(0);
@@ -392,6 +392,7 @@ class ValueController extends Controller
                 $selected_service = $request->query('srv');
                 $entities = $this->entityService->getAllByService($selected_service, 0);
                 $employees = $this->employeeService->getAllByService($selected_service, $this->pages);
+                $employees_all = $this->employeeService->getAllByService($selected_service, 0);
             }
 
             $selected_entity = null;
@@ -400,24 +401,28 @@ class ValueController extends Controller
                 $sectors = $this->sectorEntityService->getAllByEntity($selected_entity, 0);
                 $sections = $this->sectionEntityService->getAllByEntity($selected_entity, 0);
                 $employees = $this->employeeService->getAllByEntity($selected_entity, $this->pages);
+                $employees_all = $this->employeeService->getAllByEntity($selected_entity, 0);
             }
 
             $selected_sector = null;
             if ($request->has('sectr')) {
                 $selected_sector = $request->query('sectr');
                 $employees = $this->employeeService->getAllBySector($selected_sector, $this->pages);
+                $employees_all = $this->employeeService->getAllBySector($selected_sector, 0);
             }
 
             $selected_section = null;
             if ($request->has('sect')) {
                 $selected_section = $request->query('sect');
                 $employees = $this->employeeService->getAllBySection($selected_section, $this->pages);
+                $employees_all = $this->employeeService->getAllBySection($selected_section, 0);
             }
 
 
             return view('app.audit.values.select', [
                 'periods' => $periods,
                 'employees' => $employees,
+                'employees_all' => $employees_all,
                 'services' => $services,
                 'entities' => $entities,
                 'sectors' => $sectors,
@@ -429,6 +434,27 @@ class ValueController extends Controller
             ]);
 
         }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function view ($emp){
+        try {
+
+            $employee = $this->employeeService->getOneById($emp);
+            if (is_null($employee)) {
+                return back()->with('error', "Employée introuvable !!");
+            }
+
+            $values = $this->valueService->getAllByEmployee($emp, 0);
+
+            return view('app.audit.values.view', [
+                'employee' => $employee,
+                'values' => $values,
+                'groupedValues' => $values->groupBy('employee_id'),
+            ]);
+
+        }catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
     }

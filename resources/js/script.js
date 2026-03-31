@@ -99,9 +99,10 @@ $(function() {
         navigateWithFilters(baseUrl, { srv: '#sl_aff_service_id', ent: '#sl_aff_entity_id' });
     });
 
+    /**********************************/
     $('#sl_audit_view_service').on('change', function() {
 
-        let href = '/audit/values/view?';
+        let href = '/audit/values/select?';
 
         const srv = $(this).val();
         if (srv != '-1' && srv != undefined) {
@@ -114,7 +115,7 @@ $(function() {
 
     $('#sl_audit_view_entity').on('change', function() {
 
-        let href = '/audit/values/view?';
+        let href = '/audit/values/select?';
 
         const ent = $(this).val();
 
@@ -143,7 +144,7 @@ $(function() {
 
     $('#sl_audit_view_sector').on('change', function() {
 
-        let href = '/audit/values/view?';
+        let href = '/audit/values/select?';
 
         const sectr = $(this).val();
         if (sectr != '-1' && sectr != undefined) {
@@ -166,7 +167,7 @@ $(function() {
 
     $('#sl_audit_view_section').on('change', function() {
 
-        let href = '/audit/values/view?';
+        let href = '/audit/values/select?';
 
         const sect = $(this).val();
         if (sect != '-1' && sect != undefined) {
