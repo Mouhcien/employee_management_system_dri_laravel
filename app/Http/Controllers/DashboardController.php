@@ -63,4 +63,8 @@ class DashboardController extends Controller
             'totalSection' => $sections->count(),
         ]);
     }
+
+    public function error() {
+        return view('app.errors.index')->with('error', "Accès refusé: Profil Responsable requis.");
+    }
 }

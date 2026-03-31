@@ -76,13 +76,21 @@
                 </div>
 
                 <div class="card-body p-4">
+                    <div id="controls_overlay" class="d-none text-center mb-3">
+                        <button onclick="toggleView(false)" class="btn btn-dark rounded-pill shadow-sm">
+                            <i class="bi bi-arrow-left me-2"></i>Retour à la vue normale
+                        </button>
+                    </div>
+
                     <div class="text-center mb-4 transition-all" id="image_wrapper">
                         <div class="position-relative d-inline-block shadow-lg rounded-4 overflow-hidden border border-4 border-white">
                             @if($employee->photo && Storage::disk('public')->exists($employee->photo))
                                 <img src="{{ Storage::url($employee->photo) }}"
                                      id="employee_img"
                                      class="object-fit-cover transition-all"
-                                     width="300" height="300">
+                                     width="300" height="300"
+                                     ondblclick="toggleView(true)"
+                                     style="cursor: pointer; transition: all 0.3s ease;">
                             @else
                                 <div id="employee_placeholder"
                                      class="d-flex align-items-center justify-content-center text-white fw-bold transition-all"
@@ -284,6 +292,54 @@
             if(img) { img.width = 300; img.height = 300; }
             if(placeholder) { placeholder.style.width = '300px'; placeholder.style.height = '300px'; placeholder.style.fontSize = '5rem'; }
             btnText.innerText = "Agrandir";
+        }
+    }
+
+    function toggleView(isZoomed) {
+        const img = document.getElementById('employee_img');
+        const placeholder = document.getElementById('employee_placeholder');
+        const identity = document.getElementById('identity_details');
+        const affectation = document.querySelector('section.card'); // Targets the Affectation section
+        const infoGrid = document.getElementById('info_grid');
+        const controls = document.getElementById('controls_overlay');
+
+        if (isZoomed) {
+            // 1. Resize Image or Placeholder
+            //
+            if(img) {
+                img.style.width = "700px";
+                img.style.height = "700px";
+            }
+            if(placeholder) {
+                placeholder.style.width = "700px";
+                placeholder.style.height = "700px";
+            }
+
+            // 2. Hide Sections
+            identity.classList.add('d-none');
+            affectation.classList.add('d-none');
+            infoGrid.classList.add('d-none');
+
+            // 3. Show Return Button
+            controls.classList.remove('d-none');
+        } else {
+            // 1. Reset Sizes
+            if(img) {
+                img.style.width = "300px";
+                img.style.height = "300px";
+            }
+            if(placeholder) {
+                placeholder.style.width = "300px";
+                placeholder.style.height = "300px";
+            }
+
+            // 2. Show Sections
+            identity.classList.remove('d-none');
+            affectation.classList.remove('d-none');
+            infoGrid.classList.remove('d-none');
+
+            // 3. Hide Return Button
+            controls.classList.add('d-none');
         }
     }
 </script>

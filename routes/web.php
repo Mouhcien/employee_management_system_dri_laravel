@@ -34,12 +34,14 @@ use App\Http\Controllers\TempController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ValueController;
 use App\Http\Controllers\WorkController;
+use App\Http\Middleware\CheckResponsibleProfile;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('check.auth')->group(function (){
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard0');
     Route::get('/dashboard0', [DashboardController::class, 'index'])->name('dashboard0');
+    Route::get('/error', [DashboardController::class, 'error'])->name('error');
 
     /*
     Route::get('/dashboard', function () {
@@ -316,57 +318,57 @@ Route::middleware('check.auth')->group(function (){
     });
 
     Route::prefix('audit/tables')->group(function(){
-        Route::get('/', [TableController::class, 'index'])->name('audit.tables.index');
-        Route::post('/store', [TableController::class, 'store'])->name('audit.tables.store');
-        Route::get('/create', [TableController::class, 'create'])->name('audit.tables.create');
-        Route::get('/{id}', [TableController::class, 'show'])->name('audit.tables.show');
-        Route::get('/edit/{id}', [TableController::class, 'edit'])->name('audit.tables.edit');
-        Route::post('/update/{id}', [TableController::class, 'update'])->name('audit.tables.update');
-        Route::get('/delete/{id}', [TableController::class, 'delete'])->name('audit.tables.delete');
-    });
+        Route::get('/', [TableController::class, 'index'])->name('audit.tables.index')->middleware(CheckResponsibleProfile::class);
+        Route::post('/store', [TableController::class, 'store'])->name('audit.tables.store')->middleware(CheckResponsibleProfile::class);
+        Route::get('/create', [TableController::class, 'create'])->name('audit.tables.create')->middleware(CheckResponsibleProfile::class);
+        Route::get('/{id}', [TableController::class, 'show'])->name('audit.tables.show')->middleware(CheckResponsibleProfile::class);
+        Route::get('/edit/{id}', [TableController::class, 'edit'])->name('audit.tables.edit')->middleware(CheckResponsibleProfile::class);
+        Route::post('/update/{id}', [TableController::class, 'update'])->name('audit.tables.update')->middleware(CheckResponsibleProfile::class);
+        Route::get('/delete/{id}', [TableController::class, 'delete'])->name('audit.tables.delete')->middleware(CheckResponsibleProfile::class);
+    })->middleware(CheckResponsibleProfile::class);
 
     Route::prefix('audit/columns')->group(function(){
-        Route::get('/', [ColumnController::class, 'index'])->name('audit.columns.index');
-        Route::post('/store', [ColumnController::class, 'store'])->name('audit.columns.store');
-        Route::get('/create', [ColumnController::class, 'create'])->name('audit.columns.create');
-        Route::get('/{id}', [ColumnController::class, 'show'])->name('audit.columns.show');
-        Route::get('/edit/{id}', [ColumnController::class, 'edit'])->name('audit.columns.edit');
-        Route::post('/update/{id}', [ColumnController::class, 'update'])->name('audit.columns.update');
-        Route::get('/delete/{id}', [ColumnController::class, 'delete'])->name('audit.columns.delete');
+        Route::get('/', [ColumnController::class, 'index'])->name('audit.columns.index')->middleware(CheckResponsibleProfile::class);
+        Route::post('/store', [ColumnController::class, 'store'])->name('audit.columns.store')->middleware(CheckResponsibleProfile::class);
+        Route::get('/create', [ColumnController::class, 'create'])->name('audit.columns.create')->middleware(CheckResponsibleProfile::class);
+        Route::get('/{id}', [ColumnController::class, 'show'])->name('audit.columns.show')->middleware(CheckResponsibleProfile::class);
+        Route::get('/edit/{id}', [ColumnController::class, 'edit'])->name('audit.columns.edit')->middleware(CheckResponsibleProfile::class);
+        Route::post('/update/{id}', [ColumnController::class, 'update'])->name('audit.columns.update')->middleware(CheckResponsibleProfile::class);
+        Route::get('/delete/{id}', [ColumnController::class, 'delete'])->name('audit.columns.delete')->middleware(CheckResponsibleProfile::class);
     });
 
     Route::prefix('audit/periods')->group(function(){
-        Route::get('/', [PeriodController::class, 'index'])->name('audit.periods.index');
-        Route::post('/store', [PeriodController::class, 'store'])->name('audit.periods.store');
-        Route::get('/create', [PeriodController::class, 'create'])->name('audit.periods.create');
-        Route::get('/{id}', [PeriodController::class, 'show'])->name('audit.periods.show');
-        Route::get('/edit/{id}', [PeriodController::class, 'edit'])->name('audit.periods.edit');
-        Route::post('/update/{id}', [PeriodController::class, 'update'])->name('audit.periods.update');
-        Route::get('/delete/{id}', [PeriodController::class, 'delete'])->name('audit.periods.delete');
+        Route::get('/', [PeriodController::class, 'index'])->name('audit.periods.index')->middleware(CheckResponsibleProfile::class);
+        Route::post('/store', [PeriodController::class, 'store'])->name('audit.periods.store')->middleware(CheckResponsibleProfile::class);
+        Route::get('/create', [PeriodController::class, 'create'])->name('audit.periods.create')->middleware(CheckResponsibleProfile::class);
+        Route::get('/{id}', [PeriodController::class, 'show'])->name('audit.periods.show')->middleware(CheckResponsibleProfile::class);
+        Route::get('/edit/{id}', [PeriodController::class, 'edit'])->name('audit.periods.edit')->middleware(CheckResponsibleProfile::class);
+        Route::post('/update/{id}', [PeriodController::class, 'update'])->name('audit.periods.update')->middleware(CheckResponsibleProfile::class);
+        Route::get('/delete/{id}', [PeriodController::class, 'delete'])->name('audit.periods.delete')->middleware(CheckResponsibleProfile::class);
     });
 
     Route::prefix('audit/relations')->group(function(){
-        Route::get('/', [RelationController::class, 'index'])->name('audit.relations.index');
-        Route::post('/store', [RelationController::class, 'store'])->name('audit.relations.store');
-        Route::get('/create', [RelationController::class, 'create'])->name('audit.relations.create');
-        Route::get('/{id}', [RelationController::class, 'show'])->name('audit.relations.show');
-        Route::get('/edit/{id}', [RelationController::class, 'edit'])->name('audit.relations.edit');
-        Route::post('/update/{id}', [RelationController::class, 'update'])->name('audit.relations.update');
-        Route::get('/delete/{id}', [RelationController::class, 'delete'])->name('audit.relations.delete');
+        Route::get('/', [RelationController::class, 'index'])->name('audit.relations.index')->middleware(CheckResponsibleProfile::class);
+        Route::post('/store', [RelationController::class, 'store'])->name('audit.relations.store')->middleware(CheckResponsibleProfile::class);
+        Route::get('/create', [RelationController::class, 'create'])->name('audit.relations.create')->middleware(CheckResponsibleProfile::class);
+        Route::get('/{id}', [RelationController::class, 'show'])->name('audit.relations.show')->middleware(CheckResponsibleProfile::class);
+        Route::get('/edit/{id}', [RelationController::class, 'edit'])->name('audit.relations.edit')->middleware(CheckResponsibleProfile::class);
+        Route::post('/update/{id}', [RelationController::class, 'update'])->name('audit.relations.update')->middleware(CheckResponsibleProfile::class);
+        Route::get('/delete/{id}', [RelationController::class, 'delete'])->name('audit.relations.delete')->middleware(CheckResponsibleProfile::class);
     });
 
     Route::prefix('audit/values')->group(function(){
-        Route::get('/', [ValueController::class, 'index'])->name('audit.values.index');
-        Route::get('/consult', [ValueController::class, 'consult'])->name('audit.values.consult');
-        Route::get('/select', [ValueController::class, 'select'])->name('audit.values.select');
-        Route::get('/view/{emp}', [ValueController::class, 'view'])->name('audit.values.view');
-        Route::get('/view/{entity}/{id}', [ValueController::class, 'view_entity'])->name('audit.values.view.entity');
-        Route::post('/store', [ValueController::class, 'store'])->name('audit.values.store');
-        Route::get('/create', [ValueController::class, 'create'])->name('audit.values.create');
-        Route::get('/{id}', [ValueController::class, 'show'])->name('audit.values.show');
-        Route::get('/edit/{id}/{attr}', [ValueController::class, 'edit'])->name('audit.values.edit');
-        Route::post('/update', [ValueController::class, 'update'])->name('audit.values.update');
-        Route::get('/delete/{attr}', [ValueController::class, 'delete'])->name('audit.values.delete');
+        Route::get('/', [ValueController::class, 'index'])->name('audit.values.index')->middleware(CheckResponsibleProfile::class);
+        Route::get('/consult', [ValueController::class, 'consult'])->name('audit.values.consult')->middleware(CheckResponsibleProfile::class);
+        Route::get('/select', [ValueController::class, 'select'])->name('audit.values.select')->middleware(CheckResponsibleProfile::class);
+        Route::get('/view/{emp}', [ValueController::class, 'view'])->name('audit.values.view')->middleware(CheckResponsibleProfile::class);
+        Route::get('/view/{entity}/{id}', [ValueController::class, 'view_entity'])->name('audit.values.view.entity')->middleware(CheckResponsibleProfile::class);
+        Route::post('/store', [ValueController::class, 'store'])->name('audit.values.store')->middleware(CheckResponsibleProfile::class);
+        Route::get('/create', [ValueController::class, 'create'])->name('audit.values.create')->middleware(CheckResponsibleProfile::class);
+        Route::get('/{id}', [ValueController::class, 'show'])->name('audit.values.show')->middleware(CheckResponsibleProfile::class);
+        Route::get('/edit/{id}/{attr}', [ValueController::class, 'edit'])->name('audit.values.edit')->middleware(CheckResponsibleProfile::class);
+        Route::post('/update', [ValueController::class, 'update'])->name('audit.values.update')->middleware(CheckResponsibleProfile::class);
+        Route::get('/delete/{attr}', [ValueController::class, 'delete'])->name('audit.values.delete')->middleware(CheckResponsibleProfile::class);
     });
 
     /*
