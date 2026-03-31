@@ -126,16 +126,31 @@
                 @if (auth()->user()->profile_id == 3)
                     <li class="nav-item dropdown">
                         <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
-                              {{ request()->routeIs('performances.*') || request()->routeIs('temps.*') ? 'active-link' : 'text-secondary' }}"
+                              {{ request()->routeIs('audit.values.*') ? 'active-link' : 'text-secondary' }}"
                            href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-person-workspace me-2"></i>
                             <span class="fw-semibold">Performance</span>
                         </a>
                         <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-4 mt-2">
-                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('chefs.index') }}">Évaluations Périodiques</a></li>
-                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('temps.index') }}">Intérimaires</a></li>
+                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('audit.values.index') }}">Évaluations Périodiques</a></li>
+                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('audit.values.consult') }}">Consulter l'évaluation</a></li>
                         </ul>
                     </li>
+                @endif
+
+                @if (auth()->user()->profile_id == 4)
+                    <li class="nav-item dropdown">
+                        <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
+                              {{ request()->routeIs('performances.*') || request()->routeIs('temps.*') ? 'active-link' : 'text-secondary' }}"
+                           href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-workspace me-2"></i>
+                            <span class="fw-semibold">Évaluations Périodiques</span>
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-4 mt-2">
+                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('audit.values.select') }}">Superviser l'évaluation</a></li>
+                        </ul>
+                    </li>
+
                 @endif
 
             </ul>

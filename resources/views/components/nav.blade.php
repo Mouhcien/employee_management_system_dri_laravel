@@ -183,7 +183,7 @@
             </button>
             <div class="collapse {{ request()->routeIs('audit.values.*') ? 'show' : '' }}" id="menuPerformance">
                 <ul class="nav flex-column ms-2 mt-1">
-                    <li><a href="{{ route('audit.values.select') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.view') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Superviser l'évaluation</a></li>
+                    <li><a href="{{ route('audit.values.select') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.select') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Superviser l'évaluation</a></li>
                 </ul>
             </div>
         </div>
