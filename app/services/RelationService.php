@@ -23,12 +23,16 @@ class RelationService
         return $this->relationRepository->All(Relation::class, $this->with, $pages);
     }
 
+    public function getRelationByTable($table_id){
+        return $this->relationRepository->AllByTable($table_id, $this->with);
+    }
+
     public function getOneById($id){
         return $this->relationRepository->One(Relation::class, $this->with, $id);
     }
 
     public function getRelationWhichColumnNotInNewList($table_id, $submittedColumnIds){
-        return $this->relationRepository->getRelationWhichColumnNotInNewList($table_id, $submittedColumnIds);
+        return $this->relationRepository->getRelationWhichColumnNotInNewList($table_id, $submittedColumnIds, $this->with);
     }
 
     public function create($data){

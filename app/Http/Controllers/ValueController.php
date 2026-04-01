@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ChefExport;
+use App\Exports\ModelPerformance;
 use App\services\ColumnService;
 use App\Services\EmployeeService;
 use App\services\EntityService;
@@ -12,7 +14,9 @@ use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
 use App\services\TableService;
 use App\services\ValueService;
+use DateTime;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Mockery\Exception;
 
 class ValueController extends Controller
@@ -520,6 +524,94 @@ class ValueController extends Controller
                 'employee' => $employee,
                 'values' => $values
             ]);
+
+        }catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function download_model(Request $request, $tbl, $srv=null, $ent=null, $sectr=null, $sect=null) {
+        try {
+
+            $table = $this->tableService->getOneById($tbl);
+            if (is_null($table))
+                return back()->with('error', "Tableau de suivi introuvable !!!");
+
+            $headings = [];
+
+            $headings[0] = "Tableau de suivi";
+            $headings[1] = "PPR";
+            $headings[2] = "Agent";
+
+            $employees = null;
+            if (!is_null($srv) && $srv != 0) {
+                $selected_service = $srv;
+                $employees = $this->employeeService->getAllByService($selected_service, 0);
+                $headings[3] = "Service";
+            }
+
+            if (!is_null($ent) && $ent != 0) {
+                $selected_entity = $ent;
+                $employees = $this->employeeService->getAllByEntity($selected_entity, 0);
+                $headings[3] = "Entité";
+            }
+
+            if (!is_null($sectr) && $sectr != 0) {
+                $selected_sector = $sectr;
+                $employees = $this->employeeService->getAllBySector($selected_sector, 0);
+                $headings[3] = "Secteur";
+            }
+
+            if (!is_null($sect) && $sect != 0) {
+                $selected_section = $sect;
+                $employees = $this->employeeService->getAllBySection($selected_section, 0);
+                $headings[3] = "Section";
+            }
+
+
+            // get the columns of the table
+            $relations = $this->relationService->getRelationByTable($table->id);
+            $i=3;
+            foreach ($relations as $relation) {
+                $headings[$i] = $relation->column->title;
+                $i++;
+            }
+
+            $data = [];
+            if (!is_null($employees)) {
+                foreach ($employees as $employee) {
+                    $employeeData[0] = $table->title;
+                    $employeeData[1] = $employee->ppr;
+                    $employeeData[2] = $employee->lastname.' '.$employee->firstname;
+                    switch ($headings[3]) {
+                        case "Section":
+                            $employeeData[3] = $employee->affectations->where("affectations.state", "=", true)->first()->section->title;
+                            break;
+                        case "Secteur":
+                            $employeeData[3] = $employee->affectations->where("affectations.state", "=", true)->first()->sector->title;
+                            break;
+                        case "Entité":
+                            $employeeData[3] = $employee->affectations->where("affectations.state", "=", true)->first()->entity->title;
+                            break;
+                        case "Service":
+                            $employeeData[3] = $employee->affectations->where("affectations.state", "=", true)->first()->service->title;
+                            break;
+                    }
+                    $data[] = $employeeData;
+                }
+            }else {
+                $employeeData[0] = "";
+                $employeeData[1] = "";
+                $employeeData[2] = "";
+
+                $data[] = $employeeData;
+            }
+
+            $date = new DateTime();
+            $current_date =  $date->format('Y-m-d H:i:s');
+
+            return Excel::download(new ModelPerformance($data, $headings), 'canvas_'.$current_date.'.xlsx');
+
 
         }catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());

@@ -369,6 +369,7 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/edit/{id}/{attr}', [ValueController::class, 'edit'])->name('audit.values.edit')->middleware(CheckResponsibleProfile::class);
         Route::post('/update', [ValueController::class, 'update'])->name('audit.values.update')->middleware(CheckResponsibleProfile::class);
         Route::get('/delete/{attr}', [ValueController::class, 'delete'])->name('audit.values.delete')->middleware(CheckResponsibleProfile::class);
+        Route::get('/download/model/{tbl?}/{srv?}/{ent?}/{sectr?}/{sect?}', [ValueController::class, 'download_model'])->name('audit.values.download.model')->middleware(CheckResponsibleProfile::class);
     });
 
     /*

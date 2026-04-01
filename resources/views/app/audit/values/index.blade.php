@@ -175,10 +175,20 @@
                         @endforeach
                     </select>
                     @endif
+                    @php
+                        $params = [];
+                        if (!is_null($selected_table))
+                            $params['tbl'] = $selected_table;
 
-                    <button type="button" class="btn btn-primary fw-bold py-2 shadow-sm mt-2">
-                        <i class="bi bi-download me-2"></i>Téléchaarger le modèle du fichier
-                    </button>
+                        $params['srv'] = !is_null($selected_service) ? $selected_service : 0;
+                        $params['ent'] = !is_null($selected_entity) ? $selected_entity : 0;
+                        $params['sectr'] = !is_null($selected_sector) ? $selected_sector : 0;
+                        $params['sect'] = !is_null($selected_section) ? $selected_section : 0;
+
+                    @endphp
+                    <a href="{{ route('audit.values.download.model', $params) }}" class="btn btn-primary fw-bold py-2 shadow-sm mt-2">
+                        <i class="bi bi-download me-2"></i>Télécharger le modèle du fichier
+                    </a>
                 </div>
             </div>
         </div>
@@ -254,6 +264,7 @@
     </div>
 
     </form>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const input = document.getElementById('employee_selected');
