@@ -9,6 +9,7 @@ use App\services\LocalService;
 use App\services\SectionEntityService;
 use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -53,15 +54,29 @@ class DashboardController extends Controller
         $sections = $this->sectionEntityService->getAll(0);
         $employeesByCategory = $this->employeeService->getTotalByCategory();
 
-        return view('app.dashboard', [
-            'totalEmployees' => $employees->count(),
-            'totalLocals' => $locals->count(),
-            'employeesByCategory' => $employeesByCategory,
-            'totalService' => $services->count(),
-            'totalEntity' => $entities->count(),
-            'totalSector' => $sectors->count(),
-            'totalSection' => $sections->count(),
-        ]);
+        if (Auth::user()->profile_id == 3) {
+            return view('app.audit.dashboard-auditor', [
+
+            ]);
+        }
+
+        if (Auth::user()->profile_id == 4) {
+            return view('app.audit.dashboard-supervisor', [
+
+            ]);
+        }
+        if (Auth::user()->profile_id == 1) {
+            return view('app.dashboard', [
+                'totalEmployees' => $employees->count(),
+                'totalLocals' => $locals->count(),
+                'employeesByCategory' => $employeesByCategory,
+                'totalService' => $services->count(),
+                'totalEntity' => $entities->count(),
+                'totalSector' => $sectors->count(),
+                'totalSection' => $sections->count(),
+            ]);
+        }
+
     }
 
     public function error() {
