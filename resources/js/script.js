@@ -188,5 +188,23 @@ $(function() {
 
     });
 
+    $('#btn_import_values').on('click', function(e) {
+        e.preventDefault();
+
+        const $select = $('#sl_table_performance');
+        const tbl_value = $select.val();
+
+        $select.css('border', '1px solid #ccc');
+
+        // 2. Validation Check
+        if (!tbl_value || tbl_value.trim() === "") {
+            $select.css('border', '1px solid red');
+            $select.focus();
+        } else {
+            // 3. Success: Manually trigger the modal
+            $('#importValuesModal').modal('show');
+        }
+    });
+
 
 });

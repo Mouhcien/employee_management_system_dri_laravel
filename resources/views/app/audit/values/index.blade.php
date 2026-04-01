@@ -105,17 +105,17 @@
                     <label class="form-label-sm">Configuration de base</label>
                     <div class="mb-2">
                         <select class="form-select form-select-sm border-0 bg-light" id="sl_table_performance" name="table_id" required>
-                            <option value="">Sélectionner le Tableau de suivi</option>
+                            <option value="" selected>Sélectionner le Tableau de suivi</option>
                             @foreach($tables as $table)
-                                <option value="{{ $table->id }}" {{ $table->id == $selected_table ? 'selected': '' }}>{{ $table->title }}</option>
+                                <option value="{{ $table->id }}" {{ !is_null($selected_table) && $table->id == $selected_table ? 'selected': '' }}>{{ $table->title }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div>
                         <select class="form-select form-select-sm border-0 bg-light" name="period_id" required>
-                            <option value="">Sélectionner la période de suivi</option>
+                            <option value="" selected>Sélectionner la période de suivi</option>
                             @foreach($periods as $period)
-                                <option value="{{ $period->id }}" {{ $selected_period == $period->period_id ? 'selected' : '' }}>{{ $period->title }} {{$period->year}}</option>
+                                <option value="{{ $period->id }}" {{ !is_null($selected_period) && $selected_period == $period->period_id ? 'selected' : '' }}>{{ $period->title }} {{$period->year}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -200,8 +200,8 @@
                 <h5 class="d-inline ms-2 fw-bold text-secondary mb-0">Indicateurs de performance</h5>
             </div>
             <div class="d-flex gap-2">
-                <button type="button" class="btn btn-light border btn-sm text-secondary px-3" data-bs-toggle="modal" data-bs-target="#importValuesModal">
-                    <i class="bi bi-file-earmark-excel me-1"></i>Modèle
+                <button type="button" class="btn btn-light border btn-sm text-secondary px-3" id="btn_import_values" >
+                    <i class="bi bi-file-earmark-excel me-1"></i>Importer Valeurs
                 </button>
                 @if (is_null($values))
                     <button type="submit" class="btn btn-success btn-sm px-4 fw-bold shadow-sm">
