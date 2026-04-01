@@ -146,6 +146,12 @@ class EmployeeRepository extends MainRepository
             ->first();
     }
 
+    public function getOneByEmail($email) {
+        return Employee::with($this->with)
+            ->whereRaw('LOWER(email) = ?', [strtolower($email)])
+            ->first();
+    }
+
     public function allByCategory($category_id, $with, $pages) {
         $query =  Employee::with($with)
             ->where('category_id', '=', $category_id)

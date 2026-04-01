@@ -2,24 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\EmployeeService;
 use App\services\ProfileService;
+use App\services\RuleService;
 use App\services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Mockery\Exception;
 
 class UserController extends Controller
 {
 
     private UserService $userService;
     private ProfileService $profileService;
+    private EmployeeService $employeeService;
+    private RuleService $ruleService;
 
     /**
      * @param UserService $userService
      */
-    public function __construct(UserService $userService, ProfileService $profileService)
+    public function __construct(UserService $userService, ProfileService $profileService, EmployeeService $employeeService, RuleService $ruleService)
     {
         $this->userService = $userService;
         $this->profileService = $profileService;
+        $this->employeeService = $employeeService;
+        $this->ruleService = $ruleService;
     }
 
 
@@ -85,6 +92,32 @@ class UserController extends Controller
                 return back()->with('error', 'Problème lors de la mise à jour !!');
 
         }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function show($id) {
+        try {
+
+            $user = $this->userService->getOneById($id);
+            if (is_null($user))
+                return back()->with('error', "Utilisateur introuvable !!");
+
+            $employee = $this->employeeService->getOneByEmail($user->email);
+            if (is_null($employee))
+                return back()->with('error', "Agent introuvable !!");
+
+            $rules = $this->ruleService->getAll(0);
+            $profiles = $this->profileService->getAll(0);
+
+            return view('app.users.show',[
+                'user' => $user,
+                'employee' => $employee,
+                'rules' => $rules,
+                'profiles' => $profiles
+            ]);
+
+        }catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
     }

@@ -78,6 +78,9 @@ class EmployeeService
     public function getOneByPPR($ppr) {
         return $this->employeeRepository->getOneByPPR($ppr);
     }
+    public function getOneByEmail($email) {
+        return $this->employeeRepository->getOneByEmail($email);
+    }
 
     public function create(array $data): ?bool
     {
