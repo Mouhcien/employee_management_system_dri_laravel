@@ -556,7 +556,12 @@ class ValueController extends Controller
                         return back()->with('error', "Service introuvable !!");
                     }
                     $employees = $this->employeeService->getAllByService($id);
-                    $employee = $service->chefs->where('state', "=", 1)->first()->employee;
+                    if (count($service->chefs) != 0){
+                        $employee = $service->chefs->where('state', "=", 1)->first()->employee;
+                    }else{
+                        //check inerim
+                    }
+
                     $values = $this->valueService->getAllByService($id);
                     break;
 
@@ -566,7 +571,8 @@ class ValueController extends Controller
                         return back()->with('error', "Entité introuvable !!");
                     }
                     $employees = $this->employeeService->getAllByEntity($id);
-                    $employee = $entity->chefs->where('state', "=", 1)->first()->employee;
+                    if (count($entity->chefs) != 0)
+                        $employee = $entity->chefs->where('state', "=", 1)->first()->employee;
                     $values = $this->valueService->getAllByEntity($id);
                     break;
 
@@ -576,7 +582,8 @@ class ValueController extends Controller
                         return back()->with('error', "Secteur introuvable !!");
                     }
                     $employees = $this->employeeService->getAllByService($id);
-                    $employee = $sector->chefs->where('state', "=", 1)->first()->employee;
+                    if (count($sector->chefs) != 0)
+                        $employee = $sector->chefs->where('state', "=", 1)->first()->employee;
                     $values = $this->valueService->getAllBySector($id);
                     break;
 
@@ -586,12 +593,11 @@ class ValueController extends Controller
                         return back()->with('error', "Section introuvable !!");
                     }
                     $employees = $this->employeeService->getAllBySection($id);
-                    $employee = $section->chefs->where('state', "=", 1)->first()->employee;
+                    if (count($section->chefs) != 0)
+                        $employee = $section->chefs->where('state', "=", 1)->first()->employee;
                     $values = $this->valueService->getAllBySection($id);
                     break;
             }
-
-            //dd($values);
 
             return view('app.audit.values.view-entity', [
                 'employees' => $employees,
@@ -600,7 +606,7 @@ class ValueController extends Controller
                 'sector' => $sector,
                 'section' => $section,
                 'employee' => $employee,
-                'values' => $values
+                'values' => $values,
             ]);
 
         }catch (Exception $exception) {

@@ -88,6 +88,7 @@
                 </div>
 
                 <div class="card-body p-4">
+                    @if(!is_null($employee))
                     <div id="controls_overlay" class="d-none text-center mb-3">
                         <button onclick="toggleView(false)" class="btn btn-dark rounded-pill shadow-sm">
                             <i class="bi bi-arrow-left me-2"></i>Retour à la vue normale
@@ -191,19 +192,31 @@
                             </div>
                         </div>
                     </div>
+                    @else
+                        <P> pas de chef actuellment </P>
+                    @endif
                 </div>
             </div>
         </div>
 
         <div class="col-lg-7" id="data_column">
-            @if (count($values) != 0)
-                @php $groupedByTable = $values->groupBy('relation.table_id'); @endphp
+            @if ($values->isNotEmpty())
+                {{-- Group by table_id from the query result --}}
+                @php $groupedByTable = $values->groupBy('table_id'); @endphp
 
                 @foreach($groupedByTable as $tableId => $tableValues)
                     @php
-                        $tableName = $tableValues->first()->relation->table->title ?? 'Table #'.$tableId;
-                        $tableColumns = $tableValues->map(fn($v) => $v->relation->column)->unique('id');
-                        $valuesByPeriod = $tableValues->groupBy('period_id')->sortByDesc(fn($group) => $group->first()->period->year);
+                        $tableName = $tableValues->first()->table_title ?? 'Table #'.$tableId;
+
+                        // Get unique columns for this specific table
+                        $tableColumns = $tableValues->unique('column_id')->map(function($v) {
+                            return (object) ['id' => $v->column_id, 'title' => $v->column_title];
+                        });
+
+                        $valuesByPeriod = $tableValues->groupBy('period_id')->sortByDesc(function ($group) {
+                            // Access the period year from the first item in the group
+                            return $group->first()->period->year;
+                        });
                         $periodKeys = $valuesByPeriod->keys()->toArray();
                     @endphp
 
@@ -235,25 +248,27 @@
                                         <tr>
                                             <td class="ps-4 border-end bg-light-subtle">
                                                 <div class="fw-bold text-dark">{{ $period->title }} {{ $period->year }}</div>
-                                                <small class="text-muted extra-small text-uppercase">{{ $period->start_date }} → {{ $period->end_date }}</small>
+                                                <small class="text-muted extra-small text-uppercase">{{ $period->starting_date }} → {{ $period->end_date }}</small>
                                             </td>
                                             @foreach($tableColumns as $col)
                                                 <td class="text-center">
                                                     @php
-                                                        $entry = $periodEntries->firstWhere('relation.column_id', $col->id);
+                                                        // Look for the summed total for this column
+                                                        $entry = $periodEntries->firstWhere('column_id', $col->id);
                                                         $trend = null;
+
                                                         if ($entry && $olderEntries) {
-                                                            $prevEntry = $olderEntries->firstWhere('relation.column_id', $col->id);
-                                                            if ($prevEntry && is_numeric($entry->value) && is_numeric($prevEntry->value)) {
-                                                                if ($entry->value > $prevEntry->value) $trend = 'up';
-                                                                elseif ($entry->value < $prevEntry->value) $trend = 'down';
+                                                            $prevEntry = $olderEntries->firstWhere('column_id', $col->id);
+                                                            if ($prevEntry && is_numeric($entry->total_sum) && is_numeric($prevEntry->total_sum)) {
+                                                                if ($entry->total_sum > $prevEntry->total_sum) $trend = 'up';
+                                                                elseif ($entry->total_sum < $prevEntry->total_sum) $trend = 'down';
                                                                 else $trend = 'equal';
                                                             }
                                                         }
                                                     @endphp
                                                     @if($entry)
                                                         <div class="d-inline-flex align-items-center gap-2 p-2 bg-white border rounded shadow-xs min-w-80 justify-content-center">
-                                                            <span class="fw-black text-primary">{{ $entry->value }}</span>
+                                                            <span class="fw-black text-primary">{{ number_format($entry->total_sum, 2) }}</span>
                                                             @if($trend === 'up') <i class="bi bi-arrow-up-right text-success fw-bold"></i>
                                                             @elseif($trend === 'down') <i class="bi bi-arrow-down-right text-danger fw-bold"></i>
                                                             @elseif($trend === 'equal') <i class="bi bi-dash text-muted"></i> @endif
@@ -276,7 +291,7 @@
                 <div class="h-100 d-flex align-items-center justify-content-center border-dashed rounded-4 p-5">
                     <div class="text-center opacity-50">
                         <i class="bi bi-database-exclamation display-4"></i>
-                        <p class="mt-2 fw-bold">Aucune valeur saisie pour cet employé</p>
+                        <p class="mt-2 fw-bold">Aucune valeur saisie pour ce service</p>
                     </div>
                 </div>
             @endif
@@ -302,6 +317,7 @@
                         </div>
 
                         <div class="card-body p-0">
+
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle mb-0">
                                     <thead class="bg-light-subtle border-bottom">
@@ -313,6 +329,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    @php $val = 0 @endphp
                                     @forelse($valuesByPeriod as $periodId => $periodEntries)
                                         @php
                                             $period = $periodEntries->first()->period;
@@ -323,7 +340,7 @@
                                         <tr>
                                             <td class="ps-4 border-end bg-light-subtle">
                                                 <div class="fw-bold text-dark">{{ $period->title }} {{ $period->year }}</div>
-                                                <small class="text-muted extra-small text-uppercase">{{ $period->start_date }} → {{ $period->end_date }}</small>
+                                                <small class="text-muted extra-small text-uppercase">{{ $period->starting_date }} → {{ $period->end_date }}</small>
                                             </td>
                                             @foreach($tableColumns as $col)
                                                 <td class="text-center">
@@ -357,6 +374,7 @@
                                     </tbody>
                                 </table>
                             </div>
+
                         </div>
                     </div>
                 @endforeach

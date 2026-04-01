@@ -74,57 +74,125 @@ class ValueRepository extends MainRepository
 
     public function getAllByService($service_id, $with) {
 
-        $query = Value::with($with)
+        return Value::selectRaw('
+            "values".period_id,
+            relations.column_id,
+            relations.table_id,
+            tables.title as table_title,
+            columns.title as column_title,
+            SUM(CAST("values"."value" AS DECIMAL(10,2))) as total_sum
+        ')
             ->join('employees', 'employees.id', '=', 'values.employee_id')
             ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->join('relations', 'relations.id', '=', 'values.relation_id')
+            ->join('columns', 'columns.id', '=', 'relations.column_id')
+            ->join('tables', 'tables.id', '=', 'relations.table_id') // Added join for table title
             ->where('affectations.service_id', '=', $service_id)
             ->where('affectations.state', '=', true)
-            ->select('values.*')
-            ->orderBy('values.period_id', 'DESC');
-
-        return $query->get();
+            ->with('period') // Keep this for the date/year display
+            ->groupBy(
+                'values.period_id',
+                'relations.column_id',
+                'relations.table_id',
+                'tables.title',
+                'columns.title',
+                'columns.id'
+            )
+            ->orderBy('values.period_id', 'DESC')
+            ->get();
 
     }
 
     public function getAllByEntity($entity_id, $with) {
 
-        $query = Value::with($with)
+        return Value::selectRaw('
+            "values".period_id,
+            relations.column_id,
+            relations.table_id,
+            tables.title as table_title,
+            columns.title as column_title,
+            SUM(CAST("values"."value" AS DECIMAL(10,2))) as total_sum
+        ')
             ->join('employees', 'employees.id', '=', 'values.employee_id')
             ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->join('relations', 'relations.id', '=', 'values.relation_id')
+            ->join('columns', 'columns.id', '=', 'relations.column_id')
+            ->join('tables', 'tables.id', '=', 'relations.table_id') // Added join for table title
             ->where('affectations.entity_id', '=', $entity_id)
             ->where('affectations.state', '=', true)
-            ->select('values.*')
-            ->orderBy('values.period_id', 'DESC');
-
-        return $query->get();
+            ->with('period') // Keep this for the date/year display
+            ->groupBy(
+                'values.period_id',
+                'relations.column_id',
+                'relations.table_id',
+                'tables.title',
+                'columns.title',
+                'columns.id'
+            )
+            ->orderBy('values.period_id', 'DESC')
+            ->get();
 
     }
 
     public function getAllBySector($sector_id, $with) {
 
-        $query = Value::with($with)
+        return Value::selectRaw('
+            "values".period_id,
+            relations.column_id,
+            relations.table_id,
+            tables.title as table_title,
+            columns.title as column_title,
+            SUM(CAST("values"."value" AS DECIMAL(10,2))) as total_sum
+        ')
             ->join('employees', 'employees.id', '=', 'values.employee_id')
             ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->join('relations', 'relations.id', '=', 'values.relation_id')
+            ->join('columns', 'columns.id', '=', 'relations.column_id')
+            ->join('tables', 'tables.id', '=', 'relations.table_id') // Added join for table title
             ->where('affectations.sector_id', '=', $sector_id)
             ->where('affectations.state', '=', true)
-            ->select('values.*')
-            ->orderBy('values.period_id', 'DESC');
-
-        return $query->get();
+            ->with('period') // Keep this for the date/year display
+            ->groupBy(
+                'values.period_id',
+                'relations.column_id',
+                'relations.table_id',
+                'tables.title',
+                'columns.title',
+                'columns.id'
+            )
+            ->orderBy('values.period_id', 'DESC')
+            ->get();
 
     }
 
     public function getAllBySection($section_id, $with) {
 
-        $query = Value::with($with)
+        return Value::selectRaw('
+            "values".period_id,
+            relations.column_id,
+            relations.table_id,
+            tables.title as table_title,
+            columns.title as column_title,
+            SUM(CAST("values"."value" AS DECIMAL(10,2))) as total_sum
+        ')
             ->join('employees', 'employees.id', '=', 'values.employee_id')
             ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
-            ->where('affectations.section', '=', $section_id)
+            ->join('relations', 'relations.id', '=', 'values.relation_id')
+            ->join('columns', 'columns.id', '=', 'relations.column_id')
+            ->join('tables', 'tables.id', '=', 'relations.table_id') // Added join for table title
+            ->where('affectations.section_id', '=', $section_id)
             ->where('affectations.state', '=', true)
-            ->select('values.*')
-            ->orderBy('values.period_id', 'DESC');
-
-        return $query->get();
+            ->with('period') // Keep this for the date/year display
+            ->groupBy(
+                'values.period_id',
+                'relations.column_id',
+                'relations.table_id',
+                'tables.title',
+                'columns.title',
+                'columns.id'
+            )
+            ->orderBy('values.period_id', 'DESC')
+            ->get();
 
     }
 
