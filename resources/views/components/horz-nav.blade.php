@@ -39,7 +39,7 @@
                 </li>
 
                 {{-- Dropdown: NOMENCLATURE --}}
-                @if (auth()->user()->profile_id != 3)
+                @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
                 <li class="nav-item dropdown">
                     @php $isReferencial = request()->routeIs('occupations.*') || request()->routeIs('grades.*') || request()->routeIs('diplomas.*') || request()->routeIs('options.*'); @endphp
                     <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
@@ -58,7 +58,7 @@
                 @endif
 
                 {{-- Dropdown: LOCALISATION --}}
-                @if (auth()->user()->profile_id != 3)
+                @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
                 <li class="nav-item dropdown">
                     <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
                               {{ request()->routeIs('locals.*') || request()->routeIs('cities.*') ? 'active-link' : 'text-secondary' }}"
@@ -74,7 +74,7 @@
                 @endif
 
                 {{-- Dropdown: UNITÉS --}}
-                @if (auth()->user()->profile_id != 3)
+                @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
                 <li class="nav-item dropdown">
                     @php $isOrg = request()->routeIs('services.*') || request()->routeIs('entities.*') || request()->routeIs('sectors.*') || request()->routeIs('sections.*'); @endphp
                     <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
@@ -93,7 +93,7 @@
                 @endif
 
                 {{-- Dropdown: HIÉRARCHIE --}}
-                @if (auth()->user()->profile_id != 3)
+                @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
                 <li class="nav-item dropdown">
                     <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
                               {{ request()->routeIs('chefs.*') || request()->routeIs('temps.*') ? 'active-link' : 'text-secondary' }}"

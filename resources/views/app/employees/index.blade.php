@@ -144,7 +144,7 @@
         @endif
 
         {{-- Table Card --}}
-        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="min-height: 400px;">
 
             <div class="card-header bg-white py-3 px-4 border-bottom d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-list-stars text-primary me-2"></i>Effectif Actif</h5>
@@ -202,11 +202,6 @@
                 title="Confirmation de Suppression"
                 target="deleteEmployeeModal" />
         @endforeach
-    </div>
-
-    {{-- Preview Photo flottante --}}
-    <div id="employee-photo-preview">
-        <img src="" alt="Aperçu employé">
     </div>
 
     @push('scripts')

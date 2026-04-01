@@ -11,6 +11,7 @@
     </a>
 
     {{-- Section: EMPLOYÉS --}}
+    @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Ressources Humaines</div>
     <div class="sidebar-group mb-1">
         <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('employees.*') || request()->routeIs('categories.*') ? 'text-primary bg-primary-subtle' : '' }}"
@@ -39,9 +40,11 @@
             </ul>
         </div>
     </div>
+    @endif
+
 
     {{-- Section: RÉFÉRENTIELS --}}
-    @if (auth()->user()->profile_id != 3)
+    @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Référentiels</div>
     <div class="sidebar-group mb-1">
         @php $isReferencial = request()->routeIs('occupations.*') || request()->routeIs('grades.*') || request()->routeIs('diplomas.*') || request()->routeIs('options.*'); @endphp
@@ -65,7 +68,7 @@
     @endif
 
     {{-- Section: INFRASTRUCTURES --}}
-    @if (auth()->user()->profile_id != 3)
+    @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Infrastructures</div>
     <div class="sidebar-group mb-1">
         <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('locals.*') || request()->routeIs('cities.*') ? 'text-primary bg-primary-subtle' : '' }}"
@@ -86,7 +89,7 @@
     @endif
 
     {{-- Section: STRUCTURE --}}
-    @if (auth()->user()->profile_id != 3)
+    @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Organisation</div>
     <div class="sidebar-group mb-1">
         @php $isOrg = request()->routeIs('services.*') || request()->routeIs('entities.*') || request()->routeIs('sectors.*') || request()->routeIs('sections.*'); @endphp
@@ -110,7 +113,7 @@
     @endif
 
     {{-- Section: CHEFS --}}
-    @if (auth()->user()->profile_id != 3)
+    @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Hiérarchie</div>
     <div class="sidebar-group mb-3">
         <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('chefs.*') ? 'text-primary bg-primary-subtle' : '' }}"
@@ -170,7 +173,7 @@
         </div>
     @endif
 
-    @if (auth()->user()->profile_id == 4)
+    @if (auth()->user()->profile_id == 4 )
         <div class="sidebar-section-title mt-3 mb-1 px-3">Performance</div>
         <div class="sidebar-group mb-3">
             <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('audit.values.*') ? 'text-primary bg-primary-subtle' : '' }}"

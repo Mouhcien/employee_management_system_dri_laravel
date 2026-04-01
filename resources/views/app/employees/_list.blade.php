@@ -180,6 +180,11 @@
     </tbody>
 </table>
 
+{{-- Preview Photo flottante --}}
+<div id="employee-photo-preview">
+    <img src="" alt="Aperçu employé">
+</div>
+
 <style>
     .ls-1 { letter-spacing: 0.5px; }
     .extra-small { font-size: 0.7rem; }
@@ -188,4 +193,77 @@
     .bg-light-subtle { background-color: #f8f9fa !important; }
     .avatar-hover:hover { transform: scale(1.1); transition: 0.2s ease; }
     .hover-row:hover { background-color: #f8fbff !important; }
+
+    #employee-photo-preview {
+        display: none;
+        position: fixed; /* Fixed relative to the viewport */
+        z-index: 10000;
+        width: 400px;
+        height: 400px;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        border: 5px solid white;
+        pointer-events: none; /* Prevents the preview from flickering when the cursor touches it */
+        background-color: #fff;
+    }
+
+    #employee-photo-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    /* Fix for dropdowns being cut off in responsive tables */
+    .table-responsive {
+        overflow: visible !important;
+    }
+
+    .table td {
+        position: relative; /* Helps with z-index positioning */
+    }
+
+    /* Optional: Ensure the menu stays above other rows */
+    .dropup .dropdown-menu {
+        z-index: 1050;
+    }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const previewContainer = document.getElementById('employee-photo-preview');
+        const previewImg = previewContainer.querySelector('img');
+        const thumbnails = document.querySelectorAll('.employee-photo-thumb');
+
+        thumbnails.forEach(thumb => {
+            thumb.addEventListener('mouseenter', function(e) {
+                // Set the preview source to the thumbnail source
+                previewImg.src = this.src;
+                previewContainer.style.display = 'block';
+            });
+
+            thumb.addEventListener('mousemove', function(e) {
+                // Position the preview 20px to the right and 20px below the cursor
+                // Adjust calculations if the preview goes off-screen
+                let x = e.clientX + 20;
+                let y = e.clientY + 20;
+
+                // Simple collision detection for the right edge of the screen
+                if (x + 400 > window.innerWidth) {
+                    x = e.clientX - 420;
+                }
+                // Simple collision detection for the bottom edge
+                if (y + 400 > window.innerHeight) {
+                    y = e.clientY - 420;
+                }
+
+                previewContainer.style.left = x + 'px';
+                previewContainer.style.top = y + 'px';
+            });
+
+            thumb.addEventListener('mouseleave', function() {
+                previewContainer.style.display = 'none';
+                previewImg.src = '';
+            });
+        });
+    });
+</script>

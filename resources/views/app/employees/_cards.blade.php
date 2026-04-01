@@ -47,17 +47,20 @@
                     </div>
 
                     {{-- Avatar Section --}}
+                    {{-- Avatar Section --}}
                     <div class="d-flex justify-content-center" style="margin-top: -30px;">
                         <div class="position-relative">
                             @if($employee->photo && Storage::disk('public')->exists($employee->photo))
-                                <img src="{{ Storage::url($employee->photo) }}" class="rounded-circle border border-3 border-white shadow-sm object-fit-cover avatar-hover" width="65" height="65">
+                                <img src="{{ Storage::url($employee->photo) }}"
+                                     class="rounded-circle border border-3 border-white shadow-sm object-fit-cover avatar-hover employee-photo-thumb employee-avatar"
+                                     width="65" height="65" style="cursor: zoom-in;">
                             @else
-                                <div class="rounded-circle border border-3 border-white shadow-sm d-flex align-items-center justify-content-center text-white fw-bold"
-                                     style="width:65px; height:65px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+                                <div class="employee-avatar rounded-circle border border-3 border-white shadow-sm d-flex align-items-center justify-content-center text-white fw-bold"
+                                     style="width:65px; height:65px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); cursor: zoom-in;">
                                     {{ strtoupper(substr($employee->firstname, 0, 1)) }}{{ strtoupper(substr($employee->lastname, 0, 1)) }}
                                 </div>
                             @endif
-                            <span class="position-absolute bottom-0 end-0 p-1 bg-{{ $employee->status == 1 ? 'success' : 'danger' }} border border-2 border-white rounded-circle" style="width:14px; height:14px;"></span>
+                            <span class="position-absolute bottom-0 end-0 p-1 bg-{{ $employee->status == 1 ? 'success' : 'danger' }} border border-2 border-white rounded-circle" style="width:14px; height:14px; pointer-events: none;"></span>
                         </div>
                     </div>
 
@@ -140,6 +143,10 @@
     </div>
 </div>
 
+<div id="employee-photo-preview" style="display: none; position: fixed; z-index: 10000; width: 400px; height: 400px; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.3); border: 5px solid white; pointer-events: none; background-color: #fff;">
+    <img src="" alt="Aperçu employé" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+
 <style>
     .hover-lift { transition: all 0.2s ease-in-out; }
     .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important; }
@@ -194,5 +201,85 @@
         const closeModal = () => modal.classList.remove('show');
         document.getElementById('closeModalBtn').addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+
+        const previewContainer = document.getElementById('employee-photo-preview');
+        const previewImg = previewContainer.querySelector('img');
+        const cardsContainer = document.getElementById('employees-cards');
+
+        // --- 1. HOVER PREVIEW LOGIC (Event Delegation) ---
+        cardsContainer.addEventListener('mouseover', function(e) {
+            const thumb = e.target.closest('.employee-photo-thumb');
+            if (thumb) {
+                previewImg.src = thumb.src;
+                previewContainer.style.display = 'block';
+            }
+        });
+
+        cardsContainer.addEventListener('mousemove', function(e) {
+            if (previewContainer.style.display === 'block') {
+                let x = e.clientX + 20;
+                let y = e.clientY + 20;
+
+                // Collision detection for screen edges
+                if (x + 400 > window.innerWidth) x = e.clientX - 420;
+                if (y + 400 > window.innerHeight) y = e.clientY - 420;
+
+                previewContainer.style.left = x + 'px';
+                previewContainer.style.top = y + 'px';
+            }
+        });
+
+        cardsContainer.addEventListener('mouseout', function(e) {
+            if (e.target.closest('.employee-photo-thumb')) {
+                previewContainer.style.display = 'none';
+                previewImg.src = '';
+            }
+        });
+
+        // --- 2. DOUBLE CLICK LOGIC (Expanded Profile) ---
+        cardsContainer.addEventListener('dblclick', function(e) {
+            const avatar = e.target.closest('.employee-avatar');
+            if (avatar) {
+                // Hide the hover preview immediately so it doesn't stay stuck
+                previewContainer.style.display = 'none';
+
+                // Find the ID and name (hidden in data attributes on the nearby button)
+                const parentCard = avatar.closest('.employee-card');
+                const detailsBtn = parentCard.querySelector('.open-details-modal');
+                const empId = detailsBtn.dataset.employeeId;
+
+                // Trigger your Full Screen Overlay Logic here
+                openFullScreenProfile(empId, avatar);
+            }
+        });
     });
+
+    /**
+     * Re-using the logic to fill the full-screen overlay from your previous requirement
+     */
+    function openFullScreenProfile(id, avatarElement) {
+        const imageDest = document.getElementById('imageDest');
+        const personalDest = document.getElementById('personalDest');
+        const professionalDest = document.getElementById('professionalDest');
+        const overlay = document.getElementById('profileOverlay');
+
+        if (!overlay) return; // Exit if the full-screen HTML doesn't exist on this page
+
+        // 1. Clone Avatar to Center
+        const imgClone = avatarElement.cloneNode(true);
+        imgClone.style.width = '600px';
+        imgClone.style.height = '600px';
+        imageDest.innerHTML = '';
+        imageDest.appendChild(imgClone);
+
+        // 2. Add structural info beneath center image (grabbed from the hidden div)
+        const hiddenData = document.getElementById('details-data-' + id);
+        const structInfo = hiddenData.cloneNode(true);
+        structInfo.classList.remove('d-none');
+        imageDest.appendChild(structInfo);
+
+        // 3. Show Overlay
+        overlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
 </script>

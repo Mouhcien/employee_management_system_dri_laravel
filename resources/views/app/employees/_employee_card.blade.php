@@ -4,7 +4,7 @@
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-white py-3 border-bottom">
                     <h5 class="card-title mb-0 fw-bold text-primary">
-                        <i class="bi bi-people-fill me-2"></i>Employés
+                        <i class="bi bi-people-fill me-2"></i>Liste des Agents
                     </h5>
                 </div>
                 <div class="card border-0 shadow-sm h-100">
@@ -133,16 +133,18 @@
 
                             @if($photoExists)
                                 <img src="{{ Storage::url($employeeObj->photo) }}"
-                                     class="rounded-circle border border-4 border-white shadow-lg object-fit-cover bg-white"
-                                     width="200" height="200">
+                                     {{-- ADDED CLASSES AND STYLE BELOW --}}
+                                     class="employee-avatar employee-photo-thumb rounded-circle border border-4 border-white shadow-lg object-fit-cover bg-white"
+                                     width="200" height="200" style="cursor: zoom-in; position: relative; z-index: 10;">
                             @else
-                                <div class="rounded-circle border border-4 border-white shadow-lg d-flex align-items-center justify-content-center text-white fw-bold h1 mb-0"
-                                     style="width:160px; height:160px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);">
+                                <div class="employee-avatar rounded-circle border border-4 border-white shadow-lg d-flex align-items-center justify-content-center text-white fw-bold h1 mb-0"
+                                     style="width:160px; height:160px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); cursor: zoom-in;">
                                     {{ strtoupper(substr($employeeObj->firstname, 0, 1)) }}{{ strtoupper(substr($employeeObj->lastname, 0, 1)) }}
                                 </div>
                             @endif
 
-                            <span class="position-absolute bottom-0 end-0 mb-1 me-1 p-2 bg-{{ $employeeObj->status == 1 ? 'success' : 'danger' }} border border-3 border-white rounded-circle shadow"></span>
+                            {{-- Pointer-events: none added here so the dot doesn't block the click --}}
+                            <span class="position-absolute bottom-0 end-0 mb-1 me-1 p-2 bg-{{ $employeeObj->status == 1 ? 'success' : 'danger' }} border border-3 border-white rounded-circle shadow" style="pointer-events: none; z-index: 11;"></span>
                         </div>
 
                         <div class="px-3">
@@ -253,6 +255,10 @@
     </div>
 </div>
 
+<div id="employee-photo-preview" style="display: none; position: fixed; z-index: 10000; width: 500px; height: 500px; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.3); border: 5px solid white; pointer-events: none; background-color: #fff;">
+    <img src="" alt="Aperçu" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+
 <style>
     .avatar-hover { transition: transform 0.3s ease; }
     .avatar-hover:hover { transform: scale(1.05); }
@@ -260,3 +266,76 @@
     .extra-small { font-size: 0.7rem; }
     .border-transparent { border-left-color: transparent !important; }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const previewContainer = document.getElementById('employee-photo-preview');
+        const previewImg = previewContainer.querySelector('img');
+
+        // --- 1. HOVER PREVIEW LOGIC ---
+        document.addEventListener('mouseover', function(e) {
+            const thumb = e.target.closest('.employee-photo-thumb');
+            if (thumb) {
+                previewImg.src = thumb.src;
+                previewContainer.style.display = 'block';
+            }
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (previewContainer.style.display === 'block') {
+                let x = e.clientX + 20;
+                let y = e.clientY + 20;
+
+                if (x + 400 > window.innerWidth) x = e.clientX - 420;
+                if (y + 400 > window.innerHeight) y = e.clientY - 420;
+
+                previewContainer.style.left = x + 'px';
+                previewContainer.style.top = y + 'px';
+            }
+        });
+
+        document.addEventListener('mouseout', function(e) {
+            if (e.target.closest('.employee-photo-thumb')) {
+                previewContainer.style.display = 'none';
+            }
+        });
+
+        // --- 2. DOUBLE CLICK EXPANDED MODE ---
+        document.addEventListener('dblclick', function(e) {
+            const avatar = e.target.closest('.employee-avatar');
+            if (avatar) {
+                previewContainer.style.display = 'none'; // Hide preview immediately
+
+                const imageDest = document.getElementById('imageDest');
+                const personalDest = document.getElementById('personalDest');
+                const professionalDest = document.getElementById('professionalDest');
+                const overlay = document.getElementById('profileOverlay');
+
+                if (!overlay) return;
+
+                // Clone Image to Center
+                const imgClone = avatar.cloneNode(true);
+                imgClone.style.width = '600px';
+                imgClone.style.height = '600px';
+                imageDest.innerHTML = '';
+                imageDest.appendChild(imgClone);
+
+                // Clone the 'Affectation' and 'Geolocalisation' boxes into the center under image
+                const infoBoxes = document.querySelector('.card-body.mt-5').cloneNode(true);
+                imageDest.appendChild(infoBoxes);
+
+                // Optionally fill side panels if they exist in your x-layout
+                personalDest.innerHTML = '<h3 class="text-primary">Info Agent</h3>' + document.querySelector('.px-3').innerHTML;
+
+                overlay.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+
+    // Full Screen Close Logic
+    function closeProfile() {
+        document.getElementById('profileOverlay').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+</script>
