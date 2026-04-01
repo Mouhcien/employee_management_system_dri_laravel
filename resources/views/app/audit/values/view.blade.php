@@ -191,7 +191,7 @@
                     @php
                         $tableName = $tableValues->first()->relation->table->title ?? 'Table #'.$tableId;
                         $tableColumns = $tableValues->map(fn($v) => $v->relation->column)->unique('id');
-                        $valuesByPeriod = $tableValues->groupBy('period_id')->sortByDesc(fn($group) => $group->first()->period->title);
+                        $valuesByPeriod = $tableValues->groupBy('period_id')->sortByDesc(fn($group) => $group->first()->period->year);
                         $periodKeys = $valuesByPeriod->keys()->toArray();
                     @endphp
 
@@ -222,7 +222,7 @@
                                         @endphp
                                         <tr>
                                             <td class="ps-4 border-end bg-light-subtle">
-                                                <div class="fw-bold text-dark">{{ $period->title }}</div>
+                                                <div class="fw-bold text-dark">{{ $period->title }} {{ $period->year }}</div>
                                                 <small class="text-muted extra-small text-uppercase">{{ $period->start_date }} → {{ $period->end_date }}</small>
                                             </td>
                                             @foreach($tableColumns as $col)

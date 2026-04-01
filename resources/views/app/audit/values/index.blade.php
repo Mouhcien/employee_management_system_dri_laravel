@@ -200,7 +200,7 @@
                 <h5 class="d-inline ms-2 fw-bold text-secondary mb-0">Indicateurs de performance</h5>
             </div>
             <div class="d-flex gap-2">
-                <button class="btn btn-light border btn-sm text-secondary px-3">
+                <button type="button" class="btn btn-light border btn-sm text-secondary px-3" data-bs-toggle="modal" data-bs-target="#importValuesModal">
                     <i class="bi bi-file-earmark-excel me-1"></i>Modèle
                 </button>
                 @if (is_null($values))
@@ -264,6 +264,8 @@
     </div>
 
     </form>
+
+    <x-import-values-modal :periods="$periods" :table="$tableObj ?? null" />
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

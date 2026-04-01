@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\ChefExport;
 use App\Exports\ModelPerformance;
+use App\Models\Employee;
 use App\services\ColumnService;
 use App\Services\EmployeeService;
 use App\services\EntityService;
@@ -18,6 +19,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Mockery\Exception;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class ValueController extends Controller
 {
@@ -241,6 +243,80 @@ class ValueController extends Controller
 
                 $this->valueService->create($data);
             }
+
+            return redirect()->route('audit.values.index')->with('success', "Sauvgrade est bien faite !!!");
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function import(Request $request) {
+        try {
+            //dd($request);
+
+            $data['period_id'] = $request->period_id;
+            $data['table_id'] = $request->table_id;
+
+            $period = $this->periodService->getOneById($request->period_id);
+            if (is_null($period))
+                return back()->with('error', 'Période introuvable !!!');
+
+            $table = $this->tableService->getOneById($request->table_id);
+            if (is_null($table))
+                return back()->with('error', 'Le tableau de suivi est introuvable !!!');
+
+            //get table columns
+
+            $columns = $this->columnService->getAllColumnsByTable($table->id);
+
+            if ($request->hasFile('file')) {
+
+                $request->validate([
+                    'file' => 'required|file|mimes:xlsx,csv,xls'
+                ]);
+
+                // Read data into array
+                $rows = Excel::toArray([], $request->file('file'));
+
+                //get the headers
+                $headers = null;
+                foreach ($rows[0] as $rr) {
+                    $headers = $rr;
+                    break;
+                }
+
+                $count = 0; //count the header
+                foreach ($rows[0] as $rr) {
+                    if ($count > 0) {
+                        foreach ($columns as $column) {
+                            $data['relation_id'] = $column->relations[0]->id;
+                            $j=0;
+                            foreach ($headers as $header) {
+                                if ($header == 'PPR')
+                                    $data['employee_id'] = $this->employeeService->getOneByPPR($rr[$j])->id;
+
+                                if ($column->title == $header)
+                                    $data['value'] = $rr[$j];
+                                $j++;
+                            }
+                            $this->valueService->create($data);
+                        }
+                    }
+                    $count++;
+                }
+
+                if ($count == count($rows[0])) {
+                    return redirect()->route('audit.values.index')->with('success', "Importation est bien faite!!  " . $count . "/" . count($rows[0]) . " !");
+                } else {
+                    return redirect()->route('audit.values.index')->with('error', "Erreur lors d'imortation !!! " . $count . "/" . count($rows[0]) . " !");
+                }
+
+            } else {
+                return redirect()->route('audit.values.index')->with('error', "Merci de spécifier le fichier excel !!!");
+            }
+
+
 
             return redirect()->route('audit.values.index')->with('success', "Sauvgrade est bien faite !!!");
 
@@ -514,6 +590,8 @@ class ValueController extends Controller
                     $values = $this->valueService->getAllBySection($id);
                     break;
             }
+
+            //dd($values);
 
             return view('app.audit.values.view-entity', [
                 'employees' => $employees,

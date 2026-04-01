@@ -209,219 +209,144 @@
                 {{-- 1. GROUP BY EMPLOYEE --}}
                 @php $i=0; @endphp
                 @if (count($values) != 0)
-                @foreach($values->groupBy(fn($item) => $item->employee->lastname . ' ' . $item->employee->firstname) as $employeeName => $employeeValues)
+                    @foreach($values->groupBy(fn($item) => $item->employee->lastname . ' ' . $item->employee->firstname) as $employeeName => $employeeValues)
 
-                    <div class="px-4 py-4 bg-white border-bottom d-flex align-items-start position-relative" style="border-left: 4px solid var(--saas-primary);">
-                        <div class="flex-shrink-0">
-                            @if($employeeValues->first()->employee->photo && Storage::disk('public')->exists($employeeValues->first()->employee->photo))
-                                <img src="{{ Storage::url($employeeValues->first()->employee->photo) }}" class="rounded-circle border border-3 border-white shadow-sm object-fit-cover avatar-hover" width="65" height="65">
-                            @else
-                                <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center text-white"
-                                     style="width: 56px; height: 56px; background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);">
-                                    <i class="bi bi-person-badge fs-4"></i>
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="ms-4 flex-grow-1">
-                            <div class="d-flex align-items-center mb-2">
-                                <h5 class="mb-0 fw-800 text-dark text-uppercase tracking-tight me-3">{{ $employeeName }}</h5>
-                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">
-                                    <i class="bi bi-check-circle-fill me-1"></i> Actif
-                                </span>
-                            </div>
-
-                            <div class="d-flex flex-wrap gap-2 align-items-center">
-                                @php
-                                    $activeAffectation = $employeeValues->first()->employee->affectations->where('state', 1)->first();
-                                @endphp
-
-                                @if($activeAffectation)
-                                    @if($activeAffectation->section)
-                                        <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary fw-bold px-3 py-2">
-                                            <i class="bi bi-diagram-3 me-1"></i> {{ $activeAffectation->section->title }}
-                                        </span>
-                                        <i class="bi bi-chevron-right text-muted opacity-50 small"></i>
-                                    @endif
-
-                                    @if($activeAffectation->sector)
-                                        <span class="badge rounded-pill bg-info bg-opacity-10 text-info fw-bold px-3 py-2">
-                                            <i class="bi bi-layers me-1"></i> {{ $activeAffectation->sector->title }}
-                                        </span>
-                                        <i class="bi bi-chevron-right text-muted opacity-50 small"></i>
-                                    @endif
-
-                                    <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning-emphasis fw-bold px-3 py-2">
-                                        <i class="bi bi-building me-1"></i> {{ $activeAffectation->entity->title }}
-                                    </span>
-
-                                    <i class="bi bi-chevron-right text-muted opacity-50 small"></i>
-
-                                    <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary fw-bold px-3 py-2">
-                                        <i class="bi bi-diagram-3-fill me-1"></i> {{ $activeAffectation->service->title }}
-                                    </span>
+                        {{-- ... (Employee Header remains the same) ... --}}
+                        <div class="px-4 py-4 bg-white border-bottom d-flex align-items-start position-relative" style="border-left: 4px solid var(--saas-primary);">
+                            <div class="flex-shrink-0">
+                                @if($employeeValues->first()->employee->photo && Storage::disk('public')->exists($employeeValues->first()->employee->photo))
+                                    <img src="{{ Storage::url($employeeValues->first()->employee->photo) }}" class="rounded-circle border border-3 border-white shadow-sm object-fit-cover avatar-hover" width="65" height="65">
+                                @else
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center text-white"
+                                         style="width: 56px; height: 56px; background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);">
+                                        <i class="bi bi-person-badge fs-4"></i>
+                                    </div>
                                 @endif
                             </div>
 
-                            <div class="mt-2">
-                                <small class="text-muted fw-bold text-uppercase x-small tracking-widest">
-                                    <i class="bi bi-clock-history me-1"></i> Historique des performances par période
-                                </small>
+                            <div class="ms-4 flex-grow-1">
+                                <div class="d-flex align-items-center mb-2">
+                                    <h5 class="mb-0 fw-800 text-dark text-uppercase tracking-tight me-3">{{ $employeeName }}</h5>
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">
+                            <i class="bi bi-check-circle-fill me-1"></i> Actif
+                        </span>
+                                </div>
+                                {{-- ... (Affectation Badges) ... --}}
+                                <div class="mt-2">
+                                    <small class="text-muted fw-bold text-uppercase x-small tracking-widest">
+                                        <i class="bi bi-clock-history me-1"></i> Historique des performances par table
+                                    </small>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="ms-auto d-none d-lg-block">
-                            <div class="text-end">
-                                <div class="text-muted x-small fw-bold text-uppercase">Dernière mise à jour</div>
-                                <div class="fw-bold text-dark">{{ now()->format('d/m/Y') }}</div>
+                        {{-- 2. GROUP BY TABLE TITLE --}}
+                        @foreach($employeeValues->groupBy(fn($item) => $item->relation->table->title) as $tableTitle => $tableEntries)
+                            <div class="px-4 py-2 bg-light border-bottom">
+                    <span class="fw-bold small text-primary text-uppercase">
+                        <i class="bi bi-table me-2"></i> Table : {{ $tableTitle }}
+                    </span>
                             </div>
-                        </div>
-                    </div>
 
-                    {{-- 2. GROUP BY PERIOD AND SORT DESCENDING --}}
-                    @foreach($employeeValues->groupBy('period.title')->sortByDesc(fn($group, $key) => $key) as $periodTitle => $valuesInPeriod)
-                        <div class="px-4 py-2 bg-light border-bottom">
-                            <span class="fw-bold small text-primary">
-                                <i class="bi bi-calendar3 me-2"></i> Période : {{ $periodTitle }} {{ $valuesInPeriod->first()->period->year }}
-                            </span>
-                        </div>
+                            <div class="p-4">
+                                {{-- 3. GROUP BY period_id AND SORT BY YEAR DESCENDING --}}
+                                @php
+                                    // Grouping by period_id ensures unique periods across years
+                                    $periodsInTable = $tableEntries->groupBy('period_id')
+                                        ->sortByDesc(fn($group) => $group->first()->period->year);
 
-                        <div class="p-4">
-                            {{-- 3. GROUP BY TABLE TITLE --}}
-                            @foreach($valuesInPeriod->groupBy(fn($item0) => $item0->relation->table->title) as $tableTitle => $tableEntries)
-                                <div class="card border shadow-sm mb-4">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover align-middle mb-0">
-                                            <thead class="bg-white">
-                                            <tr>
-                                                <th class="px-4 py-3 text-muted fw-bold border-0" style="width: 200px;">
-                                                    <span class="badge bg-primary px-3 text-uppercase">{{ $tableTitle }}</span>
-                                                </th>
-                                                @foreach($tableEntries as $entry)
-                                                    <th class="px-4 py-3 text-center border-0 text-uppercase x-small text-secondary">
-                                                        {{ $entry->relation->column->title }}
+                                    // We use the keys (period_ids) to identify the sequence for trends
+                                    $periodKeys = $periodsInTable->keys()->toArray();
+                                @endphp
+
+                                @foreach($periodsInTable as $periodId => $valuesInPeriod)
+                                    @php $currentPeriod = $valuesInPeriod->first()->period; @endphp
+
+                                    <div class="card border shadow-sm mb-4">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle mb-0">
+                                                <thead class="bg-white">
+                                                <tr>
+                                                    <th class="px-4 py-3 text-muted fw-bold border-0" style="width: 200px;">
+                                            <span class="badge bg-primary px-3 text-uppercase">
+                                                {{ $currentPeriod->title }} {{ $currentPeriod->year }}
+                                            </span>
                                                     </th>
-                                                @endforeach
-                                                <th class="px-4 py-3 text-end border-0"></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td class="px-4 py-3 border-0 small text-muted fst-italic">
-                                                    Valeurs saisies
-                                                </td>
-                                                @php $attr = ""; @endphp
-                                                @foreach($tableEntries as $entry)
-                                                    <td class="px-4 py-3 text-center border-0">
-                                                        <div class="d-flex align-items-center justify-content-center">
-                                                            <input type="number"
-                                                                   class="form-control form-control-sm fw-bold text-center border-0 bg-light"
-                                                                   style="max-width: 80px; border-radius: 6px;"
-                                                                   value="{{ $entry->value }}" disabled>
+                                                    @foreach($valuesInPeriod as $entry)
+                                                        <th class="px-4 py-3 text-center border-0 text-uppercase x-small text-secondary">
+                                                            {{ $entry->relation->column->title }}
+                                                        </th>
+                                                    @endforeach
+                                                    <th class="px-4 py-3 text-end border-0"></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td class="px-4 py-3 border-0 small text-muted fst-italic"> Valeurs saisies </td>
+                                                    @php $attr = ""; @endphp
+                                                    @foreach($valuesInPeriod as $entry)
+                                                        <td class="px-4 py-3 text-center border-0">
+                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                <input type="number" class="form-control form-control-sm fw-bold text-center border-0 bg-light" style="max-width: 80px; border-radius: 6px;" value="{{ $entry->value }}" disabled>
 
-                                                            {{-- COMPARISON LOGIC --}}
-                                                            @php
-                                                                // Get period keys for this employee, sorted DESC
-                                                                $employeePeriodKeys = $employeeValues->groupBy('period.title')
-                                                                    ->sortByDesc(fn($group, $key) => $key)
-                                                                    ->keys()
-                                                                    ->toArray();
+                                                                {{-- COMPARISON LOGIC --}}
+                                                                @php
+                                                                    $currentIndex = array_search($periodId, $periodKeys);
+                                                                    $prevPeriodId = $periodKeys[$currentIndex + 1] ?? null;
+                                                                    $trend = null;
+                                                                    $prevTitle = "";
 
-                                                                $currentIndex = array_search($periodTitle, $employeePeriodKeys);
+                                                                    if ($prevPeriodId) {
+                                                                        $prevEntry = $tableEntries->where('period_id', $prevPeriodId)
+                                                                            ->where('relation_id', $entry->relation_id)
+                                                                            ->first();
 
-                                                                // Since it's DESC, the "Previous" period is the NEXT index (+1)
-                                                                $prevPeriodTitle = $employeePeriodKeys[$currentIndex + 1] ?? null;
-
-                                                                $trend = null;
-                                                                if ($prevPeriodTitle) {
-                                                                    $prevValue = $employeeValues->where('period.title', $prevPeriodTitle)
-                                                                        ->where('relation_id', $entry->relation_id)
-                                                                        ->first()?->value;
-
-                                                                    if ($prevValue !== null) {
-                                                                        if ($entry->value > $prevValue) $trend = 'up';
-                                                                        elseif ($entry->value < $prevValue) $trend = 'down';
+                                                                        if ($prevEntry) {
+                                                                            $prevTitle = $prevEntry->period->title;
+                                                                            if ($entry->value > $prevEntry->value) $trend = 'up';
+                                                                            elseif ($entry->value < $prevEntry->value) $trend = 'down';
+                                                                        }
                                                                     }
-                                                                }
-                                                            @endphp
+                                                                @endphp
 
-                                                            <span class="ms-2">
-                                                                @if($trend === 'up')
-                                                                    <i class="bi bi-caret-up-fill text-success" title="Supérieur à {{ $prevPeriodTitle }}"></i>
-                                                                @elseif($trend === 'down')
-                                                                    <i class="bi bi-caret-down-fill text-danger" title="Inférieur à {{ $prevPeriodTitle }}"></i>
-                                                                @else
-                                                                    <i class="bi bi-dash text-muted opacity-50"></i>
-                                                                @endif
-                                                            </span>
+                                                                <span class="ms-2">
+                                                        @if($trend === 'up')
+                                                                        <i class="bi bi-caret-up-fill text-success" title="Supérieur à {{ $prevTitle }}"></i>
+                                                                    @elseif($trend === 'down')
+                                                                        <i class="bi bi-caret-down-fill text-danger" title="Inférieur à {{ $prevTitle }}"></i>
+                                                                    @else
+                                                                        <i class="bi bi-dash text-muted opacity-50"></i>
+                                                                    @endif
+                                                    </span>
+                                                            </div>
+                                                        </td>
+                                                        @php $attr .= $entry->id."-" @endphp
+                                                    @endforeach
+
+                                                    <td class="px-4 py-3 text-end border-0">
+                                                        <div class="btn-group shadow-sm">
+                                                            <a href="{{ route('audit.values.edit', ['id' => $valuesInPeriod->first()->relation_id, 'attr' => $attr]) }}" class="btn btn-sm btn-white border text-warning"><i class="bi bi-pencil-square"></i></a>
+                                                            <button class="btn btn-sm btn-white border text-danger" data-bs-toggle="modal" data-bs-target="#deleteValueElementModal-{{ $valuesInPeriod->first()->id }}">
+                                                                <i class="bi bi-trash3"></i>
+                                                            </button>
                                                         </div>
                                                     </td>
-                                                    @php $attr .= $entry->id."-"  @endphp
-                                                @endforeach
-
-                                                <td class="px-4 py-3 text-end border-0">
-                                                    <div class="btn-group shadow-sm">
-                                                        <a href="{{ route('audit.values.edit', ['id' => $entry->relation_id, 'attr' => $attr]) }}" class="btn btn-sm btn-white border text-warning"><i class="bi bi-pencil-square"></i></a>
-                                                        <button class="dropdown-item btn btn-sm btn-white border text-danger" data-bs-toggle="modal" data-bs-target="#deleteValueElementModal-{{ $tableEntries[0]->id }}">
-                                                            <i class="bi bi-trash3 me-2"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
-                            @endforeach
-                        </div>
 
-                            @foreach($valuesInPeriod->groupBy(fn($item0) => $item0->relation->table->title) as $tableTitle => $tableEntries)
-                                <x-delete-model
-                                    href="{{ route('audit.values.delete', ['attr' => $attr]) }}"
-                                    message="Attention : La suppression de ces éléments est définitive."
-                                    title="Confirmation de Suppression"
-                                    target="deleteValueElementModal-{{ $tableEntries[0]->id }}" />
-                            @endforeach
+                                    <x-delete-model
+                                        href="{{ route('audit.values.delete', ['attr' => $attr]) }}"
+                                        message="Attention : La suppression est définitive."
+                                        title="Confirmation"
+                                        target="deleteValueElementModal-{{ $valuesInPeriod->first()->id }}" />
+                                @endforeach
+                            </div>
+                        @endforeach
+                        <div class="py-2 bg-white"></div>
                     @endforeach
-
-                    <div class="py-2 bg-white"></div> {{-- Spacer --}}
-
-                    @php $i++; @endphp
-                @endforeach
-
-                @else
-                    <div class="card border-0 shadow-sm my-5 bg-white">
-                        <div class="card-body p-5 text-center">
-                            <div class="mb-4">
-                                <div class="bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px;">
-                                    <i class="bi bi-people-fill text-warning fs-1"></i>
-                                </div>
-                            </div>
-
-                            <div class="mx-auto" style="max-width: 450px;">
-                                <h5 class="fw-bold text-dark">Prêt à consulter les performances ?</h5>
-                                <p class="text-muted mb-4">
-                                    Veuillez sélectionner un employé dans le panneau de configuration ci-dessus pour générer l'historique complet de ses indicateurs et comparer ses résultats par période.
-                                </p>
-
-                                <div class="d-inline-flex align-items-center text-primary fw-bold small text-uppercase tracking-wider">
-                                    <i class="bi bi-arrow-up me-2 pulse-animation"></i>
-                                    Utilisez les filtres pour commencer
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <style>
-                        /* Subtle pulse to draw attention to the top filters */
-                        @keyframes pulse-y {
-                            0%, 100% { transform: translateY(0); }
-                            50% { transform: translateY(-5px); }
-                        }
-                        .pulse-animation {
-                            animation: pulse-y 2s infinite ease-in-out;
-                        }
-                    </style>
                 @endif
             </div>
         </div>

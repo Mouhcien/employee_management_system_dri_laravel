@@ -27,6 +27,10 @@ class ColumnService
         return $this->columnRepository->One(Column::class, $this->with, $id);
     }
 
+    public function getAllColumnsByTable($table_id){
+        return $this->columnRepository->AllColumnsByTable($table_id, $this->with);
+    }
+
     public function create($data){
         $obj = new Column();
 

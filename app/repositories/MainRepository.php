@@ -15,7 +15,7 @@ class MainRepository
             $query->orderBy('employees.lastname', 'ASC');
 
         if ($class === Period::class)
-            $query->orderBy('periods.title', 'ASC');
+            $query->orderBy('periods.year', 'DESC')->orderBy('periods.title', 'ASC');
 
         /*
         else
