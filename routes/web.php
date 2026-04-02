@@ -175,6 +175,7 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/{id}', [EmployeeController::class, 'show'])->name('employees.show');
         Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('employees.edit');
         Route::post('/update/{id}', [EmployeeController::class, 'update'])->name('employees.update');
+        Route::post('/change/state/{id}', [EmployeeController::class, 'state'])->name('employees.change.state');
         Route::get('/delete/{id}', [EmployeeController::class, 'delete'])->name('employees.delete');
         Route::get('/unities/{id}', [EmployeeController::class, 'unities'])->name('employees.unities');
     });

@@ -16,9 +16,9 @@ class StoreAffectationRequest extends FormRequest
         return [
             'employee_id' => 'required',
             'service_id' => 'required',
-            'entity_id' => 'required',
-            'sector_id' => 'required',
-            'section_id' => 'required',
+            'entity_id' => 'nullable',
+            'sector_id' => 'nullable',
+            'section_id' => 'nullable',
             'affectation_date' => 'required',
         ];
     }

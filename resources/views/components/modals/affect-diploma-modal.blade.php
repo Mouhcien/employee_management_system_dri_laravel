@@ -1,5 +1,5 @@
 
-@props(['employee', 'diplomas'])
+@props(['employee', 'diplomas', 'options'])
 
 <div class="modal fade" id="affectDiplomaModal" tabindex="-1" aria-labelledby="affectDiplomaModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -38,7 +38,25 @@
                                 @endforeach
                             </select>
                         </div>
+                    </div>
+                    <div class="mb-4">
 
+                        <label for="workTitle" class="form-label fw-semibold text-dark mb-2">
+                            Filière <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group input-group-lg mb-2">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="bi bi-geo-alt text-primary"></i>
+                            </span>
+                            <select class="form-control" name="option_id">
+                                <option> Sélectionnez le diplôme</option>
+                                @foreach($options as $option)
+                                    <option value="{{ $option->id }}"> {{ $option->title }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-4">
                         <label for="workTitle" class="form-label fw-semibold text-dark mb-2">
                             Année d'obtention <span class="text-danger"></span>
                         </label>
@@ -48,7 +66,6 @@
                                 </span>
                             <input type="number" name="year" class="form-control">
                         </div>
-
                     </div>
                 </div>
 

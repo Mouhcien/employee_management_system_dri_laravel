@@ -11,6 +11,7 @@ use App\services\DiplomaService;
 use App\services\EmployeeService;
 use App\services\LocalService;
 use App\services\OccupationService;
+use App\services\OptionService;
 use App\services\SectionEntityService;
 use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
@@ -38,7 +39,15 @@ class EmployeeController extends Controller
     private SectionEntityService $sectionEntityService;
     private SectorEntityService $sectorEntityService;
     private CategoryService $categoryService;
+    private OptionService $optionService;
     private $pages = 10;
+    private $rules = [
+        'ppr' => 'required',
+        'cin' => 'required',
+        'firstname' => 'required',
+        'lastname' => 'required',
+        'local_id' => 'required'
+    ];
 
     /**
      * @param EmployeeService $employeeService
@@ -57,7 +66,8 @@ class EmployeeController extends Controller
         EntityService $entityService,
         SectionEntityService $sectionEntityService,
         SectorEntityService $sectorEntityService,
-        CategoryService $categoryService
+        CategoryService $categoryService,
+        OptionService $optionService
     ) {
         $this->employeeService = $employeeService;
         $this->localService = $localService;
@@ -71,6 +81,7 @@ class EmployeeController extends Controller
         $this->sectionEntityService = $sectionEntityService;
         $this->sectorEntityService = $sectorEntityService;
         $this->categoryService = $categoryService;
+        $this->optionService = $optionService;
     }
 
 
@@ -150,11 +161,17 @@ class EmployeeController extends Controller
         }
     }
 
-    public function store(StoreEmployeeRequest $request)
+    public function store(Request $request)
     {
         try {
-            $data = $request->validated();
 
+            $data = $request->validate($this->rules);
+
+            $data['firstname'] = $request->input('firstname');
+            $data['lastname'] = $request->input('lastname');
+            $data['ppr'] = $request->input('ppr');
+            $data['cin'] = $request->input('cin');
+            $data['local_id'] = $request->input('local_id');
             $data['firstname_arab'] = $request->input('firstname_arab');
             $data['lastname_arab'] = $request->input('lastname_arab');
             $data['birth_date'] = $request->input('birth_date');
@@ -165,7 +182,6 @@ class EmployeeController extends Controller
             $data['hiring_public_date'] = $request->input('hiring_public_date');
             $data['address'] = $request->input('address');
             $data['tel'] = $request->input('tel');
-            $data['city'] = $request->input('city');
             $data['email'] = $request->input('email');
             $data['category_id'] = $request->input('category_id');
             $data['status'] = Employee::STATUS_ACTIVE;
@@ -174,7 +190,7 @@ class EmployeeController extends Controller
             if ($request->hasFile('photo')) {
                 $file = $request->file('photo');
 
-                $filename = $data['ppr'].$file->extension();
+                $filename = $data['ppr'].".".$file->extension();
                 $path = $file->storeAs('photos/employees', $filename, 'public');
 
                 $data['photo'] = $path;
@@ -183,14 +199,14 @@ class EmployeeController extends Controller
             $result = $this->employeeService->create($data);
 
             if ($result) {
-                return redirect()->route('employees.index')->with('success', 'Employée est bien ajouté !!!');
+                return redirect()->route('employees.index')->with('success', 'Agente est bien ajouté !!!');
             }
 
             return back()->with('error', 'Erreur insertion employé');
 
         } catch (\Exception $exception) {
             Log::error('Error in EmployeeController@store: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue lors de l\'enregistrement de l\'employé.');
+            return back()->with('error', $exception->getMessage());
         }
     }
 
@@ -202,7 +218,7 @@ class EmployeeController extends Controller
             $categories = $this->categoryService->getAll(0);
 
             if (is_null($employee)) {
-                return back()->with('error', 'Employé introuvable');
+                return back()->with('error', 'Agent introuvable');
             }
 
             return view('app.employees.insert', [
@@ -217,16 +233,21 @@ class EmployeeController extends Controller
         }
     }
 
-    public function update(UpdateEmployeeRequest $request, $id)
+    public function update(Request $request, $id)
     {
         try {
             $employee = $this->employeeService->getOneById($id);
             if (is_null($employee)) {
-                return back()->with('error', 'Employé introuvable');
+                return back()->with('error', 'Agent introuvable');
             }
 
-            $data = $request->validated();
+            $data = $request->validate($this->rules);
 
+            $data['firstname'] = $request->input('firstname');
+            $data['lastname'] = $request->input('lastname');
+            $data['ppr'] = $request->input('ppr');
+            $data['cin'] = $request->input('cin');
+            $data['local_id'] = $request->input('local_id');
             $data['firstname_arab'] = $request->input('firstname_arab');
             $data['lastname_arab'] = $request->input('lastname_arab');
             $data['birth_date'] = $request->input('birth_date');
@@ -249,23 +270,26 @@ class EmployeeController extends Controller
                 }
 
                 $file = $request->file('photo');
-                $filename = time() . '_' . $data['lastname'] . '_' . $data['firstname'] . '-' . uniqid() . '.' . $file->extension();
+
+                $filename = $data['ppr'].".".$file->extension();
                 $path = $file->storeAs('photos/employees', $filename, 'public');
 
                 $data['photo'] = $path;
+            }else{
+                $data['photo'] = $employee->photo;
             }
 
             $result = $this->employeeService->update($id, $data);
 
             if ($result) {
-                return redirect()->route('employees.index')->with('success', 'Employée est bien modifié !!!');
+                return redirect()->route('employees.index')->with('success', 'Agente est bien modifié !!!');
             }
 
             return back()->with('error', 'Erreur insertion employé');
 
         } catch (\Exception $exception) {
             Log::error('Error in EmployeeController@update: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue lors de la modification de l\'employé.');
+            return back()->with('error', $exception->getMessage());
         }
     }
 
@@ -274,7 +298,7 @@ class EmployeeController extends Controller
         try {
             $employee = $this->employeeService->getOneById($id);
             if (is_null($employee)) {
-                return back()->with('error', 'Employé introuvable');
+                return back()->with('error', 'Agent introuvable');
             }
 
             $result = $this->employeeService->delete($id);
@@ -283,7 +307,7 @@ class EmployeeController extends Controller
                 if (!is_null($employee->photo)) {
                     Storage::disk('public')->delete($employee->photo);
                 }
-                return back()->with('success', 'Employé est supprimé avec success');
+                return back()->with('success', 'Agent est supprimé avec success');
             }
 
             return back()->with('error', 'Erreur suppression employé');
@@ -302,9 +326,10 @@ class EmployeeController extends Controller
             $diplomas = $this->diplomaService->getAll(0);
             $grades = $this->gradeService->getAll(0);
             $levels = $this->levelService->getAll(0);
+            $options = $this->optionService->getAll(0);
 
             if (is_null($employee)) {
-                return back()->with('error', 'Employé introuvable');
+                return back()->with('error', 'Agent introuvable');
             }
 
             return view('app.employees.show', [
@@ -313,6 +338,7 @@ class EmployeeController extends Controller
                 'diplomas' => $diplomas,
                 'grades' => $grades,
                 'levels' => $levels,
+                'options' => $options
             ]);
 
         } catch (\Exception $exception) {
@@ -326,7 +352,7 @@ class EmployeeController extends Controller
         try {
             $employee = $this->employeeService->getOneById($id);
             if (is_null($employee)) {
-                return back()->with('error', 'Employé introuvable');
+                return back()->with('error', 'Agent introuvable');
             }
 
             $services = $this->serviceEntityService->getAll(0);
@@ -453,7 +479,7 @@ class EmployeeController extends Controller
                 if ($count == count($rows[0])) {
                     return redirect()->route('employees.index')->with('success', "Importation est bien faite!!  " . $count . "/" . count($rows[0]) . " !");
                 } else {
-                    return redirect()->route('employees.index')->with('error', "Employé sont ajouté " . $count . "/" . count($rows[0]) . " !");
+                    return redirect()->route('employees.index')->with('error', "Agent sont ajouté " . $count . "/" . count($rows[0]) . " !");
                 }
 
             } else {
@@ -510,6 +536,58 @@ class EmployeeController extends Controller
 
         }catch (\Exception $exception) {
 
+        }
+    }
+
+    public function state(Request $request) {
+        try {
+            $employee_id = $request->input('employee_id');
+            $employee = $this->employeeService->getOneById($employee_id);
+            if (is_null($employee))
+                return back()->with('error', 'Agent introuvable !!');
+
+            $state = $request->input('state');
+            $motif = $request->input('motif');
+            $date_operation = $request->input('date');
+
+            $result = null;
+            switch ($state) {
+                case 1:
+                    $result = $this->employeeService->changeStateMode($employee_id, $state);
+                    break;
+                case 0:
+                    $data['disposition_date'] = $date_operation;
+                    $data['disposition_reason'] = $motif;
+                    $data['state'] = $state;
+                    $result = $this->employeeService->putOutsideMode($employee_id, $data);
+                    break;
+                case -1:
+                    $data['retiring_date'] = $date_operation;
+                    $data['state'] = $state;
+                    $result = $this->employeeService->putInRetiredMode($employee_id, $data);
+                    break;
+                case -2:
+                    $data['retiring_date'] = $date_operation;
+                    $data['disposition_reason'] = $motif; // use disposition_reason as motif for this state
+                    $data['state'] = $state;
+                    $result = $this->employeeService->putInSuspensionMode($employee_id, $data);
+                    break;
+                case 2:
+                    $data['reintegration_date'] = $date_operation;
+                    $data['reintegration_reason'] = $motif; // use disposition_reason as motif for this state
+                    $data['state'] = $state;
+                    $result = $this->employeeService->putInReIntegrationMode($employee_id, $data);
+                    break;
+            }
+
+            if ($result)
+                return back()->with('success', "Sitation est bien modifié");
+            else
+                return back()->with('error', "Erreur lors de la modification de la situation !!");
+
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
     }
 

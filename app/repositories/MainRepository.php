@@ -11,8 +11,11 @@ class MainRepository
     public function All($class, $relations, $pages) {
         $query = $class::with($relations);
 
-        if ($class === Employee::class)
+        if ($class === Employee::class) {
+            $query->where('employees.status', '=', 1);
             $query->orderBy('employees.lastname', 'ASC');
+        }
+
 
         if ($class === Period::class)
             $query->orderBy('periods.year', 'DESC')->orderBy('periods.title', 'ASC');

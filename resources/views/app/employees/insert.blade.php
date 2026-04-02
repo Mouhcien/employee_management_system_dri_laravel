@@ -83,11 +83,11 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold text-muted text-uppercase">Situation familiale</label>
-                                <select class="form-select border-0 bg-light shadow-none py-2" name="family_status">
+                                <select class="form-select border-0 bg-light shadow-none py-2" name="sit">
                                     <option value="">Sélectionnez</option>
-                                    <option value="C" {{ old('family_status', $employee->family_status ?? '') === 'C' ? 'selected' : '' }}>Célibataire</option>
-                                    <option value="M" {{ old('family_status', $employee->family_status ?? '') === 'M' ? 'selected' : '' }}>Marié(e)</option>
-                                    <option value="D" {{ old('family_status', $employee->family_status ?? '') === 'D' ? 'selected' : '' }}>Divorcé(e)</option>
+                                    <option value="C" {{ old('family_status', $employee->sit ?? '') === 'C' ? 'selected' : '' }}>Célibataire</option>
+                                    <option value="M" {{ old('family_status', $employee->sit ?? '') === 'M' ? 'selected' : '' }}>Marié(e)</option>
+                                    <option value="D" {{ old('family_status', $employee->sit ?? '') === 'D' ? 'selected' : '' }}>Divorcé(e)</option>
                                 </select>
                             </div>
                         </div>

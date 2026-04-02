@@ -75,6 +75,7 @@ class EmployeeService
         return $this->employeeRepository->one(Employee::class, $this->with, $id);
     }
 
+
     public function getOneByPPR($ppr) {
         return $this->employeeRepository->getOneByPPR($ppr);
     }
@@ -86,6 +87,12 @@ class EmployeeService
     {
         $employee = new Employee();
 
+        $employee->ppr = $data['ppr'];
+        $employee->cin = $data['cin'];
+        $employee->firstname = $data['firstname'];
+        $employee->lastname = $data['lastname'];
+        $employee->local_id = $data['local_id'];
+        $employee->firstname_arab = $data['firstname_arab'];
         $employee->firstname_arab = $data['firstname_arab'];
         $employee->lastname_arab = $data['lastname_arab'];
         $employee->birth_date = $data['birth_date'];
@@ -96,10 +103,10 @@ class EmployeeService
         $employee->hiring_public_date = $data['hiring_public_date'];
         $employee->address = $data['address'];
         $employee->tel = $data['tel'];
-        $employee->city = $data['city'];
         $employee->email = $data['email'];
         $employee->category_id = $data['category_id'];
         $employee->status = $data['status'];
+        $employee->photo = $data['photo'];
 
         return $this->employeeRepository->add($employee);
     }
@@ -112,6 +119,11 @@ class EmployeeService
             return null;
         }
 
+        $employee->ppr = $data['ppr'];
+        $employee->cin = $data['cin'];
+        $employee->firstname = $data['firstname'];
+        $employee->lastname = $data['lastname'];
+        $employee->local_id = $data['local_id'];
         $employee->firstname_arab = $data['firstname_arab'];
         $employee->lastname_arab = $data['lastname_arab'];
         $employee->birth_date = $data['birth_date'];
@@ -122,10 +134,82 @@ class EmployeeService
         $employee->hiring_public_date = $data['hiring_public_date'];
         $employee->address = $data['address'];
         $employee->tel = $data['tel'];
-        $employee->city = $data['city'];
         $employee->email = $data['email'];
         $employee->category_id = $data['category_id'];
         $employee->status = $data['status'];
+        $employee->photo = $data['photo'];
+
+        return $this->employeeRepository->update($employee);
+    }
+
+    public function changeStateMode($id, $state)
+    {
+        $employee = $this->getOneById($id);
+
+        if (! $employee) {
+            return null;
+        }
+
+        $employee->status = $state;
+
+        return $this->employeeRepository->update($employee);
+    }
+
+    public function putOutsideMode($id, $data)
+    {
+        $employee = $this->getOneById($id);
+
+        if (! $employee) {
+            return null;
+        }
+
+        $employee->disposition_date = $data['disposition_date'];
+        $employee->disposition_reason = $data['disposition_reason'];
+        $employee->status = $data['state'];
+
+        return $this->employeeRepository->update($employee);
+    }
+
+    public function putInRetiredMode($id, $data)
+    {
+        $employee = $this->getOneById($id);
+
+        if (! $employee) {
+            return null;
+        }
+
+        $employee->retiring_date = $data['retiring_date'];
+        $employee->status = $data['state'];
+
+        return $this->employeeRepository->update($employee);
+    }
+
+    public function putInSuspensionMode($id, $data)
+    {
+        $employee = $this->getOneById($id);
+
+        if (! $employee) {
+            return null;
+        }
+
+        $employee->retiring_date = $data['retiring_date'];
+        $employee->disposition_reason = $data['disposition_reason'];
+        $employee->status = $data['state'];
+
+        return $this->employeeRepository->update($employee);
+    }
+
+    public function putInReIntegrationMode($id, $data)
+    {
+        $employee = $this->getOneById($id);
+
+        if (! $employee) {
+            return null;
+        }
+
+        $employee->reintegration_date = $data['reintegration_date'];
+        $employee->reintegration_reason = $data['reintegration_reason'];
+        $employee->status = $data['state'];
 
         return $this->employeeRepository->update($employee);
     }
@@ -146,29 +230,4 @@ class EmployeeService
         return $this->employeeRepository->latestInserted(Employee::class);
     }
 
-    private function filterData(array $data): array
-    {
-        return collect($data)->only([
-            'ppr',
-            'cin',
-            'firstname',
-            'lastname',
-            'firstname_arab',
-            'lastname_arab',
-            'birth_date',
-            'birth_city',
-            'gender',
-            'sit',
-            'hiring_date',
-            'local_id',
-            'address',
-            'city',
-            'tel',
-            'email',
-            'photo',
-            'status',
-            'hiring_public_date',
-            'category_id'
-        ])->toArray();
-    }
 }

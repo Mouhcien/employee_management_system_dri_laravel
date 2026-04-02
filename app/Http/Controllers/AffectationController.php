@@ -44,6 +44,15 @@ class AffectationController extends Controller
     public function store(StoreAffectationRequest $request)
     {
         $data = $request->validated();
+        $old_affectation = $request->input('old_affectation');
+
+        if (!is_null($old_affectation)) {
+            $affectation = $this->affectationService->getOneById($old_affectation);
+            if (is_null($affectation))
+                return back()->with('error', "L'encien affectation est introuvable !!");
+
+            $this->affectationService->changeState($old_affectation, false);
+        }
 
         if ($this->affectationService->create($data)) {
             return back()->with('success', 'Affectation est bien spécifié');

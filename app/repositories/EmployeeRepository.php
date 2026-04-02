@@ -13,6 +13,7 @@ class EmployeeRepository extends MainRepository
 
         $query =  Employee::with($this->with)
             ->where($filter['col'], '=', $filter['val'])
+            ->where('employees.status', '=', 1)
             ->orderBy('lastname', 'ASC');
 
         return $pages == 0 ? $query->get() : $query->paginate($pages);
@@ -24,6 +25,7 @@ class EmployeeRepository extends MainRepository
             ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
             ->where('affectations.service_id', '=', $service_id)
             ->where('affectations.finished_date', '=', null)
+            ->where('employees.status', '=', 1)
             ->select('employees.*')
             ->orderBy('lastname', 'ASC');
 
@@ -36,6 +38,7 @@ class EmployeeRepository extends MainRepository
             ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
             ->where('affectations.entity_id', '=', $entity_id)
             ->where('affectations.finished_date', '=', null)
+            ->where('employees.status', '=', 1)
             ->select('employees.*')
             ->orderBy('lastname', 'ASC');
 
@@ -48,6 +51,7 @@ class EmployeeRepository extends MainRepository
             ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
             ->where('affectations.sector_id', '=', $sector_id)
             ->where('affectations.finished_date', '=', null)
+            ->where('employees.status', '=', 1)
             ->select('employees.*')
             ->orderBy('lastname', 'ASC');
 
@@ -60,6 +64,7 @@ class EmployeeRepository extends MainRepository
             ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
             ->where('affectations.section_id', '=', $section_id)
             ->where('affectations.finished_date', '=', null)
+            ->where('employees.status', '=', 1)
             ->select('employees.*')
             ->orderBy('lastname', 'ASC');
 
@@ -83,6 +88,7 @@ class EmployeeRepository extends MainRepository
                 });
             });
 
+        $query->where('employees.status', '=', 1);
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
 
@@ -101,6 +107,7 @@ class EmployeeRepository extends MainRepository
         if (isset($filter['gender']))
             $query->where('gender', '=', $filter['gender']);
 
+        $query->where('employees.status', '=', 1);
         $query->orderBy('birth_date', 'DESC');
 
         return $pages == 0 ? $query->get() : $query->paginate($pages);
@@ -155,6 +162,7 @@ class EmployeeRepository extends MainRepository
     public function allByCategory($category_id, $with, $pages) {
         $query =  Employee::with($with)
             ->where('category_id', '=', $category_id)
+            ->where('employees.status', '=', 1)
             ->orderBy('lastname', 'ASC');
 
         return $pages == 0 ? $query->get() : $query->paginate($pages);
@@ -165,6 +173,7 @@ class EmployeeRepository extends MainRepository
             ->join('categories', 'categories.id', '=', 'employees.category_id')
             ->selectRaw('employees.category_id, categories.title, COUNT(employees.id) AS total')
             ->groupBy('employees.category_id', 'categories.title')
+            ->where('employees.status', '=', 1)
             ->get();
     }
 

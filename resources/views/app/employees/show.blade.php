@@ -99,7 +99,6 @@
             color: white;
             border: none;
             font-weight: bold;
-            box-shadow: 0;
         }
 
         /* Styling for the structural info when inside the dark overlay */
@@ -193,19 +192,28 @@
                             <a href="{{ route('employees.index') }}" class="btn btn-light btn-sm px-4 fw-bold rounded-pill shadow-sm">
                                 <i class="bi bi-arrow-left me-2"></i>Retour
                             </a>
+
                             <a href="{{ route('employees.edit', $employee) }}" class="btn btn-warning btn-sm px-4 fw-bold rounded-pill shadow-sm">
                                 <i class="bi bi-pencil-square me-2"></i>Modifier
                             </a>
+
+                            <button type="button"
+                                    class="btn btn-info btn-sm px-4 fw-bold rounded-pill shadow-sm text-white"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#changeStateModal">
+                                <i class="bi bi-pencil-square me-2"></i>Situation
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <x-change-situation-emmployee :employee="$employee" />
+
             {{-- Body Section --}}
             <div class="card-body p-4 bg-white">
                 @php $activeAff = $employee->affectations->where('state', 1)->first(); @endphp
                 @if($activeAff)
-
                     <h6 class="text-uppercase text-primary fw-bolder mb-3 ls-1 small">
                         <i class="bi bi-diagram-3-fill me-2"></i>Affectation Structurelle Active :
                         @if (!is_null($activeAff->section))
@@ -234,6 +242,7 @@
                     <div class="text-center p-5 bg-light rounded-4 border border-dashed">
                         <i class="bi bi-exclamation-circle text-muted fs-2 opacity-50"></i>
                         <p class="text-muted small mb-0 mt-2">Aucune affectation active enregistrée.</p>
+                        <a class="dropdown-item rounded-3 py-2" href="{{ route('employees.unities', $employee) }}"><i class="bi bi-diagram-3 text-primary me-2"></i>Gérer l'affectation</a>
                     </div>
                 @endif
             </div>
@@ -343,9 +352,21 @@
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-light rounded-3 p-3 me-3 text-secondary"><i class="bi bi-hourglass-bottom fs-4"></i></div>
-                                    <div>
-                                        <small class="text-muted text-uppercase extra-small fw-bold">Départ à la retraite</small>
-                                        <div class="fw-bold text-dark">{{ $employee->retiring_date ? \Carbon\Carbon::parse($employee->retiring_date)->format('d F Y') : '—' }}</div>
+                                    <div class="p-2 border-start border-4 {{ \Carbon\Carbon::parse($employee->birth_date)->age >= 62 ? 'border-info' : 'border-light' }}">
+                                        <p class="text-muted small fw-bold text-uppercase mb-1">Départ à la retraite</p>
+
+                                        @if (\Carbon\Carbon::parse($employee->birth_date)->age >= 62 && is_null($employee->retiring_date))
+                                            <span class="text-primary fw-bold">
+                                            <i class="bi bi-arrow-right-circle me-1"></i> À mettre en retrait
+                                        </span>
+                                        @else
+                                            <div class="d-flex align-items-center">
+                                                <span class="fs-5 fw-bold text-dark">
+                                                    {{ $employee->retiring_date ? \Carbon\Carbon::parse($employee->retiring_date)->format('d F Y') : \Carbon\Carbon::parse($employee->birth_date)->age . ' ans' }}
+                                                </span>
+                                                <small class="ms-2 text-muted italic">/ 62 ans</small>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -391,7 +412,7 @@
                             <div class="card-header bg-white border-bottom-0 pt-4 px-4 d-flex justify-content-between align-items-center">
                                 <h6 class="fw-bold text-muted small mb-0 text-uppercase ls-1">Fonction</h6>
                                 @if(count($employee->works) == 0)
-                                    <button class="btn btn-sm btn-primary-light rounded-circle" data-bs-toggle="modal" data-bs-target="#affectOccupationModal"><i class="bi bi-plus-lg"></i></button>
+                                    <button class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#affectOccupationModal"><i class="bi bi-plus-lg"></i></button>
                                 @endif
                             </div>
                             <div class="card-body p-4 pt-2">
@@ -414,7 +435,7 @@
                         <div class="card border-0 shadow-sm rounded-4 h-100">
                             <div class="card-header bg-white border-bottom-0 pt-4 px-4 d-flex justify-content-between align-items-center">
                                 <h6 class="fw-bold text-muted small mb-0 text-uppercase ls-1">Grade Actuel</h6>
-                                <button class="btn btn-sm btn-primary-light rounded-circle" data-bs-toggle="modal" data-bs-target="#affectGradeModal"><i class="bi bi-plus-lg"></i></button>
+                                <button class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#affectGradeModal"><i class="bi bi-plus-lg"></i></button>
                             </div>
                             <div class="card-body p-4 pt-2">
                                 @forelse($employee->competences as $competence)
@@ -424,12 +445,19 @@
                                             <span class="fw-bold text-success">échelle : {{ $competence->grade->scale }}</span><br>
                                             <span class="fw-bold text-info">échellon : {{ $competence->echellon->title ?? 'N/A' }}</span>
                                         </div>
-                                        <button class="btn btn-sm btn-outline-danger border-0"><i class="bi bi-trash3"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger border-0" data-bs-toggle="modal" data-bs-target="#deleteCompetenceModal-{{ $competence->id }}"><i class="bi bi-trash3"></i></button>
                                     </div>
                                 @empty
                                     <div class="text-center py-3 border border-dashed rounded-3"><p class="small text-muted mb-0">Grade non défini</p></div>
                                 @endforelse
                             </div>
+                            @foreach($employee->competences as $competence)
+                                <x-delete-model
+                                    href="{{ route('competences.delete', $competence->id) }}"
+                                    message="Attention : La suppression du grade {{ $competence->grade->title }}  est irréversible."
+                                    title="Confirmation de Suppression du grade"
+                                    target="deleteCompetenceModal-{{ $competence->id }}" />
+                            @endforeach
                         </div>
                     </div>
 
@@ -454,13 +482,16 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @forelse($employee->qualifications as $qualification)
+                                        @forelse($employee->qualifications->sortByDesc('year') as $qualification)
                                             <tr>
                                                 <td class="fw-bold text-dark border-0">{{ $qualification->diploma->title }}</td>
                                                 <td class="fw-bold text-dark border-0">{{ $qualification->option->title ?? '-' }}</td>
                                                 <td class="text-center border-0"><span class="badge bg-secondary rounded-pill px-3">{{ $qualification->year ?? '-' }}</span></td>
                                                 <td class="text-end border-0">
-                                                    <button class="btn btn-sm btn-light border-0 rounded-circle text-danger shadow-xs"><i class="bi bi-trash-fill"></i></button>
+                                                    <button class="btn btn-sm btn-light border-0 rounded-circle text-danger shadow-xs"
+                                                            data-bs-toggle="modal" data-bs-target="#deleteQualificationModal-{{ $qualification->id }}">
+                                                        <i class="bi bi-trash-fill"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @empty
@@ -468,6 +499,13 @@
                                         @endforelse
                                         </tbody>
                                     </table>
+                                    @foreach($employee->qualifications as $qualification)
+                                    <x-delete-model
+                                        href="{{ route('qualifications.delete', $qualification->id) }}"
+                                        message="Attention : La suppression du {{ $qualification->diploma->title }}  est irréversible."
+                                        title="Confirmation de Suppression du diplôme"
+                                        target="deleteQualificationModal-{{ $qualification->id }}" />
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -479,7 +517,7 @@
 
     {{-- Modals --}}
     <x-affect-occupation-modal :employee="$employee" :occupations="$occupations" />
-    <x-affect-diploma-modal :employee="$employee" :diplomas="$diplomas" />
+    <x-affect-diploma-modal :employee="$employee" :diplomas="$diplomas" :options="$options" />
     <x-affect-grade-modal :employee="$employee" :levels="$levels" :grades="$grades" />
 
     <style>

@@ -105,4 +105,18 @@ class CompetenceController extends Controller
             return redirect()->route('settings.importation')->with('error', "Merci de spécifier le fichier excel contenant les employés avec les diplômes");
         }
     }
+
+    public function delete($id)
+    {
+        $competence = $this->competenceService->getOneById($id);
+        if (is_null($competence))
+            return back()->with('error', 'Grade Introuvable !!');
+
+        $result = $this->competenceService->delete($id);
+
+        if ($result)
+            return back()->with('success', 'La suppression du grade est bien faite !!');
+        else
+            return back()->with('error', 'Erreur lors de la suppression du grade !!!');
+    }
 }

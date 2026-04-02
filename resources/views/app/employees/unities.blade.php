@@ -44,6 +44,9 @@
                             <a href="{{ route('employees.index') }}" class="btn btn-white btn-rounded shadow-sm fw-bold px-4 transition-base">
                                 <i class="bi bi-arrow-left me-2"></i>Retour
                             </a>
+                            <a href="{{ route('employees.show', $employee) }}" class="btn btn-warning btn-sm px-4 fw-bold rounded-pill shadow-sm">
+                                <i class="bi bi-list me-2"></i>Consulter
+                            </a>
                             <a href="{{ route('employees.edit', $employee) }}" class="btn btn-primary-light btn-rounded shadow-sm fw-bold px-4 transition-base">
                                 <i class="bi bi-pencil-square me-2"></i>Modifier profil
                             </a>
@@ -136,7 +139,7 @@
                     <div class="card-body p-4">
                         <form action="{{ is_null($affectationObj) ? route('affectations.store') : route('affectations.update', $affectationObj->id)}}" method="POST">
                             @csrf
-
+                            <input type="hidden" name="old_affectation" value="{{ is_null($activeAff) ? null : $activeAff->id }}">
                             <div class="row g-4">
                                 <div class="col-md-6">
                                     <label class="form-label small fw-bold text-muted text-uppercase ls-1">Service d'accueil</label>

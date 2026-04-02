@@ -14,7 +14,8 @@ class QualificationController extends Controller
     private EmployeeService $employeeService;
     private $rules = [
         'employee_id' => 'required',
-        'diploma_id' => 'required'
+        'diploma_id' => 'required',
+        'option_id' => 'required'
     ];
 
     /**
@@ -34,6 +35,7 @@ class QualificationController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate($this->rules);
+        $data['year'] = $request->input('year');
 
         if ($this->qualificationService->create($data)) {
             return back()->with('success', 'Le dipôme est bien spécifié');
@@ -79,5 +81,19 @@ class QualificationController extends Controller
         } else {
             return redirect()->route('settings.importation')->with('error', "Merci de spécifier le fichier excel contenant les employés avec les diplômes");
         }
+    }
+
+    public function delete($id)
+    {
+        $qualification = $this->qualificationService->getOneById($id);
+        if (is_null($qualification))
+            return back()->with('error', "Qualification est diplôme introuvable !!");
+
+        $result = $this->qualificationService->delete($id);
+
+        if ($result)
+            return back()->with('success', "La suppression est bien faite !!!");
+        else
+            return back()->with('error', "Erreur lors de l'opération de suppression !!!");
     }
 }

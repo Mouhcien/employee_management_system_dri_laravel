@@ -72,6 +72,17 @@ class AffectationService
         return $this->affectationRepository->Update($obj);
     }
 
+    public function changeState($id, $state){
+        $obj = $this->getOneById($id);
+        if (is_null($obj))
+            return null;
+
+        $obj->state = $state;
+        $obj->finished_date = now();
+
+        return $this->affectationRepository->Update($obj);
+    }
+
     public function delete($id){
         $obj = $this->getOneById($id);
         if (is_null($obj))
