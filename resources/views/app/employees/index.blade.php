@@ -168,7 +168,7 @@
                 <div class="d-flex gap-2">
                     <div class="btn-group rounded-pill overflow-hidden shadow-xs">
                         <button class="btn btn-light border-end" onclick="window.print()"><i class="bi bi-printer"></i></button>
-                        <button class="btn btn-light"><i class="bi bi-file-earmark-excel"></i></button>
+                        <a class="btn btn-light" href="{{ route('employees.download') }}"><i class="bi bi-file-earmark-excel"></i></a>
                     </div>
                     <div class="btn-group rounded-pill overflow-hidden shadow-xs ms-2">
                         <a href="{{ route('employees.index') }}?opt=list" class="btn btn-{{ session('opt') == 'list' || !session('opt') ? 'primary' : 'light' }}">
