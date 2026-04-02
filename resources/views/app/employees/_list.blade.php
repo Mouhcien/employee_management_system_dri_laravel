@@ -70,8 +70,19 @@
             </td>
             <td class="py-3">
                 <div class="d-flex align-items-center text-muted small fw-medium">
-                    <i class="bi bi-calendar-event me-2 text-info"></i>
-                    {{ \Carbon\Carbon::parse($employee->hiring_date)->translatedFormat('d M Y') }}
+                    @if ($employee->status == "-1")
+                        Mise à la retraite <br> le
+                        {{ \Carbon\Carbon::parse($employee->retiring_date)->translatedFormat('d M Y') }}
+                    @elseif ($employee->status == "0") {{-- mise a disposition --}}
+                        Mise à la disposition <br> le
+                        {{ \Carbon\Carbon::parse($employee->disposition_date)->translatedFormat('d M Y') }}
+                    @elseif ($employee->status == "2") {{-- Suspension immédiate --}}
+                        Suspendu <br> le
+                        {{ \Carbon\Carbon::parse($employee->retiring_date)->translatedFormat('d M Y') }}
+                    @else
+                        <i class="bi bi-calendar-event me-2 text-info"></i>
+                        {{ \Carbon\Carbon::parse($employee->hiring_date)->translatedFormat('d M Y') }}
+                    @endif
                 </div>
             </td>
             <td class="py-3">

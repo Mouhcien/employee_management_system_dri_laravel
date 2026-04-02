@@ -110,7 +110,13 @@
         <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="min-height: 400px;">
 
             <div class="card-header bg-white py-3 px-4 border-bottom d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-list-stars text-primary me-2"></i>Effectif Non Actif <span class="badge bg-info">{{ $employees->total() }}</span></h5>
+                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-list-stars text-primary me-2"></i>Effectif Non Actif
+                    @if($employees instanceof \Illuminate\Pagination\AbstractPaginator)
+                        <span class="badge bg-info">{{ $employees->total()  }}</span>
+                    @else
+                        <span class="badge bg-info">{{ $employees->count()  }}</span>
+                    @endif
+                </h5>
                 <div class="d-flex gap-2">
                     <div class="btn-group rounded-pill overflow-hidden shadow-xs">
                         <button class="btn btn-light border-end" onclick="window.print()"><i class="bi bi-printer"></i></button>

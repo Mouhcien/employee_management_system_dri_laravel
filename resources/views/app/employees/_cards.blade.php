@@ -52,7 +52,6 @@
                     </div>
 
                     {{-- Avatar Section --}}
-                    {{-- Avatar Section --}}
                     <div class="d-flex justify-content-center {{ \Carbon\Carbon::parse($employee->birth_date)->age >= 62 ? 'bg-danger-subtle' : '' }}" style="margin-top: -30px;">
                         <div class="position-relative">
                             @if($employee->photo && Storage::disk('public')->exists($employee->photo))
@@ -78,6 +77,25 @@
                             <span class="badge bg-light text-dark border font-monospace extra-small" id="employee_ppr" title="PPR">#{{ $employee->ppr }}</span>
                             <span class="badge bg-light text-muted border font-monospace extra-small" id="employee_cin" title="CIN">{{ $employee->cin }}</span>
                             <span class="badge bg-light text-muted border font-monospace extra-small" id="employee_cin">{{ \Carbon\Carbon::parse($employee->birth_date)->age }} Ans</span>
+                        </div>
+
+                        <div class="d-flex justify-content-center gap-1 mb-3">
+                            @if ($employee->status == "-1")
+                                <span class="badge bg-light text-dark border font-monospace extra-small" >
+                                    Mise à la retraite le
+                                    {{ \Carbon\Carbon::parse($employee->retiring_date)->translatedFormat('d M Y') }}
+                                </span>
+                            @elseif ($employee->status == "0") {{-- mise a disposition --}}
+                                <span class="badge bg-light text-dark border font-monospace extra-small" >
+                                    Mise à la disposition le
+                                    {{ \Carbon\Carbon::parse($employee->disposition_date)->translatedFormat('d M Y') }}
+                                </span>
+                            @elseif ($employee->status == "2") {{-- Suspension immédiate --}}
+                                <span class="badge bg-light text-dark border font-monospace extra-small" >
+                                Suspendu le
+                                {{ \Carbon\Carbon::parse($employee->retiring_date)->translatedFormat('d M Y') }}
+                                </span>
+                            @endif
                         </div>
 
                         <ul class="list-unstyled text-start small mb-3 border rounded-3 p-2 bg-light-subtle">

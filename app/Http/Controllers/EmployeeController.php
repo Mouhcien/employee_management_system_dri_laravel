@@ -616,6 +616,12 @@ class EmployeeController extends Controller
                 $employees = $this->employeeService->allByFilterInActive($filter, $this->pages);
             }
 
+            $employeeObj = null;
+            if ($request->has('emp')) {
+                $employee_id = $request->query('emp');
+                $employeeObj = $this->employeeService->getOneById($employee_id);
+            }
+
             $template = 'app.employees.status';
 
             return view($template, [
@@ -624,7 +630,8 @@ class EmployeeController extends Controller
                 'maleCount' => $male_employees->count(),
                 'total_employee' => $this->pages == 0 ? $employees->count() : $employees->total(),
                 'filter_val' => $filter_val,
-                'state' => $state
+                'state' => $state,
+                'employeeObj' => $employeeObj
             ]);
 
         }catch (Exception $exception) {

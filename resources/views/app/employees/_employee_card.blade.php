@@ -192,6 +192,25 @@
                         </div>
                     </div>
 
+                    <div class="row pb-4">
+                        @if ($employeeObj->status == "-1")
+                            <span class="badge bg-danger-subtle text-dark border font-monospace extra-small" >
+                                    Mise à la retraite le
+                                    {{ \Carbon\Carbon::parse($employeeObj->retiring_date)->translatedFormat('d M Y') }}
+                                </span>
+                        @elseif ($employeeObj->status == "0") {{-- mise a disposition --}}
+                        <span class="badge bg-warning-subtle text-dark border font-monospace extra-small" >
+                                    Mise à la disposition le
+                                    {{ \Carbon\Carbon::parse($employeeObj->disposition_date)->translatedFormat('d M Y') }}
+                                </span>
+                        @elseif ($employeeObj->status == "2") {{-- Suspension immédiate --}}
+                        <span class="badge bg-danger text-dark border font-monospace extra-small" >
+                                Suspendu le
+                                {{ \Carbon\Carbon::parse($employeeObj->retiring_date)->translatedFormat('d M Y') }}
+                                </span>
+                        @endif
+                    </div>
+
                     <div class="row g-4">
                         <div class="col-md-7">
                             <div class="p-4 rounded-4 border-0 shadow-sm bg-primary bg-opacity-10 h-100">
