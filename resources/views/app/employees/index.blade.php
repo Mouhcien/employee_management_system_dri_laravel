@@ -134,6 +134,12 @@
                         <button type="submit" class="btn btn-dark flex-fill rounded-3 py-2 fw-bold transition-base">
                             <i class="bi bi-funnel-fill me-2"></i>Filtrer
                         </button>
+                        <button type="button" class="btn btn-info flex-fill rounded-3 py-2 fw-bold transition-base"
+                                title="Option de triage"
+                                data-bs-toggle="modal"
+                                data-bs-target="#sortEmployeeOptionsModal" >
+                            <i class="bi bi-sort-up-alt"></i>
+                        </button>
                         <a href="{{ route('employees.index') }}" class="btn btn-outline-secondary rounded-3 py-2">
                             <i class="bi bi-arrow-clockwise"></i>
                         </a>
@@ -143,11 +149,22 @@
         </div>
         @endif
 
+        {{-- sort option --}}
+        <x-sort-employee-options />
+
         {{-- Table Card --}}
         <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="min-height: 400px;">
 
             <div class="card-header bg-white py-3 px-4 border-bottom d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-list-stars text-primary me-2"></i>Effectif Actif</h5>
+                @if(request()->hasAny(['sort_ppr', 'sort_lastname', 'sort_firstname', 'sort_age']))
+                    <div class="mb-3 d-flex align-items-center gap-2">
+                        <span class="small text-muted">Tri actif :</span>
+                        <a href="{{ route('employees.index') }}" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-0 small">
+                            Effacer tous les tris <i class="bi bi-x-circle ms-1"></i>
+                        </a>
+                    </div>
+                @endif
                 <div class="d-flex gap-2">
                     <div class="btn-group rounded-pill overflow-hidden shadow-xs">
                         <button class="btn btn-light border-end" onclick="window.print()"><i class="bi bi-printer"></i></button>

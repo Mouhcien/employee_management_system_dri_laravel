@@ -218,4 +218,41 @@ class EmployeeRepository extends MainRepository
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
 
+    public function sortEmployeesByOption($request, $pages) {
+
+        $query = Employee::with(['works', 'qualifications', 'competences', 'remunerations', 'chefs', 'affectations'])
+                ->where('employees.status', '=', '1');
+
+        // 1. Tri par PPR
+        if ($request->filled('sort_ppr')) {
+            $query->orderBy('ppr', $request->sort_ppr);
+        }
+
+        // 2. Tri par Nom
+        if ($request->filled('sort_lastname')) {
+            $query->orderBy('lastname', $request->sort_lastname);
+        }
+
+        // 3. Tri par Prénom
+        if ($request->filled('sort_firstname')) {
+            $query->orderBy('firstname', $request->sort_firstname);
+        }
+
+        // 4. Tri par Âge (Logique inverse sur birth_date)
+        if ($request->filled('sort_age')) {
+            // asc = plus jeune (date de naissance la plus récente/grande)
+            // desc = plus âgé (date de naissance la plus ancienne/petite)
+            $direction = ($request->sort_age === 'asc') ? 'desc' : 'asc';
+            $query->orderBy('birth_date', $direction);
+        }
+
+        // Tri par défaut si rien n'est sélectionné
+        if (!$request->hasAny(['sort_ppr', 'sort_lastname', 'sort_firstname', 'sort_age'])) {
+            $query->orderBy('lastname', 'asc');
+        }
+
+        return $query->paginate($pages)->withQueryString();
+
+    }
+
 }

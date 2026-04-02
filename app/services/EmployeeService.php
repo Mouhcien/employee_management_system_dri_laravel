@@ -245,4 +245,8 @@ class EmployeeService
         return $this->employeeRepository->latestInserted(Employee::class);
     }
 
+    public function sortEmployeesByOption($params, $pages) {
+        return $this->employeeRepository->sortEmployeesByOption($params, $pages);
+    }
+
 }

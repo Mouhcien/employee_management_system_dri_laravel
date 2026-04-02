@@ -170,6 +170,7 @@ Route::middleware('check.auth')->group(function (){
         Route::post('/store', [EmployeeController::class, 'store'])->name('employees.store');
         Route::get('/search', [EmployeeController::class, 'search'])->name('employees.search');
         Route::get('/import', [EmployeeController::class, 'import'])->name('employees.import');
+        Route::post('/sort', [EmployeeController::class, 'sort'])->name('employees.sort');
         Route::get('/advance/search', [EmployeeController::class, 'advance'])->name('employees.advance');
         Route::get('/advance/result', [EmployeeController::class, 'result'])->name('employees.advance.result');
         Route::post('/importation', [EmployeeController::class, 'importation'])->name('employees.importation');

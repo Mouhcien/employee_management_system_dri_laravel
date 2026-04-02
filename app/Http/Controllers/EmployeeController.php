@@ -128,6 +128,10 @@ class EmployeeController extends Controller
             $employeeObj = $this->employeeService->getOneById($employee_id);
         }
 
+        if ($request->has('_token')){
+            $employees = $this->employeeService->sortEmployeesByOption($request, $this->pages);
+        }
+
         $template = 'app.employees.index';
 
         return view($template, [
@@ -637,6 +641,66 @@ class EmployeeController extends Controller
         }catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
+    }
+
+    public function sort(Request $request)
+    {
+
+        $this->pages = $this->setEmployeeCardSession($request);
+
+        $locals = $this->localService->getAll(0);
+        $employees = $this->employeeService->sortEmployeesByOption($request, $this->pages);
+        $male_employees = $this->employeeService->getAllByFilter(['col' => 'gender', 'val' => 'M'], 0);
+        $female_employees = $this->employeeService->getAllByFilter(['col' => 'gender', 'val' => 'F'], 0);
+        $cities = $this->cityService->getAll(0);
+        $categories = $this->categoryService->getAll(0);
+
+        $local_id = null;
+        $city_id = null;
+        $filter = null;
+
+        if ($request->has('ct')) {
+            $city_id = $request->query('ct');
+            $filter['city_id'] = $city_id;
+            $locals = $this->localService->getAllByCity($city_id, 0);
+        }
+
+        if ($request->has('lc')) {
+            $local_id = $request->query('lc');
+            $filter['local_id'] = $local_id;
+        }
+
+        if ($request->has('gr')) {
+            $genre = $request->query('gr');
+            $filter['gender'] = $genre == 'fml' ? 'F' : 'M';
+        }
+
+        if ($request->has('lc') || $request->has('ct') || $request->has('gr')) {
+            $employees = $this->employeeService->getAllByFilterAdvanced($filter, $this->pages);
+        }
+
+        $employeeObj = null;
+        if ($request->has('emp')) {
+            $employee_id = $request->query('emp');
+            $employeeObj = $this->employeeService->getOneById($employee_id);
+        }
+
+        $template = 'app.employees.index';
+
+        return view($template, [
+            'locals' => $locals,
+            'employees' => $employees,
+            'cities' => $cities,
+            'categories' => $categories,
+            'femaleCount' => $female_employees->count(),
+            'maleCount' => $male_employees->count(),
+            'total_employee' => $this->pages == 0 ? $employees->count() : $employees->total(),
+            'local_id' => $local_id,
+            'city_id' => $city_id,
+            'filter_val' => null,
+            'employeeObj' => $employeeObj
+        ]);
+
     }
 
 }
