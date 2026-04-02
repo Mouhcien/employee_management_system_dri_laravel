@@ -207,4 +207,16 @@ $(function() {
     });
 
 
+    $('#sl_agent_status').on('change', function(e) {
+
+        let href = "/employees/status?";
+        const state = $(this).val();
+        if (state != '' && state != undefined) {
+            href += 'state='+state;
+        }
+
+        window.location.href = href;
+
+    });
+
 });

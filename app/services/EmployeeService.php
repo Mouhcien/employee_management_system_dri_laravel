@@ -21,6 +21,11 @@ class EmployeeService
         return $this->employeeRepository->all(Employee::class, $this->with, $pages);
     }
 
+    public function getInActiveEmployees(int $pages = 0)
+    {
+        return $this->employeeRepository->inActiveEmployees($this->with, $pages);
+    }
+
     public function getAllByCategory($category_id, $pages = 0)
     {
         return $this->employeeRepository->allByCategory($category_id, $this->with, $pages);
@@ -36,9 +41,19 @@ class EmployeeService
         return $this->employeeRepository->allByFilter($filter, $pages);
     }
 
+    public function allByFilterInActive($filter, $pages = 0)
+    {
+        return $this->employeeRepository->allByFilterInActive($filter, $pages);
+    }
+
     public function getAllByFilterValue($val, $pages = 0)
     {
         return $this->employeeRepository->allByFilterValue($val, $pages);
+    }
+
+    public function getAllByFilterValueInactive($val, $pages = 0)
+    {
+        return $this->employeeRepository->allByFilterValueInactive($val, $pages);
     }
 
     public function getAllByService($service_id, $pages = 0)

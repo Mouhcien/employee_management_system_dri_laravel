@@ -5,6 +5,7 @@
         <th scope="col" class="text-muted small fw-bold text-uppercase ls-1 border-0">Profil</th>
         <th scope="col" class="text-muted small fw-bold text-uppercase ls-1 border-0">PPR / CIN</th>
         <th scope="col" class="text-muted small fw-bold text-uppercase ls-1 border-0">Identité</th>
+        <th scope="col" class="text-muted small fw-bold text-uppercase ls-1 border-0">Age</th>
         <th scope="col" class="text-muted small fw-bold text-uppercase ls-1 border-0">Recrutement</th>
         <th scope="col" class="text-muted small fw-bold text-uppercase ls-1 border-0">Contact</th>
         <th scope="col" class="text-muted small fw-bold text-uppercase ls-1 border-0 text-end pe-4">Actions</th>
@@ -24,7 +25,7 @@
             $rowId = 'employee-details-' . $employee->id;
         @endphp
 
-        <tr class="employee-row transition-base border-bottom" style="cursor:pointer;">
+        <tr class="employee-row transition-base border-bottom {{ \Carbon\Carbon::parse($employee->birth_date)->age >= 62 ? 'table-danger' : '' }}" style="cursor:pointer;" >
             <td class="ps-4 py-3">
                 @if ($employee->gender == 'M')
                     <span class="text-primary opacity-50"><i class="bi bi-gender-male fs-5"></i></span>
@@ -63,6 +64,12 @@
             </td>
             <td class="py-3">
                 <div class="d-flex align-items-center text-muted small fw-medium">
+                    <i class="bi bi-yelp me-2 text-info"></i>
+                    {{ \Carbon\Carbon::parse($employee->birth_date)->age }} Ans
+                </div>
+            </td>
+            <td class="py-3">
+                <div class="d-flex align-items-center text-muted small fw-medium">
                     <i class="bi bi-calendar-event me-2 text-info"></i>
                     {{ \Carbon\Carbon::parse($employee->hiring_date)->translatedFormat('d M Y') }}
                 </div>
@@ -86,6 +93,8 @@
                         <i class="bi bi-chevron-down"></i>
                     </button>
 
+
+                    @if ($employee->status == 1)
                     <div class="dropdown">
                         <button class="btn btn-white btn-sm rounded-pill px-3 shadow-xs border dropdown-toggle fw-bold"
                                 type="button" data-bs-toggle="dropdown">
@@ -99,6 +108,9 @@
                             <li><a class="dropdown-item rounded-3 py-2 text-danger fw-bold" href="#" data-bs-toggle="modal" data-bs-target="#deleteEmployeeModal"><i class="bi bi-trash3 me-2"></i>Supprimer</a></li>
                         </ul>
                     </div>
+                    @else
+                        <a class="btn btn-sm btn-info rounded-3 py-2" href="{{ route('employees.show', $employee) }}" title="consulter"><i class="bi bi-eye-fill"></i></a>
+                    @endif
                 </div>
             </td>
         </tr>

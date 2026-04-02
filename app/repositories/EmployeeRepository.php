@@ -19,6 +19,17 @@ class EmployeeRepository extends MainRepository
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
 
+    public function allByFilterInActive($filter, $pages = 0)
+    {
+
+        $query =  Employee::with($this->with)
+            ->where($filter['col'], '=', $filter['val'])
+            ->where('employees.status', '<>', 1)
+            ->orderBy('lastname', 'ASC');
+
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
+    }
+
     public function allByService($service_id, $pages = 0)
     {
         $query =  Employee::with($this->with)
@@ -89,6 +100,27 @@ class EmployeeRepository extends MainRepository
             });
 
         $query->where('employees.status', '=', 1);
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
+    }
+
+    public function allByFilterValueInactive($val, $pages = 0)
+    {
+        $query = Employee::with($this->with)
+            ->when($val, function ($query) use ($val) {
+                $query->where(function ($q) use ($val) {
+                    $q->where('lastname', 'like', "%{$val}%")
+                        ->orWhere('firstname', 'like', "%{$val}%")
+                        ->orWhere('email', 'like', "%{$val}%")
+                        ->orWhere('cin', 'like', "%{$val}%")
+                        ->orWhere('ppr', 'like', "%{$val}%")
+                        ->orWhere('birth_date', 'like', "%{$val}%")
+                        ->orWhere('birth_city', 'like', "%{$val}%")
+                        ->orWhere('hiring_date', 'like', "%{$val}%")
+                        ->orWhere('tel', 'like', "%{$val}%");
+                });
+            });
+
+        $query->where('employees.status', '<>', 1);
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
 
@@ -177,5 +209,13 @@ class EmployeeRepository extends MainRepository
             ->get();
     }
 
+
+    public function inActiveEmployees($with, $pages) {
+        $query =  Employee::with($with)
+            ->where('employees.status', '<>', 1)
+            ->orderBy('lastname', 'ASC');
+
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
+    }
 
 }

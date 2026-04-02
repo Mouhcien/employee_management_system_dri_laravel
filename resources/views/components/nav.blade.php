@@ -28,13 +28,18 @@
                 <li class="nav-item">
                     <a href="{{ route('employees.index') }}"
                        class="nav-link sidebar-link-nested rounded-3 px-3 py-2 d-flex align-items-center small {{ request()->routeIs('employees.index') ? 'active fw-bold' : '' }}">
-                        <i class="bi bi-dot me-1 fs-4"></i><span class="sidebar-text">Annuaire</span>
+                        <i class="bi bi-list me-1 fs-4"></i><span class="sidebar-text">Annuaire</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('categories.index') }}"
                        class="nav-link sidebar-link-nested rounded-3 px-3 py-2 d-flex align-items-center small {{ request()->routeIs('categories.index') ? 'active fw-bold' : '' }}">
-                        <i class="bi bi-dot me-1 fs-4"></i><span class="sidebar-text">Catégories</span>
+                        <i class="bi bi-person me-1 fs-4"></i><span class="sidebar-text">Catégories</span>
+                    </a>
+                </li><li class="nav-item">
+                    <a href="{{ route('employees.status') }}"
+                       class="nav-link sidebar-link-nested rounded-3 px-3 py-2 d-flex align-items-center small {{ request()->routeIs('employees.status') ? 'active fw-bold' : '' }}">
+                        <i class="bi bi-layers me-1 fs-4"></i><span class="sidebar-text">Status</span>
                     </a>
                 </li>
             </ul>

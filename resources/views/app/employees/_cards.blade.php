@@ -26,8 +26,10 @@
                             @endif
                         </span>
 
+
                         {{-- Dropdown Actions --}}
                         <div class="position-absolute top-0 end-0 m-2 dropdown">
+                            @if ($employee->status == 1)
                             <button class="btn btn-sm btn-white btn-rounded shadow-xs p-0 d-flex align-items-center justify-content-center"
                                     type="button" data-bs-toggle="dropdown" style="width:28px; height:28px;">
                                 <i class="bi bi-three-dots-vertical text-dark"></i>
@@ -43,12 +45,15 @@
                                     </button>
                                 </li>
                             </ul>
+                            @else
+                                <a class="btn btn-sm btn-info rounded-5 float-end" href="{{ route('employees.show', $employee) }}"><i class="bi bi-eye-fill"></i></a>
+                            @endif
                         </div>
                     </div>
 
                     {{-- Avatar Section --}}
                     {{-- Avatar Section --}}
-                    <div class="d-flex justify-content-center" style="margin-top: -30px;">
+                    <div class="d-flex justify-content-center {{ \Carbon\Carbon::parse($employee->birth_date)->age >= 62 ? 'bg-danger-subtle' : '' }}" style="margin-top: -30px;">
                         <div class="position-relative">
                             @if($employee->photo && Storage::disk('public')->exists($employee->photo))
                                 <img src="{{ Storage::url($employee->photo) }}"
@@ -65,13 +70,14 @@
                     </div>
 
                     {{-- Card Content --}}
-                    <div class="card-body text-center pt-2 pb-3">
+                    <div class="card-body text-center pt-2 pb-3 {{ \Carbon\Carbon::parse($employee->birth_date)->age >= 62 ? 'bg-danger-subtle' : '' }}">
                         <h6 class="fw-bold text-dark mb-1" id="employee_fullname">{{ $employee->firstname }} {{ strtoupper($employee->lastname) }}</h6>
                         <div class="text-primary small mb-2" dir="rtl" id="employee_fullname_arabic">{{ $employee->firstname_arab }} {{ $employee->lastname_arab }}</div>
 
                         <div class="d-flex justify-content-center gap-1 mb-3">
-                            <span class="badge bg-light text-dark border font-monospace extra-small" id="employee_ppr">#{{ $employee->ppr }}</span>
-                            <span class="badge bg-light text-muted border font-monospace extra-small" id="employee_cin">{{ $employee->cin }}</span>
+                            <span class="badge bg-light text-dark border font-monospace extra-small" id="employee_ppr" title="PPR">#{{ $employee->ppr }}</span>
+                            <span class="badge bg-light text-muted border font-monospace extra-small" id="employee_cin" title="CIN">{{ $employee->cin }}</span>
+                            <span class="badge bg-light text-muted border font-monospace extra-small" id="employee_cin">{{ \Carbon\Carbon::parse($employee->birth_date)->age }} Ans</span>
                         </div>
 
                         <ul class="list-unstyled text-start small mb-3 border rounded-3 p-2 bg-light-subtle">

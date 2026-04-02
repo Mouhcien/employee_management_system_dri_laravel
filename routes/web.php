@@ -165,6 +165,7 @@ Route::middleware('check.auth')->group(function (){
 
     Route::prefix('employees')->group(function(){
         Route::get('/', [EmployeeController::class, 'index'])->name('employees.index');
+        Route::get('/status', [EmployeeController::class, 'status'])->name('employees.status');
         Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
         Route::post('/store', [EmployeeController::class, 'store'])->name('employees.store');
         Route::get('/search', [EmployeeController::class, 'search'])->name('employees.search');

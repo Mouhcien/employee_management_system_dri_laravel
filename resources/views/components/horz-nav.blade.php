@@ -35,6 +35,7 @@
                         <li><h6 class="dropdown-header text-uppercase opacity-50 small fw-bold">Ressources Humaines</h6></li>
                         <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('employees.*') ? 'active' : '' }}" href="{{ route('employees.index') }}">Annuaire</a></li>
                         <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('categories.*') ? 'active' : '' }}" href="{{ route('categories.index') }}">Catégories</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('employees.status') ? 'active' : '' }}" href="{{ route('employees.status') }}">Status</a></li>
                     </ul>
                 </li>
 

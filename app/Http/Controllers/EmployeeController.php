@@ -23,6 +23,7 @@ use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Employee;
 use Maatwebsite\Excel\Facades\Excel;
+use Mockery\Exception;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class EmployeeController extends Controller
@@ -587,6 +588,46 @@ class EmployeeController extends Controller
 
 
         }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public  function status(Request $request) {
+        try {
+
+            $this->pages = $this->setEmployeeCardSession($request);
+
+            $employees = $this->employeeService->getInActiveEmployees($this->pages);
+            $male_employees = $this->employeeService->getAllByFilter(['col' => 'gender', 'val' => 'M'], 0);
+            $female_employees = $this->employeeService->getAllByFilter(['col' => 'gender', 'val' => 'F'], 0);
+
+            $filter_val = null;
+            if ($request->has('flt')) {
+                $filter_val = $request->query('flt');
+                $employees = $this->employeeService->getAllByFilterValueInactive($filter_val, $this->pages);
+            }
+
+
+            $state = null;
+            if ($request->has('state')) {
+                $state = $request->query('state');
+                $filter['col'] = 'status';
+                $filter['val'] = $state;
+                $employees = $this->employeeService->allByFilterInActive($filter, $this->pages);
+            }
+
+            $template = 'app.employees.status';
+
+            return view($template, [
+                'employees' => $employees,
+                'femaleCount' => $female_employees->count(),
+                'maleCount' => $male_employees->count(),
+                'total_employee' => $this->pages == 0 ? $employees->count() : $employees->total(),
+                'filter_val' => $filter_val,
+                'state' => $state
+            ]);
+
+        }catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
     }

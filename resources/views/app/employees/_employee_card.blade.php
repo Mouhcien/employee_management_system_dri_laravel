@@ -158,9 +158,15 @@
                     </div>
                 </div>
 
-                <div class="card-body mt-5 pt-4 px-4">
+                <div class="card-body mt-5 pt-4 px-4 ">
                     <div class="row g-3 mb-4">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
+                            <div class="p-3 border rounded-3 text-center  {{ \Carbon\Carbon::parse($employeeObj->birth_date)->age >= 62 ? 'bg-danger-subtle' : 'bg-light' }}">
+                                <small class="text-muted d-block text-uppercase fw-bold ls-1">Age</small>
+                                <span class="fw-bold text-dark">{{ \Carbon\Carbon::parse($employeeObj->birth_date)->age }} Ans</span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
                             <div class="p-3 border rounded-3 text-center bg-light">
                                 <small class="text-muted d-block text-uppercase fw-bold ls-1">Matricule (PPR)</small>
                                 <span class="fw-bold text-dark">#{{ $employeeObj->ppr }}</span>
@@ -178,7 +184,7 @@
                                 <span class="fw-bold text-dark">{{ \Carbon\Carbon::parse($employeeObj->hiring_date)->format('d M Y') }}</span>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="p-3 border rounded-3 text-center bg-light">
                                 <small class="text-muted d-block text-uppercase fw-bold ls-1">Contact</small>
                                 <span class="fw-bold text-dark">{{ $employeeObj->tel ?? '—' }}</span>
