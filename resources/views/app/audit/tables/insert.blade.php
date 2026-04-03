@@ -1,23 +1,98 @@
 <x-layout>
-    <style>
-        :root { --saas-primary: #0061f2; --saas-bg-soft: #f8f9fa; }
-        .page-header { background: linear-gradient(135deg, #0061f2 0%, #0a2351 100%); border-radius: 16px; }
-        .card-saas { border: 1px solid rgba(0,0,0,.05); border-radius: 12px; background: #fff; }
-        .form-label { font-weight: 600; font-size: 0.85rem; color: #4b5563; }
-        .column-row { transition: all 0.2s ease; border: 1px solid #e5e7eb; background: #fff; }
-        .btn-add-column { border: 2px dashed #d1d5db; color: #6b7280; transition: all 0.3s ease; }
-        .btn-add-column:hover { border-color: var(--saas-primary); color: var(--saas-primary); background: rgba(0, 97, 242, 0.02); }
-    </style>
+    @push('styles')
+        <style>
+            :root {
+                --saas-primary: #6366f1;
+                --saas-indigo: #4f46e5;
+                --saas-slate: #0f172a;
+                --glass-bg: rgba(255, 255, 255, 0.7);
+            }
 
-    <div class="card page-header border-0 shadow-sm mb-4 text-white">
-        <div class="card-body p-4">
+            body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; }
+
+            /* Futurist Header */
+            .header-vibrant {
+                background: radial-gradient(circle at top right, #6366f1, #0f172a);
+                border-radius: 24px;
+                position: relative;
+                overflow: hidden;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .header-vibrant::after {
+                content: ""; position: absolute; top: -20%; right: -10%; width: 300px; height: 300px;
+                background: rgba(99, 102, 241, 0.2); filter: blur(80px); border-radius: 50%;
+            }
+
+            /* Technical Card Aesthetic */
+            .card-futurist {
+                background: white; border-radius: 20px; border: 1px solid #e2e8f0;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .card-futurist:hover { box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.05); }
+
+            /* Column Row - Layered Depth */
+            .column-row {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-left: 5px solid var(--saas-primary);
+                border-radius: 12px;
+                transition: all 0.2s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            }
+            .column-row:hover {
+                transform: translateX(5px);
+                border-color: var(--saas-primary);
+                box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1);
+            }
+
+            /* Typography */
+            .ls-caps { letter-spacing: 0.05em; font-size: 0.7rem; text-transform: uppercase; font-weight: 700; color: #64748b; }
+
+            /* Add Button - Futurist Dash */
+            .btn-add-futurist {
+                border: 2px dashed #cbd5e1;
+                background: #f8fafc;
+                color: #64748b;
+                transition: all 0.3s;
+                border-radius: 12px;
+            }
+            .btn-add-futurist:hover {
+                border-color: var(--saas-primary);
+                color: var(--saas-primary);
+                background: #fff;
+                box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+            }
+
+            .btn-primary-gradient {
+                background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+                border: none; box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+            }
+            .btn-primary-gradient:hover { transform: translateY(-2px); box-shadow: 0 15px 25px -5px rgba(79, 70, 229, 0.5); }
+
+            /* Inputs */
+            .form-control-futurist {
+                border-radius: 10px; border: 1px solid #e2e8f0; padding: 0.75rem 1rem;
+                transition: all 0.2s;
+            }
+            .form-control-futurist:focus {
+                border-color: var(--saas-primary);
+                box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            }
+        </style>
+    @endpush
+
+    {{-- Header --}}
+    <div class="card header-vibrant border-0 shadow-lg mb-5 text-white">
+        <div class="card-body p-5">
             <div class="d-flex align-items-center">
-                <div class="bg-primary bg-opacity-20 p-3 rounded-3 me-3">
-                    <i class="bi {{ is_null($table) ? 'bi-plus-square-fill' : 'bi-pencil-square' }} fs-3"></i>
+                <div class="bg-white bg-opacity-10 p-3 rounded-4 me-4 border border-white border-opacity-10">
+                    <i class="bi {{ is_null($table) ? 'bi-database-add' : 'bi-database-fill-gear' }} fs-2 text-info"></i>
                 </div>
                 <div>
-                    <h3 class="fw-bold mb-0">{{ is_null($table) ? 'Nouveau Tableau' : 'Modifier: ' . $table->title }}</h3>
-                    <p class="mb-0 text-white-50 small">Configurez les métadonnées et la structure des colonnes</p>
+                    <span class="ls-caps text-info opacity-75">Architecture de Données</span>
+                    <h2 class="fw-bold mb-0 display-6">{{ is_null($table) ? 'Nouveau Référentiel' : 'Configuration: ' . $table->title }}</h2>
+                    <p class="mb-0 text-white-50 lead fs-6">Définissez les attributs techniques de votre structure d'audit</p>
                 </div>
             </div>
         </div>
@@ -27,60 +102,67 @@
         @csrf
 
         <div class="row g-4">
+            {{-- Left Sidebar: Meta --}}
             <div class="col-lg-4">
-                <div class="card card-saas shadow-sm">
-                    <div class="card-header bg-transparent border-bottom py-3">
-                        <h6 class="mb-0 fw-bold"><i class="bi bi-info-circle me-2 text-primary"></i>Infos Générales</h6>
+                <div class="card card-futurist shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                        <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-info-circle-fill me-2 text-primary"></i>Métadonnées</h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-4">
-                            <label class="form-label">Nom du tableau</label>
-                            <input type="text" name="title" class="form-control form-control-lg" value="{{ old('title', $table->title ?? '') }}" required>
+                            <label class="ls-caps mb-2">Identifiant du tableau</label>
+                            <input type="text" name="title" class="form-control form-control-futurist fw-bold" value="{{ old('title', $table->title ?? '') }}" placeholder="Ex: Audit_Agents_2026" required>
                         </div>
                         <div class="mb-0">
-                            <label class="form-label">Description</label>
-                            <textarea name="description" class="form-control" rows="4">{{ old('description', $table->description ?? '') }}</textarea>
+                            <label class="ls-caps mb-2">Note descriptive</label>
+                            <textarea name="description" class="form-control form-control-futurist" rows="5" placeholder="Expliquez la finalité de ce tableau...">{{ old('description', $table->description ?? '') }}</textarea>
                         </div>
                     </div>
-                </div>
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow">
-                        @if (!is_null($table))
-                            <i class="bi bi-pencil-square me-2"></i> Mettre à jour
-                        @else
-                            <i class="bi bi-save me-2"></i> Enregistrer
-                        @endif
-                    </button>
-                    <a href="{{ route('audit.tables.index') }}" class="btn btn-link w-100 text-muted mt-2 text-decoration-none small">Annuler</a>
+                    <div class="card-footer bg-light border-0 p-4">
+                        <button type="submit" class="btn btn-primary-gradient w-100 py-3 fw-bold rounded-3">
+                            @if (!is_null($table))
+                                <i class="bi bi-cloud-arrow-up-fill me-2"></i> Mettre à jour le schéma
+                            @else
+                                <i class="bi bi-plus-circle-fill me-2"></i> Initialiser la table
+                            @endif
+                        </button>
+                        <a href="{{ route('audit.tables.index') }}" class="btn btn-link w-100 text-muted mt-2 text-decoration-none ls-caps">
+                            <i class="bi bi-arrow-left me-1"></i> Annuler
+                        </a>
+                    </div>
                 </div>
             </div>
 
+            {{-- Right Section: Dynamic Columns --}}
             <div class="col-lg-8">
-                <div class="card card-saas shadow-sm">
-                    <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0 fw-bold"><i class="bi bi-columns-gap me-2 text-primary"></i>Colonnes du tableau</h6>
-                        <span class="badge bg-light text-dark border fw-normal" id="column-count">0 Colonne</span>
+                <div class="card card-futurist shadow-sm">
+                    <div class="card-header bg-white border-bottom py-4 px-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0 fw-bold"><i class="bi bi-layout-three-columns me-2 text-primary"></i>Dictionnaire des Colonnes</h6>
+                            <p class="text-muted small mb-0 mt-1">Définissez les champs requis pour l'audit</p>
+                        </div>
+                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2 rounded-pill fw-bold" id="column-count">0 Colonne</span>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body p-4 bg-light bg-opacity-50">
                         <div id="columns-container">
                             @php $index = 0; @endphp
 
                             @if(!is_null($table) && $table->relations->count() > 0)
                                 @foreach($table->relations as $relation)
-                                    <div class="column-row p-3 rounded-3 mb-3 shadow-sm">
+                                    <div class="column-row p-4 mb-3 animate__animated animate__fadeIn">
                                         <div class="row g-3">
                                             <input type="hidden" name="columns[{{ $index }}][id]" value="{{ $relation->column->id }}">
                                             <div class="col-md-5">
-                                                <label class="form-label x-small text-uppercase">Titre</label>
-                                                <input type="text" name="columns[{{ $index }}][title]" class="form-control" value="{{ $relation->column->title }}" required>
+                                                <label class="ls-caps mb-2">Titre de l'attribut</label>
+                                                <input type="text" name="columns[{{ $index }}][title]" class="form-control form-control-futurist fw-bold" value="{{ $relation->column->title }}" required>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label x-small text-uppercase">Description</label>
-                                                <input type="text" name="columns[{{ $index }}][description]" class="form-control" value="{{ $relation->column->description }}">
+                                                <label class="ls-caps mb-2">Règle / Description</label>
+                                                <input type="text" name="columns[{{ $index }}][description]" class="form-control form-control-futurist" value="{{ $relation->column->description }}">
                                             </div>
-                                            <div class="col-md-1 d-flex align-items-end justify-content-center">
-                                                <button type="button" class="btn btn-outline-danger border-0 remove-column">
-                                                    <i class="bi bi-trash"></i>
+                                            <div class="col-md-1 d-flex align-items-end justify-content-center pb-1">
+                                                <button type="button" class="btn btn-outline-danger border-0 rounded-circle remove-column p-2">
+                                                    <i class="bi bi-trash3-fill fs-5"></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -90,19 +172,19 @@
                             @endif
 
                             @if(is_null($table) || $table->relations->count() == 0)
-                                <div class="column-row p-3 rounded-3 mb-3 shadow-sm">
+                                <div class="column-row p-4 mb-3 animate__animated animate__fadeIn">
                                     <div class="row g-3">
                                         <div class="col-md-5">
-                                            <label class="form-label x-small text-uppercase">Titre</label>
-                                            <input type="text" name="columns[{{ $index }}][title]" class="form-control" placeholder="Ex: Statut" required>
+                                            <label class="ls-caps mb-2">Titre de l'attribut</label>
+                                            <input type="text" name="columns[{{ $index }}][title]" class="form-control form-control-futurist fw-bold" placeholder="Ex: Date de validation" required>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label x-small text-uppercase">Description</label>
-                                            <input type="text" name="columns[{{ $index }}][description]" class="form-control" placeholder="..." >
+                                            <label class="ls-caps mb-2">Règle / Description</label>
+                                            <input type="text" name="columns[{{ $index }}][description]" class="form-control form-control-futurist" placeholder="Format AAAA-MM-JJ..." >
                                         </div>
-                                        <div class="col-md-1 d-flex align-items-end justify-content-center">
-                                            <button type="button" class="btn btn-outline-danger border-0 remove-column" {{ is_null($table) ? 'disabled' : '' }}>
-                                                <i class="bi bi-trash"></i>
+                                        <div class="col-md-1 d-flex align-items-end justify-content-center pb-1">
+                                            <button type="button" class="btn btn-outline-danger border-0 rounded-circle remove-column p-2" {{ is_null($table) ? 'disabled' : '' }}>
+                                                <i class="bi bi-trash3-fill fs-5"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -111,8 +193,8 @@
                             @endif
                         </div>
 
-                        <button type="button" id="add-column-btn" class="btn btn-add-column w-100 py-3 rounded-3 mt-2 fw-bold">
-                            <i class="bi bi-plus-circle me-2"></i>Ajouter une colonne
+                        <button type="button" id="add-column-btn" class="btn btn-add-futurist w-100 py-3 mt-2 fw-bold">
+                            <i class="bi bi-plus-circle-dotted me-2 fs-5"></i>Injecter une nouvelle colonne
                         </button>
                     </div>
                 </div>
@@ -125,23 +207,23 @@
             const container = document.getElementById('columns-container');
             const addBtn = document.getElementById('add-column-btn');
             const countBadge = document.getElementById('column-count');
-            let columnIndex = {{ $index }}; // Start index from where PHP left off
+            let columnIndex = {{ $index }};
 
             addBtn.addEventListener('click', function () {
                 const row = document.createElement('div');
-                row.className = 'column-row p-3 rounded-3 mb-3 shadow-sm animate__animated animate__fadeInUp';
+                row.className = 'column-row p-4 mb-3 animate__animated animate__fadeInRight';
                 row.innerHTML = `
                     <div class="row g-3">
                         <div class="col-md-5">
-                            <label class="form-label x-small text-uppercase">Titre</label>
-                            <input type="text" name="columns[${columnIndex}][title]" class="form-control" required>
+                            <label class="ls-caps mb-2">Titre de l'attribut</label>
+                            <input type="text" name="columns[${columnIndex}][title]" class="form-control form-control-futurist fw-bold" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label x-small text-uppercase">Description</label>
-                            <input type="text" name="columns[${columnIndex}][description]" class="form-control">
+                            <label class="ls-caps mb-2">Règle / Description</label>
+                            <input type="text" name="columns[${columnIndex}][description]" class="form-control form-control-futurist">
                         </div>
-                        <div class="col-md-1 d-flex align-items-end justify-content-center">
-                            <button type="button" class="btn btn-outline-danger border-0 remove-column"><i class="bi bi-trash"></i></button>
+                        <div class="col-md-1 d-flex align-items-end justify-content-center pb-1">
+                            <button type="button" class="btn btn-outline-danger border-0 rounded-circle remove-column p-2"><i class="bi bi-trash3-fill fs-5"></i></button>
                         </div>
                     </div>`;
                 container.appendChild(row);
@@ -151,8 +233,13 @@
 
             container.addEventListener('click', e => {
                 if (e.target.closest('.remove-column')) {
-                    e.target.closest('.column-row').remove();
-                    updateCount();
+                    const rows = container.querySelectorAll('.column-row');
+                    if(rows.length > 1) {
+                        e.target.closest('.column-row').remove();
+                        updateCount();
+                    } else {
+                        alert('Une structure de table nécessite au moins une colonne.');
+                    }
                 }
             });
 

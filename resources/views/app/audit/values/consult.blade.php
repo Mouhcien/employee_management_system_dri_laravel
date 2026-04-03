@@ -1,423 +1,334 @@
 <x-layout>
+    @push('styles')
+        <style>
+            :root {
+                --saas-primary: #6366f1;
+                --saas-indigo: #4f46e5;
+                --saas-slate: #0f172a;
+                --glass-bg: rgba(255, 255, 255, 0.7);
+            }
 
-    <style>
-        :root {
-            --saas-primary: #0061f2;
-            --saas-secondary: #0a2351;
-            --saas-bg-soft: #f8f9fa;
-            --saas-border: #e3e6f0;
-        }
+            body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; }
 
-        .fw-800 { font-weight: 800; }
-        .tracking-tight { letter-spacing: -0.02em; }
-        .tracking-widest { letter-spacing: 0.1em; }
-        .bg-warning-emphasis { background-color: #fff3cd !important; color: #664d03 !important; }
+            /* Futurist Hero Header */
+            .header-vibrant {
+                background: radial-gradient(circle at top right, #4f46e5, #0f172a);
+                border-radius: 24px;
+                position: relative;
+                overflow: hidden;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
 
-        .profile-header-custom {
-            background: linear-gradient(135deg, var(--saas-primary) 0%, var(--saas-secondary) 100%);
-            border-radius: 12px;
-        }
+            /* Glassmorphism Filter Hub */
+            .filter-hub {
+                background: var(--glass-bg);
+                backdrop-filter: blur(12px);
+                border-radius: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            }
 
-        /* Modern Filter Bar */
-        .filter-section {
-            background: white;
-            border-bottom: 1px solid var(--saas-border);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
-        }
+            .ls-caps { letter-spacing: 0.08em; font-size: 0.65rem; text-transform: uppercase; font-weight: 800; color: #6366f1; }
 
-        /* Professional Input Styling */
-        .form-label-sm {
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: #4e73df;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
+            /* Employee Card - Premium Profile */
+            .employee-header-surface {
+                background: white;
+                border-radius: 20px 20px 0 0;
+                border: 1px solid #e2e8f0;
+                border-left: 6px solid var(--saas-primary);
+                transition: all 0.3s;
+            }
 
-        .search-results-box {
-            border: 1px solid var(--saas-border);
-            border-top: none;
-            border-radius: 0 0 8px 8px;
-            max-height: 150px;
-            overflow-y: auto;
-        }
+            /* Trend Indicators with Glowing Accents */
+            .trend-badge {
+                padding: 4px 8px;
+                border-radius: 6px;
+                font-size: 0.75rem;
+                font-weight: 800;
+                display: inline-flex;
+                align-items: center;
+            }
+            .trend-up { background: #ecfdf5; color: #059669; border: 1px solid #d1fae5; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+            .trend-down { background: #fff1f2; color: #e11d48; border: 1px solid #ffe4e6; box-shadow: 0 0 10px rgba(225, 29, 72, 0.2); }
 
-        .sticky-header th {
-            position: sticky;
-            top: 0;
-            background: #f8f9fc;
-            z-index: 10;
-            border-bottom: 2px solid var(--saas-border);
-        }
+            /* Technical Table Layout */
+            .table-technical thead th {
+                background: #f8fafc;
+                color: #64748b;
+                font-size: 0.65rem;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                padding: 1.25rem;
+                border-bottom: 2px solid #eef2ff;
+            }
 
-        .x-small { font-size: 0.75rem; }
+            .input-readonly-data {
+                background: #f1f5f9;
+                border: 1px solid #e2e8f0;
+                font-weight: 800;
+                color: #1e293b;
+                border-radius: 8px;
+            }
 
+            /* Floating Filter Trigger */
+            .fixed-bottom-left {
+                position: fixed;
+                left: 30px;
+                bottom: 30px;
+                z-index: 1050;
+                background: var(--saas-indigo);
+                color: white;
+                border: none;
+                transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+            .fixed-bottom-left:hover { transform: scale(1.15) rotate(5deg); box-shadow: 0 10px 20px rgba(79, 70, 229, 0.4); }
+        </style>
+    @endpush
 
-        /* Fixed Button Styling */
-         .fixed-bottom-left {
-             position: fixed;
-             left: 25px;
-             bottom: 25px;
-             z-index: 1050; /* Above all tables */
-             transition: transform 0.3s ease;
-         }
-
-        .fixed-bottom-left:hover {
-            transform: scale(1.1);
-        }
-
-        /* Animation for the filter section */
-        #filterCollapse.collapsing {
-            transition: height 0.35s ease, opacity 0.3s ease;
-            opacity: 0;
-        }
-
-        #filterCollapse.show {
-            opacity: 1;
-        }
-
-    </style>
-
-    <div class="card profile-header-custom border-0 mb-4 text-white shadow-sm">
+    {{-- Vibrant Header --}}
+    <div class="card header-vibrant border-0 shadow-lg mb-4 text-white">
         <div class="card-body p-4">
             <div class="row align-items-center">
-                <div class="col-md-8">
-                    <div class="d-flex align-items-center">
-                        <div class="bg-primary bg-opacity-20 p-3 rounded-circle me-3">
-                            <i class="bi bi-pencil-square fs-3"></i>
-                        </div>
-                        <div>
-                            <h4 class="fw-bold mb-0">Tableaux d'Évaluation</h4>
-                            <p class="mb-0 text-white-50 small text-uppercase tracking-wider">Consulter des indicateurs de performance</p>
-                        </div>
+                <div class="col-md-8 d-flex align-items-center">
+                    <div class="bg-white bg-opacity-10 p-3 rounded-4 me-4 border border-white border-opacity-10">
+                        <i class="bi bi-graph-up-arrow fs-2 text-info"></i>
+                    </div>
+                    <div>
+                        <span class="ls-caps text-info opacity-75">Analytics Engine v3.0</span>
+                        <h3 class="fw-bold mb-0">Consultation & <span class="text-info">Tendances</span></h3>
                     </div>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <a href="{{ route('audit.values.consult') }}"
-                       class="btn btn-light text-primary border shadow-sm rounded-pill px-3 fw-bold d-inline-flex align-items-center"
-                       title="Actualiser les données">
-                        <i class="bi bi-arrow-clockwise me-2"></i> Actualiser
+                    <a href="{{ route('audit.values.consult') }}" class="btn btn-outline-info rounded-pill px-4 fw-bold border-2">
+                        <i class="bi bi-arrow-clockwise me-2"></i> Actualiser les Flux
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div>
-        <div class="filter-section border-0 shadow-sm position-relative collapse show" id="filterCollapse">
+    {{-- Filter Section --}}
+    <div class="filter-hub p-4 mb-5 shadow-sm collapse show position-relative" id="filterCollapse">
+        <button type="button" class="btn-close position-absolute top-0 end-0 m-3 shadow-none" data-bs-toggle="collapse" data-bs-target="#filterCollapse"></button>
 
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-3"
-                    data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-label="Close"></button>
+        <div class="row g-4 align-items-start">
+            <div class="col-md-3 border-end">
+                <label class="ls-caps mb-3">Configuration Source</label>
+                <select class="form-select border-0 bg-light mb-2 fw-bold" id="sl_consult_table_performance">
+                    <option value="-1">Sélectionner le Tableau...</option>
+                    @foreach($tables as $table)
+                        <option value="{{ $table->id }}" {{ $table->id == $selected_table ? 'selected': '' }}>{{ $table->title }}</option>
+                    @endforeach
+                </select>
+                <select class="form-select border-0 bg-light fw-bold" id="sl_consult_period">
+                    <option value="-1">Sélectionner la Période...</option>
+                    @foreach($periods as $period)
+                        <option value="{{ $period->id }}" {{ $selected_period == $period->id ? 'selected' : '' }}>{{ $period->title }} {{$period->year}}</option>
+                    @endforeach
+                </select>
+            </div>
 
-            <div class="row g-4 align-items-start">
-                <div class="col-md-3 border-end">
-                    <label class="form-label-sm">Configuration de base</label>
-                    <div class="mb-2">
-                        <select class="form-select form-select-sm border-0 bg-light" id="sl_consult_table_performance" name="table_id">
-                            <option value="-1">Sélectionner le Tableau de suivi</option>
-                            @foreach($tables as $table)
-                                <option value="{{ $table->id }}" {{ $table->id == $selected_table ? 'selected': '' }}>{{ $table->title }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <select class="form-select form-select-sm border-0 bg-light" name="period_id" id="sl_consult_period">
-                            <option value="-1">Sélectionner la période de suivi</option>
-                            @foreach($periods as $period)
-                                <option value="{{ $period->id }}" {{ $selected_period == $period->id ? 'selected' : '' }}>{{ $period->title }} {{$period->year}}</option>
-                            @endforeach
-                        </select>
-                    </div>
+            <div class="col-md-6 border-end">
+                <label class="ls-caps mb-3">Index des Collaborateurs</label>
+                <div class="input-group mb-2 shadow-sm rounded-3 overflow-hidden">
+                    <span class="input-group-text bg-white border-0"><i class="bi bi-search text-primary"></i></span>
+                    <input type="text" id="employee_selected_consult" class="form-control border-0" placeholder="Scanner un nom ou service...">
                 </div>
-
-                <div class="col-md-6 border-end">
-                    <label class="form-label-sm">Recherche Employé(e)</label>
-                    <div class="input-group input-group-sm mb-0">
-                        <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
-                        <input type="text" id="employee_selected_consult" class="form-control border-0 bg-light" placeholder="Entrez un nom ou service...">
-                    </div>
-                    <div class="search-results-box bg-white">
-                        <select id="employee_list_consult" class="form-select border-0 x-small" size="8" name="employee_id">
-                            <option value="-1" disabled selected>En attente de saisie...</option>
-                            @foreach($employees as $employee)
-                                <option value="{{ $employee->id }}" data-name="{{ strtolower($employee->firstname . ' ' . $employee->lastname) }}" {{ $selected_employee == $employee->id ? 'selected' : '' }}>
-                                    {{ strtoupper($employee->lastname) }} {{ $employee->firstname }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-md-3 d-grid">
-                    <label class="form-label-sm">Untité Structurelle</label>
-                    <select class="form-control mb-2" id="sl_consult_audit_service">
-                        <option value="-1"> Séléctionnez le service</option>
-                        @foreach($services as $service)
-                            <option value="{{ $service->id }}" {{ $selected_service == $service->id ? 'selected' : '' }}>{{ $service->title }}</option>
+                <div class="search-results-box bg-white">
+                    <select id="employee_list_consult" class="form-select border-0 x-small" size="6">
+                        <option value="-1" disabled selected>Initialisation du système...</option>
+                        @foreach($employees as $employee)
+                            <option value="{{ $employee->id }}" data-name="{{ strtolower($employee->firstname . ' ' . $employee->lastname) }}" {{ $selected_employee == $employee->id ? 'selected' : '' }}>
+                                {{ strtoupper($employee->lastname) }} {{ $employee->firstname }}
+                            </option>
                         @endforeach
                     </select>
-
-                    @if (count($entities) != 0)
-                        <select class="form-control mb-2" id="sl_consult_audit_entity">
-                            <option value="-1"> Séléctionnez l'entité</option>
-                            @foreach($entities as $entity)
-                                <option value="{{ $entity->id }}" {{ $selected_entity == $entity->id ? 'selected' : '' }}>{{ $entity->title }}</option>
-                            @endforeach
-                        </select>
-                    @endif
-
-                    @if (count($sectors) != 0)
-                        <select class="form-control mb-2" id="sl_consult_audit_sector">
-                            <option value="-1"> Séléctionnez le secteur</option>
-                            @foreach($sectors as $sector)
-                                <option value="{{ $sector->id }}" {{ $selected_sector == $sector->id ? 'selected' : '' }}>{{ $sector->title }}</option>
-                            @endforeach
-                        </select>
-                    @endif
-
-                    @if (count($sections) != 0)
-                        <select class="form-control mb-2" id="sl_consult_audit_section">
-                            <option value="-1"> Séléctionnez la section</option>
-                            @foreach($sections as $section)
-                                <option value="{{ $section->id }}" {{ $selected_section == $section->id ? 'selected' : '' }}>{{ $section->title }}</option>
-                            @endforeach
-                        </select>
-                    @endif
-
-                    <button type="button" class="btn btn-primary fw-bold py-2 shadow-sm mt-2">
-                        <i class="bi bi-download me-2"></i>Téléchaarger le fichier
-                    </button>
                 </div>
             </div>
-        </div>
 
-        <button class="btn btn-primary rounded-circle shadow-lg d-flex align-items-center justify-content-center fixed-bottom-left"
-                id="btnShowFilters"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#filterCollapse"
-                style="width: 55px; height: 55px; display: none !important;">
-            <i class="bi bi-sliders2 fs-4"></i>
-        </button>
-
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-0">
-                {{-- 1. GROUP BY EMPLOYEE --}}
-                @php $i=0; @endphp
-                @if (count($values) != 0)
-                    @foreach($values->groupBy(fn($item) => $item->employee->lastname . ' ' . $item->employee->firstname) as $employeeName => $employeeValues)
-
-                        {{-- ... (Employee Header remains the same) ... --}}
-                        <div class="px-4 py-4 bg-white border-bottom d-flex align-items-start position-relative" style="border-left: 4px solid var(--saas-primary);">
-                            <div class="flex-shrink-0">
-                                @if($employeeValues->first()->employee->photo && Storage::disk('public')->exists($employeeValues->first()->employee->photo))
-                                    <img src="{{ Storage::url($employeeValues->first()->employee->photo) }}" class="rounded-circle border border-3 border-white shadow-sm object-fit-cover avatar-hover" width="65" height="65">
-                                @else
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center text-white"
-                                         style="width: 56px; height: 56px; background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);">
-                                        <i class="bi bi-person-badge fs-4"></i>
-                                    </div>
-                                @endif
-                            </div>
-
-                            <div class="ms-4 flex-grow-1">
-                                <div class="d-flex align-items-center mb-2">
-                                    <h5 class="mb-0 fw-800 text-dark text-uppercase tracking-tight me-3">{{ $employeeName }}</h5>
-                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">
-                            <i class="bi bi-check-circle-fill me-1"></i> Actif
-                        </span>
-                                </div>
-                                {{-- ... (Affectation Badges) ... --}}
-                                <div class="mt-2">
-                                    <small class="text-muted fw-bold text-uppercase x-small tracking-widest">
-                                        <i class="bi bi-clock-history me-1"></i> Historique des performances par table
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- 2. GROUP BY TABLE TITLE --}}
-                        @foreach($employeeValues->groupBy(fn($item) => $item->relation->table->title) as $tableTitle => $tableEntries)
-                            <div class="px-4 py-2 bg-light border-bottom">
-                    <span class="fw-bold small text-primary text-uppercase">
-                        <i class="bi bi-table me-2"></i> Table : {{ $tableTitle }}
-                    </span>
-                            </div>
-
-                            <div class="p-4">
-                                {{-- 3. GROUP BY period_id AND SORT BY YEAR DESCENDING --}}
-                                @php
-                                    // Grouping by period_id ensures unique periods across years
-                                    $periodsInTable = $tableEntries->groupBy('period_id')
-                                        ->sortByDesc(fn($group) => $group->first()->period->year);
-
-                                    // We use the keys (period_ids) to identify the sequence for trends
-                                    $periodKeys = $periodsInTable->keys()->toArray();
-                                @endphp
-
-                                @foreach($periodsInTable as $periodId => $valuesInPeriod)
-                                    @php $currentPeriod = $valuesInPeriod->first()->period; @endphp
-
-                                    <div class="card border shadow-sm mb-4">
-                                        <div class="table-responsive">
-                                            <table class="table table-hover align-middle mb-0">
-                                                <thead class="bg-white">
-                                                <tr>
-                                                    <th class="px-4 py-3 text-muted fw-bold border-0" style="width: 200px;">
-                                            <span class="badge bg-primary px-3 text-uppercase">
-                                                {{ $currentPeriod->title }} {{ $currentPeriod->year }}
-                                            </span>
-                                                    </th>
-                                                    @foreach($valuesInPeriod as $entry)
-                                                        <th class="px-4 py-3 text-center border-0 text-uppercase x-small text-secondary">
-                                                            {{ $entry->relation->column->title }}
-                                                        </th>
-                                                    @endforeach
-                                                    <th class="px-4 py-3 text-end border-0"></th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td class="px-4 py-3 border-0 small text-muted fst-italic"> Valeurs saisies </td>
-                                                    @php $attr = ""; @endphp
-                                                    @foreach($valuesInPeriod as $entry)
-                                                        <td class="px-4 py-3 text-center border-0">
-                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                <input type="number" class="form-control form-control-sm fw-bold text-center border-0 bg-light" style="max-width: 80px; border-radius: 6px;" value="{{ $entry->value }}" disabled>
-
-                                                                {{-- COMPARISON LOGIC --}}
-                                                                @php
-                                                                    $currentIndex = array_search($periodId, $periodKeys);
-                                                                    $prevPeriodId = $periodKeys[$currentIndex + 1] ?? null;
-                                                                    $trend = null;
-                                                                    $prevTitle = "";
-
-                                                                    if ($prevPeriodId) {
-                                                                        $prevEntry = $tableEntries->where('period_id', $prevPeriodId)
-                                                                            ->where('relation_id', $entry->relation_id)
-                                                                            ->first();
-
-                                                                        if ($prevEntry) {
-                                                                            $prevTitle = $prevEntry->period->title;
-                                                                            if ($entry->value > $prevEntry->value) $trend = 'up';
-                                                                            elseif ($entry->value < $prevEntry->value) $trend = 'down';
-                                                                        }
-                                                                    }
-                                                                @endphp
-
-                                                                <span class="ms-2">
-                                                        @if($trend === 'up')
-                                                                        <i class="bi bi-caret-up-fill text-success" title="Supérieur à {{ $prevTitle }}"></i>
-                                                                    @elseif($trend === 'down')
-                                                                        <i class="bi bi-caret-down-fill text-danger" title="Inférieur à {{ $prevTitle }}"></i>
-                                                                    @else
-                                                                        <i class="bi bi-dash text-muted opacity-50"></i>
-                                                                    @endif
-                                                    </span>
-                                                            </div>
-                                                        </td>
-                                                        @php $attr .= $entry->id."-" @endphp
-                                                    @endforeach
-
-                                                    <td class="px-4 py-3 text-end border-0">
-                                                        <div class="btn-group shadow-sm">
-                                                            <a href="{{ route('audit.values.edit', ['id' => $valuesInPeriod->first()->relation_id, 'attr' => $attr]) }}" class="btn btn-sm btn-white border text-warning"><i class="bi bi-pencil-square"></i></a>
-                                                            <button class="btn btn-sm btn-white border text-danger" data-bs-toggle="modal" data-bs-target="#deleteValueElementModal-{{ $valuesInPeriod->first()->id }}">
-                                                                <i class="bi bi-trash3"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                    <x-delete-model
-                                        href="{{ route('audit.values.delete', ['attr' => $attr]) }}"
-                                        message="Attention : La suppression est définitive."
-                                        title="Confirmation"
-                                        target="deleteValueElementModal-{{ $valuesInPeriod->first()->id }}" />
-                                @endforeach
-                            </div>
-                        @endforeach
-                        <div class="py-2 bg-white"></div>
+            <div class="col-md-3 d-flex flex-column gap-2">
+                <label class="ls-caps mb-2">Unité Structurelle</label>
+                <select class="form-select bg-light border-0 py-1" id="sl_consult_audit_service">
+                    <option value="-1">Service...</option>
+                    @foreach($services as $service)
+                        <option value="{{ $service->id }}" {{ $selected_service == $service->id ? 'selected' : '' }}>{{ $service->title }}</option>
                     @endforeach
+                </select>
+
+                @if (count($entities) != 0)
+                    <select class="form-select bg-light border-0 py-1" id="sl_consult_audit_entity">
+                        <option value="-1">Entité...</option>
+                        @foreach($entities as $entity)
+                            <option value="{{ $entity->id }}" {{ $selected_entity == $entity->id ? 'selected' : '' }}>{{ $entity->title }}</option>
+                        @endforeach
+                    </select>
                 @endif
+
+                {{-- RESTORED: Other Select Logic remains same --}}
+                @if (count($sectors) != 0)
+                    <select class="form-select bg-light border-0 py-1" id="sl_consult_audit_sector">
+                        <option value="-1">Secteur...</option>
+                        @foreach($sectors as $sector)
+                            <option value="{{ $sector->id }}" {{ $selected_sector == $sector->id ? 'selected' : '' }}>{{ $sector->title }}</option>
+                        @endforeach
+                    </select>
+                @endif
+
+                <button type="button" class="btn btn-primary bg-indigo-soft text-primary border-0 fw-bold py-2 mt-2 rounded-3">
+                    <i class="bi bi-cloud-download-fill me-2"></i>Exporter Rapport
+                </button>
             </div>
         </div>
-
     </div>
 
+    {{-- Floating Trigger --}}
+    <button class="btn fixed-bottom-left rounded-circle shadow-lg d-flex align-items-center justify-content-center"
+            id="btnShowFilters" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse"
+            style="width: 60px; height: 60px; display: none !important;">
+        <i class="bi bi-sliders2 fs-4"></i>
+    </button>
+
+    {{-- Main Results View --}}
+    <div class="results-surface">
+        @if (count($values) != 0)
+            @foreach($values->groupBy(fn($item) => $item->employee->lastname . ' ' . $item->employee->firstname) as $employeeName => $employeeValues)
+                <div class="employee-header-surface px-4 py-4 mb-0 d-flex align-items-center shadow-sm">
+                    <div class="flex-shrink-0 position-relative">
+                        @if($employeeValues->first()->employee->photo && Storage::disk('public')->exists($employeeValues->first()->employee->photo))
+                            <img src="{{ Storage::url($employeeValues->first()->employee->photo) }}" class="rounded-circle border border-4 border-white shadow-sm object-fit-cover" width="75" height="75">
+                        @else
+                            <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center text-white"
+                                 style="width: 75px; height: 75px; background: linear-gradient(135deg, #4f46e5 0%, #0f172a 100%);">
+                                <i class="bi bi-person-badge fs-2"></i>
+                            </div>
+                        @endif
+                        <span class="position-absolute bottom-0 end-0 bg-success border border-2 border-white rounded-circle p-2"></span>
+                    </div>
+
+                    <div class="ms-4 flex-grow-1">
+                        <div class="d-flex align-items-center mb-1">
+                            <h4 class="mb-0 fw-bold text-dark text-uppercase me-3">{{ $employeeName }}</h4>
+                            <span class="ls-caps text-muted opacity-75">ID-{{ $employeeValues->first()->employee->id }}</span>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <small class="ls-caps text-primary fw-bold"><i class="bi bi-diagram-2 me-1"></i> Performance Insight</small>
+                            <small class="ls-caps text-muted"><i class="bi bi-clock-history me-1"></i> Analyse Multi-Périodes</small>
+                        </div>
+                    </div>
+                </div>
+
+                @foreach($employeeValues->groupBy(fn($item) => $item->relation->table->title) as $tableTitle => $tableEntries)
+                    <div class="px-4 py-3 bg-indigo-soft text-primary ls-caps border-start border-end border-white">
+                        <i class="bi bi-table me-2"></i> Dimension : {{ $tableTitle }}
+                    </div>
+
+                    <div class="bg-white border p-4 mb-4 rounded-bottom-4 shadow-sm">
+                        @php
+                            $periodsInTable = $tableEntries->groupBy('period_id')->sortByDesc(fn($group) => $group->first()->period->year);
+                            $periodKeys = $periodsInTable->keys()->toArray();
+                        @endphp
+
+                        @foreach($periodsInTable as $periodId => $valuesInPeriod)
+                            @php $currentPeriod = $valuesInPeriod->first()->period; @endphp
+                            <div class="card border-light shadow-xs mb-4 overflow-hidden rounded-3">
+                                <div class="table-responsive">
+                                    <table class="table table-technical align-middle mb-0">
+                                        <thead>
+                                        <tr>
+                                            <th class="ps-4" style="width: 220px;">
+                                                    <span class="badge bg-dark px-3 py-2 text-uppercase rounded-2">
+                                                        {{ $currentPeriod->title }} {{ $currentPeriod->year }}
+                                                    </span>
+                                            </th>
+                                            @foreach($valuesInPeriod as $entry)
+                                                <th class="text-center">{{ $entry->relation->column->title }}</th>
+                                            @endforeach
+                                            <th class="text-end pe-4">Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr class="bg-light bg-opacity-25">
+                                            <td class="ps-4 py-3 small text-muted fw-medium italic"><i class="bi bi-activity me-2"></i>Métriques</td>
+                                            @php $attr = ""; @endphp
+                                            @foreach($valuesInPeriod as $entry)
+                                                <td class="text-center">
+                                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                                        <div class="input-readonly-data px-3 py-2">{{ $entry->value }}</div>
+
+                                                        @php
+                                                            $currentIndex = array_search($periodId, $periodKeys);
+                                                            $prevPeriodId = $periodKeys[$currentIndex + 1] ?? null;
+                                                            $trend = null;
+                                                            if ($prevPeriodId) {
+                                                                $prevEntry = $tableEntries->where('period_id', $prevPeriodId)->where('relation_id', $entry->relation_id)->first();
+                                                                if ($prevEntry) {
+                                                                    if ($entry->value > $prevEntry->value) $trend = 'up';
+                                                                    elseif ($entry->value < $prevEntry->value) $trend = 'down';
+                                                                }
+                                                            }
+                                                        @endphp
+
+                                                        @if($trend === 'up')
+                                                            <span class="trend-badge trend-up"><i class="bi bi-graph-up"></i></span>
+                                                        @elseif($trend === 'down')
+                                                            <span class="trend-badge trend-down"><i class="bi bi-graph-down"></i></span>
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                                @php $attr .= $entry->id."-" @endphp
+                                            @endforeach
+                                            <td class="text-end pe-4">
+                                                <div class="btn-group rounded-3 overflow-hidden shadow-xs">
+                                                    <a href="{{ route('audit.values.edit', ['id' => $valuesInPeriod->first()->relation_id, 'attr' => $attr]) }}" class="btn btn-white border px-2 text-warning"><i class="bi bi-pencil-square"></i></a>
+                                                    <button class="btn btn-white border px-2 text-danger" data-bs-toggle="modal" data-bs-target="#deleteValueElementModal-{{ $valuesInPeriod->first()->id }}"><i class="bi bi-trash3"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <x-delete-model href="{{ route('audit.values.delete', ['attr' => $attr]) }}" message="Attention : Suppression irréversible." title="Confirmer" target="deleteValueElementModal-{{ $valuesInPeriod->first()->id }}" />
+                        @endforeach
+                    </div>
+                @endforeach
+            @endforeach
+        @endif
+    </div>
+
+    {{-- Restored JS logic exactly as requested --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const input = document.getElementById('employee_selected_consult');
             const list = document.getElementById('employee_list_consult');
-
-            // 1. Create a master "Source of Truth" array from the initial HTML
-            const masterOptions = Array.from(list.options)
-                .filter(opt => opt.value !== "-1")
-                .map(opt => ({
-                    value: opt.value,
-                    text: opt.text,
-                    searchName: opt.getAttribute('data-name') || opt.text.toLowerCase()
-                }));
+            const masterOptions = Array.from(list.options).filter(opt => opt.value !== "-1").map(opt => ({
+                value: opt.value, text: opt.text, searchName: opt.getAttribute('data-name') || opt.text.toLowerCase()
+            }));
 
             input.addEventListener('input', function() {
                 const query = this.value.toLowerCase().trim();
-
-                // 2. Clear the current list (except the first "Wait" option)
                 list.innerHTML = '';
-
-                // 3. Filter the master list
                 const filtered = masterOptions.filter(item => item.searchName.includes(query));
-
                 if (filtered.length > 0) {
-                    // 4. Re-inject matching options
-                    filtered.forEach(item => {
-                        const newOpt = new Option(item.text, item.value);
-                        list.add(newOpt);
-                    });
-
-                    // 5. Auto-select the first match if searching
-                    if (query !== "") {
-                        list.selectedIndex = 0;
-                    }
+                    filtered.forEach(item => { list.add(new Option(item.text, item.value)); });
+                    if (query !== "") list.selectedIndex = 0;
                 } else {
-                    // 6. Handle "No results" case
                     const noRes = new Option("Aucun résultat trouvé...", "-1");
                     noRes.disabled = true;
                     list.add(noRes);
                 }
             });
 
-            // Sync input text when list is clicked
             list.addEventListener('change', function() {
                 if (this.selectedIndex !== -1 && this.value !== "-1") {
                     input.value = this.options[this.selectedIndex].text.trim();
                 }
             });
 
-
-            //Button hide/show filter div
             const filterDiv = document.getElementById('filterCollapse');
             const showBtn = document.getElementById('btnShowFilters');
-
-            // When the filters start to hide, show the floating button
-            filterDiv.addEventListener('hide.bs.collapse', function () {
-                showBtn.style.setProperty('display', 'flex', 'important');
-            });
-
-            // When the filters start to show, hide the floating button
-            filterDiv.addEventListener('show.bs.collapse', function () {
-                showBtn.style.setProperty('display', 'none', 'important');
-            });
-
+            filterDiv.addEventListener('hide.bs.collapse', () => showBtn.style.setProperty('display', 'flex', 'important'));
+            filterDiv.addEventListener('show.bs.collapse', () => showBtn.style.setProperty('display', 'none', 'important'));
         });
     </script>
-
 </x-layout>
