@@ -1,5 +1,11 @@
 {{-- resources/views/components/sidebar-nav.blade.php --}}
 <nav id="sidebar" class="sidebar sidebar-open bg-white border-end d-flex flex-column p-3 transition-base">
+    {{-- Toggle Button inside Sidebar --}}
+    <div class="d-flex justify-content-end mb-3 d-md-flex">
+        <button id="sidebarToggle" class="btn btn-light btn-sm rounded-circle shadow-sm border">
+            <i class="bi bi-chevron-left" id="toggleIcon"></i>
+        </button>
+    </div>
 
     {{-- Section: HOME --}}
     <div class="sidebar-section-title mt-2 mb-1 px-3">Principal</div>

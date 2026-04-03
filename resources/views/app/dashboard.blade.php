@@ -1,7 +1,7 @@
 <x-layout>
     @section('title', 'Tableau de Bord - Gestion RH')
 
-    <div class="container-fluid py-4">
+    <div class="">
         {{-- En-tête de la page --}}
         <div class="row align-items-center mb-4">
             <div class="col-md-6">

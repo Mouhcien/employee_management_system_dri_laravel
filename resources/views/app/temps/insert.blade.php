@@ -1,32 +1,33 @@
 <x-layout>
-    @section('title', isset($temp) ? "Modifier le chef par intérim" : "Nouveau Chef par intérim")
+    @section('title', isset($temp) ? "Modifier l'Intérim" : "Nouvelle Nomination par Intérim")
 
-    <div class="container py-5">
+    <div class="container py-5 px-md-5">
         <div class="row justify-content-center">
-            {{-- Focused width for administrative forms --}}
-            <div class="col-xl-10 col-lg-9 col-md-10">
+            <div class="col-xl-11 col-lg-12">
 
-                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-                    {{-- Vibrant Gradient Header --}}
-                    <div class="card-header border-0 py-4 px-4 d-flex justify-content-between align-items-center"
-                         style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+                <div class="card border-0 shadow-2xl rounded-5 overflow-hidden bg-white">
+                    {{-- Header Aero-Dynamique --}}
+                    <div class="card-header border-0 py-4 px-4 p-md-5 d-flex justify-content-between align-items-center"
+                         style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
                         <div>
-                            <h4 class="mb-1 text-white fw-bold">
-                                <i class="bi {{ isset($temp) ? 'bi-pencil-square' : 'bi-plus-circle-dotted' }} me-2"></i>
-                                {{ isset($temp) ? "Modifier le chef par intérim" : "Nouveau Chef par intérim" }}
-                            </h4>
-                            <p class="text-white text-opacity-75 mb-0 small">
-                                {{ isset($temp) ? "Mise à jour du chef par intérim" : "Création d'un nouveau chef par intérim" }}
-                            </p>
+                            <nav aria-label="breadcrumb" class="mb-2">
+                                <ol class="breadcrumb mb-0 extra-small text-uppercase fw-bold ls-1">
+                                    <li class="breadcrumb-item"><a href="{{ route('temps.index') }}" class="text-white text-opacity-75 text-decoration-none">Gouvernance</a></li>
+                                    <li class="breadcrumb-item active text-white" aria-current="page">{{ isset($temp) ? 'Update Interim' : 'System Initialize' }}</li>
+                                </ol>
+                            </nav>
+                            <h3 class="mb-0 text-white fw-bold">
+                                <i class="bi {{ isset($temp) ? 'bi-cpu-fill' : 'bi-person-plus-fill' }} me-2"></i>
+                                {{ isset($temp) ? "Révision de l'Intérim" : "Nomination Chef par Intérim" }}
+                            </h3>
                         </div>
 
-                        <a href="{{ route('temps.index') }}" class="btn btn-white btn-sm rounded-pill px-3 fw-bold shadow-sm transition-base">
-                            <i class="bi bi-arrow-left me-1"></i>
-                            Retour
+                        <a href="{{ route('temps.index') }}" class="btn btn-glass-light btn-rounded px-4 fw-bold shadow-sm transition-base">
+                            <i class="bi bi-x-lg me-1"></i> Annuler
                         </a>
                     </div>
 
-                    <div class="card-body bg-white p-4 p-md-5">
+                    <div class="card-body p-4 p-md-5">
                         <form
                             action="{{ isset($temp) ? route('temps.update', $temp->id) : route('temps.store') }}"
                             method="POST"
@@ -36,24 +37,24 @@
                         >
                             @csrf
 
-                            <div class="row col-12">
-                                <div class="col-6">
-                                    <div class="mb-4">
-                                        <label for="employee_id" class="form-label small fw-bold text-muted text-uppercase">
-                                            Employé <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-white border-end-0 text-primary">
-                                                <i class="bi bi-search"></i>
-                                            </span>
-                                            <input type="text"
-                                                   id="employee_search"
-                                                   class="form-control border-start-0 ps-0 shadow-none"
-                                                   placeholder="Rechercher un employé..."
-                                                   onkeyup="filterEmployees()">
+                            <div class="row g-5">
+                                {{-- Colonne 1 : Acteurs du Node --}}
+                                <div class="col-lg-6">
+                                    <h6 class="fw-bold text-dark mb-4 small text-uppercase ls-1 d-flex align-items-center">
+                                        <i class="bi bi-people-fill me-2 text-primary"></i> Configuration des Acteurs
+                                    </h6>
 
-                                            <select class="form-control" name="employee_id" id="employee_id" required>
-                                                <option value="">Séléctionnez l'employé</option>
+                                    {{-- Sélection Employé --}}
+                                    <div class="mb-4">
+                                        <label for="employee_id" class="input-label">Employé à Nommer</label>
+                                        <div class="input-group-futurist search-node mb-2">
+                                            <input type="text" id="employee_search" class="form-control futurist-input"
+                                                   placeholder="Rechercher par nom ou PPR..." onkeyup="filterEmployees()">
+                                            <i class="bi bi-search input-icon"></i>
+                                        </div>
+                                        <div class="input-group-futurist">
+                                            <select class="form-select futurist-input select-custom" name="employee_id" id="employee_id" required>
+                                                <option value="" disabled selected>Sélectionner le profil...</option>
                                                 @foreach($employees->sortBy('lastname') as $employee)
                                                     <option value="{{ $employee->id }}"
                                                         {{ (isset($temp) && $employee->id == $temp->employee_id) ? 'selected' : '' }}>
@@ -61,43 +62,21 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            <i class="bi bi-person-badge input-icon"></i>
                                         </div>
-
-                                        <script>
-                                            function filterEmployees() {
-                                                const input = document.getElementById('employee_search');
-                                                const filter = input.value.toLowerCase();
-                                                const select = document.getElementById('employee_id');
-                                                const options = select.getElementsByTagName('option');
-
-                                                for (let i = 1; i < options.length; i++) { // Start at 1 to skip the placeholder
-                                                    const txtValue = options[i].textContent || options[i].innerText;
-                                                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                                                        options[i].style.display = "";
-                                                    } else {
-                                                        options[i].style.display = "none";
-                                                    }
-                                                }
-                                            }
-                                        </script>
                                     </div>
 
+                                    {{-- Sélection Responsable Cible --}}
                                     <div class="mb-4">
-                                        <label for="chef_id" class="form-label small fw-bold text-muted text-uppercase">
-                                            Résponsable <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-white border-end-0 text-primary">
-                                                <i class="bi bi-person-badge"></i>
-                                            </span>
-                                            <input type="text"
-                                                   id="chef_search"
-                                                   class="form-control border-start-0 ps-0 shadow-none"
-                                                   placeholder="Filtrer par nom..."
-                                                   onkeyup="filterChefs()">
-
-                                            <select class="form-control" name="chef_id" id="chef_id" required>
-                                                <option value="">Séléctionnez le chef</option>
+                                        <label for="chef_id" class="input-label">Poste à Remplacer (Chef titulaire)</label>
+                                        <div class="input-group-futurist search-node mb-2">
+                                            <input type="text" id="chef_search" class="form-control futurist-input"
+                                                   placeholder="Filtrer le responsable..." onkeyup="filterChefs()">
+                                            <i class="bi bi-funnel input-icon"></i>
+                                        </div>
+                                        <div class="input-group-futurist">
+                                            <select class="form-select futurist-input select-custom" name="chef_id" id="chef_id" required>
+                                                <option value="" disabled selected>Cibler le poste...</option>
                                                 @foreach($chefs->sortBy(fn($chef) => $chef->employee->lastname ?? '') as $chef)
                                                     @if($chef->employee)
                                                         <option value="{{ $chef->id }}"
@@ -107,126 +86,158 @@
                                                     @endif
                                                 @endforeach
                                             </select>
+                                            <i class="bi bi-shield-shaded input-icon"></i>
                                         </div>
-
-                                        <script>
-                                            function filterChefs() {
-                                                const input = document.getElementById('chef_search');
-                                                const filter = input.value.toLowerCase();
-                                                const select = document.getElementById('chef_id');
-                                                const options = select.getElementsByTagName('option');
-
-                                                for (let i = 1; i < options.length; i++) {
-                                                    const text = options[i].textContent || options[i].innerText;
-                                                    const matches = text.toLowerCase().indexOf(filter) > -1;
-                                                    options[i].style.display = matches ? "" : "none";
-
-                                                    // Optional: Auto-select if there's an exact match
-                                                    if (filter !== "" && text.toLowerCase().trim() === filter.trim()) {
-                                                        select.value = options[i].value;
-                                                    }
-                                                }
-                                            }
-                                        </script>
                                     </div>
-
                                 </div>
-                                <div class="col-6">
-                                    {{-- Date de commencement --}}
-                                    <div class="mb-4">
-                                        <label for="starting_date" class="form-label small fw-bold text-muted text-uppercase">
-                                            Date de prise d'intérim <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-white border-end-0 text-primary">
-                                                <i class="bi bi-calendar-event"></i>
-                                            </span>
-                                            <x-date-input id="starting_date"
-                                                  name="starting_date"
-                                                  class="form-control border-start-0 ps-0 shadow-none bg-white"
-                                                  value="{{ isset($temp) && $temp->starting_date ? $temp->starting_date : '' }}"
-                                                  required />
+
+                                {{-- Colonne 2 : Données Logistiques --}}
+                                <div class="col-lg-6">
+                                    <h6 class="fw-bold text-dark mb-4 small text-uppercase ls-1 d-flex align-items-center">
+                                        <i class="bi bi-calendar-range me-2 text-primary"></i> Paramètres Temporels & Actes
+                                    </h6>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-6 mb-4">
+                                            <label for="starting_date" class="input-label">Prise de Fonction</label>
+                                            <div class="input-group-futurist">
+                                                <x-date-input id="starting_date" name="starting_date"
+                                                              class="form-control futurist-input"
+                                                              value="{{ isset($temp) && $temp->starting_date ? $temp->starting_date : '' }}" required />
+                                                <i class="bi bi-play-circle input-icon"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-4">
+                                            <label for="finished_date" class="input-label">Fin d'Intérim</label>
+                                            <div class="input-group-futurist">
+                                                <x-date-input id="finished_date" name="finished_date"
+                                                              class="form-control futurist-input"
+                                                              value="{{ isset($temp) && $temp->finished_date ? $temp->finished_date : '' }}" />
+                                                <i class="bi bi-stop-circle input-icon"></i>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    {{-- Date de fin --}}
                                     <div class="mb-4">
-                                        <label for="finished_date" class="form-label small fw-bold text-muted text-uppercase">
-                                            Date de fin d'intérim
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-white border-end-0 text-primary">
-                                                <i class="bi bi-calendar-event"></i>
-                                            </span>
-                                            <x-date-input id="finished_date"
-                                                          name="finished_date"
-                                                          class="form-control border-start-0 ps-0 shadow-none bg-white"
-                                                          value="{{ isset($temp) && $temp->finished_date ? $temp->finished_date : '' }}" />
+                                        <label for="decision_file" class="input-label">Acte de Nomination (PDF)</label>
+                                        <div class="input-group-futurist dark-file">
+                                            <input type="file" name="decision_file" class="form-control futurist-input"
+                                                   id="decision_file" accept=".pdf" {{ isset($temp) ? '' : 'required' }}>
+                                            <i class="bi bi-file-earmark-pdf-fill input-icon text-danger"></i>
                                         </div>
-                                    </div>
-
-                                    {{-- Fichier de décision --}}
-                                    <div class="mb-2">
-                                        <label for="decision_file" class="form-label small fw-bold text-muted text-uppercase">
-                                            Acte de nomination (PDF) <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-white border-end-0 text-danger">
-                                                <i class="bi bi-file-earmark-pdf"></i>
-                                            </span>
-                                            <input type="file"
-                                                   name="decision_file"
-                                                   class="form-control border-start-0 ps-0 shadow-none"
-                                                   id="decision_file"
-                                                   accept=".pdf"
-                                                   required>
-                                        </div>
-                                        <div class="form-text small mt-2">
-                                            <i class="bi bi-info-circle me-1"></i> Veuillez joindre la copie numérisée de la décision officielle.
+                                        <div class="form-text extra-small mt-3 d-flex align-items-center">
+                                            <i class="bi bi-info-circle-fill me-2 text-primary"></i>
+                                            L'archive doit être au format PDF numérisé haute définition.
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {{-- Form Actions --}}
-                            <div class="d-flex flex-column flex-md-row justify-content-end gap-3 pt-4 border-top">
-                                <button type="reset" class="btn btn-light btn-rounded px-4 fw-semibold text-muted order-2 order-md-1">
-                                    <i class="bi bi-x-circle me-1"></i> Annuler
+                            {{-- Actions de Validation --}}
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 pt-5 mt-4 border-top border-light">
+                                <button type="reset" class="btn btn-link text-decoration-none text-muted fw-bold extra-small text-uppercase ls-1">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i> Réinitialiser
                                 </button>
-                                <button type="submit" class="btn btn-primary btn-rounded px-5 fw-bold shadow-sm order-1 order-md-2">
-                                    <i class="bi bi-check-lg me-1"></i>
-                                    {{ isset($temp) ? 'Mettre à jour' : 'Enregistrer' }}
+
+                                <button type="submit" class="btn btn-futurist px-5 py-3 rounded-pill fw-bold shadow-lg transition-base">
+                                    <i class="bi bi-shield-check me-2"></i>
+                                    {{ isset($temp) ? 'Mettre à jour le Registre' : 'Valider la Nomination' }}
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
 
-                {{-- Security/Info Badge --}}
-                <div class="text-center mt-4 opacity-50 small">
-                    <p><i class="bi bi-shield-check me-1"></i> Validation des données RH active</p>
+                {{-- Sécurité --}}
+                <div class="text-center mt-5 opacity-50">
+                    <p class="extra-small fw-bold text-uppercase ls-1">
+                        <i class="bi bi-cpu-fill me-1 text-primary"></i> Gouvernance v4.0 - Système d'Intégrité RH
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    @push('styles')
-        <style>
-            .transition-base { transition: all 0.2s ease-in-out; }
-            .bg-light-subtle { background-color: #f9fafb !important; }
-            .btn-white { background: #fff; color: #4f46e5; border: none; }
-            .btn-white:hover { background: #f0f4ff; color: #3730a3; }
-            .btn-rounded { border-radius: 50px; }
-            .ls-1 { letter-spacing: 0.5px; }
+    <script>
+        function filterEmployees() {
+            const input = document.getElementById('employee_search');
+            const filter = input.value.toLowerCase();
+            const select = document.getElementById('employee_id');
+            const options = select.getElementsByTagName('option');
+            for (let i = 1; i < options.length; i++) {
+                const txtValue = options[i].textContent || options[i].innerText;
+                options[i].style.display = txtValue.toLowerCase().indexOf(filter) > -1 ? "" : "none";
+            }
+        }
 
-            /* Premium Input Focus States */
-            .form-select:focus, .input-group:focus-within {
-                border: 1px solid #4f46e5 !important;
-                box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.1) !important;
+        function filterChefs() {
+            const input = document.getElementById('chef_search');
+            const filter = input.value.toLowerCase();
+            const select = document.getElementById('chef_id');
+            const options = select.getElementsByTagName('option');
+            for (let i = 1; i < options.length; i++) {
+                const text = options[i].textContent || options[i].innerText;
+                options[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? "" : "none";
             }
-            .form-control:focus {
-                box-shadow: none !important;
-            }
-        </style>
-    @endpush
+        }
+    </script>
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            --accent-glow: rgba(99, 102, 241, 0.15);
+        }
+
+        body { background-color: #f8fafc; }
+
+        .btn-glass-light {
+            background: rgba(255, 255, 255, 0.15);
+            color: white; border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-futurist {
+            background: var(--primary-gradient);
+            color: white; border: none;
+            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+        }
+        .btn-futurist:hover { transform: translateY(-3px); filter: brightness(1.1); box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.5); }
+
+        /* Futurist Inputs */
+        .input-label {
+            font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.75rem; display: block;
+        }
+
+        .input-group-futurist { position: relative; }
+        .futurist-input {
+            background-color: #f1f5f9 !important;
+            border: 2px solid transparent !important;
+            padding: 12px 16px 12px 48px !important;
+            border-radius: 16px !important;
+            font-weight: 600; color: #1e293b; transition: all 0.3s ease;
+        }
+        .futurist-input:focus {
+            background-color: #fff !important;
+            border-color: #6366f1 !important;
+            box-shadow: 0 0 0 5px var(--accent-glow) !important;
+        }
+        .input-icon {
+            position: absolute; left: 18px; top: 50%;
+            transform: translateY(-50%); color: #6366f1;
+            font-size: 1.1rem; z-index: 10;
+        }
+
+        .search-node .futurist-input {
+            background-color: #fff !important;
+            border: 1px dashed #cbd5e1 !important;
+            font-size: 0.85rem; padding: 8px 12px 8px 40px !important;
+        }
+
+        .transition-base { transition: all 0.25s ease; }
+        .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.12); }
+        .ls-1 { letter-spacing: 0.05em; }
+        .extra-small { font-size: 0.7rem; }
+    </style>
 </x-layout>

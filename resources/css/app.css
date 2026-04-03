@@ -6,18 +6,41 @@
     --sidebar-mini-width: 85px;
 }
 
-#sidebar0 {
-    width: 292px;
-    position: fixed;
-    height: 100vh;
-    transition: width 0.3s ease;
+.transition-base {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #sidebar {
     width: var(--sidebar-width);
-    position: fixed;
-    height: 100vh;
-    transition: width 0.3s ease;
+    min-width: var(--sidebar-width); /* Force la largeur */
+    background-color: white;
+    min-height: 100vh;
+}
+
+/* Changement de la variable quand on réduit */
+#sidebar.sidebar-collapsed {
+    --sidebar-width: 80px;
+}
+
+/* Ajustement du contenu principal */
+#main-container {
+    /* Le main prend tout l'espace restant grâce à flex-grow-1 */
+    overflow-x: hidden;
+}
+
+/* Masquage des éléments en mode réduit */
+.sidebar-collapsed .sidebar-text,
+.sidebar-collapsed .sidebar-section-title,
+.sidebar-collapsed .bi-chevron-down {
+    display: none !important;
+}
+
+/* Centrage des icônes en mode réduit */
+.sidebar-collapsed .sidebar-link,
+.sidebar-collapsed .sidebar-toggle {
+    justify-content: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 #main-wrapper {

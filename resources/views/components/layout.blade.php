@@ -7,6 +7,46 @@
 
     @vite(['resources/css/app.css', 'resources/css/toastr.min.css'])
 
+    <style>
+        :root { --sidebar-width: 280px; --sidebar-collapsed-width: 80px; }
+
+        .transition-base { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        #sidebar {
+            width: var(--sidebar-width);
+            min-height: 100vh;
+            z-index: 1000;
+        }
+
+        /* État Réduit (Collapsed) */
+        .sidebar-collapsed { width: var(--sidebar-collapsed-width) !important; }
+
+        .sidebar-collapsed .sidebar-text,
+        .sidebar-collapsed .sidebar-section-title,
+        .sidebar-collapsed .bi-chevron-down {
+            display: none !important;
+        }
+
+        .sidebar-collapsed .sidebar-link,
+        .sidebar-collapsed .sidebar-toggle {
+            justify-content: center !important;
+            padding: 10px 0 !important;
+        }
+
+        .sidebar-collapsed .nav-item i,
+        .sidebar-collapsed .sidebar-link i {
+            margin-right: 0 !important;
+            font-size: 1.4rem;
+        }
+
+        /* Styles standards */
+        .sidebar-section-title { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #adb5bd; }
+        .sidebar-link, .sidebar-toggle { color: #4b5563; text-decoration: none; font-size: 0.9rem; white-space: nowrap; border: none; background: none; }
+        .sidebar-link:hover, .sidebar-toggle:hover { background-color: #f8fafc; color: #4f46e5; }
+        .sidebar-link.active { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #ffffff !important; }
+        .bg-primary-subtle { background-color: #eef2ff !important; }
+    </style>
+
 </head>
 <body class="bg-light">
 
@@ -20,38 +60,51 @@
     <x-horz-nav />
 @endif
 
-{{-- Sidebar --}}
-@if ($configs[0]->value == 'Vertical')
-    <aside id="sidebar0" class="flex-column shadow-sm bg-white border-end container-fluid">
-        <div class="container-fluid align-items-center justify-content-between p-3 mb-2 border-bottom" style="height: 57px;">
-            <span class="fs-5 fw-bold text-dark" id="sidebarBrandFull">
-               RH APP
-            </span>
-        </div>
+<div @if ($configs[0]->value == 'Vertical') id="main-wrapper" @endif class="d-flex min-vh-100 w-100 p-0 m-0 overflow-hidden">
 
-        <div class="flex-grow-1 overflow-y-auto overflow-x-hidden" >
-            <x-nav />
-        </div>
-
-    </aside>
-@endif
-
-{{-- Main area --}}
-
-{{-- The outer container-fluid needs to be a flex column --}}
-<div @if ($configs[0]->value == 'Vertical') id="main-wrapper" @endif class="container-fluid">
-
+    {{-- Sidebar --}}
     @if ($configs[0]->value == 'Vertical')
-        <header class="navbar navbar-expand bg-white border-bottom px-4 top-navbar sticky-top">
-            <x-search />
-            <x-profil />
-        </header>
+        <x-nav />
     @endif
 
-    <div class="p-4">
-        {{ $slot }}
+    {{-- 2. Bloc de droite (Header + Contenu) --}}
+    <div class="flex-grow-1 d-flex flex-column transition-base shadow-sm" style="min-width: 0;">
+
+        {{-- Navbar du haut --}}
+        @if ($configs[0]->value == 'Vertical')
+            <header class="navbar navbar-expand bg-white border-bottom px-4 top-navbar sticky-top">
+                <div class="row col-12">
+                    <div class="col-8">
+                        <x-search />
+                    </div>
+                    <div class="col-2">
+                        <div class="d-flex align-items-center ms-3 border-start ps-3 py-1">
+                            {{-- On empile le texte verticalement --}}
+                            <div class="d-flex flex-column text-start">
+                                <span class="fw-bold text-dark lh-1 mb-1" style="font-size: 0.9rem;">
+                                    {{ session('employee_name') }}
+                                </span>
+                                <span class="text-muted fw-medium extra-small text-uppercase ls-1" style="font-size: 0.7rem;">
+                                    {{ auth()->user()->profile->title }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <x-profil />
+                    </div>
+                </div>
+            </header>
+        @endif
+
+        {{-- Zone de contenu dynamique --}}
+        <main id="main-container" class="p-4 bg-light flex-grow-1">
+            {{ $slot }}
+        </main>
+
     </div>
 
+    {{-- Loader Global --}}
     <div id="global-loader" style="display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.7); z-index: 9999; justify-content: center; align-items: center;">
         <div class="spinner"></div>
     </div>
@@ -100,6 +153,24 @@
                 document.getElementById('global-loader').style.display = 'none';
             }
         };
+
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        // Optionnel : Gérer le contenu principal pour qu'il s'adapte
+        const mainContent = document.querySelector('main');
+
+        toggleBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('sidebar-collapsed');
+
+            // Changement d'icône
+            if (sidebar.classList.contains('sidebar-collapsed')) {
+                toggleIcon.classList.replace('bi-chevron-left', 'bi-chevron-right');
+            } else {
+                toggleIcon.classList.replace('bi-chevron-right', 'bi-chevron-left');
+            }
+        });
 
         // Toastr Configuration
         window.addEventListener('load', function() {
