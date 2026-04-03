@@ -21,6 +21,10 @@ class DiplomaService
         return $this->diplomaRepository->All(Diploma::class, ['qualifications'], $pages);
     }
 
+    public function getAllByFilter($filter, $pages=0){
+        return $this->diplomaRepository->AllByFilter($filter, ['qualifications'], $pages);
+    }
+
     public function getOneById($id){
         return $this->diplomaRepository->One(Diploma::class, ['qualifications'], $id);
     }

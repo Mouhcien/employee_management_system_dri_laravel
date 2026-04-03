@@ -21,6 +21,10 @@ class OccupationService
         return $this->occupationRepository->All(Occupation::class, ['works'], $pages);
     }
 
+    public function getAllByFilter($filter, $pages=0){
+        return $this->occupationRepository->AllByFilter($filter, ['works'], $pages);
+    }
+
     public function getOneById($id){
         return $this->occupationRepository->One(Occupation::class, ['works'], $id);
     }
@@ -54,4 +58,5 @@ class OccupationService
     public function getLatestInserted(){
         return $this->occupationRepository->LatestInserted(Occupation::class);
     }
+
 }

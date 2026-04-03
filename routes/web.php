@@ -137,6 +137,7 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/', [OccupationController::class, 'index'])->name('occupations.index');
         Route::get('/create', [OccupationController::class, 'create'])->name('occupations.create');
         Route::post('/store', [OccupationController::class, 'store'])->name('occupations.store');
+        Route::get('/download/{id?}', [OccupationController::class, 'download'])->name('occupations.download');
         Route::get('/{id}', [OccupationController::class, 'show'])->name('occupations.show');
         Route::get('/edit/{id}', [OccupationController::class, 'edit'])->name('occupations.edit');
         Route::post('/update/{id}', [OccupationController::class, 'update'])->name('occupations.update');
@@ -147,6 +148,7 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/', [GradeController::class, 'index'])->name('grades.index');
         Route::get('/create', [GradeController::class, 'create'])->name('grades.create');
         Route::post('/store', [GradeController::class, 'store'])->name('grades.store');
+        Route::get('/download/{id?}', [GradeController::class, 'download'])->name('grades.download');
         Route::get('/{id}', [GradeController::class, 'show'])->name('grades.show');
         Route::get('/edit/{id}', [GradeController::class, 'edit'])->name('grades.edit');
         Route::post('/update/{id}', [GradeController::class, 'update'])->name('grades.update');
@@ -208,6 +210,7 @@ Route::middleware('check.auth')->group(function (){
 
     Route::prefix('diplomas')->group(function(){
         Route::get('/', [DiplomaController::class, 'index'])->name('diplomas.index');
+        Route::get('/download/{id?}', [DiplomaController::class, 'download'])->name('diplomas.download');
         Route::get('/{id}', [DiplomaController::class, 'show'])->name('diplomas.show');
         Route::post('/store', [DiplomaController::class, 'store'])->name('diplomas.store');
         Route::get('/edit/{id}', [DiplomaController::class, 'edit'])->name('diplomas.edit');
@@ -217,6 +220,7 @@ Route::middleware('check.auth')->group(function (){
 
     Route::prefix('options')->group(function(){
         Route::get('/', [OptionController::class, 'index'])->name('options.index');
+        Route::get('/download/{id?}', [OptionController::class, 'download'])->name('options.download');
         Route::get('/{id}', [OptionController::class, 'show'])->name('options.show');
         Route::post('/store', [OptionController::class, 'store'])->name('options.store');
         Route::post('/import', [OptionController::class, 'import'])->name('options.import');

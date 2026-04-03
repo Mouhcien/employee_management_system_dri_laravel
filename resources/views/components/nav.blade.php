@@ -63,10 +63,10 @@
         </button>
         <div class="collapse {{ $isReferencial ? 'show' : '' }}" id="menuReferenciel">
             <ul class="nav flex-column ms-2 mt-1">
-                <li><a href="{{ route('occupations.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('occupations.*') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Fonctions</a></li>
-                <li><a href="{{ route('grades.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('grades.*') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Grades</a></li>
-                <li><a href="{{ route('diplomas.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('diplomas.*') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Diplômes</a></li>
-                <li><a href="{{ route('options.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('options.*') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Options</a></li>
+                <li><a href="{{ route('occupations.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('occupations.*') ? 'active' : '' }}"><i class="bi bi-briefcase me-1 fs-4"></i>Fonctions</a></li>
+                <li><a href="{{ route('grades.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('grades.*') ? 'active' : '' }}"><i class="bi bi-patch-check me-1 fs-4"></i>Grades</a></li>
+                <li><a href="{{ route('diplomas.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('diplomas.*') ? 'active' : '' }}"><i class="bi bi-award me-1 fs-4"></i>Diplômes</a></li>
+                <li><a href="{{ route('options.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('options.*') ? 'active' : '' }}"><i class="bi bi-journals me-1 fs-4"></i>Filières</a></li>
             </ul>
         </div>
     </div>
@@ -86,8 +86,8 @@
         </button>
         <div class="collapse {{ request()->routeIs('locals.*') || request()->routeIs('cities.*') ? 'show' : '' }}" id="menuLocaux">
             <ul class="nav flex-column ms-2 mt-1">
-                <li><a href="{{ route('locals.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('locals.*') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Locaux</a></li>
-                <li><a href="{{ route('cities.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('cities.*') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Villes</a></li>
+                <li><a href="{{ route('locals.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('locals.*') ? 'active' : '' }}"><i class="bi bi-building me-1 fs-4"></i>Locaux</a></li>
+                <li><a href="{{ route('cities.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('cities.*') ? 'active' : '' }}"><i class="bi bi-geo-alt me-1 fs-4"></i>Villes</a></li>
             </ul>
         </div>
     </div>
@@ -108,10 +108,10 @@
         </button>
         <div class="collapse {{ $isOrg ? 'show' : '' }}" id="menuUnites">
             <ul class="nav flex-column ms-2 mt-1">
-                <li><a href="{{ route('services.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('services.*') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Services</a></li>
-                <li><a href="{{ route('entities.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('entities.*') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Entités</a></li>
-                <li><a href="{{ route('sectors.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('sectors.*') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Secteurs</a></li>
-                <li><a href="{{ route('sections.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('sections.*') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Sections</a></li>
+                <li><a href="{{ route('services.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('services.*') ? 'active' : '' }}"><i class="bi bi-diagram-3 me-1 fs-4"></i>Services</a></li>
+                <li><a href="{{ route('entities.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('entities.*') ? 'active' : '' }}"><i class="bi bi-diagram-2 me-1 fs-4"></i>Entités</a></li>
+                <li><a href="{{ route('sectors.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('sectors.*') ? 'active' : '' }}"><i class="bi bi-grid-1x2 me-1 fs-4"></i>Secteurs</a></li>
+                <li><a href="{{ route('sections.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('sections.*') ? 'active' : '' }}"><i class="bi bi-list-nested me-1 fs-4"></i>Sections</a></li>
             </ul>
         </div>
     </div>
@@ -131,8 +131,8 @@
         </button>
         <div class="collapse {{ request()->routeIs('chefs.*') ? 'show' : '' }}" id="menuChefs">
             <ul class="nav flex-column ms-2 mt-1">
-                <li><a href="{{ route('chefs.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('chefs.index') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Consulter les chefs</a></li>
-                <li><a href="{{ route('temps.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('temps.index') ? 'active' : '' }}"><i class="bi bi-dot me-1 fs-4"></i>Consulter les intérimaires</a></li>
+                <li><a href="{{ route('chefs.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('chefs.index') ? 'active' : '' }}"><i class="bi bi-person-workspace me-1 fs-4"></i>Consulter les chefs</a></li>
+                <li><a href="{{ route('temps.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('temps.index') ? 'active' : '' }}"><i class="bi bi-hourglass-split me-1 fs-4"></i>Consulter les intérimaires</a></li>
             </ul>
         </div>
     </div>

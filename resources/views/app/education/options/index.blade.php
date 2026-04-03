@@ -67,15 +67,6 @@
                     Liste des Options ({{ $options->total() ?? 0 }})
                 </h5>
                 <div class="d-flex gap-2">
-                    <div class="dropdown">
-                        <button class="btn btn-outline-primary btn-sm rounded-pill px-3 dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-download me-1"></i>Exporter
-                        </button>
-                        <ul class="dropdown-menu shadow border-0 rounded-3">
-                            <li><a href="#" class="dropdown-item text-success small py-2"><i class="bi bi-file-earmark-excel me-2"></i>Format Excel</a></li>
-                            <li><a href="#" class="dropdown-item text-danger small py-2"><i class="bi bi-file-earmark-pdf me-2"></i>Format PDF</a></li>
-                        </ul>
-                    </div>
                     <button class="btn btn-outline-success btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#importOptionModal">
                         <i class="bi bi-database-fill-up me-1"></i>Importer
                     </button>
@@ -88,7 +79,7 @@
                     <tr>
                         <th class="ps-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0">#</th>
                         <th class="ps-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Intitulé de la Filière</th>
-                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Employés Titulaires</th>
+                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Agents Titulaires</th>
                         <th class="pe-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-end">Actions</th>
                     </tr>
                     </thead>
@@ -109,16 +100,9 @@
                             <td class="py-3">
                                 @if($option->qualifications->count() > 0)
                                     <div class="d-flex flex-wrap gap-1">
-                                        @foreach($option->qualifications->take(5) as $qualification)
-                                            <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill extra-small px-2 py-1">
-                                                    PPR: {{ $qualification->employee->ppr }}
-                                                </span>
-                                        @endforeach
-                                        @if($option->qualifications->count() > 5)
-                                            <span class="badge bg-light text-muted rounded-pill extra-small px-2 py-1">
-                                                    +{{ $option->qualifications->count() - 5 }} autres
-                                                </span>
-                                        @endif
+                                        <span class="badge bg-light text-muted rounded-pill extra-small px-2 py-1">
+                                            {{ $option->qualifications->count() }}
+                                        </span>
                                     </div>
                                 @else
                                     <span class="text-muted italic small opacity-75">Aucun employé rattaché</span>
@@ -135,6 +119,7 @@
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 overflow-hidden">
                                             <li><a class="dropdown-item py-2 small" href="#"><i class="bi bi-envelope me-2 text-info"></i>Notifier les titulaires</a></li>
+                                            <li><a class="dropdown-item py-2 small" href="{{ route('options.download', $option) }}"><i class="bi bi-file-earmark-excel me-2 text-success"></i>Export Filière</a></li>
                                             <li><hr class="dropdown-divider opacity-50"></li>
                                             <li>
                                                 <button class="dropdown-item py-2 small text-danger fw-bold" data-bs-toggle="modal" data-bs-target="#deleteOptionModal-{{ $option->id }}">
@@ -223,7 +208,7 @@
 
                     <div class="modal-footer border-0 bg-light px-4 py-3">
                         <button type="button" class="btn btn-outline-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm transition-base">Créer l'option</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm transition-base">Créer la filière</button>
                     </div>
                 </form>
             </div>
@@ -266,6 +251,36 @@
                         <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold shadow-sm transition-base">Lancer l'import</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal d'Exportation --}}
+    <div class="modal fade" id="bulkActions" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header bg-dark text-white p-4">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-cloud-arrow-down me-2 text-info"></i>Exporter les Grades</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a href="{{ route('options.download') }}" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0 border-bottom transition-base">
+                            <i class="bi bi-file-earmark-excel-fill text-success fs-2 me-4"></i>
+                            <div>
+                                <div class="fw-bold">Données Excel (.xlsx)</div>
+                                <small class="text-muted">Tableau complet des filières </small>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0 transition-base">
+                            <i class="bi bi-file-earmark-pdf-fill text-danger fs-2 me-4"></i>
+                            <div>
+                                <div class="fw-bold">Référentiel PDF</div>
+                                <small class="text-muted">Document officiel de la hiérarchie statutaire</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

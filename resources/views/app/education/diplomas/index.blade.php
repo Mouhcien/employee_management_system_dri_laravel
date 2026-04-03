@@ -14,7 +14,7 @@
                         <div class="col-md-8">
                             <h2 class="fw-bold mb-1 text-white">Référentiel des Diplômes</h2>
                             <p class="text-white text-opacity-75 mb-0 fw-medium">
-                                <i class="bi bi-patch-check me-2"></i>Gestion des filières et des qualifications académiques des employés
+                                <i class="bi bi-patch-check me-2"></i>Gestion des filières et des qualifications académiques des agents
                             </p>
                         </div>
                         <div class="col-md-4 text-md-end mt-3 mt-md-0">
@@ -64,15 +64,6 @@
                     </span>
                     Liste des Filières ({{ $diplomas->total() ?? 0 }})
                 </h5>
-                <div class="dropdown">
-                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3 dropdown-toggle" data-bs-toggle="dropdown">
-                        <i class="bi bi-download me-1"></i>Exporter
-                    </button>
-                    <ul class="dropdown-menu shadow border-0 rounded-3">
-                        <li><a href="#" class="dropdown-item text-success small py-2"><i class="bi bi-file-earmark-excel me-2"></i>Format Excel</a></li>
-                        <li><a href="#" class="dropdown-item text-danger small py-2"><i class="bi bi-file-earmark-pdf me-2"></i>Format PDF</a></li>
-                    </ul>
-                </div>
             </div>
 
             <div class="table-responsive">
@@ -80,7 +71,8 @@
                     <thead class="bg-light-subtle">
                     <tr>
                         <th class="ps-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Intitulé du Diplôme</th>
-                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Employés Titulaires</th>
+                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Agents Titulaires</th>
+                        <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Filières </th>
                         <th class="pe-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-end">Actions</th>
                     </tr>
                     </thead>
@@ -98,16 +90,20 @@
                             <td class="py-3">
                                 @if($diploma->qualifications->count() > 0)
                                     <div class="d-flex flex-wrap gap-1">
-                                        @foreach($diploma->qualifications->take(5) as $qualification)
-                                            <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill extra-small px-2 py-1">
-                                                    PPR: {{ $qualification->employee->ppr }}
-                                                </span>
-                                        @endforeach
-                                        @if($diploma->qualifications->count() > 5)
-                                            <span class="badge bg-light text-muted rounded-pill extra-small px-2 py-1">
-                                                    +{{ $diploma->qualifications->count() - 5 }} autres
-                                                </span>
-                                        @endif
+                                        <span class="badge bg-light text-muted rounded-pill extra-small px-2 py-1">
+                                            {{ $diploma->qualifications->count()}}
+                                        </span>
+                                    </div>
+                                @else
+                                    <span class="text-muted italic small opacity-75">Aucun titulaire</span>
+                                @endif
+                            </td>
+                            <td class="py-3">
+                                @if($diploma->qualifications->count() > 0)
+                                    <div class="d-flex flex-wrap gap-1">
+                                        <span class="badge bg-light text-muted rounded-pill extra-small px-2 py-1">
+                                            {{ $diploma->qualifications->pluck('option_id')->unique()->count() }}
+                                        </span>
                                     </div>
                                 @else
                                     <span class="text-muted italic small opacity-75">Aucun titulaire</span>
@@ -124,6 +120,7 @@
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 overflow-hidden">
                                             <li><a class="dropdown-item py-2 small" href="#"><i class="bi bi-envelope me-2 text-info"></i>Informer les titulaires</a></li>
+                                            <li><a class="dropdown-item py-2 small" href="{{ route('diplomas.download', $diploma) }}"><i class="bi bi-file-earmark-excel me-2 text-success"></i>Export du grade</a></li>
                                             <li><hr class="dropdown-divider opacity-50"></li>
                                             <li>
                                                 <button class="dropdown-item py-2 small text-danger fw-bold" data-bs-toggle="modal" data-bs-target="#deleteDiplomaModal-{{ $diploma->id }}">
@@ -168,7 +165,7 @@
     @foreach($diplomas as $diploma)
         <x-delete-model
             href="{{ route('diplomas.delete', $diploma->id) }}"
-            message="Attention : La suppression du diplôme '{{ $diploma->title }}' supprimera l'historique académique des employés liés. Confirmer ?"
+            message="Attention : La suppression du diplôme '{{ $diploma->title }}' supprimera l'historique académique des agents liés. Confirmer ?"
             title="Confirmation"
             target="deleteDiplomaModal-{{ $diploma->id }}" />
     @endforeach
@@ -215,6 +212,36 @@
                         <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm transition-base">Créer le diplôme</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal d'Exportation --}}
+    <div class="modal fade" id="bulkActions" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header bg-dark text-white p-4">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-cloud-arrow-down me-2 text-info"></i>Exporter les Grades</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a href="{{ route('diplomas.download') }}" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0 border-bottom transition-base">
+                            <i class="bi bi-file-earmark-excel-fill text-success fs-2 me-4"></i>
+                            <div>
+                                <div class="fw-bold">Données Excel (.xlsx)</div>
+                                <small class="text-muted">Tableau complet des diplômes </small>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0 transition-base">
+                            <i class="bi bi-file-earmark-pdf-fill text-danger fs-2 me-4"></i>
+                            <div>
+                                <div class="fw-bold">Référentiel PDF</div>
+                                <small class="text-muted">Document officiel de la hiérarchie statutaire</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

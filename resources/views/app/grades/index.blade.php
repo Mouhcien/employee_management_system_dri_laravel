@@ -30,34 +30,6 @@
             </div>
         </div>
 
-        {{-- Grid de Statistiques Interactives --}}
-        <div class="row g-4 mb-4">
-            @php
-                $stats = [
-                    ['label' => 'Total Grades', 'count' => $grades->total(), 'color' => 'primary', 'icon' => 'bi-award-fill'],
-                    ['label' => 'Entités liées', 'count' => $total_entity ?? 0, 'color' => 'success', 'icon' => 'bi-diagram-3-fill'],
-                    ['label' => 'Secteurs', 'count' => $total_sector ?? 0, 'color' => 'info', 'icon' => 'bi-grid-3x3-gap-fill'],
-                    ['label' => 'Total Sections', 'count' => $total_section ?? 0, 'color' => 'warning', 'icon' => 'bi-bounding-box-circles']
-                ];
-            @endphp
-            @foreach($stats as $stat)
-                <div class="col-xl-3 col-sm-6">
-                    <div class="card border-0 shadow-sm rounded-4 hover-lift h-100 border-start border-4 border-{{ $stat['color'] }}">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="bg-{{ $stat['color'] }}-subtle text-{{ $stat['color'] }} rounded-3 p-2">
-                                    <i class="bi {{ $stat['icon'] }} fs-4"></i>
-                                </div>
-                                <i class="bi bi-arrow-up-right text-muted opacity-50"></i>
-                            </div>
-                            <h3 class="fw-bold mb-0 text-dark">{{ $stat['count'] }}</h3>
-                            <p class="text-muted small mb-0 fw-bold text-uppercase ls-1">{{ $stat['label'] }}</p>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-
         {{-- Filtres de Recherche Modernes --}}
         <div class="card border-0 shadow-sm rounded-4 mb-4">
             <div class="card-body p-4">
@@ -151,6 +123,7 @@
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 overflow-hidden">
                                             <li><a class="dropdown-item py-2 small" href="#"><i class="bi bi-envelope me-2 text-info"></i>Informer les agents</a></li>
+                                            <li><a class="dropdown-item py-2 small" href="{{ route('grades.download', $grade) }}"><i class="bi bi-file-earmark-excel me-2 text-success"></i>Export du grade</a></li>
                                             <li><hr class="dropdown-divider opacity-50"></li>
                                             <li>
                                                 <button class="dropdown-item py-2 small text-danger fw-bold" data-bs-toggle="modal" data-bs-target="#deleteGradeModal-{{ $grade->id }}">
@@ -261,7 +234,7 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="list-group list-group-flush">
-                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0 border-bottom transition-base">
+                        <a href="{{ route('grades.download') }}" class="list-group-item list-group-item-action d-flex align-items-center p-4 border-0 border-bottom transition-base">
                             <i class="bi bi-file-earmark-excel-fill text-success fs-2 me-4"></i>
                             <div>
                                 <div class="fw-bold">Données Excel (.xlsx)</div>

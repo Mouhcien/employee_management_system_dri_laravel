@@ -53,7 +53,7 @@
                         <li><a class="dropdown-item rounded-3 py-2" href="{{ route('occupations.index') }}">Fonctions</a></li>
                         <li><a class="dropdown-item rounded-3 py-2" href="{{ route('grades.index') }}">Grades</a></li>
                         <li><a class="dropdown-item rounded-3 py-2" href="{{ route('diplomas.index') }}">Diplômes</a></li>
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('options.index') }}">Options</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('options.index') }}">Filières</a></li>
                     </ul>
                 </li>
                 @endif
