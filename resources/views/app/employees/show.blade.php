@@ -141,7 +141,7 @@
 
                 {{-- FIX 1: Added pointer-events: none so this doesn't block clicks --}}
                 <div class="position-absolute top-0 end-0 p-4 opacity-10" style="pointer-events: none; z-index: 0;">
-                    <i class="bi bi-person-bounding-box" style="font-size: 8rem;"></i>
+
                 </div>
 
                 <div class="position-relative" style="z-index: 1;">

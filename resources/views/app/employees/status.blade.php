@@ -1,223 +1,166 @@
 <x-layout>
-    {{-- Styles optimisés --}}
     @push('styles')
         <style>
+            :root {
+                --glass-bg: rgba(255, 255, 255, 0.7);
+                --glass-border: rgba(255, 255, 255, 0.2);
+                --accent-indigo: #6366f1;
+                --sidebar-width: 260px;
+            }
+
+            body {
+                background-color: #f8fafc;
+                color: #1e293b;
+                font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            }
+
+            /* Sleek Glass Effect */
+            .glass-card {
+                background: var(--glass-bg);
+                backdrop-filter: blur(12px);
+                border: 1px solid var(--glass-border);
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+            }
+
+            /* Professional Typography */
+            .text-display {
+                letter-spacing: -0.02em;
+                font-weight: 700;
+            }
+
+            /* Sublte Row Hover */
+            .hover-row-highlight {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                border-left: 3px solid transparent;
+            }
+
             .hover-row-highlight:hover {
-                background-color: rgba(79, 70, 229, 0.04) !important;
-                border-left: 4px solid #4f46e5 !important;
-                transition: all 0.2s ease;
+                background-color: #f1f5f9 !important;
+                border-left: 3px solid var(--accent-indigo) !important;
+                transform: translateX(4px);
             }
 
-            .avatar-hover {
-                transition: transform 0.2s;
-                cursor: zoom-in;
-            }
-
-            .avatar-hover:hover {
-                transform: scale(1.1);
-            }
-
-            #employee-photo-preview {
-                position: fixed;
-                display: none;
-                pointer-events: none;
-                z-index: 9999;
-                padding: 8px;
-                background: #fff;
-                border-radius: 1rem;
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            /* Modern Inputs */
+            .form-control-futurist {
                 border: 1px solid #e2e8f0;
+                background: #ffffff;
+                padding: 0.6rem 1rem;
+                transition: all 0.2s;
             }
 
-            #employee-photo-preview img {
-                display: block;
-                max-width: 320px;
-                max-height: 320px;
-                border-radius: 0.75rem;
-                object-fit: cover;
+            .form-control-futurist:focus {
+                border-color: var(--accent-indigo);
+                box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
             }
 
-            .ls-1 { letter-spacing: 0.5px; }
+            /* Action Badge */
+            .badge-soft {
+                padding: 0.5em 0.8em;
+                font-weight: 600;
+                border-radius: 6px;
+            }
+            .badge-soft-info { background: #e0f2fe; color: #0369a1; }
         </style>
     @endpush
 
-    @section('title', 'Gestion des Agents - HR Management')
+    @section('title', 'Agents Non Actifs | HR Insight')
 
-    <div class="container-fluid py-4">
-        {{-- Header Premium --}}
-        <div class="card border-0 shadow-lg rounded-4 mb-4 overflow-hidden">
-            <div class="card-body p-0">
-                <div class="bg-primary bg-gradient p-4 text-white position-relative">
-                    <div class="position-absolute top-0 end-0 p-4 opacity-10">
-                        <i class="bi bi-people-fill" style="font-size: 8rem;"></i>
-                    </div>
-                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 position-relative">
-                        <div>
-                            <h1 class="h3 fw-bold mb-1 text-white">Répertoire des Agents Non Actifs</h1>
-                            <p class="text-white text-opacity-75 mb-0 small">
-                                <i class="bi bi-geo-alt-fill me-1"></i>DRI-Marrakech | Administration du personnel
-                            </p>
-                        </div>
-                    </div>
+    <div class="container-fluid py-4 px-lg-5">
+
+        {{-- Header Section: Professional & Concise --}}
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-5">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-2">
+                        <li class="breadcrumb-item small text-uppercase fw-bold text-muted">DRI-Marrakech</li>
+                        <li class="breadcrumb-item small text-uppercase fw-bold text-primary active">Administration</li>
+                    </ol>
+                </nav>
+                <h1 class="text-display h2 mb-0">Répertoire des Agents <span class="text-primary">Non Actifs</span></h1>
+            </div>
+
+            <div class="d-flex gap-2 mt-3 mt-md-0">
+                <div class="btn-group shadow-sm rounded-3 overflow-hidden">
+                    <button class="btn btn-white border-end" title="Exporter Excel"><i class="bi bi-file-earmark-excel"></i></button>
+                    <button class="btn btn-white" onclick="window.print()" title="Imprimer"><i class="bi bi-printer"></i></button>
+                </div>
+                <div class="btn-group shadow-sm rounded-3 overflow-hidden">
+                    <a href="?opt=list" class="btn {{ (session('opt') == 'list' || !session('opt')) ? 'btn-dark' : 'btn-white border' }}"><i class="bi bi-list"></i></a>
+                    <a href="?opt=cards" class="btn {{ session('opt') == 'cards' ? 'btn-dark' : 'btn-white border' }}"><i class="bi bi-grid"></i></a>
+                    <a href="?opt=empcrd" class="btn {{ session('opt') == 'empcrd' ? 'btn-dark' : 'btn-white border' }}"><i class="bi bi-person-badge"></i></a>
                 </div>
             </div>
         </div>
 
         @if(session('opt') != 'empcrd')
-            {{-- Panneau de Recherche Avancé --}}
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
-                <div class="card-body p-4">
-                    <form method="GET" action="{{ route('employees.status') }}" class="row g-3 align-items-end">
-                        <div class="col-xl-4 col-lg-6">
-                            <label class="form-label small fw-bold text-muted text-uppercase ls-1">Recherche globale</label>
-                            <div class="input-group bg-light rounded-3 overflow-hidden border">
-                                <span class="input-group-text bg-transparent border-0"><i class="bi bi-search"></i></span>
-                                <input type="text" name="flt" value="{{ $filter_val ?? '' }}" class="form-control bg-transparent border-0 shadow-none py-2" placeholder="Nom, PPR, Email...">
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-6">
-                            <label class="form-label small fw-bold text-muted text-uppercase ls-1">Status</label>
-                            <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0 text-muted">
-                                <i class="bi bi-briefcase"></i>
-                            </span>
-                                <select class="form-select border-start-0 ps-0" name="state" id="sl_agent_status">
-                                    <option value="" selected disabled>Choisir une situation...</option>
-                                    <option value="0" {{ $state == "0" ? 'selected' : '' }}>Mise à disposition</option>
-                                    <option value="-1" {{ $state == "-1" ? 'selected' : '' }}>Mise à la retraite</option>
-                                    <option value="-2" {{ $state == "-2" ? 'selected' : '' }}>Suspension immédiate</option>
-                                    <option value="2" {{ $state == "2" ? 'selected' : '' }}>Réintégration en position d'activité</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-6">
-
-                        </div>
-                        <div class="col-xl-2 col-lg-6 d-flex gap-2">
-                            <button type="submit" class="btn btn-dark flex-fill rounded-3 py-2 fw-bold transition-base">
-                                <i class="bi bi-funnel-fill me-2"></i>Filtrer
-                            </button>
-                            <a href="{{ route('employees.status') }}" class="btn btn-outline-secondary rounded-3 py-2">
-                                <i class="bi bi-arrow-clockwise"></i>
-                            </a>
-                        </div>
-                    </form>
-                </div>
+            {{-- Advanced Filter Panel --}}
+            <div class="glass-card rounded-4 p-4 mb-4 border-0">
+                <form method="GET" action="{{ route('employees.status') }}" class="row g-3 align-items-end">
+                    <div class="col-xl-5 col-lg-6">
+                        <label class="small fw-bold text-muted mb-2"><i class="bi bi-search me-2"></i>RECHERCHE GLOBALE</label>
+                        <input type="text" name="flt" value="{{ $filter_val ?? '' }}"
+                               class="form-control form-control-futurist rounded-3"
+                               placeholder="Rechercher par Nom, PPR ou Email...">
+                    </div>
+                    <div class="col-xl-4 col-lg-6">
+                        <label class="small fw-bold text-muted mb-2"><i class="bi bi-funnel me-2"></i>SITUATION ADMINISTRATIVE</label>
+                        <select class="form-select form-control-futurist rounded-3" name="state" id="sl_agent_status">
+                            <option value="" selected disabled>Tous les états...</option>
+                            <option value="0" {{ $state == "0" ? 'selected' : '' }}>Mise à disposition</option>
+                            <option value="-1" {{ $state == "-1" ? 'selected' : '' }}>Mise à la retraite</option>
+                            <option value="-2" {{ $state == "-2" ? 'selected' : '' }}>Suspension immédiate</option>
+                            <option value="2" {{ $state == "2" ? 'selected' : '' }}>Réintégration</option>
+                        </select>
+                    </div>
+                    <div class="col-xl-3 col-lg-12 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary w-100 rounded-3 py-2 fw-bold">
+                            Appliquer le filtre
+                        </button>
+                        <a href="{{ route('employees.status') }}" class="btn btn-outline-secondary rounded-3">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </a>
+                    </div>
+                </form>
             </div>
         @endif
 
-        {{-- Table Card --}}
-        <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="min-height: 400px;">
-
-            <div class="card-header bg-white py-3 px-4 border-bottom d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-list-stars text-primary me-2"></i>Effectif Non Actif
-                    @if($employees instanceof \Illuminate\Pagination\AbstractPaginator)
-                        <span class="badge bg-info">{{ $employees->total()  }}</span>
-                    @else
-                        <span class="badge bg-info">{{ $employees->count()  }}</span>
-                    @endif
-                </h5>
-                <div class="d-flex gap-2">
-                    <div class="btn-group rounded-pill overflow-hidden shadow-xs">
-                        <button class="btn btn-light border-end" onclick="window.print()"><i class="bi bi-printer"></i></button>
-                        <button class="btn btn-light"><i class="bi bi-file-earmark-excel"></i></button>
-                    </div>
-                    <div class="btn-group rounded-pill overflow-hidden shadow-xs ms-2">
-                        <a href="{{ route('employees.status') }}?opt=list" class="btn btn-{{ session('opt') == 'list' || !session('opt') ? 'primary' : 'light' }}">
-                            <i class="bi bi-list"></i>
-                        </a>
-                        <a href="{{ route('employees.status') }}?opt=cards" class="btn btn-{{ session('opt') == 'cards' ? 'primary' : 'light' }}">
-                            <i class="bi bi-grid-fill"></i>
-                        </a>
-                        <a href="{{ route('employees.status') }}?opt=empcrd" class="btn btn-{{ session('opt') == 'empcrd' ? 'primary' : 'light' }}">
-                            <i class="bi bi-person-badge"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
+        {{-- Main Data Display --}}
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
             <div class="table-responsive">
                 @if (session('opt') == 'cards')
-                    @include('app.employees._cards')
+                    <div class="p-4">@include('app.employees._cards')</div>
                 @elseif(session('opt') == 'empcrd')
                     @include('app.employees._employee_card')
                 @else
-                    @include('app.employees._list')
+                    <table class="table align-middle mb-0">
+                        <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 border-0 py-3 text-uppercase small fw-bold text-muted">Agent</th>
+                            <th class="border-0 py-3 text-uppercase small fw-bold text-muted">Statut</th>
+                            <th class="border-0 py-3 text-uppercase small fw-bold text-muted text-end pe-4">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{-- This section logic is handled in your _list partial, but ensure it uses .hover-row-highlight --}}
+                        @include('app.employees._list')
+                        </tbody>
+                    </table>
                 @endif
             </div>
 
-            {{-- Footer Pagination --}}
-            @if($employees instanceof \Illuminate\Pagination\AbstractPaginator)
-                @if(isset($employees) && $employees->hasPages())
-                    <div class="card-footer bg-white border-top-0 py-4 px-4">
-                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                            <div class="text-muted small">
-                                Agents <span class="fw-bold text-dark">{{ $employees->firstItem() }}</span> - <span class="fw-bold text-dark">{{ $employees->lastItem() }}</span> sur <span class="fw-bold text-dark">{{ $employees->total() }}</span>
-                            </div>
-                            <div>
-                                {{ $employees->appends(request()->query())->links() }}
-                            </div>
+            {{-- Smart Pagination --}}
+            @if($employees instanceof \Illuminate\Pagination\AbstractPaginator && $employees->hasPages())
+                <div class="card-footer bg-white border-top py-3 px-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="small text-muted">
+                            Affichage <span class="text-dark fw-bold">{{ $employees->firstItem() }}</span> à <span class="text-dark fw-bold">{{ $employees->lastItem() }}</span> sur <span class="badge badge-soft-info">{{ $employees->total() }}</span> agents
+                        </span>
+                        <div>
+                            {{ $employees->appends(request()->query())->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
-                @endif
+                </div>
             @endif
         </div>
-
     </div>
-
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                // Gestion du preview photo
-                const previewBox = document.getElementById('employee-photo-preview');
-                const previewImg = previewBox.querySelector('img');
-                const offsetX = 25;
-                const offsetY = 25;
-
-                document.querySelectorAll('.employee-photo-thumb').forEach(function (img) {
-                    img.addEventListener('mouseenter', function (e) {
-                        const src = img.dataset.full || img.src;
-                        previewImg.src = src;
-                        previewBox.style.display = 'block';
-                        movePreview(e);
-                    });
-
-                    img.addEventListener('mousemove', movePreview);
-                    img.addEventListener('mouseleave', () => previewBox.style.display = 'none');
-                });
-
-                function movePreview(e) {
-                    previewBox.style.left = (e.clientX + offsetX) + 'px';
-                    previewBox.style.top  = (e.clientY + offsetY) + 'px';
-                }
-
-                // Gestion des lignes extensibles (Détails)
-                document.querySelectorAll('.employee-row').forEach(row => {
-                    row.classList.add('hover-row-highlight');
-                    row.addEventListener('click', function (e) {
-                        if (e.target.closest('.dropdown') || e.target.closest('a') || e.target.closest('button')) return;
-
-                        const targetId = this.getAttribute('data-bs-target');
-                        const detailsRow = document.querySelector(targetId);
-                        if (detailsRow) {
-                            new bootstrap.Collapse(detailsRow, { toggle: true });
-                            const icon = this.querySelector('.toggle-details i');
-                            if (icon) {
-                                icon.classList.toggle('bi-chevron-down');
-                                icon.classList.toggle('bi-chevron-up');
-                            }
-                        }
-                    });
-                });
-            });
-        </script>
-    @endpush
-
-    <style>
-        .hover-lift:hover { transform: translateY(-3px); transition: transform 0.2s; }
-        .btn-white { background: #fff; color: #4f46e5; border: none; }
-        .btn-white:hover { background: #f8f9fa; color: #4338ca; }
-        .btn-rounded { border-radius: 50px; }
-        .shadow-xs { box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    </style>
 </x-layout>

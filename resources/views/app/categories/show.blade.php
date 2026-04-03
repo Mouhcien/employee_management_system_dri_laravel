@@ -1,190 +1,177 @@
 <x-layout>
-
-    @section('title', 'Gestion des Catégories - HR Management')
-
     @push('styles')
         <style>
-            .hover-row-highlight:hover {
-                background-color: rgba(79, 70, 229, 0.04) !important;
-                border-left: 4px solid #4f46e5 !important;
-                transition: all 0.2s ease;
+            :root {
+                --glass-bg: rgba(255, 255, 255, 0.7);
+                --glass-border: rgba(226, 232, 240, 0.8);
+                --accent-indigo: #6366f1;
             }
 
-            .avatar-hover {
-                transition: transform 0.2s;
-                cursor: zoom-in;
+            body { background-color: #f8fafc; }
+
+            /* Professional Typography */
+            .text-display { letter-spacing: -0.02em; font-weight: 700; color: #1e293b; }
+
+            /* Glassmorphism Header */
+            .glass-header {
+                background: var(--glass-bg);
+                backdrop-filter: blur(12px);
+                border: 1px solid var(--glass-border);
+                border-radius: 1.25rem;
             }
 
-            .avatar-hover:hover {
-                transform: scale(1.1);
-            }
-
-            #employee-photo-preview {
-                position: fixed;
-                display: none;
-                pointer-events: none;
-                z-index: 9999;
-                padding: 8px;
-                background: #fff;
-                border-radius: 1rem;
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            /* Stats Highlight */
+            .stat-pill {
+                background: #ffffff;
                 border: 1px solid #e2e8f0;
+                padding: 0.5rem 1rem;
+                border-radius: 50px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             }
 
-            #employee-photo-preview img {
-                display: block;
-                max-width: 320px;
-                max-height: 320px;
-                border-radius: 0.75rem;
-                object-fit: cover;
+            /* Modern Table Hover */
+            .hover-row-highlight {
+                transition: all 0.2s ease;
+                border-left: 4px solid transparent;
+            }
+            .hover-row-highlight:hover {
+                background-color: #f1f5f9 !important;
+                border-left: 4px solid var(--accent-indigo) !important;
+                cursor: pointer;
             }
 
-            .ls-1 { letter-spacing: 0.5px; }
+            /* Action Buttons Group */
+            .action-hub {
+                background: rgba(241, 245, 249, 0.8);
+                padding: 4px;
+                border-radius: 12px;
+                display: inline-flex;
+            }
+
+            .action-hub .btn {
+                border: none;
+                padding: 6px 12px;
+                border-radius: 8px;
+                transition: all 0.2s;
+            }
+
+            .action-hub .btn-active {
+                background: white;
+                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+                color: var(--accent-indigo);
+            }
         </style>
     @endpush
 
-    <div class="container-fluid py-4">
-        {{-- Header Premium avec effet de profondeur --}}
-        <div class="card border-0 shadow-lg rounded-4 mb-4 overflow-hidden">
-            <div class="card-body p-0">
-                <div class="bg-primary bg-gradient p-4 text-white position-relative">
-                    {{-- Icône décorative en filigrane --}}
-                    <div class="position-absolute top-0 end-0 p-4 opacity-10">
-                        <i class="bi bi-tags-fill" style="font-size: 8rem;"></i>
-                    </div>
-                    <div class="row align-items-center position-relative">
-                        <div class="col-md-8">
-                            <h2 class="fw-bold mb-1 text-white">Catégorie {{ $category->title }}</h2>
-                            <p class="text-white text-opacity-75 mb-0 fw-medium">
-                                <i class="bi bi-shield-check me-2"></i>Administration des employés
-                            </p>
+    @section('title', "Détails Catégorie - {$category->title}")
+
+        <div class="container-fluid py-4 px-lg-5">
+
+            {{-- Futurist Breadcrumb & Header --}}
+            <div class="glass-header p-4 mb-5 shadow-sm border-0">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-4">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary text-white rounded-4 p-3 me-4 shadow-primary">
+                            <i class="bi bi-layers-fill fs-3"></i>
                         </div>
-                        <div class="col-md-4">
-                            <a href="{{ route('categories.index') }}" class="btn btn-white btn-rounded shadow-sm fw-bold px-4 float-end">
-                                <i class="bi bi-arrow-left me-2"></i>Retour
+                        <div>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb mb-1 small fw-bold text-uppercase ls-1">
+                                    <li class="breadcrumb-item"><a href="{{ route('categories.index') }}" class="text-decoration-none text-muted">Référentiel</a></li>
+                                    <li class="breadcrumb-item active text-primary">Détails</li>
+                                </ol>
+                            </nav>
+                            <h1 class="text-display h2 mb-0">{{ $category->title }}</h1>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 align-items-center">
+                        <div class="stat-pill">
+                            <i class="bi bi-people text-primary"></i>
+                            <span class="fw-bold">
+                            {{ $employees instanceof \Illuminate\Pagination\AbstractPaginator ? $employees->total() : $employees->count() }}
+                        </span>
+                            <span class="text-muted small text-uppercase fw-bold">Agents</span>
+                        </div>
+                        <a href="{{ route('categories.index') }}" class="btn btn-dark rounded-3 px-4 fw-bold">
+                            <i class="bi bi-arrow-left me-2"></i>Retour
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Main Content Card --}}
+            <div class="card border-0 shadow-soft rounded-4 overflow-hidden">
+                <div class="card-header bg-white py-4 px-4 border-bottom d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-person-check text-primary me-2"></i>Effectif de la catégorie</h5>
+
+                    <div class="d-flex gap-3">
+                        {{-- Export Hub --}}
+                        <div class="btn-group shadow-sm rounded-3 overflow-hidden">
+                            <button class="btn btn-white border-end" title="Excel"><i class="bi bi-file-earmark-excel text-success"></i></button>
+                            <button class="btn btn-white" onclick="window.print()" title="PDF"><i class="bi bi-file-earmark-pdf text-danger"></i></button>
+                        </div>
+
+                        {{-- View Switcher --}}
+                        <div class="action-hub shadow-sm">
+                            <a href="?opt=list" class="btn {{ (session('opt') == 'list' || !session('opt')) ? 'btn-active' : '' }}">
+                                <i class="bi bi-list-ul"></i>
+                            </a>
+                            <a href="?opt=cards" class="btn {{ session('opt') == 'cards' ? 'btn-active' : '' }}">
+                                <i class="bi bi-grid"></i>
+                            </a>
+                            <a href="?opt=empcrd" class="btn {{ session('opt') == 'empcrd' ? 'btn-active' : '' }}">
+                                <i class="bi bi-person-badge"></i>
                             </a>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        {{-- Table Card --}}
-        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-
-            <div class="card-header bg-white py-3 px-4 border-bottom d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-list-stars text-primary me-2"></i>Effectif Actif <span class="badge bg-info"> {{ $employees->total() }}</span></h5>
-                <div class="d-flex gap-2">
-                    <div class="btn-group rounded-pill overflow-hidden shadow-xs">
-                        <button class="btn btn-light border-end" onclick="window.print()"><i class="bi bi-printer"></i></button>
-                        <button class="btn btn-light"><i class="bi bi-file-earmark-excel"></i></button>
-                    </div>
-                    <div class="btn-group rounded-pill overflow-hidden shadow-xs ms-2">
-                        <a href="{{ route('categories.show', $category) }}?opt=list" class="btn btn-{{ session('opt') == 'list' || !session('opt') ? 'primary' : 'light' }}">
-                            <i class="bi bi-list"></i>
-                        </a>
-                        <a href="{{ route('categories.show', $category) }}?opt=cards" class="btn btn-{{ session('opt') == 'cards' ? 'primary' : 'light' }}">
-                            <i class="bi bi-grid-fill"></i>
-                        </a>
-                        <a href="{{ route('categories.show', $category) }}?opt=empcrd" class="btn btn-{{ session('opt') == 'empcrd' ? 'primary' : 'light' }}">
-                            <i class="bi bi-person-badge"></i>
-                        </a>
-                    </div>
+                <div class="table-responsive">
+                    @if (session('opt') == 'cards')
+                        <div class="p-4">@include('app.employees._cards')</div>
+                    @elseif(session('opt') == 'empcrd')
+                        @include('app.employees._employee_card')
+                    @else
+                        <table class="table align-middle mb-0">
+                            <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4 border-0 py-3 text-uppercase small fw-bold text-muted">Agent</th>
+                                <th class="border-0 py-3 text-uppercase small fw-bold text-muted">Statut</th>
+                                <th class="border-0 py-3 text-uppercase small fw-bold text-muted text-end pe-4">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @include('app.employees._list')
+                            </tbody>
+                        </table>
+                    @endif
                 </div>
-            </div>
 
-            <div class="table-responsive">
-                @if (session('opt') == 'cards')
-                    @include('app.employees._cards')
-                @elseif(session('opt') == 'empcrd')
-                    @include('app.employees._employee_card')
-                @else
-                    @include('app.employees._list')
-                @endif
-            </div>
-
-            {{-- Footer Pagination --}}
-            @if($employees instanceof \Illuminate\Pagination\AbstractPaginator)
-                @if(isset($employees) && $employees->hasPages())
-                    <div class="card-footer bg-white border-top-0 py-4 px-4">
-                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                            <div class="text-muted small">
-                                Agents <span class="fw-bold text-dark">{{ $employees->firstItem() }}</span> - <span class="fw-bold text-dark">{{ $employees->lastItem() }}</span> sur <span class="fw-bold text-dark">{{ $employees->total() }}</span>
-                            </div>
-                            <div>
-                                {{ $employees->appends(request()->query())->links() }}
-                            </div>
+                {{-- Footer Pagination --}}
+                @if($employees instanceof \Illuminate\Pagination\AbstractPaginator && $employees->hasPages())
+                    <div class="card-footer bg-white border-top py-4 px-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                        <span class="small text-muted">
+                            Affichage <span class="fw-bold text-dark">{{ $employees->firstItem() }}</span> à <span class="fw-bold text-dark">{{ $employees->lastItem() }}</span> sur <span class="fw-bold text-dark">{{ $employees->total() }}</span>
+                        </span>
+                            <div>{{ $employees->appends(request()->query())->links() }}</div>
                         </div>
                     </div>
                 @endif
-            @endif
+            </div>
         </div>
 
-        {{-- Modals de suppression --}}
-        @foreach($employees as $employee)
-            <x-delete-model
-                href="{{ route('employees.delete', $employee->id) }}"
-                message="Attention : La suppression de l'agent #{{ $employee->ppr }} est irréversible."
-                title="Confirmation de Suppression"
-                target="deleteEmployeeModal" />
-        @endforeach
-
-    </div>
-
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                // Gestion du preview photo
-                const previewBox = document.getElementById('employee-photo-preview');
-                const previewImg = previewBox.querySelector('img');
-                const offsetX = 25;
-                const offsetY = 25;
-
-                document.querySelectorAll('.employee-photo-thumb').forEach(function (img) {
-                    img.addEventListener('mouseenter', function (e) {
-                        const src = img.dataset.full || img.src;
-                        previewImg.src = src;
-                        previewBox.style.display = 'block';
-                        movePreview(e);
-                    });
-
-                    img.addEventListener('mousemove', movePreview);
-                    img.addEventListener('mouseleave', () => previewBox.style.display = 'none');
+        {{-- Clean Tooltip Initialization --}}
+        @push('scripts')
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const tooltips = [].slice.call(document.querySelectorAll('[title]'))
+                    tooltips.map(t => new bootstrap.Tooltip(t));
                 });
-
-                function movePreview(e) {
-                    previewBox.style.left = (e.clientX + offsetX) + 'px';
-                    previewBox.style.top  = (e.clientY + offsetY) + 'px';
-                }
-
-                // Gestion des lignes extensibles (Détails)
-                document.querySelectorAll('.employee-row').forEach(row => {
-                    row.classList.add('hover-row-highlight');
-                    row.addEventListener('click', function (e) {
-                        if (e.target.closest('.dropdown') || e.target.closest('a') || e.target.closest('button')) return;
-
-                        const targetId = this.getAttribute('data-bs-target');
-                        const detailsRow = document.querySelector(targetId);
-                        if (detailsRow) {
-                            new bootstrap.Collapse(detailsRow, { toggle: true });
-                            const icon = this.querySelector('.toggle-details i');
-                            if (icon) {
-                                icon.classList.toggle('bi-chevron-down');
-                                icon.classList.toggle('bi-chevron-up');
-                            }
-                        }
-                    });
-                });
-            });
-        </script>
-    @endpush
-
-    <style>
-        .hover-lift:hover { transform: translateY(-3px); transition: transform 0.2s; }
-        .btn-white { background: #fff; color: #4f46e5; border: none; }
-        .btn-white:hover { background: #f8f9fa; color: #4338ca; }
-        .btn-rounded { border-radius: 50px; }
-        .shadow-xs { box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    </style>
-
+            </script>
+        @endpush
 </x-layout>

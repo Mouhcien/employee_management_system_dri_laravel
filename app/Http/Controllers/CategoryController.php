@@ -27,9 +27,11 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = $this->categoryService->getAll($this->pages);
+        $employees = $this->employeeService->getAll(0);
 
         return view('app.categories.index', [
-            'categories' => $categories
+            'categories' => $categories,
+            'employee_total' => $employees->count()
         ]);
     }
 

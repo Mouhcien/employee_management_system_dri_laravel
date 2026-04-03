@@ -8,7 +8,7 @@
                 <div class="bg-primary bg-gradient p-4 text-white position-relative">
                     {{-- Icône décorative --}}
                     <div class="position-absolute top-0 end-0 p-4 opacity-10">
-                        <i class="bi bi-diagram-3-fill" style="font-size: 8rem;"></i>
+
                     </div>
 
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 position-relative">

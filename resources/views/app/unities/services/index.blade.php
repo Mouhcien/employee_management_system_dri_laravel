@@ -123,7 +123,7 @@
                                                     <div class="management-pill">
                                                         <i class="bi bi-person-badge-fill me-2 text-primary"></i>
                                                         <a href="{{ Storage::url($chef->decision_file) }}" target="_blank" class="text-decoration-none text-dark fw-bold small">
-                                                            {{ $chef->employee->lastname }}
+                                                            {{ $chef->employee->lastname }} {{ $chef->employee->firstname }}
                                                         </a>
                                                     </div>
                                                 </div>
