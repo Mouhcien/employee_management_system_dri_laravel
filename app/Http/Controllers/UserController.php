@@ -34,10 +34,12 @@ class UserController extends Controller
         try {
 
             $profiles = $this->profileService->getAll(0);
+            $employees = $this->employeeService->getAll(0);
 
             return view('app.users.insert', [
                 'profiles' => $profiles,
-                'user' => null
+                'user' => null,
+                'employees' => $employees
             ]);
 
         }catch (\Exception $exception) {

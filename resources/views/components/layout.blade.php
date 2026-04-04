@@ -114,7 +114,7 @@
 
 </div>
 
-@vite(['resources/js/jquery-3.7.1.js', 'resources/js/app.js', 'resources/js/toastr.min.js', 'resources/js/script.js', 'resources/js/chart.js'])
+@vite(['resources/js/jquery-3.7.1.js', 'resources/js/app.js', 'resources/js/toastr.min.js', 'resources/js/script.js', 'resources/js/chart.js', 'resources/js/tom-select.complete.min.js'])
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

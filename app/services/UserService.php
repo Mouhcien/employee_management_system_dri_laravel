@@ -26,6 +26,10 @@ class UserService
         return $this->userRepository->One(User::class, $this->with, $id);
     }
 
+    public function getOneByUsername($username){
+        return $this->userRepository->OneByUsername($username, $this->with);
+    }
+
     public function create($data){
         $obj = new User();
 
