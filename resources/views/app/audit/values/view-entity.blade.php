@@ -68,7 +68,7 @@
                 <i class="bi bi-printer me-2"></i>Imprimer
             </button>
 
-            <a href="javascript:window.history.back();" class="btn btn-light border rounded-pill px-4 fw-bold">
+            <a href="{{ route('audit.values.select') }}" class="btn btn-light border rounded-pill px-4 fw-bold">
                 <i class="bi bi-x-lg me-2"></i>Fermer
             </a>
         </div>
@@ -223,6 +223,7 @@
                     <div class="card border-0 shadow-sm mb-4 rounded-4 overflow-hidden">
                         <div class="card-header bg-dark py-3 px-4 d-flex justify-content-between align-items-center">
                             <h6 class="mb-0 text-white fw-bold"><i class="bi bi-bar-chart-line me-2 text-primary"></i> {{ $tableName }}</h6>
+                            <a href="{{ route('audit.values.view.entity.details', ['entityName' =>$entityName, 'id' => $id, 'table_id' => $tableId]) }}" class="badge bg-warning-subtle text-primary border border-warning-subtle rounded-pill">Détail</a>
                             <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">Analyse des KPIs</span>
                         </div>
 

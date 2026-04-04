@@ -581,7 +581,7 @@ class ValueController extends Controller
                     if (is_null($sector)) {
                         return back()->with('error', "Secteur introuvable !!");
                     }
-                    $employees = $this->employeeService->getAllByService($id);
+                    $employees = $this->employeeService->getAllBySector($id);
                     if (count($sector->chefs) != 0)
                         $employee = $sector->chefs->where('state', "=", 1)->first()->employee;
                     $values = $this->valueService->getAllBySector($id);
@@ -607,10 +607,101 @@ class ValueController extends Controller
                 'section' => $section,
                 'employee' => $employee,
                 'values' => $values,
+                'entityName' => $entityName,
+                'id' => $id
             ]);
 
         }catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function view_entity_details(Request $request, $entityName, $id, $table_id) {
+        try {
+
+            $periods = $this->periodService->getAll(0);
+            $employees = [];
+            $service = null;
+            $entity = null;
+            $sector = null;
+            $section = null;
+            $employee = null;
+            $values = [];
+            $period_id = null;
+            if ($request->has('perd')) {
+                $period_id = $request->query('perd');
+            }
+
+            switch (strtolower($entityName)) {
+                case 'service':
+                    $service = $this->serviceEntityService->getOneById($id);
+                    if (is_null($service)) {
+                        return back()->with('error', "Service introuvable !!");
+                    }
+                    $employees = $this->employeeService->getAllByService($id);
+                    if (count($service->chefs) != 0){
+                        $employee = $service->chefs->where('state', "=", 1)->first()->employee;
+                    }else{
+                        //check inerim
+                    }
+
+                    $values = $this->valueService->getAllByServiceWithEmployees($id, $table_id, $period_id);
+                    break;
+
+                case 'entité':
+                    $entity = $this->entityService->getOneById($id);
+                    if (is_null($entity)) {
+                        return back()->with('error', "Entité introuvable !!");
+                    }
+                    $employees = $this->employeeService->getAllByEntity($id);
+                    if (count($entity->chefs) != 0)
+                        $employee = $entity->chefs->where('state', "=", 1)->first()->employee;
+                    $values = $this->valueService->getAllByEntityWithEmployees($id, $table_id, $period_id);
+                    break;
+
+                case 'secteur':
+                    $sector = $this->sectorEntityService->getOneById($id);
+                    if (is_null($sector)) {
+                        return back()->with('error', "Secteur introuvable !!");
+                    }
+                    $employees = $this->employeeService->getAllBySector($id);
+                    if (count($sector->chefs) != 0)
+                        $employee = $sector->chefs->where('state', "=", 1)->first()->employee;
+                    $values = $this->valueService->getAllBySectorWithEmployees($id, $table_id, $period_id);
+                    break;
+
+                case 'section':
+                    $section = $this->sectionEntityService->getOneById($id);
+                    if (is_null($section)) {
+                        return back()->with('error', "Section introuvable !!");
+                    }
+                    $employees = $this->employeeService->getAllBySection($id);
+                    if (count($section->chefs) != 0)
+                        $employee = $section->chefs->where('state', "=", 1)->first()->employee;
+                    $values = $this->valueService->getAllBySectionWithEmployees($id, $table_id, $period_id);
+                    break;
+            }
+
+            return view('app.audit.values.view-details', [
+                'employees' => $employees,
+                'service' => $service,
+                'entity' => $entity,
+                'sector' => $sector,
+                'section' => $section,
+                'employee' => $employee,
+                'values' => $values,
+                'entityName' => $entityName,
+                'id' => $id,
+                'periods' => $periods->sortByDesc('title')->sortByDesc('year'),
+                'table_id' => $table_id,
+                'period_id' => $period_id
+            ]);
+
+
+
+        }catch (\Exception $exception) {
+            //return back()->with('error', $exception->getMessage());
+            dd($exception->getMessage());
         }
     }
 

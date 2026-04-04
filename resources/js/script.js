@@ -219,4 +219,19 @@ $(function() {
 
     });
 
+    $('#sl_view_detail_period').on('change', function(e) {
+
+        const entity_name = $('#input_hidden_entity_name').val();
+        const id = $('#input_hidden_entity_id').val();
+        const table_id = $('#input_hidden_table_id').val();
+        let href = "/audit/values/view/"+entity_name+"/"+id+"/details/"+table_id+"?";
+        const period = $(this).val();
+        if (period != '' && period != undefined) {
+            href += 'perd='+period;
+        }
+
+        window.location.href = href;
+
+    });
+
 });

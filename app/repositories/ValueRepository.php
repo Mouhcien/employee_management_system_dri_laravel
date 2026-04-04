@@ -196,4 +196,140 @@ class ValueRepository extends MainRepository
 
     }
 
+    public function getAllByServiceWithEmployees($service_id, $table_id, $period_id) {
+
+        return Value::from('values as v') // Alias 'values' to 'v'
+                ->selectRaw('
+                v.period_id,
+                v.employee_id,
+                employees.lastname as employee_name,
+                relations.column_id,
+                tables.title as table_title,
+                columns.title as column_title,
+                SUM(CAST(v.value AS DECIMAL(10,2))) as total_sum
+            ')
+            ->join('employees', 'employees.id', '=', 'v.employee_id')
+            ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->join('relations', 'relations.id', '=', 'v.relation_id')
+            ->join('columns', 'columns.id', '=', 'relations.column_id')
+            ->join('tables', 'tables.id', '=', 'relations.table_id')
+            ->where('affectations.service_id', '=', $service_id)
+            ->where('affectations.state', '=', true)
+            ->where('v.period_id', '=', $period_id)
+            ->where('relations.table_id', '=', $table_id)
+            ->with(['period', 'employee'])
+            ->groupBy(
+                'v.period_id',
+                'v.employee_id',
+                'employees.lastname',
+                'relations.column_id',
+                'tables.title',
+                'columns.title',
+                'columns.id'
+            )
+            ->get();
+    }
+
+    public function getAllByEntityWithEmployees($entity_id, $table_id, $period_id) {
+
+        return Value::from('values as v') // Alias 'values' to 'v'
+            ->selectRaw('
+                v.period_id,
+                v.employee_id,
+                employees.lastname as employee_name,
+                relations.column_id,
+                tables.title as table_title,
+                columns.title as column_title,
+                SUM(CAST(v.value AS DECIMAL(10,2))) as total_sum
+            ')
+            ->join('employees', 'employees.id', '=', 'v.employee_id')
+            ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->join('relations', 'relations.id', '=', 'v.relation_id')
+            ->join('columns', 'columns.id', '=', 'relations.column_id')
+            ->join('tables', 'tables.id', '=', 'relations.table_id')
+            ->where('affectations.entity_id', '=', $entity_id)
+            ->where('affectations.state', '=', true)
+            ->where('v.period_id', '=', $period_id)
+            ->where('relations.table_id', '=', $table_id)
+            ->with(['period', 'employee'])
+            ->groupBy(
+                'v.period_id',
+                'v.employee_id',
+                'employees.lastname',
+                'relations.column_id',
+                'tables.title',
+                'columns.title',
+                'columns.id'
+            )
+            ->get();
+    }
+
+    public function getAllBySectorWithEmployees($sector_id, $table_id, $period_id) {
+
+        return Value::from('values as v') // Alias 'values' to 'v'
+        ->selectRaw('
+                v.period_id,
+                v.employee_id,
+                employees.lastname as employee_name,
+                relations.column_id,
+                tables.title as table_title,
+                columns.title as column_title,
+                SUM(CAST(v.value AS DECIMAL(10,2))) as total_sum
+            ')
+            ->join('employees', 'employees.id', '=', 'v.employee_id')
+            ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->join('relations', 'relations.id', '=', 'v.relation_id')
+            ->join('columns', 'columns.id', '=', 'relations.column_id')
+            ->join('tables', 'tables.id', '=', 'relations.table_id')
+            ->where('affectations.sector_id', '=', $sector_id)
+            ->where('affectations.state', '=', true)
+            ->where('v.period_id', '=', $period_id)
+            ->where('relations.table_id', '=', $table_id)
+            ->with(['period', 'employee'])
+            ->groupBy(
+                'v.period_id',
+                'v.employee_id',
+                'employees.lastname',
+                'relations.column_id',
+                'tables.title',
+                'columns.title',
+                'columns.id'
+            )
+            ->get();
+    }
+
+    public function getAllBySectionWithEmployees($section_id, $table_id, $period_id) {
+
+        return Value::from('values as v') // Alias 'values' to 'v'
+        ->selectRaw('
+                v.period_id,
+                v.employee_id,
+                employees.lastname as employee_name,
+                relations.column_id,
+                tables.title as table_title,
+                columns.title as column_title,
+                SUM(CAST(v.value AS DECIMAL(10,2))) as total_sum
+            ')
+            ->join('employees', 'employees.id', '=', 'v.employee_id')
+            ->join('affectations', 'affectations.employee_id', '=', 'employees.id')
+            ->join('relations', 'relations.id', '=', 'v.relation_id')
+            ->join('columns', 'columns.id', '=', 'relations.column_id')
+            ->join('tables', 'tables.id', '=', 'relations.table_id')
+            ->where('affectations.section_id', '=', $section_id)
+            ->where('affectations.state', '=', true)
+            ->where('v.period_id', '=', $period_id)
+            ->where('relations.table_id', '=', $table_id)
+            ->with(['period', 'employee'])
+            ->groupBy(
+                'v.period_id',
+                'v.employee_id',
+                'employees.lastname',
+                'relations.column_id',
+                'tables.title',
+                'columns.title',
+                'columns.id'
+            )
+            ->get();
+    }
+
 }

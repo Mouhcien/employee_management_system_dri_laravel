@@ -51,6 +51,22 @@ class ValueService
         return $this->valueRepository->getAllBySection($section_id, $this->with);
     }
 
+    public function getAllByServiceWithEmployees($service_id, $table_id, $period_id){
+        return $this->valueRepository->getAllByServiceWithEmployees($service_id, $table_id, $period_id);
+    }
+
+    public function getAllByEntityWithEmployees($entity_id, $table_id, $period_id){
+        return $this->valueRepository->getAllByEntityWithEmployees($entity_id, $table_id, $period_id);
+    }
+
+    public function getAllBySectorWithEmployees($sector_id, $table_id, $period_id){
+        return $this->valueRepository->getAllBySectorWithEmployees($sector_id, $table_id, $period_id);
+    }
+
+    public function getAllBySectionWithEmployees($section_id, $table_id, $period_id){
+        return $this->valueRepository->getAllBySectionWithEmployees($section_id, $table_id, $period_id);
+    }
+
     public function getAllByFilters($filter, $pages=0){
         return $this->valueRepository->AllByFilter($filter, $this->with, $pages);
     }
