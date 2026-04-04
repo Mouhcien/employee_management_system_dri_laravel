@@ -222,3 +222,94 @@
     /* Custom scrollbar for dropdowns if they get long */
     .dropdown-menu { max-height: 80vh; overflow-y: auto; }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('mainSearch');
+        const resultBox = document.getElementById('box_result_search');
+        const resultContent = document.getElementById('searchContent');
+
+        function debounce(func, timeout = 300) {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    func.apply(this, args);
+                }, timeout);
+            };
+        }
+
+        async function performSearch(query) {
+            // Trim whitespace to prevent empty searches
+            const cleanQuery = query.trim();
+
+            if (cleanQuery.length < 2) {
+                resultBox.classList.add('d-none');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/search/?q=${encodeURIComponent(cleanQuery)}`);
+                if (!response.ok) throw new Error('Network response error');
+
+                const data = await response.json();
+
+                // Reveal the box before rendering
+                resultBox.classList.remove('d-none');
+                renderCategorizedResults(data);
+            } catch (error) {
+                console.error("Erreur:", error);
+                resultContent.innerHTML = '<div class="p-3 text-danger small">Erreur de connexion.</div>';
+                resultBox.classList.remove('d-none');
+            }
+        }
+
+        const processChange = debounce((e) => performSearch(e.target.value));
+        searchInput.addEventListener('input', processChange);
+
+        function renderCategorizedResults(matches) {
+            if (matches.length === 0) {
+                resultContent.innerHTML = '<div class="p-3 text-muted text-center">Aucun résultat trouvé.</div>';
+                return;
+            }
+
+            const grouped = matches.reduce((acc, obj) => {
+                const key = obj.display_category || 'Autres';
+                if (!acc[key]) acc[key] = [];
+                acc[key].push(obj);
+                return acc;
+            }, {});
+
+            let html = '';
+
+            for (const category in grouped) {
+                const categoryItems = grouped[category];
+                html += `
+            <div class="row w-100 py-2 m-0 align-items-start">
+                <div class="col-4 fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">
+                    ${category} <span class="badge bg-info ms-1">${categoryItems.length}</span>
+                </div>
+                <div class="col-8">
+                    ${categoryItems.map(item => {
+                    // Secure the JSON string for the onclick attribute
+                    const safeData = JSON.stringify(item).replace(/"/g, '&quot;');
+                    return `
+                            <div class="search-result-item mb-2 p-2 rounded"
+                                 style="cursor:pointer;"
+                                 onclick="handleSelect(${safeData})">
+                                <div class="fw-bold text-dark" style="font-size: 0.9rem;">
+                                <a href="${item.url}" >${item.display_name}</a>
+                                </div>
+                                <div class="text-muted" style="font-size: 0.8rem;">${item.display_info}</div>
+                            </div>`;
+                }).join('')}
+                </div>
+            </div>
+            <hr class="my-1 text-secondary opacity-25">
+        `;
+            }
+
+            resultContent.innerHTML = html;
+        }
+    });
+</script>
