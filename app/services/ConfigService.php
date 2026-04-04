@@ -21,6 +21,10 @@ class ConfigService
         return $this->configRepository->All(Config::class, [], $pages);
     }
 
+    public function getAllByUser($user_id, $pages=0){
+        return $this->configRepository->AllByUser($user_id, [], $pages);
+    }
+
     public function getOneById($id){
         return $this->configRepository->One(Config::class, [], $id);
     }
@@ -30,6 +34,7 @@ class ConfigService
 
         $obj->title = $data['title'];
         $obj->value = $data['value'];
+        $obj->user_id = $data['user_id'];
 
         return $this->configRepository->Add($obj);
     }
@@ -44,6 +49,9 @@ class ConfigService
 
         if (isset($data['value']))
             $obj->value = $data['value'];
+
+        if (isset($data['user_id']))
+            $obj->user_id = $data['user_id'];
 
         return $this->configRepository->Update($obj);
     }

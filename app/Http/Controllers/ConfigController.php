@@ -23,7 +23,7 @@ class ConfigController extends Controller
     public function index() {
         try {
 
-            $configs = $this->configService->getAll(0);
+            $configs = $this->configService->getAllByUser(auth()->user()->id, 0);
 
             return view('app.configs.index', [
                 'configs' => $configs
@@ -42,14 +42,12 @@ class ConfigController extends Controller
                 return back()->with('error', 'Paramètre introuvable');
 
             $data = $request->validate($this->rules);
+            $data['user_id'] = auth()->user()->id;
             $result = $this->configService->update($id, $data);
 
             if ($result){
-                // Update the session
-                if (session()->has('configs')) {
-                    $configs = $this->configService->getAll(0);
-                    session()->put('configs', $configs);
-                }
+                $configs = $this->configService->getAllByUser(auth()->user()->id, 0);
+                session()->put('configs', $configs);
                 return redirect()->route('configs.index')->with('success', 'Mise à jour bien faite !!!');
             } else
                 return back()->with('error', 'Erreur lor de la mise à jour bien faite !!!');

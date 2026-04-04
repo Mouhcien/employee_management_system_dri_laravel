@@ -25,7 +25,7 @@
                 aria-expanded="{{ request()->routeIs('employees.*') || request()->routeIs('categories.*') ? 'true' : 'false' }}">
             <span class="d-flex align-items-center">
                 <i class="bi bi-people-fill me-2 fs-5"></i>
-                <span class="sidebar-text fw-semibold">Employés</span>
+                <span class="sidebar-text fw-semibold">Agents</span>
             </span>
             <i class="bi bi-chevron-down small transition-base"></i>
         </button>

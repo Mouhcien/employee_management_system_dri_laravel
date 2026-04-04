@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +15,8 @@ return new class extends Migration
         Schema::create('configs', function (Blueprint $table) {
             $table->id();
             $table->string('title'); //nav
-            $table->string('value')->nullable(); //Ver or Horz
+            $table->string('value')->default('Vertical'); //Ver or Horz  (Horizontal)
+            $table->foreignIdFor(User::class, 'user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

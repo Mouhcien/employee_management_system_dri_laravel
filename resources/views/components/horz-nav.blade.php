@@ -33,9 +33,9 @@
                     </a>
                     <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-4 mt-2">
                         <li><h6 class="dropdown-header text-uppercase opacity-50 small fw-bold">Ressources Humaines</h6></li>
-                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('employees.*') ? 'active' : '' }}" href="{{ route('employees.index') }}">Annuaire</a></li>
-                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('categories.*') ? 'active' : '' }}" href="{{ route('categories.index') }}">Catégories</a></li>
-                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('employees.status') ? 'active' : '' }}" href="{{ route('employees.status') }}">Status</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('employees.index') ? 'active' : '' }}" href="{{ route('employees.index') }}"><i class="bi bi-list me-1 fs-4"></i>Annuaire</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('categories.*') ? 'active' : '' }}" href="{{ route('categories.index') }}"><i class="bi bi-person me-1 fs-4"></i>Catégories</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('employees.status') ? 'active' : '' }}" href="{{ route('employees.status') }}"><i class="bi bi-layers me-1 fs-4"></i>Status</a></li>
                     </ul>
                 </li>
 
@@ -50,10 +50,10 @@
                         <span class="fw-semibold">Nomenclature</span>
                     </a>
                     <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-4 mt-2">
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('occupations.index') }}">Fonctions</a></li>
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('grades.index') }}">Grades</a></li>
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('diplomas.index') }}">Diplômes</a></li>
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('options.index') }}">Filières</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('occupations.*') ? 'active' : '' }}" href="{{ route('occupations.index') }}"><i class="bi bi-briefcase me-1 fs-4"></i>Fonctions</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('grades.*') ? 'active' : '' }}" href="{{ route('grades.index') }}"><i class="bi bi-patch-check me-1 fs-4"></i>Grades</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('diplomas.*') ? 'active' : '' }}" href="{{ route('diplomas.index') }}"><i class="bi bi-award me-1 fs-4"></i>Diplômes</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('options.*') ? 'active' : '' }}" href="{{ route('options.index') }}"><i class="bi bi-journals me-1 fs-4"></i>Filières</a></li>
                     </ul>
                 </li>
                 @endif
@@ -68,8 +68,8 @@
                         <span class="fw-semibold">Localisation</span>
                     </a>
                     <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-4 mt-2">
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('locals.index') }}">Locaux</a></li>
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('cities.index') }}">Villes</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('locals.*') ? 'active' : '' }}" href="{{ route('locals.index') }}"><i class="bi bi-building me-1 fs-4"></i>Locaux</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('cities.*') ? 'active' : '' }}" href="{{ route('cities.index') }}"><i class="bi bi-geo-alt me-1 fs-4"></i>Villes</a></li>
                     </ul>
                 </li>
                 @endif
@@ -85,10 +85,10 @@
                         <span class="fw-semibold">Unités</span>
                     </a>
                     <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-4 mt-2">
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('services.index') }}">Services</a></li>
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('entities.index') }}">Entités</a></li>
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('sectors.index') }}">Secteurs</a></li>
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('sections.index') }}">Sections</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('services.*') ? 'active' : '' }}" href="{{ route('services.index') }}"><i class="bi bi-diagram-3 me-1 fs-4"></i>Services</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('entities.*') ? 'active' : '' }}" href="{{ route('entities.index') }}"><i class="bi bi-diagram-2 me-1 fs-4"></i>Entités</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('sectors.*') ? 'active' : '' }}" href="{{ route('sectors.index') }}"><i class="bi bi-grid-1x2 me-1 fs-4"></i>Secteurs</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('sections.*') ? 'active' : '' }}" href="{{ route('sections.index') }}"><i class="bi bi-list-nested me-1 fs-4"></i>Sections</a></li>
                     </ul>
                 </li>
                 @endif
@@ -103,8 +103,8 @@
                         <span class="fw-semibold">Hiérarchie</span>
                     </a>
                     <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-4 mt-2">
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('chefs.index') }}">Chefs</a></li>
-                        <li><a class="dropdown-item rounded-3 py-2" href="{{ route('temps.index') }}">Intérimaires</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('chefs.*') ? 'active' : '' }}" href="{{ route('chefs.index') }}"><i class="bi bi-person-workspace me-1 fs-4"></i>Chefs</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('temps.*') ? 'active' : '' }}" href="{{ route('temps.index') }}"><i class="bi bi-hourglass-split me-1 fs-4"></i>Intérimaires</a></li>
                     </ul>
                 </li>
                 @endif
@@ -118,8 +118,8 @@
                             <span class="fw-semibold">Gestion de suivi</span>
                         </a>
                         <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-4 mt-2">
-                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('audit.tables.index') }}">Tableaux de suivi</a></li>
-                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('audit.periods.index') }}">Périodes de suivi</a></li>
+                            <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('audit.tables.*') ? 'active' : '' }}" href="{{ route('audit.tables.index') }}"><i class="bi bi-table me-1 fs-4"></i>Tableaux de suivi</a></li>
+                            <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('audit.periods.*') ? 'active' : '' }}" href="{{ route('audit.periods.index') }}"><i class="bi bi-calendar-check me-1 fs-4"></i>Périodes de suivi</a></li>
                         </ul>
                     </li>
                 @endif
@@ -133,8 +133,8 @@
                             <span class="fw-semibold">Performance</span>
                         </a>
                         <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-4 mt-2">
-                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('audit.values.index') }}">Évaluations Périodiques</a></li>
-                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('audit.values.consult') }}">Consulter l'évaluation</a></li>
+                            <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('audit.values.index') ? 'active' : '' }}" href="{{ route('audit.values.index') }}"><i class="bi bi-database-add me-1 fs-4"></i>Évaluations Périodiques</a></li>
+                            <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('audit.values.consult') ? 'active' : '' }}" href="{{ route('audit.values.consult') }}"><i class="bi bi-bar-chart-steps me-1 fs-4"></i>Consulter l'évaluation</a></li>
                         </ul>
                     </li>
                 @endif
@@ -148,7 +148,7 @@
                             <span class="fw-semibold">Évaluations Périodiques</span>
                         </a>
                         <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-4 mt-2">
-                            <li><a class="dropdown-item rounded-3 py-2" href="{{ route('audit.values.select') }}">Superviser l'évaluation</a></li>
+                            <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('audit.values.select') ? 'active' : '' }}" href="{{ route('audit.values.select') }}"><i class="bi bi-person-workspace me-1 fs-4"></i>Superviser l'évaluation</a></li>
                         </ul>
                     </li>
 

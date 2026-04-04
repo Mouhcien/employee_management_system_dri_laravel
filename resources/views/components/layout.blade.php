@@ -53,17 +53,20 @@
 @if (session()->has('configs'))
     @php
         $configs = session()->get('configs');
+        $navigation = "Vertical";
+        if (count($configs) != 0)
+            $navigation = $configs[0]->value;
     @endphp
 @endif
 
-@if ($configs[0]->value == 'Horizontal')
+@if ($navigation == 'Horizontal')
     <x-horz-nav />
 @endif
 
-<div @if ($configs[0]->value == 'Vertical') id="main-wrapper" @endif class="d-flex min-vh-100 w-100 p-0 m-0 overflow-hidden">
+<div @if ($navigation == 'Vertical') id="main-wrapper" @endif class="d-flex min-vh-100 w-100 p-0 m-0 overflow-hidden">
 
     {{-- Sidebar --}}
-    @if ($configs[0]->value == 'Vertical')
+    @if ($navigation == 'Vertical')
         <x-nav />
     @endif
 
@@ -71,7 +74,7 @@
     <div class="flex-grow-1 d-flex flex-column transition-base shadow-sm" style="min-width: 0;">
 
         {{-- Navbar du haut --}}
-        @if ($configs[0]->value == 'Vertical')
+        @if ($navigation == 'Vertical')
             <header class="navbar navbar-expand bg-white border-bottom px-4 top-navbar sticky-top">
                 <div class="row col-12">
                     <div class="col-8">
