@@ -63,7 +63,8 @@ $(function() {
 
     // Initialize all standard routes
     Object.entries(routes).forEach(([path, map]) => {
-        const event = path.includes('consult') ? 'click change' : 'change';
+        //const event = path.includes('consult') ? 'click change' : 'change';
+        const event = (path === 'employee_list_consult') ? 'click' : 'change';
         bindFilterGroup(`/${path}`, map, event);
     });
 

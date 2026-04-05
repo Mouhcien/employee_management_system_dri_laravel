@@ -12,8 +12,8 @@ class CheckResponsibleProfile
     /**
      * Profile ID Constants
      */
-    const PROFILE_ADMIN = 3;
-    const PROFILE_AUDITOR = 4;
+    const PROFILE_ADMIN = 4;
+    const PROFILE_AUDITOR = 3;
 
     public function handle(Request $request, Closure $next)
     {
@@ -26,21 +26,22 @@ class CheckResponsibleProfile
         $profileId = (int) $user->profile_id;
 
         // 2. Group Admin-only routes
-        $adminRoutes = [
+        $auditorRoutes = [
             'audit.values.index', 'audit.values.consult', 'audit.values.store',
             'audit.values.create', 'audit.values.show', 'audit.values.edit',
             'audit.values.update', 'audit.values.delete', 'audit.periods.*',
-            'audit.relations.*', 'audit.columns.*', 'audit.tables.*'
+            'audit.relations.*', 'audit.columns.*', 'audit.tables.*',
+            'audit.values.select', 'audit.values.view.*'
         ];
 
-        if ($request->routeIs($adminRoutes) && $profileId !== self::PROFILE_ADMIN) {
+        if ($request->routeIs($auditorRoutes) && $profileId !== self::PROFILE_AUDITOR  && $profileId !== self::PROFILE_ADMIN ) {
             return redirect('/error');
         }
 
         // 3. Group Auditor-only routes
-        $auditorRoutes = ['audit.values.select', 'audit.values.view.*'];
+        $adminRoutes = ['audit.values.select', 'audit.values.view.*'];
 
-        if ($request->routeIs($auditorRoutes) && $profileId !== self::PROFILE_AUDITOR) {
+        if ($request->routeIs($adminRoutes) && $profileId !== self::PROFILE_ADMIN && $profileId !== self::PROFILE_AUDITOR) {
             return redirect('/error');
         }
 

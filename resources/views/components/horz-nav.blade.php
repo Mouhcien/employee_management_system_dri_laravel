@@ -144,6 +144,7 @@
                         <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-4 mt-2">
                             <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('audit.values.index') ? 'active' : '' }}" href="{{ route('audit.values.index') }}"><i class="bi bi-database-add me-1 fs-4"></i>Évaluations Périodiques</a></li>
                             <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('audit.values.consult') ? 'active' : '' }}" href="{{ route('audit.values.consult') }}"><i class="bi bi-bar-chart-steps me-1 fs-4"></i>Consulter l'évaluation</a></li>
+                            <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('audit.values.select') ? 'active' : '' }}" href="{{ route('audit.values.select') }}"><i class="bi bi-person-workspace me-1 fs-4"></i>Superviser l'évaluation</a></li>
                         </ul>
                     </li>
                 @endif

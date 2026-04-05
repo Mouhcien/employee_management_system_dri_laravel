@@ -190,6 +190,7 @@
                 <ul class="nav flex-column ms-2 mt-1">
                     <li><a href="{{ route('audit.values.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.index') ? 'active' : '' }}"><i class="bi bi-database-add me-1 fs-4"></i>Remplir les tableaux</a></li>
                     <li><a href="{{ route('audit.values.consult') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.consult') ? 'active' : '' }}"><i class="bi bi-bar-chart-steps me-1 fs-4"></i>Consulter l'évaluation</a></li>
+                    <li><a href="{{ route('audit.values.select') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.select') ? 'active' : '' }}"><i class="bi bi-person-workspace me-1 fs-4"></i>Superviser l'évaluation</a></li>
                 </ul>
             </div>
         </div>
