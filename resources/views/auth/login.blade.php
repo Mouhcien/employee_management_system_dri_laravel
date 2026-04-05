@@ -112,8 +112,8 @@
                         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                     </svg>
                 </div>
-                <h2 class="fw-bold tracking-tight text-dark mb-1">RH<span style="color: #6366f1;">Connect</span></h2>
-                <p class="text-muted small fw-medium">Administration & Management v2.0</p>
+                <h2 class="fw-bold tracking-tight text-dark mb-1">DRI<span style="color: #6366f1;">-Marrakech</span></h2>
+                <p class="text-muted small fw-medium">Administration & Gestion RH v2.0</p>
             </div>
 
             <div class="card auth-card p-4 p-md-5">
@@ -123,7 +123,7 @@
                     @csrf
 
                     <div class="mb-4">
-                        <label for="email" class="input-label">Identifiant Business</label>
+                        <label for="email" class="input-label">Identifiant</label>
                         <input id="email" class="form-control @error('email') is-invalid @enderror"
                                type="email" name="email" value="{{ old('email') }}"
                                placeholder="nom@entreprise.fr" required autofocus autocomplete="username">
@@ -136,7 +136,7 @@
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <label for="password" class="input-label mb-0">Mot de passe</label>
                             @if (Route::has('password.request'))
-                                <a class="text-decoration-none small fw-bold" href="{{ route('password.request') }}" style="color: #6366f1;">
+                                <a class="text-decoration-none small fw-bold" href="" style="color: #6366f1;">
                                     Réinitialiser ?
                                 </a>
                             @endif

@@ -102,7 +102,7 @@
                         </h5>
                     </div>
 
-                    <div class="table-responsive" style="height: 500px">
+                    <div class="table-responsive" style="min-height: 500px">
                         <table class="table table-hover align-middle mb-0">
                             <thead>
                             <tr class="bg-light-subtle">

@@ -130,7 +130,7 @@
                             <thead>
                             <tr class="bg-light-subtle">
                                 <th class="ps-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Responsable</th>
-                                <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Node de Commandement</th>
+                                <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Entité Administrative</th>
                                 <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0">Expérience</th>
                                 <th class="py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-center">Acte</th>
                                 <th class="pe-4 py-3 text-muted small text-uppercase ls-1 fw-bold border-0 text-end">Action</th>
@@ -195,7 +195,7 @@
                                                 <i class="bi bi-three-dots"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2">
-                                                <li><a class="dropdown-item rounded-3 py-2" href="{{ route('chefs.edit', $chef) }}"><i class="bi bi-pencil-square me-2 text-warning"></i>Éditer Node</a></li>
+                                                <li><a class="dropdown-item rounded-3 py-2" href="{{ route('chefs.edit', $chef) }}"><i class="bi bi-pencil-square me-2 text-warning"></i>Éditer</a></li>
                                                 <li><a class="dropdown-item rounded-3 py-2" href="#"><i class="bi bi-clock-history me-2 text-info"></i>Log Historique</a></li>
                                                 <li><hr class="dropdown-divider opacity-50"></li>
                                                 <li><button class="dropdown-item rounded-3 py-2 text-danger fw-bold" data-bs-toggle="modal" data-bs-target="#deleteChefModal-{{ $chef->id }}"><i class="bi bi-trash3 me-2"></i>Révoquer</button></li>

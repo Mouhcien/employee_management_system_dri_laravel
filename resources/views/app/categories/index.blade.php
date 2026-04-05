@@ -1,6 +1,8 @@
 <x-layout>
-    @push('styles')
-        <style>
+
+    @section('title', 'Référentiel - HR Management')
+
+    <style>
             :root {
                 --sidebar-indigo: #4f46e5;
                 --surface-glass: rgba(255, 255, 255, 0.85);
@@ -69,9 +71,6 @@
                 box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
             }
         </style>
-    @endpush
-
-    @section('title', 'Référentiel - HR Management')
 
     <div class="container-fluid py-4 px-lg-5">
 

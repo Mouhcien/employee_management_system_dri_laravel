@@ -183,6 +183,10 @@ Route::middleware('check.auth')->group(function (){
         Route::post('/change/state/{id}', [EmployeeController::class, 'state'])->name('employees.change.state');
         Route::get('/delete/{id}', [EmployeeController::class, 'delete'])->name('employees.delete');
         Route::get('/unities/{id}', [EmployeeController::class, 'unities'])->name('employees.unities');
+        Route::get('/work/certificate/{id}', [EmployeeController::class, 'work_certificate'])->name('employees.work.certificate');
+        Route::get('/bonus/certificate/{id}', [EmployeeController::class, 'bonus_certificate'])->name('employees.bonus.certificate');
+        Route::get('/holiday/certificate/{id}', [EmployeeController::class, 'holiday_certificate'])->name('employees.holiday.certificate');
+        Route::get('/renewal/certificate/{id}', [EmployeeController::class, 'renewal_certificate'])->name('employees.renewal.certificate');
     });
 
     Route::prefix('settings')->group(function (){

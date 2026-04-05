@@ -209,6 +209,15 @@ class EmployeeRepository extends MainRepository
             ->get();
     }
 
+    public function allTotalByLocal() {
+        return Employee::query()
+            ->join('locals', 'locals.id', '=', 'employees.local_id')
+            ->selectRaw('employees.local_id, locals.title, COUNT(employees.id) AS total')
+            ->groupBy('employees.local_id', 'locals.title')
+            ->where('employees.status', '=', 1)
+            ->get();
+    }
+
 
     public function inActiveEmployees($with, $pages) {
         $query =  Employee::with($with)

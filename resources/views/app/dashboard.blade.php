@@ -356,7 +356,7 @@
                     ],
                     [
                         'label' => 'Contractuels',
-                        'value' => ($employeesByCategory[1]->total ?? 44),
+                        'value' => ($employeesByCategory[1]->total + $employeesByCategory[2]->total ?? 44),
                         'icon' => 'bi-file-earmark-text',
                         'color' => 'warning',
                         'trend' => 'Catégorie B',
@@ -506,10 +506,10 @@
                     <div class="chart-body">
                         @php
                             $structure = [
-                                ['name' => 'Services', 'count' => $totalService - 1 ?? 12, 'color' => 'primary', 'width' => 85],
-                                ['name' => 'Entités', 'count' => $totalEntity ?? 8, 'color' => 'success', 'width' => 65],
-                                ['name' => 'Secteurs', 'count' => $totalSector ?? 15, 'color' => 'warning', 'width' => 75],
-                                ['name' => 'Sections', 'count' => $totalSection ?? 24, 'color' => 'danger', 'width' => 90]
+                                ['name' => 'Services', 'count' => $totalService ?? 0, 'color' => 'primary', 'width' => 85],
+                                ['name' => 'Entités', 'count' => $totalEntity ?? 0, 'color' => 'success', 'width' => 65],
+                                ['name' => 'Secteurs', 'count' => $totalSector ?? 0, 'color' => 'warning', 'width' => 75],
+                                ['name' => 'Sections', 'count' => $totalSection ?? 0, 'color' => 'danger', 'width' => 90]
                             ];
                         @endphp
 
@@ -616,7 +616,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Nombre d'employés',
+                        label: 'Nombre des agents',
                         data: data,
                         backgroundColor: backgroundColors,
                         borderColor: colors,
@@ -662,15 +662,29 @@
                 }
             });
 
-            // Doughnut Chart
+            /*******************************************************************************/
+            // Circle Chart
+            // 1. Rename the mapped variables to avoid conflicts
+            const chartStatsRaw = @json($employeesByLocals);
+
+            const chartLabels = chartStatsRaw.map(item => item.title);
+            const chartDataValues = chartStatsRaw.map(item => item.total);
+
+            // 2. Rename the color array
+            const chartSegmentColors = chartStatsRaw.map((_, index) => {
+                const palette = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796'];
+                return palette[index % palette.length];
+            });
+
             const ctxDoughnut = document.getElementById('employeeCircleChart').getContext('2d');
+
             new Chart(ctxDoughnut, {
                 type: 'doughnut',
                 data: {
-                    labels: labels,
+                    labels: chartLabels, // Updated variable name
                     datasets: [{
-                        data: data,
-                        backgroundColor: colors,
+                        data: chartDataValues, // Updated variable name
+                        backgroundColor: chartSegmentColors, // Updated variable name
                         borderWidth: 3,
                         borderColor: '#ffffff',
                         hoverOffset: 8
@@ -695,9 +709,11 @@
                             cornerRadius: 8,
                             callbacks: {
                                 label: function(context) {
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((context.raw / total) * 100).toFixed(1);
-                                    return `${context.label}: ${context.raw} (${percentage}%)`;
+                                    const dataset = context.dataset.data;
+                                    const totalSum = dataset.reduce((a, b) => a + Number(b), 0);
+                                    const value = context.raw;
+                                    const percentage = ((value / totalSum) * 100).toFixed(1);
+                                    return ` ${context.label}: ${value} (${percentage}%)`;
                                 }
                             }
                         }

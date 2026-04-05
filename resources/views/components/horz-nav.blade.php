@@ -2,8 +2,17 @@
 <nav class="navbar navbar-expand-lg bg-white border-bottom py-2 shadow-sm sticky-top">
     <div class="container-fluid px-4">
 
-        <a class="navbar-brand fw-bold text-primary me-4" href="{{ route('dashboard0') }}">
-            <i class="bi bi-layers-half me-2"></i>RH App
+        <a class="navbar-brand d-flex align-items-center me-5" href="{{ route('dashboard0') }}" style="text-decoration: none;">
+            <div class="brand-accent border-start border-primary border-4 ps-3">
+                <div class="brand-text">
+                <span class="d-block fw-bold text-dark lh-sm" style="font-size: 0.95rem;">
+                    DIRECTION RÉGIONALE
+                </span>
+                    <span class="d-block fw-semibold text-primary" style="font-size: 0.85rem; letter-spacing: 0.5px;">
+                    Des Impôts Marrakech
+                </span>
+                </div>
+            </div>
         </a>
 
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar">

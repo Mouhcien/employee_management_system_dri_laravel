@@ -283,7 +283,7 @@ class TempController extends Controller
                 'entity_responsable' => $entity_responsable,
                 'entity_employee' => $entity_employee
                 ]
-            )->setPaper('a4', 'portrait');;
+            )->setPaper('a4', 'portrait');
 
             // Download the file
             //return $pdf->download('invoice.pdf');

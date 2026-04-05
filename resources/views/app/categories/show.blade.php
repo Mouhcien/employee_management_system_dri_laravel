@@ -1,5 +1,7 @@
 <x-layout>
-    @push('styles')
+
+    @section('title', "Détails Catégorie - {$category->title}")
+
         <style>
             :root {
                 --glass-bg: rgba(255, 255, 255, 0.7);
@@ -64,9 +66,6 @@
                 color: var(--accent-indigo);
             }
         </style>
-    @endpush
-
-    @section('title', "Détails Catégorie - {$category->title}")
 
         <div class="container-fluid py-4 px-lg-5">
 
@@ -136,18 +135,7 @@
                     @elseif(session('opt') == 'empcrd')
                         @include('app.employees._employee_card')
                     @else
-                        <table class="table align-middle mb-0">
-                            <thead class="bg-light">
-                            <tr>
-                                <th class="ps-4 border-0 py-3 text-uppercase small fw-bold text-muted">Agent</th>
-                                <th class="border-0 py-3 text-uppercase small fw-bold text-muted">Statut</th>
-                                <th class="border-0 py-3 text-uppercase small fw-bold text-muted text-end pe-4">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @include('app.employees._list')
-                            </tbody>
-                        </table>
+                        @include('app.employees._list')
                     @endif
                 </div>
 

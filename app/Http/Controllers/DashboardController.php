@@ -53,6 +53,8 @@ class DashboardController extends Controller
         $sectors = $this->sectorEntityService->getAll(0);
         $sections = $this->sectionEntityService->getAll(0);
         $employeesByCategory = $this->employeeService->getTotalByCategory();
+        $employeesByLocals = $this->employeeService->getTotalByLocal();
+        //dd($employeesByLocals);
 
         if (Auth::user()->profile_id == 3) {
             return view('app.audit.dashboard-auditor', [
@@ -70,10 +72,11 @@ class DashboardController extends Controller
                 'totalEmployees' => $employees->count(),
                 'totalLocals' => $locals->count(),
                 'employeesByCategory' => $employeesByCategory,
-                'totalService' => $services->count(),
+                'totalService' => ($services->count() - 1),
                 'totalEntity' => $entities->count(),
                 'totalSector' => $sectors->count(),
                 'totalSection' => $sections->count(),
+                'employeesByLocals' => $employeesByLocals,
             ]);
         }
 

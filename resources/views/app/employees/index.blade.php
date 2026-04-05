@@ -1,80 +1,80 @@
 <x-layout>
-    @push('styles')
-        <style>
-            :root {
-                --admin-indigo: #6366f1;
-                --surface-glass: rgba(255, 255, 255, 0.8);
-                --border-subtle: #f1f5f9;
-            }
-
-            body { background-color: #f8fafc; font-family: 'Inter', system-ui, sans-serif; }
-
-            /* Professional Typography */
-            .text-display { letter-spacing: -0.02em; font-weight: 800; }
-            .ls-caps { letter-spacing: 0.05em; font-size: 0.7rem; text-transform: uppercase; }
-
-            /* Surface Depth */
-            .glass-card {
-                background: var(--surface-glass);
-                backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.3);
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            }
-
-            /* Metric Cards: The "Futurist" Look */
-            .metric-card {
-                border: 1px solid var(--border-subtle);
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-            .metric-card:hover {
-                transform: translateY(-4px);
-                border-color: var(--admin-indigo);
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-            }
-
-            /* Sleek Input Fields */
-            .form-control-futurist {
-                background: #f1f5f9;
-                border: 1px solid transparent;
-                padding: 0.6rem 1rem;
-                transition: 0.2s;
-            }
-            .form-control-futurist:focus {
-                background: #fff;
-                border-color: var(--admin-indigo);
-                box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-            }
-
-            /* View Switcher Refinement */
-            .view-switcher {
-                background: #f1f5f9;
-                padding: 4px;
-                border-radius: 12px;
-            }
-            .view-switcher .btn {
-                border: none;
-                padding: 6px 12px;
-                border-radius: 8px;
-            }
-            .view-switcher .btn-active {
-                background: white;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-                color: var(--admin-indigo) !important;
-            }
-
-            /* Hover Row with Side Indicator */
-            .hover-row-highlight {
-                transition: all 0.2s ease;
-                border-left: 3px solid transparent;
-            }
-            .hover-row-highlight:hover {
-                background-color: #f8fafc !important;
-                border-left: 3px solid var(--admin-indigo) !important;
-            }
-        </style>
-    @endpush
 
     @section('title', 'Gestion des Agents - HR Management')
+
+    <style>
+        :root {
+            --admin-indigo: #6366f1;
+            --surface-glass: rgba(255, 255, 255, 0.8);
+            --border-subtle: #f1f5f9;
+        }
+
+        body { background-color: #f8fafc; font-family: 'Inter', system-ui, sans-serif; }
+
+        /* Professional Typography */
+        .text-display { letter-spacing: -0.02em; font-weight: 800; }
+        .ls-caps { letter-spacing: 0.05em; font-size: 0.7rem; text-transform: uppercase; }
+
+        /* Surface Depth */
+        .glass-card {
+            background: var(--surface-glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Metric Cards: The "Futurist" Look */
+        .metric-card {
+            border: 1px solid var(--border-subtle);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .metric-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--admin-indigo);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Sleek Input Fields */
+        .form-control-futurist {
+            background: #f1f5f9;
+            border: 1px solid transparent;
+            padding: 0.6rem 1rem;
+            transition: 0.2s;
+        }
+        .form-control-futurist:focus {
+            background: #fff;
+            border-color: var(--admin-indigo);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        /* View Switcher Refinement */
+        .view-switcher {
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 12px;
+        }
+        .view-switcher .btn {
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+        .view-switcher .btn-active {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            color: var(--admin-indigo) !important;
+            padding-top: 6px;
+        }
+
+        /* Hover Row with Side Indicator */
+        .hover-row-highlight {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        .hover-row-highlight:hover {
+            background-color: #f8fafc !important;
+            border-left: 3px solid var(--admin-indigo) !important;
+        }
+    </style>
 
     <div class="container-fluid py-4 px-lg-5">
 
@@ -202,21 +202,21 @@
                     @endif
                 </h5>
 
-<div class="d-flex align-items-center gap-3">
-<div class="btn-group shadow-xs rounded-3 overflow-hidden border">
-   <button class="btn btn-white border-end" title="Imprimer"><i class="bi bi-printer text-muted"></i></button>
-   <a class="btn btn-white" href="{{ route('employees.download') }}" title="Exporter Excel"><i class="bi bi-file-earmark-excel text-success"></i></a>
-</div>
+                <div class="d-flex align-items-center gap-3">
+                <div class="btn-group shadow-xs rounded-3 overflow-hidden border">
+                   <button class="btn btn-white border-end" title="Imprimer"><i class="bi bi-printer text-muted"></i></button>
+                   <a class="btn btn-white" href="{{ route('employees.download') }}" title="Exporter Excel"><i class="bi bi-file-earmark-excel text-success"></i></a>
+                </div>
 
-<div class="view-switcher d-flex shadow-xs">
-   <a href="?opt=list" class="btn {{ (!session('opt') || session('opt') == 'list') ? 'btn-active' : 'text-muted' }}"><i class="bi bi-list"></i></a>
-   <a href="?opt=cards" class="btn {{ session('opt') == 'cards' ? 'btn-active' : 'text-muted' }}"><i class="bi bi-grid"></i></a>
-   <a href="?opt=empcrd" class="btn {{ session('opt') == 'empcrd' ? 'btn-active' : 'text-muted' }}"><i class="bi bi-person-badge"></i></a>
-</div>
-</div>
-</div>
+                <div class="view-switcher d-flex shadow-xs">
+                   <a href="?opt=list" class="btn {{ (!session('opt') || session('opt') == 'list') ? 'btn-active' : ' text-muted' }}"><i class="bi bi-list"></i></a>
+                   <a href="?opt=cards" class="btn {{ session('opt') == 'cards' ? 'btn-active' : 'text-muted' }}"><i class="bi bi-grid"></i></a>
+                   <a href="?opt=empcrd" class="btn {{ session('opt') == 'empcrd' ? 'btn-active' : 'text-muted' }}"><i class="bi bi-person-badge"></i></a>
+                </div>
+            </div>
+        </div>
 
-<div class="table-responsive" style="height: 500px">
+<div class="table-responsive" style="min-height: 500px">
     @if (session('opt') == 'cards')
         <div class="p-4">@include('app.employees._cards')</div>
     @elseif(session('opt') == 'empcrd')

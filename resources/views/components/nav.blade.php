@@ -2,11 +2,22 @@
 <nav id="sidebar" class="sidebar sidebar-open bg-white border-end d-flex flex-column p-3 transition-base">
     {{-- Toggle Button inside Sidebar --}}
     <div class="d-flex justify-content-end mb-3 d-md-flex">
+        <a class="navbar-brand d-flex align-items-center me-5" href="{{ route('dashboard0') }}" style="text-decoration: none;">
+            <div class="brand-accent border-start border-primary border-4 ps-3">
+                <div class="brand-text">
+                <span class="d-block fw-bold text-dark lh-sm" style="font-size: 0.95rem;">
+                    DIRECTION RÉGIONALE
+                </span>
+                    <span class="d-block fw-semibold text-primary" style="font-size: 0.85rem; letter-spacing: 0.5px;">
+                    Des Impôts Marrakech
+                </span>
+                </div>
+            </div>
+        </a>
         <button id="sidebarToggle" class="btn btn-light btn-sm rounded-circle shadow-sm border">
             <i class="bi bi-chevron-left" id="toggleIcon"></i>
         </button>
     </div>
-
     {{-- Section: HOME --}}
     <div class="sidebar-section-title mt-2 mb-1 px-3">Principal</div>
     <a href="{{ route('dashboard0') }}"

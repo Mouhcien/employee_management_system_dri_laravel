@@ -42,12 +42,6 @@
                 @endif
                 <li><a class="dropdown-item py-2 small" href="{{ route('employees.show', $employee) }}"><i class="bi bi-eye me-2 text-info"></i>Consulter</a></li>
                 <li><a class="dropdown-item py-2 small" href="{{ route('employees.edit', $employee) }}"><i class="bi bi-pencil-square me-2 text-warning"></i>Modifier</a></li>
-                <li><hr class="dropdown-divider opacity-50"></li>
-                <li>
-                    <button type="button" class="dropdown-item py-2 small text-danger fw-bold" data-bs-toggle="modal" data-bs-target="#deleteEmployeeModal">
-                        <i class="bi bi-trash3 me-2"></i>Supprimer
-                    </button>
-                </li>
             </ul>
         </div>
     </div>

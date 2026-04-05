@@ -43,7 +43,7 @@
                     <div class="card-body p-4 p-xl-5">
                         <div class="text-center mb-5">
                             <div class="profile-biometric-wrapper mb-4">
-                                <x-employee-card :employee="$chef->employee" detach="false" />
+                                <x-employee-card :employee="$chef->employee" :detach=false />
                             </div>
                         </div>
 

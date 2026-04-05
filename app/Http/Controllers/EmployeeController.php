@@ -15,15 +15,14 @@ use App\services\OptionService;
 use App\services\SectionEntityService;
 use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-use App\Http\Requests\StoreEmployeeRequest;
-use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Employee;
 use Maatwebsite\Excel\Facades\Excel;
 use Mockery\Exception;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Arabic;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class EmployeeController extends Controller
@@ -702,6 +701,99 @@ class EmployeeController extends Controller
         ]);
 
     }
+
+    public function work_certificate($id) {
+        try {
+
+            $employee = $this->employeeService->getOneById($id);
+            if (is_null($employee))
+                return back()->with('error', 'Agent introuvable !!');
+
+            $grade = is_null($employee->competences->where('finished_date', null)->first()) ? 'N/A' : $employee->competences->where('finished_date', null)->first()->grade->title;
+            $civility = $employee->gender == 'M' ? 'M' : 'Mme';
+
+            $pdf = Pdf::loadView('app.employees.certificates.work-certificate', [
+                'employee' => $employee,
+                'grade' => $grade ?? 'N/A',
+                'civility' => $civility,
+            ])->setPaper('a4', 'portrait');
+
+            return $pdf->stream();
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function bonus_certificate($id) {
+        try {
+
+            $employee = $this->employeeService->getOneById($id);
+            if (is_null($employee))
+                return back()->with('error', 'Agent introuvable !!');
+
+            $grade = is_null($employee->competences->where('finished_date', null)->first()) ? 'N/A' : $employee->competences->where('finished_date', null)->first()->grade->title;
+            $civility = $employee->gender == 'M' ? 'M' : 'Mme';
+
+            $pdf = Pdf::loadView('app.employees.certificates.bonus-certificate', [
+                'employee' => $employee,
+                'grade' => $grade,
+                'civility' => $civility,
+            ])->setPaper('a4', 'portrait');
+
+            return $pdf->stream();
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function holiday_certificate($id) {
+        try {
+
+            $employee = $this->employeeService->getOneById($id);
+            if (is_null($employee))
+                return back()->with('error', 'Agent introuvable !!');
+
+            $grade = is_null($employee->competences->where('finished_date', null)->first()) ? 'N/A' : $employee->competences->where('finished_date', null)->first()->grade->title;
+            $civility = $employee->gender == 'M' ? 'M' : 'Mme';
+
+            $pdf = Pdf::loadView('app.employees.certificates.holiday-certificate', [
+                'employee' => $employee,
+                'grade' => $grade,
+                'civility' => $civility,
+            ])->setPaper('a4', 'portrait');
+
+            return $pdf->stream();
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function renewal_certificate($id) {
+        try {
+
+            $employee = $this->employeeService->getOneById($id);
+            if (is_null($employee))
+                return back()->with('error', 'Agent introuvable !!');
+
+            $grade = $employee->competences->where('finished_date', null)->first()->grade->title;
+            $civility = $employee->gender == 'M' ? 'M' : 'Mme';
+
+            $pdf = Pdf::loadView('app.employees.certificates.renewal-certificate', [
+                'employee' => $employee,
+                'grade' => $grade,
+                'civility' => $civility,
+            ])->setPaper('a4', 'portrait');
+
+            return $pdf->stream();
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
 
 }
 
