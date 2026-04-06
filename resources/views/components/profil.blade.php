@@ -20,7 +20,9 @@
         @if (auth()->user()->profile->id == 1 || auth()->user()->profile->title == 'Administrateur')
             <li><a class="dropdown-item" href="{{ route('profiles.index') }}"><i class="bi bi-person-badge-fill me-2"></i>Gestion des utilisateurs</a></li>
         @endif
+        @if(auth()->user()->name == 'm.oualyali')
         <li><a class="dropdown-item" href="{{ route('settings.importation') }}"><i class="bi bi-database-add me-2"></i>Importation</a></li>
+        @endif
         <li><hr class="dropdown-divider"></li>
         <li>
             <form method="POST" action="{{ route('logout') }}">

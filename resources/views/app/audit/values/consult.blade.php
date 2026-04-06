@@ -1,89 +1,87 @@
 <x-layout>
-    @push('styles')
-        <style>
-            :root {
-                --saas-primary: #6366f1;
-                --saas-indigo: #4f46e5;
-                --saas-slate: #0f172a;
-                --glass-bg: rgba(255, 255, 255, 0.7);
-            }
+    <style>
+        :root {
+            --saas-primary: #6366f1;
+            --saas-indigo: #4f46e5;
+            --saas-slate: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+        }
 
-            body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; }
+        body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; }
 
-            /* Futurist Hero Header */
-            .header-vibrant {
-                background: radial-gradient(circle at top right, #4f46e5, #0f172a);
-                border-radius: 24px;
-                position: relative;
-                overflow: hidden;
-                border: 1px solid rgba(255, 255, 255, 0.1);
-            }
+        /* Futurist Hero Header */
+        .header-vibrant {
+            background: radial-gradient(circle at top right, #4f46e5, #0f172a);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-            /* Glassmorphism Filter Hub */
-            .filter-hub {
-                background: var(--glass-bg);
-                backdrop-filter: blur(12px);
-                border-radius: 20px;
-                border: 1px solid rgba(255, 255, 255, 0.5);
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-            }
+        /* Glassmorphism Filter Hub */
+        .filter-hub {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
 
-            .ls-caps { letter-spacing: 0.08em; font-size: 0.65rem; text-transform: uppercase; font-weight: 800; color: #6366f1; }
+        .ls-caps { letter-spacing: 0.08em; font-size: 0.65rem; text-transform: uppercase; font-weight: 800; color: #6366f1; }
 
-            /* Employee Card - Premium Profile */
-            .employee-header-surface {
-                background: white;
-                border-radius: 20px 20px 0 0;
-                border: 1px solid #e2e8f0;
-                border-left: 6px solid var(--saas-primary);
-                transition: all 0.3s;
-            }
+        /* Employee Card - Premium Profile */
+        .employee-header-surface {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            border: 1px solid #e2e8f0;
+            border-left: 6px solid var(--saas-primary);
+            transition: all 0.3s;
+        }
 
-            /* Trend Indicators with Glowing Accents */
-            .trend-badge {
-                padding: 4px 8px;
-                border-radius: 6px;
-                font-size: 0.75rem;
-                font-weight: 800;
-                display: inline-flex;
-                align-items: center;
-            }
-            .trend-up { background: #ecfdf5; color: #059669; border: 1px solid #d1fae5; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
-            .trend-down { background: #fff1f2; color: #e11d48; border: 1px solid #ffe4e6; box-shadow: 0 0 10px rgba(225, 29, 72, 0.2); }
+        /* Trend Indicators with Glowing Accents */
+        .trend-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+        }
+        .trend-up { background: #ecfdf5; color: #059669; border: 1px solid #d1fae5; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+        .trend-down { background: #fff1f2; color: #e11d48; border: 1px solid #ffe4e6; box-shadow: 0 0 10px rgba(225, 29, 72, 0.2); }
 
-            /* Technical Table Layout */
-            .table-technical thead th {
-                background: #f8fafc;
-                color: #64748b;
-                font-size: 0.65rem;
-                letter-spacing: 0.05em;
-                text-transform: uppercase;
-                padding: 1.25rem;
-                border-bottom: 2px solid #eef2ff;
-            }
+        /* Technical Table Layout */
+        .table-technical thead th {
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 0.65rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 1.25rem;
+            border-bottom: 2px solid #eef2ff;
+        }
 
-            .input-readonly-data {
-                background: #f1f5f9;
-                border: 1px solid #e2e8f0;
-                font-weight: 800;
-                color: #1e293b;
-                border-radius: 8px;
-            }
+        .input-readonly-data {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            font-weight: 800;
+            color: #1e293b;
+            border-radius: 8px;
+        }
 
-            /* Floating Filter Trigger */
-            .fixed-bottom-left {
-                position: fixed;
-                left: 30px;
-                bottom: 30px;
-                z-index: 1050;
-                background: var(--saas-indigo);
-                color: white;
-                border: none;
-                transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            }
-            .fixed-bottom-left:hover { transform: scale(1.15) rotate(5deg); box-shadow: 0 10px 20px rgba(79, 70, 229, 0.4); }
-        </style>
-    @endpush
+        /* Floating Filter Trigger */
+        .fixed-bottom-left {
+            position: fixed;
+            left: 30px;
+            bottom: 30px;
+            z-index: 1050;
+            background: var(--saas-indigo);
+            color: white;
+            border: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .fixed-bottom-left:hover { transform: scale(1.15) rotate(5deg); box-shadow: 0 10px 20px rgba(79, 70, 229, 0.4); }
+    </style>
 
     {{-- Vibrant Header --}}
     <div class="card header-vibrant border-0 shadow-lg mb-4 text-white">
@@ -191,11 +189,11 @@
     {{-- Main Results View --}}
     <div class="results-surface">
         @if (count($values) != 0)
-            @foreach($values->groupBy(fn($item) => $item->employee->lastname . ' ' . $item->employee->firstname) as $employeeName => $employeeValues)
+            @foreach($values->groupBy(fn($item) => $item->employee?->lastname . ' ' . $item->employee?->firstname) as $employeeName => $employeeValues)
                 <div class="employee-header-surface px-4 py-4 mb-0 d-flex align-items-center shadow-sm">
                     <div class="flex-shrink-0 position-relative">
-                        @if($employeeValues->first()->employee->photo && Storage::disk('public')->exists($employeeValues->first()->employee->photo))
-                            <img src="{{ Storage::url($employeeValues->first()->employee->photo) }}" class="rounded-circle border border-4 border-white shadow-sm object-fit-cover" width="75" height="75">
+                        @if($employeeValues->first()->employee?->photo && Storage::disk('public')->exists($employeeValues->first()->employee?->photo))
+                            <img src="{{ Storage::url($employeeValues->first()->employee?->photo) }}" class="rounded-circle border border-4 border-white shadow-sm object-fit-cover" width="75" height="75">
                         @else
                             <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center text-white"
                                  style="width: 75px; height: 75px; background: linear-gradient(135deg, #4f46e5 0%, #0f172a 100%);">
@@ -208,7 +206,7 @@
                     <div class="ms-4 flex-grow-1">
                         <div class="d-flex align-items-center mb-1">
                             <h4 class="mb-0 fw-bold text-dark text-uppercase me-3">{{ $employeeName }}</h4>
-                            <span class="ls-caps text-muted opacity-75">ID-{{ $employeeValues->first()->employee->id }}</span>
+                            <span class="ls-caps text-muted opacity-75">ID-{{ $employeeValues->first()->employee?->id }}</span>
                         </div>
                         <div class="d-flex gap-3">
                             <small class="ls-caps text-primary fw-bold"><i class="bi bi-diagram-2 me-1"></i> Performance Insight</small>

@@ -3,10 +3,11 @@
 namespace App\repositories;
 
 use App\Models\Employee;
+use function Laravel\Prompts\select;
 
 class EmployeeRepository extends MainRepository
 {
-    private array $with = ['works', 'qualifications', 'competences', 'remunerations', 'chefs', 'affectations'];
+    private array $with = ['works', 'qualifications', 'competences', 'remunerations', 'chefs', 'affectations', 'local', 'category'];
 
     public function allByFilter($filter, $pages = 0)
     {
@@ -140,7 +141,8 @@ class EmployeeRepository extends MainRepository
             $query->where('gender', '=', $filter['gender']);
 
         $query->where('employees.status', '=', 1);
-        $query->orderBy('birth_date', 'DESC');
+        $query->select('employees.*');
+        $query->orderBy('lastname', 'ASC');
 
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
@@ -173,6 +175,7 @@ class EmployeeRepository extends MainRepository
             $query->where('gender', '=', $filter['gender']);
 
         $query->where('affectations.state', '=', '1');
+        $query->select('employees.*');
         $query->orderBy('employees.lastname', 'ASC');
 
         return $pages == 0 ? $query->get() : $query->paginate($pages);

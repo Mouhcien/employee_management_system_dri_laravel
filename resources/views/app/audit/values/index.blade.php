@@ -125,14 +125,18 @@
                     <select class="form-select input-futurist fw-bold" name="period_id" required>
                         <option value="" selected disabled>Choisir la Période...</option>
                         @foreach($periods as $period)
-                            <option value="{{ $period->id }}" {{ !is_null($selected_period) && $selected_period == $period->period_id ? 'selected' : '' }}>{{ $period->title }} {{$period->year}}</option>
+                            @if (!is_null($values))
+                                <option value="{{ $period->id }}" {{ $values[0]->period_id == $period->id ? 'selected' : '' }}>{{ $period->title }} {{$period->year}}</option>
+                            @else
+                                <option value="{{ $period->id }}" {{ !is_null($selected_period) && $selected_period == $period->id ? 'selected' : '' }}>{{ $period->title }} {{$period->year}}</option>
+                            @endif
                         @endforeach
                     </select>
                 </div>
 
                 {{-- Employee Search --}}
                 <div class="col-xl-6 border-end">
-                    <label class="ls-caps mb-3"><i class="bi bi-person-bounding-box me-2"></i>Identification Collaborateur</label>
+                    <label class="ls-caps mb-3"><i class="bi bi-person-bounding-box me-2"></i>Identification Agent</label>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-white border-end-0 rounded-start-3"><i class="bi bi-search text-primary"></i></span>
                         <input type="text" id="employee_selected" class="form-control input-futurist rounded-start-0" placeholder="Scanner un nom ou un matricule...">
@@ -230,12 +234,12 @@
                         <i class="bi bi-cloud-upload me-2"></i>Import
                     </button>
                     @if (is_null($values))
-                        <button type="submit" class="btn btn-spectrum-success px-5 fw-bold rounded-pill">
+                        <button type="submit" class="btn btn-success px-5 fw-bold rounded-pill">
                             <i class="bi bi-save2 me-2"></i>Soumettre
                         </button>
                     @else
-                        <button type="submit" class="btn btn-spectrum-primary px-5 fw-bold rounded-pill text-white">
-                            <i class="bi bi-arrow-repeat me-2"></i>Synchroniser
+                        <button type="submit" class="btn btn-dark px-5 fw-bold rounded-pill text-warning">
+                            <i class="bi bi-arrow-repeat me-2"></i>Mettre à jour
                         </button>
                     @endif
                 </div>
