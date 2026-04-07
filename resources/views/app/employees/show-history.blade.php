@@ -189,7 +189,7 @@
 
                         {{-- Action Buttons --}}
                         <div class="d-flex gap-2">
-                            <a href="{{ route('employees.index') }}" class="btn btn-light btn-sm px-4 fw-bold rounded-pill shadow-sm">
+                            <a href="{{ route('employees.show', $employee) }}" class="btn btn-light btn-sm px-4 fw-bold rounded-pill shadow-sm">
                                 <i class="bi bi-arrow-left me-2"></i>Retour
                             </a>
 
@@ -203,10 +203,6 @@
                                     data-bs-target="#changeStateModal">
                                 <i class="bi bi-pencil-square me-2"></i>Situation
                             </button>
-
-                            <a href="{{ route('employees.history', $employee) }}" class="btn btn-dark btn-sm px-4 fw-bold rounded-pill shadow-sm">
-                                <i class="bi bi-clock-history me-2"></i>Consulter avec historie
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -218,30 +214,33 @@
             <div class="card-body p-4 bg-white">
                 @php $activeAff = $employee->affectations->where('state', 1)->first(); @endphp
                 @if($activeAff)
-                    <h6 class="text-uppercase text-primary fw-bolder mb-3 ls-1 small">
-                        <i class="bi bi-diagram-3-fill me-2"></i>Affectation Structurelle Active :
-                        @if (!is_null($activeAff->section))
-                            <span class="badge bg-info"> {{ $activeAff->section->title }} </span>
-                        @endif
-                        @if (!is_null($activeAff->sector))
-                            <span class="badge bg-info"> {{ $activeAff->sector->title }} </span>
-                        @endif
-                    </h6>
+                    @foreach($employee->affectations->sortByDesc('affectation_date') as $affectation)
+                        <h6 class="text-uppercase text-primary fw-bolder mb-3 ls-1 small">
+                            <i class="bi bi-diagram-3-fill me-2"></i>Affectation <i class="bi bi-arrow-right"></i> {{ \Carbon\Carbon::parse($affectation->affectation_date)->format('d/m/Y') }} :
+                            @if (!is_null($affectation->section))
+                                <span class="badge bg-info"> {{ $affectation->section->title }} </span>
+                            @endif
+                            @if (!is_null($affectation->sector))
+                                <span class="badge bg-info"> {{ $affectation->sector->title }} </span>
+                            @endif
+                        </h6>
 
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="p-3 rounded-4 bg-light border-start border-4 border-primary h-100">
-                                <small class="text-muted d-block mb-1 fw-bold text-uppercase" style="font-size: 0.7rem;">Service</small>
-                                <span class="fw-bold text-dark fs-5">{{ $activeAff->service->title ?? 'N/A' }}</span>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="p-3 rounded-4 bg-light border-start border-4 border-primary h-100">
+                                    <small class="text-muted d-block mb-1 fw-bold text-uppercase" style="font-size: 0.7rem;">Service</small>
+                                    <span class="fw-bold text-dark fs-5">{{ $affectation->service->title ?? 'N/A' }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 rounded-4 bg-light border-start border-4 border-info h-100">
+                                    <small class="text-muted d-block mb-1 fw-bold text-uppercase" style="font-size: 0.7rem;">Direction / Entité</small>
+                                    <span class="fw-bold text-dark fs-5">{{ $affectation->entity->title ?? 'N/A' }}</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="p-3 rounded-4 bg-light border-start border-4 border-info h-100">
-                                <small class="text-muted d-block mb-1 fw-bold text-uppercase" style="font-size: 0.7rem;">Direction / Entité</small>
-                                <span class="fw-bold text-dark fs-5">{{ $activeAff->entity->title ?? 'N/A' }}</span>
-                            </div>
-                        </div>
-                    </div>
+                        <hr>
+                    @endforeach
                 @else
                     <div class="text-center p-5 bg-light rounded-4 border border-dashed">
                         <i class="bi bi-exclamation-circle text-muted fs-2 opacity-50"></i>
@@ -491,39 +490,26 @@
                                 @endif
                             </div>
                             <div class="card-body p-4 pt-2">
-                                @forelse($employee->works->whereNull('terminated_date')->sortByDesc('starting_date') as $work)
+                                @forelse($employee->works->sortByDesc('starting_date') as $work)
                                     <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-3 border"
                                          id="sl_occupation_insert_agent"
                                          style="cursor: pointer;">
                                         <span class="fw-bold text-dark">{{ $work->occupation->title }}</span>
                                         <button class="btn btn-sm btn-outline-danger border-0 rounded-circle" data-bs-toggle="modal" data-bs-target="#deleteOccupationModal-{{ $work->id }}"><i class="bi bi-trash3"></i></button>
                                     </div>
-                                    @break
                                 @empty
                                     <div class="text-center py-3 border border-dashed rounded-3">
                                         <p class="small text-muted mb-0">Aucune fonction affectée</p>
                                     </div>
                                 @endforelse
 
-                                    @foreach($employee->works as $work)
-                                        <x-delete-model
-                                            href="{{ route('works.delete', $work->id) }}"
-                                            message="Attention : La suppression de la fonction est irréversible."
-                                            title="Confirmation de Suppression de la fonction"
-                                            target="deleteOccupationModal-{{ $work->id }}" />
-                                    @endforeach
-                            </div>
-                            <div class="d-none px-4 pb-4" id="box_inserted_occupation">
-                                @php
-                                    $work_id = $employee->works->whereNull('terminated_date')[0]->id;
-                                    $occupation_id = $employee->works->whereNull('terminated_date')[0]->occupation_id;
-                                    $starting_date = $employee->works->whereNull('terminated_date')[0]->starting_date;
-                                @endphp
-                                @include('app.employees.partials.update_occupation', [
-                                    'work_id' => $work_id,
-                                    'employee_id' => $employee->id,
-                                    'occupation_id' => $occupation_id,
-                                    'starting_date' => $starting_date])
+                                @foreach($employee->works as $work)
+                                    <x-delete-model
+                                        href="{{ route('works.delete', $work->id) }}"
+                                        message="Attention : La suppression de la fonction est irréversible."
+                                        title="Confirmation de Suppression de la fonction"
+                                        target="deleteOccupationModal-{{ $work->id }}" />
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -549,7 +535,6 @@
                                         </div>
                                         <button class="btn btn-sm btn-outline-danger border-0" data-bs-toggle="modal" data-bs-target="#deleteCompetenceModal-{{ $competence->id }}"><i class="bi bi-trash3"></i></button>
                                     </div>
-                                    @break
                                 @empty
                                     <div class="text-center py-3 border border-dashed rounded-3"><p class="small text-muted mb-0">Grade non défini</p></div>
                                 @endforelse
@@ -568,13 +553,6 @@
                     {{-- Diplômes --}}
                     <div class="col-12">
                         <div class="card border-0 shadow-sm rounded-4">
-                            <div class="d-none" id="box_grade_form_wrapper">
-                                @include('app.employees.partials.update_grade', [
-                                    'competence' => $competenceSelected,
-                                    'employee' => $employee,
-                                    'levels' => $levels,
-                                    'grades' => $grades])
-                            </div>
                             <div class="card-header bg-white border-bottom-0 pt-4 px-4 d-flex justify-content-between align-items-center">
                                 <h6 class="fw-bold text-muted small mb-0 text-uppercase ls-1">Qualifications & Diplômes</h6>
                                 <button class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#affectDiplomaModal">
@@ -605,32 +583,17 @@
                                                     </button>
                                                 </td>
                                             </tr>
-                                            <tr class="qualification-form-row d-none bg-light">
-                                                <td colspan="4" class="p-3 border-0">
-                                                    <div class="qualification-form-container">
-                                                        @include('app.employees.partials.update_qualification', [
-                                                            'qualification' => $qualification,
-                                                            'employee' => $employee,
-                                                            'diplomas' => $diplomas, // Fixed variable name pluralization
-                                                            'options' => $options])
-
-                                                        <div class="text-end mt-2">
-                                                            <button type="button" class="btn btn-sm btn-link text-muted btn-cancel-qualif">Annuler</button>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
                                         @empty
                                             <tr><td colspan="3" class="text-center py-4 border-0 text-muted italic">Aucun diplôme renseigné</td></tr>
                                         @endforelse
                                         </tbody>
                                     </table>
                                     @foreach($employee->qualifications as $qualification)
-                                    <x-delete-model
-                                        href="{{ route('qualifications.delete', $qualification->id) }}"
-                                        message="Attention : La suppression du {{ $qualification->diploma->title }}  est irréversible."
-                                        title="Confirmation de Suppression du diplôme"
-                                        target="deleteQualificationModal-{{ $qualification->id }}" />
+                                        <x-delete-model
+                                            href="{{ route('qualifications.delete', $qualification->id) }}"
+                                            message="Attention : La suppression du {{ $qualification->diploma->title }}  est irréversible."
+                                            title="Confirmation de Suppression du diplôme"
+                                            target="deleteQualificationModal-{{ $qualification->id }}" />
                                     @endforeach
                                 </div>
                             </div>
@@ -739,113 +702,6 @@
             if (e.key === "Escape") closeProfile();
         });
 
-        /****************** show/hidden update occupation ***********************************/
-        const displayDiv = document.getElementById('sl_occupation_insert_agent');
-        const formDiv = document.getElementById('box_inserted_occupation');
-        const cancelBtn = document.getElementById('btn_cancel_occupation');
-
-        // Function to show the form
-        if (displayDiv) {
-            displayDiv.addEventListener('dblclick', function () {
-                displayDiv.classList.add('d-none');
-                formDiv.classList.remove('d-none');
-
-                // Focus the select to make it immediately usable
-                const select = formDiv.querySelector('select');
-                if (select) select.focus();
-            });
-        }
-
-        // Function to reset to default state
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', function () {
-                formDiv.classList.add('d-none');
-                displayDiv.classList.remove('d-none');
-            });
-        }
-
-        /****************** show/hidden update grade ***********************************/
-            // --- Occupation Form Logic ---
-        const occDisplay = document.getElementById('sl_occupation_insert_agent');
-        const occForm = document.getElementById('box_inserted_occupation');
-        const occCancel = document.getElementById('btn_cancel_occupation');
-
-        if (occDisplay && occForm) {
-            occDisplay.addEventListener('dblclick', () => {
-                occDisplay.classList.add('d-none');
-                occForm.classList.remove('d-none');
-            });
-
-            if (occCancel) {
-                occCancel.addEventListener('click', () => {
-                    occForm.classList.add('d-none');
-                    occDisplay.classList.remove('d-none');
-                });
-            }
-        }
-
-        // --- Grade Form Logic ---
-        const gradeDisplay = document.getElementById('sl_grade_display');
-        const gradeForm = document.getElementById('box_grade_form_wrapper');
-        const gradeCancel = document.getElementById('btn_cancel_grade'); // Unique ID
-
-        if (gradeDisplay && gradeForm) {
-            gradeDisplay.addEventListener('dblclick', (e) => {
-                if (e.target.closest('.btn-outline-danger')) return;
-                gradeDisplay.classList.add('d-none');
-                gradeForm.classList.remove('d-none');
-            });
-
-            if (gradeCancel) {
-                gradeCancel.addEventListener('click', () => {
-                    gradeForm.classList.add('d-none');
-                    gradeDisplay.classList.remove('d-none');
-                });
-            }
-        }
-
-        // --- Qualification Form Logic ---
-        // 1. Handle Double Click on Rows
-        document.querySelectorAll('.qualification-row').forEach(row => {
-            row.addEventListener('dblclick', function (e) {
-                // Don't trigger if they double-click the delete button specifically
-                if (e.target.closest('button')) return;
-
-                const formRow = this.nextElementSibling;
-
-                if (formRow && formRow.classList.contains('qualification-form-row')) {
-                    // Hide current row
-                    this.classList.add('d-none');
-                    // Show form row
-                    formRow.classList.remove('d-none');
-
-                    // Focus first input
-                    const firstInput = formRow.querySelector('select, input');
-                    if (firstInput) firstInput.focus();
-                }
-            });
-        });
-
-        // 2. Handle Cancel Buttons
-        document.querySelectorAll('.btn-cancel-qualif').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const formRow = this.closest('.qualification-form-row');
-                const displayRow = formRow.previousElementSibling;
-
-                formRow.classList.add('d-none');
-                displayRow.classList.remove('d-none');
-            });
-        });
-
-        // 3. Optional: Close on Escape key for the most recently opened form
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.qualification-form-row:not(.d-none)').forEach(row => {
-                    const cancelBtn = row.querySelector('.btn-cancel-qualif');
-                    if (cancelBtn) cancelBtn.click();
-                });
-            }
-        });
 
     </script>
 </x-layout>

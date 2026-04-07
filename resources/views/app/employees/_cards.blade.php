@@ -52,7 +52,7 @@
                     </div>
 
                     {{-- Avatar Section --}}
-                    <div class="d-flex justify-content-center {{ \Carbon\Carbon::parse($employee->birth_date)->age >= 62 ? 'bg-danger-subtle' : '' }}" style="margin-top: -30px;">
+                    <div class="d-flex justify-content-center {{ \Carbon\Carbon::parse($employee->birth_date)->age >= 63 ? 'bg-danger-subtle' : '' }}" style="margin-top: -30px;">
                         <div class="position-relative">
                             @if($employee->photo && Storage::disk('public')->exists($employee->photo))
                                 <img src="{{ Storage::url($employee->photo) }}"
@@ -69,7 +69,7 @@
                     </div>
 
                     {{-- Card Content --}}
-                    <div class="card-body text-center pt-2 pb-3 {{ \Carbon\Carbon::parse($employee->birth_date)->age >= 62 ? 'bg-danger-subtle' : '' }}">
+                    <div class="card-body text-center pt-2 pb-3 {{ \Carbon\Carbon::parse($employee->birth_date)->age >= 63 ? 'bg-danger-subtle' : '' }}">
                         <h6 class="fw-bold text-dark mb-1" id="employee_fullname">{{ $employee->firstname }} {{ strtoupper($employee->lastname) }}</h6>
                         <div class="text-primary small mb-2" dir="rtl" id="employee_fullname_arabic">{{ $employee->firstname_arab }} {{ $employee->lastname_arab }}</div>
 

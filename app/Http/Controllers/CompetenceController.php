@@ -52,6 +52,23 @@ class CompetenceController extends Controller
         return back()->with('error', 'Erreur insertion competance');
     }
 
+    public function update(Request $request, $id)
+    {
+
+        $competence  = $this->competenceService->getOneById($id);
+        if (is_null($competence))
+            return back()->with('error', 'Grade introuvable');
+
+        $data = $request->validate($this->rules);
+
+        if ($this->competenceService->update($id, $data)) {
+            return back()->with('success', 'La competance est bien modifié');
+        }
+
+        return back()->with('error', 'Erreur mise à jour competance');
+    }
+
+
     public function importation(Request $request)
     {
 

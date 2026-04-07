@@ -44,6 +44,22 @@ class QualificationController extends Controller
         return back()->with('error', 'Erreur insertion dipôme');
     }
 
+    public function update(Request $request, $id)
+    {
+        $qualification = $this->qualificationService->getOneById($id);
+        if (is_null($qualification))
+            return back()->with('error', 'Diplôme introuvable !!');
+
+        $data = $request->validate($this->rules);
+        $data['year'] = $request->input('year');
+
+        if ($this->qualificationService->update($id, $data)) {
+            return back()->with('success', 'Le diplôme est bien modifié');
+        }
+
+        return back()->with('error', 'Erreur mise à jour dipôme');
+    }
+
     public function importation(Request $request)
     {
         if ($request->hasFile('file_qualification')) {

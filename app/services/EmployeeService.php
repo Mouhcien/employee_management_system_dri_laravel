@@ -245,7 +245,7 @@ class EmployeeService
         return $this->employeeRepository->delete($employee);
     }
 
-    public function getLatestInserted(): ?Employee
+    public function getLatestInserted()
     {
         return $this->employeeRepository->latestInserted(Employee::class);
     }

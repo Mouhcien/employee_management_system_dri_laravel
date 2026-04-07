@@ -178,6 +178,7 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/advance/result', [EmployeeController::class, 'result'])->name('employees.advance.result');
         Route::post('/importation', [EmployeeController::class, 'importation'])->name('employees.importation');
         Route::get('/{id}', [EmployeeController::class, 'show'])->name('employees.show');
+        Route::get('/history/{id}', [EmployeeController::class, 'history'])->name('employees.history');
         Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('employees.edit');
         Route::post('/update/{id}', [EmployeeController::class, 'update'])->name('employees.update');
         Route::post('/change/state/{id}', [EmployeeController::class, 'state'])->name('employees.change.state');
@@ -237,6 +238,7 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/', [WorkController::class, 'index'])->name('works.index');
         Route::post('/store', [WorkController::class, 'store'])->name('works.store');
         Route::get('/{id}', [WorkController::class, 'show'])->name('works.show');
+        Route::post('/update/{id}', [WorkController::class, 'update'])->name('works.update');
         Route::get('/delete/{id}', [WorkController::class, 'delete'])->name('works.delete');
         Route::post('/importation', [WorkController::class, 'importation'])->name('works.importation');
     });
@@ -245,6 +247,7 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/', [QualificationController::class, 'index'])->name('qualifications.index');
         Route::post('/store', [QualificationController::class, 'store'])->name('qualifications.store');
         Route::get('/{id}', [QualificationController::class, 'show'])->name('qualifications.show');
+        Route::post('/update/{id}', [QualificationController::class, 'update'])->name('qualifications.update');
         Route::get('/delete/{id}', [QualificationController::class, 'delete'])->name('qualifications.delete');
         Route::post('/importation', [QualificationController::class, 'importation'])->name('qualifications.importation');
     });
@@ -253,6 +256,7 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/', [CompetenceController::class, 'index'])->name('competences.index');
         Route::post('/store', [CompetenceController::class, 'store'])->name('competences.store');
         Route::get('/{id}', [CompetenceController::class, 'show'])->name('competences.show');
+        Route::post('/update/{id}', [CompetenceController::class, 'update'])->name('competences.update');
         Route::get('/delete/{id}', [CompetenceController::class, 'delete'])->name('competences.delete');
         Route::post('/importation', [CompetenceController::class, 'importation'])->name('competences.importation');
     });

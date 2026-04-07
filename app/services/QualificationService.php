@@ -50,7 +50,7 @@ class QualificationService
             $obj->employee_id = $data['employee_id'];
 
         if (isset($data['year']))
-            $obj->starting_date = $data['year'];
+            $obj->year = $data['year'];
 
         if (isset($data['option_id']))
             $obj->option_id = $data['option_id'];

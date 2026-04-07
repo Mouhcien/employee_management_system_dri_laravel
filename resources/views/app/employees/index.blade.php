@@ -95,7 +95,7 @@
                     <i class="bi bi-search me-2"></i>Avancé
                 </a>
                 <a href="{{ route('employees.create') }}" class="btn btn-dark px-4 rounded-3 fw-bold shadow-sm">
-                    <i class="bi bi-plus-lg me-2"></i>Nouvel Employé
+                    <i class="bi bi-plus-lg me-2"></i>Nouveau Agent
                 </a>
             </div>
         </div>

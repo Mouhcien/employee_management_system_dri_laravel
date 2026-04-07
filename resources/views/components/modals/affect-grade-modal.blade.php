@@ -25,7 +25,7 @@
                         <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
                         <label for="workTitle" class="form-label fw-semibold text-dark mb-2">
-                            Diplôme <span class="text-danger">*</span>
+                            Grade <span class="text-danger">*</span>
                         </label>
                         <div class="input-group input-group-lg mb-2">
                                     <span class="input-group-text bg-white border-end-0">

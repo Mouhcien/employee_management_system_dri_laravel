@@ -25,7 +25,7 @@
             $rowId = 'employee-details-' . $employee->id;
         @endphp
 
-        <tr class="employee-row transition-base border-bottom {{ \Carbon\Carbon::parse($employee->birth_date)->age >= 62 ? 'table-danger' : '' }}" style="cursor:pointer;" >
+        <tr class="employee-row transition-base border-bottom {{ \Carbon\Carbon::parse($employee->birth_date)->age >= 63 ? 'table-danger' : '' }}" style="cursor:pointer;" >
             <td class="ps-4 py-3">
                 @if ($employee->gender == 'M')
                     <span class="text-primary opacity-50"><i class="bi bi-gender-male fs-5"></i></span>

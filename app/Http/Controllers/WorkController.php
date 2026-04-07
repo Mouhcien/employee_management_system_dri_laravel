@@ -43,6 +43,29 @@ class WorkController extends Controller
         return back()->with('error', 'Erreur insertion fonction');
     }
 
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate($this->rules);
+
+        $work = $this->workService->getOneById($id);
+        if (is_null($work))
+            return back()->with('error', 'fonction introuvable');
+
+        $employee = $this->employeeService->getOneById($data['employee_id']);
+        if (is_null($employee))
+            return back()->with('error', 'Agent introuvable');
+
+        $data['starting_date'] = $request->starting_date;
+
+        $result = $this->workService->update($id, $data);
+
+        if ($result) {
+            return back()->with('success', 'Fonction est bien changé !!');
+        }
+
+        return back()->with('error', 'Erreur lors de la mise à jour de la fonction');
+    }
+
     public function importation(Request $request)
     {
         if ($request->hasFile('file')) {

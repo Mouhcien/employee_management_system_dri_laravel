@@ -203,7 +203,8 @@ class EmployeeController extends Controller
             $result = $this->employeeService->create($data);
 
             if ($result) {
-                return redirect()->route('employees.index')->with('success', 'Agente est bien ajouté !!!');
+                $employee_id = $this->employeeService->getLatestInserted();
+                return redirect()->route('employees.unities', $employee_id)->with('success', 'Agente est bien ajouté !!!');
             }
 
             return back()->with('error', 'Erreur insertion employé');
@@ -337,6 +338,35 @@ class EmployeeController extends Controller
             }
 
             return view('app.employees.show', [
+                'employee' => $employee,
+                'occupations' => $occupations,
+                'diplomas' => $diplomas,
+                'grades' => $grades,
+                'levels' => $levels,
+                'options' => $options
+            ]);
+
+        } catch (\Exception $exception) {
+            Log::error('Error in EmployeeController@show: ' . $exception->getMessage());
+            return back()->with('error', 'Une erreur est survenue.');
+        }
+    }
+
+    public function history($id)
+    {
+        try {
+            $employee = $this->employeeService->getOneById($id);
+            $occupations = $this->occupationService->getAll(0);
+            $diplomas = $this->diplomaService->getAll(0);
+            $grades = $this->gradeService->getAll(0);
+            $levels = $this->levelService->getAll(0);
+            $options = $this->optionService->getAll(0);
+
+            if (is_null($employee)) {
+                return back()->with('error', 'Agent introuvable');
+            }
+
+            return view('app.employees.show-history', [
                 'employee' => $employee,
                 'occupations' => $occupations,
                 'diplomas' => $diplomas,
