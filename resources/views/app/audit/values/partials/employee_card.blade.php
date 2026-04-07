@@ -18,10 +18,6 @@
                             {{ strtoupper(substr($employee->firstname, 0, 1)) }}{{ strtoupper(substr($employee->lastname, 0, 1)) }}
                         </div>
                     @endif
-
-                    <span class="position-absolute bottom-0 end-0 badge rounded-pill border border-2 border-white {{ $employee->gender == 'M' ? 'bg-primary' : 'bg-danger' }} p-1">
-                                <i class="bi bi-gender-{{ $employee->gender == 'M' ? 'male' : 'female' }}"></i>
-                            </span>
                 </div>
 
                 <div>

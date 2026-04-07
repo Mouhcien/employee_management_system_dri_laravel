@@ -48,11 +48,6 @@
                 </div>
             @endif
         </div>
-
-        <span class="position-absolute bottom-0 end-0 rounded-circle border border-2 border-white {{ $employee->gender == 'M' ? 'bg-primary' : 'bg-danger' }}"
-              style="width: 12px; height: 12px;"
-              title="{{ $employee->gender == 'M' ? 'Homme' : 'Femme' }}">
-            </span>
     </div>
 
     <div class="lh-sm">
