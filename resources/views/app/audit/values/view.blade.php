@@ -41,6 +41,9 @@
         .table-responsive {
             overflow: visible !important;
         }
+        #box_history_affectation {
+            display: none !important;
+        }
     }
 </style>
 
@@ -98,11 +101,7 @@
                                     {{ strtoupper(substr($employee->firstname, 0, 1)) }}{{ strtoupper(substr($employee->lastname, 0, 1)) }}
                                 </div>
                             @endif
-                            {{--
-                            <span class="position-absolute bottom-0 end-0 p-3 m-3 border border-3 border-white rounded-circle shadow {{ $employee->gender === 'F' ? 'bg-danger' : 'bg-primary' }}">
-                                <i class="bi bi-gender-{{ $employee->gender === 'F' ? 'female' : 'male' }} text-white fs-4"></i>
-                            </span>
-                            --}}
+
                         </div>
                     </div>
 
@@ -117,9 +116,24 @@
                         </div>
                     </div>
 
-                    <section class="card border-0 bg-light rounded-4 shadow-xs mb-4">
+                    <section id="box_affectation" class="card border-0 bg-light rounded-4 shadow-xs mb-4">
                         <div class="card-body p-4">
-                            <h6 class="text-uppercase text-muted fw-bolder mb-3 ls-1 small">Affectation Structurelle Active</h6>
+                            <div class="row col-12 mb-3">
+                                <div class="col-6 align-content-center">
+                                    <h6 class="text-uppercase text-muted fw-bolder mb-3 ls-1 small">
+                                        Affectation Structurelle Active
+                                    </h6>
+                                </div>
+                                <div class="col-6 align-content-center">
+                                    <a href="javascript:void(0);"
+                                       onclick="toggleSections()"
+                                       class="d-inline-flex align-items-center px-3 py-1 text-secondary text-decoration-none border rounded-pill shadow-sm bg-light hover-shadow float-end">
+                                        <i class="bi bi-clock-history me-2 text-primary"></i>
+                                        <span class="fw-medium">Historique</span>
+                                    </a>
+                                </div>
+                            </div>
+
                             @php $activeAff = $employee->affectations->where('state', 1)->first(); @endphp
                             @if($activeAff)
                                 <div class="row g-3">
@@ -153,19 +167,108 @@
                         </div>
                     </section>
 
+                    <section id="box_history_affectation" class="card border-0 bg-light rounded-4 shadow-xs mb-4 d-none">
+                        <div class="card-body p-4">
+                            <div class="row col-12 mb-4">
+                                <div class="col-6 align-content-center">
+                                    <h6 class="text-uppercase text-muted fw-bolder mb-0 ls-1 small">
+                                        Historique des Affectations
+                                    </h6>
+                                </div>
+                                <div class="col-6">
+                                    <a href="javascript:void(0);" onclick="toggleSections()"
+                                       class="d-inline-flex align-items-center px-3 py-1 text-danger text-decoration-none border border-danger rounded-pill shadow-sm bg-white hover-shadow float-end">
+                                        <i class="bi bi-arrow-left me-2"></i>
+                                        <span class="fw-medium">Retour</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            @foreach($employee->affectations->sortByDesc('affectation_date') as $affectation)
+                                <div class="mb-4">
+                                    <h6 class="text-uppercase text-primary fw-bolder mb-3 ls-1 small">
+                                        <i class="bi bi-calendar-event me-2"></i>{{ \Carbon\Carbon::parse($affectation->affectation_date)->format('d/m/Y') }}
+                                        @if ($affectation->section) <span class="badge bg-info ms-2"> {{ $affectation->section->title }} </span> @endif
+                                        @if ($affectation->sector) <span class="badge bg-info ms-1"> {{ $affectation->sector->title }} </span> @endif
+                                    </h6>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="p-3 rounded-4 bg-white border-start border-4 border-primary h-100 shadow-sm">
+                                                <small class="text-muted d-block mb-1 fw-bold text-uppercase" style="font-size: 0.7rem;">Service</small>
+                                                <span class="fw-bold text-dark">{{ $affectation->service->title ?? 'N/A' }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="p-3 rounded-4 bg-white border-start border-4 border-info h-100 shadow-sm">
+                                                <small class="text-muted d-block mb-1 fw-bold text-uppercase" style="font-size: 0.7rem;">Direction / Entité</small>
+                                                <span class="fw-bold text-dark">{{ $affectation->entity->title ?? 'N/A' }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if(!$loop->last) <hr class="my-4 opacity-25"> @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </section>
+
                     <div class="row g-3" id="info_grid">
                         <div class="col-md-6">
                             <div class="h-100 p-3 border rounded-4 bg-white shadow-xs">
                                 <small class="text-muted d-block mb-1 fw-bold">Fonction</small>
-                                <span class="fw-bold text-dark">{{ $employee->works->whereNull('terminated_date')->first()->occupation->title ?? 'N/A' }}</span>
+                                @foreach($employee->works->sortByDesc('starting_date') as $work)
+                                    <span class="fw-bold text-dark">{{ $work->occupation->title }}</span>
+                                    <hr>
+                                @endforeach
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="h-100 p-3 border rounded-4 bg-white shadow-xs">
                                 <small class="text-muted d-block mb-1 fw-bold">Grade & Échelle</small>
-                                @php $comp = $employee->competences->first(); @endphp
-                                <span class="fw-bold text-dark d-block text-truncate">{{ $comp->grade->title ?? '—' }}</span>
-                                <span class="badge bg-info-subtle text-info mt-1">Échelle: {{ $comp->grade->scale ?? '—' }}</span>
+                                @foreach($employee->competences->sortByDesc('starting_date') as $competence)
+                                    <span class="fw-bold text-dark d-block text-truncate">{{ $competence->grade->title ?? '—' }}</span>
+                                    <span class="badge bg-info-subtle text-info mt-1">Échelle: {{ $competence->grade->scale ?? '—' }}</span>
+                                    <hr>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="h-100 p-3 border rounded-4 bg-white shadow-xs">
+                                <small class="text-muted d-block mb-1 fw-bold">Qualification & Diplôme</small>
+                                <div class="card border-0 shadow-sm rounded-4">
+                                    <div class="card-body p-4 pt-2">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle mb-0">
+                                                <thead class="bg-light-subtle">
+                                                <tr>
+                                                    <th class="border-0 small fw-bold">Intitulé du diplôme</th>
+                                                    <th class="border-0 small fw-bold">Filière</th>
+                                                    <th class="border-0 small fw-bold text-center">Année</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                @forelse($employee->qualifications->sortByDesc('year') as $qualification)
+                                                    <tr class="qualification-row" style="cursor: pointer;" title="Double-cliquez pour modifier">
+                                                        <td class="fw-bold text-dark border-0">{{ $qualification->diploma->title }}</td>
+                                                        <td class="fw-bold text-dark border-0">{{ $qualification->option->title ?? '-' }}</td>
+                                                        <td class="text-center border-0"><span class="badge bg-secondary rounded-pill px-3">{{ $qualification->year ?? '-' }}</span></td>
+                                                    </tr>
+                                                @empty
+                                                    <tr><td colspan="3" class="text-center py-4 border-0 text-muted italic">Aucun diplôme renseigné</td></tr>
+                                                @endforelse
+                                                </tbody>
+                                            </table>
+                                            @foreach($employee->qualifications as $qualification)
+                                                <x-delete-model
+                                                    href="{{ route('qualifications.delete', $qualification->id) }}"
+                                                    message="Attention : La suppression du {{ $qualification->diploma->title }}  est irréversible."
+                                                    title="Confirmation de Suppression du diplôme"
+                                                    target="deleteQualificationModal-{{ $qualification->id }}" />
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                         <div class="col-12">
@@ -342,6 +445,35 @@
 
             // 3. Hide Return Button
             controls.classList.add('d-none');
+        }
+    }
+
+    function toggleSections() {
+        const boxActive = document.getElementById('box_affectation');
+        const boxHistory = document.getElementById('box_history_affectation');
+
+        // Select the button components inside the link
+        const btn = document.querySelector('[onclick="toggleSections()"]');
+        const btnText = btn.querySelector('span');
+        const btnIcon = btn.querySelector('i');
+
+        // Toggle Visibility
+        boxActive.classList.toggle('d-none');
+        boxHistory.classList.toggle('d-none');
+
+        // Update Button Appearance based on state
+        if (boxHistory.classList.contains('d-none')) {
+            // Normal State (Showing Active)
+            btnText.innerText = "Historique";
+            btnIcon.className = "bi bi-clock-history me-2 text-primary";
+            btn.classList.replace('text-danger', 'text-secondary');
+            btn.classList.replace('border-danger', 'border-secondary');
+        } else {
+            // Toggle State (Showing History)
+            btnText.innerText = "Retour";
+            btnIcon.className = "bi bi-arrow-left me-2 text-danger";
+            btn.classList.replace('text-secondary', 'text-danger');
+            btn.classList.replace('border-secondary', 'border-danger');
         }
     }
 </script>
