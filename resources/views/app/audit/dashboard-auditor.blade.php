@@ -1,5 +1,6 @@
 <x-layout>
-    <style>
+    {{--
+        <style>
         :root {
             --primary-color: #0d6efd; /* Bootstrap blue */
             --secondary-color: #6c757d;
@@ -297,4 +298,6 @@
 
     </body>
     </html>
+
+    --}}
 </x-layout>

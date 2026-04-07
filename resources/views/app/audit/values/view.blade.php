@@ -307,12 +307,12 @@
             // 1. Resize Image or Placeholder
             //
             if(img) {
-                img.style.width = "700px";
-                img.style.height = "700px";
+                img.style.width = "600px";
+                img.style.height = "600px";
             }
             if(placeholder) {
-                placeholder.style.width = "700px";
-                placeholder.style.height = "700px";
+                placeholder.style.width = "600px";
+                placeholder.style.height = "600px";
             }
 
             // 2. Hide Sections
