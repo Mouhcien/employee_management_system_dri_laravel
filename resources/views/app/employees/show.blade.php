@@ -204,9 +204,6 @@
                                 <i class="bi bi-pencil-square me-2"></i>Situation
                             </button>
 
-                            <a href="{{ route('employees.history', $employee) }}" class="btn btn-dark btn-sm px-4 fw-bold rounded-pill shadow-sm">
-                                <i class="bi bi-clock-history me-2"></i>Consulter avec historie
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -215,41 +212,8 @@
             <x-change-situation-emmployee :employee="$employee" />
 
             {{-- Body Section --}}
-            <div class="card-body p-4 bg-white">
-                @php $activeAff = $employee->affectations->where('state', 1)->first(); @endphp
-                @if($activeAff)
-                    <h6 class="text-uppercase text-primary fw-bolder mb-3 ls-1 small">
-                        <i class="bi bi-diagram-3-fill me-2"></i>Affectation Structurelle Active :
-                        @if (!is_null($activeAff->section))
-                            <span class="badge bg-info"> {{ $activeAff->section->title }} </span>
-                        @endif
-                        @if (!is_null($activeAff->sector))
-                            <span class="badge bg-info"> {{ $activeAff->sector->title }} </span>
-                        @endif
-                    </h6>
+            @include('app.employees.partials.hsitory_affectation', ['employees' => $employee])
 
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="p-3 rounded-4 bg-light border-start border-4 border-primary h-100">
-                                <small class="text-muted d-block mb-1 fw-bold text-uppercase" style="font-size: 0.7rem;">Service</small>
-                                <span class="fw-bold text-dark fs-5">{{ $activeAff->service->title ?? 'N/A' }}</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="p-3 rounded-4 bg-light border-start border-4 border-info h-100">
-                                <small class="text-muted d-block mb-1 fw-bold text-uppercase" style="font-size: 0.7rem;">Direction / Entité</small>
-                                <span class="fw-bold text-dark fs-5">{{ $activeAff->entity->title ?? 'N/A' }}</span>
-                            </div>
-                        </div>
-                    </div>
-                @else
-                    <div class="text-center p-5 bg-light rounded-4 border border-dashed">
-                        <i class="bi bi-exclamation-circle text-muted fs-2 opacity-50"></i>
-                        <p class="text-muted small mb-0 mt-2">Aucune affectation active enregistrée.</p>
-                        <a class="dropdown-item rounded-3 py-2" href="{{ route('employees.unities', $employee) }}"><i class="bi bi-diagram-3 text-primary me-2"></i>Gérer l'affectation</a>
-                    </div>
-                @endif
-            </div>
         </div>
 
         <div class="row g-4">
@@ -494,9 +458,7 @@
                         <div class="card border-0 shadow-sm rounded-4 h-100">
                             <div class="card-header bg-white border-bottom-0 pt-4 px-4 d-flex justify-content-between align-items-center">
                                 <h6 class="fw-bold text-muted small mb-0 text-uppercase ls-1">Fonction</h6>
-                                @if(count($employee->works) == 0)
-                                    <button class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#affectOccupationModal"><i class="bi bi-plus-lg"></i></button>
-                                @endif
+                                <button class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#affectOccupationModal"><i class="bi bi-plus-lg"></i></button>
                             </div>
                             <div class="card-body p-4 pt-2">
                                 @forelse($employee->works->whereNull('terminated_date')->sortByDesc('starting_date') as $work)
@@ -542,28 +504,64 @@
                     <div class="col-md-6">
                         <div class="card border-0 shadow-sm rounded-4 h-100">
                             <div class="card-header bg-white border-bottom-0 pt-4 px-4 d-flex justify-content-between align-items-center">
-                                <h6 class="fw-bold text-muted small mb-0 text-uppercase ls-1">Grade Actuel</h6>
+                                <h6 class="text-uppercase text-muted fw-bold small mb-0">Grade Actuel</h6>
                                 <button class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#affectGradeModal"><i class="bi bi-plus-lg"></i></button>
                             </div>
-                            <div class="card-body p-4 pt-2">
-                                @php $competenceSelected = null @endphp
-                                @forelse($employee->competences->sortByDesc('starting_date') as $competence)
-                                    @php $competenceSelected = $competence;  @endphp
-                                    <div class="p-3 bg-light rounded-3 border mb-2 d-flex justify-content-between align-items-center"
-                                         id="sl_grade_display"
-                                         style="cursor: pointer;">
-                                        <div>
-                                            <span class="fw-bold text-dark">{{ $competence->grade->title }}</span><br>
-                                            <span class="fw-bold text-success">échelle : {{ $competence->grade->scale }}</span><br>
-                                            <span class="fw-bold text-info">échellon : {{ $competence->echellon->title ?? 'N/A' }}</span>
+                            <div id="box_grade_without_history_container">
+                                <div class="px-4 d-flex justify-content-between align-items-center mb-0">
+                                    <button type="button" class="btn btn-sm btn-link text-primary text-decoration-none fw-bold small" onclick="toggleGradeHistory()">
+                                        <i class="bi bi-clock-history me-1"></i> Historique
+                                    </button>
+                                </div>
+
+                                <div id="box_grade_without_history" class="card-body p-4 pt-2">
+                                    @php $competenceSelected = null @endphp
+                                    @forelse($employee->competences->sortByDesc('starting_date') as $competence)
+                                        @php $competenceSelected = $competence;  @endphp
+                                        <div class="p-3 bg-light rounded-3 border mb-2 d-flex justify-content-between align-items-center"
+                                             id="sl_grade_display"
+                                             style="cursor: pointer;">
+                                            <div>
+                                                <span class="fw-bold text-dark">{{ $competence->grade->title }}</span><br>
+                                                <span class="fw-bold text-success">échelle : {{ $competence->grade->scale }}</span><br>
+                                                <span class="fw-bold text-info">échellon : {{ $competence->echellon->title ?? 'N/A' }}</span>
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-danger border-0" data-bs-toggle="modal" data-bs-target="#deleteCompetenceModal-{{ $competence->id }}"><i class="bi bi-trash3"></i></button>
                                         </div>
-                                        <button class="btn btn-sm btn-outline-danger border-0" data-bs-toggle="modal" data-bs-target="#deleteCompetenceModal-{{ $competence->id }}"><i class="bi bi-trash3"></i></button>
-                                    </div>
-                                    @break
-                                @empty
-                                    <div class="text-center py-3 border border-dashed rounded-3"><p class="small text-muted mb-0">Grade non défini</p></div>
-                                @endforelse
+                                        @break
+                                    @empty
+                                        <div class="text-center py-3 border border-dashed rounded-3"><p class="small text-muted mb-0">Grade non défini</p></div>
+                                    @endforelse
+                                </div>
                             </div>
+
+                            <div id="box_grade_with_history_container" class="d-none">
+                                <div class="px-4 d-flex justify-content-between align-items-center mb-0">
+                                    <h6 class="text-uppercase text-primary fw-bold small mb-0">Historique des Grades</h6>
+                                    <button type="button" class="btn btn-sm btn-link text-secondary text-decoration-none fw-bold small" onclick="toggleGradeHistory()">
+                                        <i class="bi bi-arrow-left me-1"></i> Retour
+                                    </button>
+                                </div>
+
+                                <div id="box_grade_with_history" class="card-body p-4 pt-2">
+                                    @php $competenceSelected = null @endphp
+                                    @forelse($employee->competences->sortByDesc('starting_date') as $competence)
+                                        @php $competenceSelected = $competence;  @endphp
+                                        <div class="p-3 bg-light rounded-3 border mb-2 d-flex justify-content-between align-items-center"
+                                             id="sl_grade_display"
+                                             style="cursor: pointer;">
+                                            <div>
+                                                <span class="fw-bold text-dark">{{ $competence->grade->title }}</span><br>
+                                                <span class="fw-bold text-success">échelle : {{ $competence->grade->scale }}</span><br>
+                                                <span class="fw-bold text-info">échellon : {{ $competence->echellon->title ?? 'N/A' }}</span>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="text-center py-3 border border-dashed rounded-3"><p class="small text-muted mb-0">Grade non défini</p></div>
+                                    @endforelse
+                                </div>
+                            </div>
+
                             @foreach($employee->competences as $competence)
                                 <x-delete-model
                                     href="{{ route('competences.delete', $competence->id) }}"
@@ -858,6 +856,14 @@
                 });
             }
         });
+
+        function toggleGradeHistory() {
+            const containerWithout = document.getElementById('box_grade_without_history_container');
+            const containerWith = document.getElementById('box_grade_with_history_container');
+
+            containerWithout.classList.toggle('d-none');
+            containerWith.classList.toggle('d-none');
+        }
 
     </script>
 </x-layout>

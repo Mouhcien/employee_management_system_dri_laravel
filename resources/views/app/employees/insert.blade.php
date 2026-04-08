@@ -188,6 +188,18 @@
                     </div>
                 </div>
 
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden mt-3">
+                    <div class="card-header bg-secondary text-white py-3">
+                        <h6 class="mb-0 fw-bold"><i class="bi bi-building me-2"></i>Autres</h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted">N° Carte de commission</label>
+                            <input type="text" id="carte" name="commission_card" value="{{ $employee->commission_card }}" class="form-control border-0 bg-light shadow-none" >
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Boutons d'action rapides --}}
                 <div class="mt-4">
                     <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm py-3 fw-bold transition-base">
