@@ -514,16 +514,18 @@
                                     @endforeach
                             </div>
                             <div class="d-none px-4 pb-4" id="box_inserted_occupation">
-                                @php
-                                    $work_id = $employee->works->whereNull('terminated_date')[0]->id;
-                                    $occupation_id = $employee->works->whereNull('terminated_date')[0]->occupation_id;
-                                    $starting_date = $employee->works->whereNull('terminated_date')[0]->starting_date;
-                                @endphp
-                                @include('app.employees.partials.update_occupation', [
-                                    'work_id' => $work_id,
-                                    'employee_id' => $employee->id,
-                                    'occupation_id' => $occupation_id,
-                                    'starting_date' => $starting_date])
+                                @if (count($employee->works->whereNull('terminated_date')) != 0)
+                                    @php
+                                        $work_id = $employee->works->whereNull('terminated_date')[0]->id;
+                                        $occupation_id = $employee->works->whereNull('terminated_date')[0]->occupation_id;
+                                        $starting_date = $employee->works->whereNull('terminated_date')[0]->starting_date;
+                                    @endphp
+                                    @include('app.employees.partials.update_occupation', [
+                                        'work_id' => $work_id,
+                                        'employee_id' => $employee->id,
+                                        'occupation_id' => $occupation_id,
+                                        'starting_date' => $starting_date])
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -568,6 +570,7 @@
                     {{-- Diplômes --}}
                     <div class="col-12">
                         <div class="card border-0 shadow-sm rounded-4">
+                            @if (count($employee->competences) != 0)
                             <div class="d-none" id="box_grade_form_wrapper">
                                 @include('app.employees.partials.update_grade', [
                                     'competence' => $competenceSelected,
@@ -575,6 +578,7 @@
                                     'levels' => $levels,
                                     'grades' => $grades])
                             </div>
+                            @endif
                             <div class="card-header bg-white border-bottom-0 pt-4 px-4 d-flex justify-content-between align-items-center">
                                 <h6 class="fw-bold text-muted small mb-0 text-uppercase ls-1">Qualifications & Diplômes</h6>
                                 <button class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#affectDiplomaModal">

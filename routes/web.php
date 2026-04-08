@@ -378,6 +378,7 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/consult', [ValueController::class, 'consult'])->name('audit.values.consult')->middleware(CheckResponsibleProfile::class);
         Route::get('/select', [ValueController::class, 'select'])->name('audit.values.select')->middleware(CheckResponsibleProfile::class);
         Route::get('/view/{emp}', [ValueController::class, 'view'])->name('audit.values.view')->middleware(CheckResponsibleProfile::class);
+        Route::get('/view-2/{emp}', [ValueController::class, 'view_2'])->name('audit.values.view.2')->middleware(CheckResponsibleProfile::class);
         Route::get('/view/{entityName}/{id}', [ValueController::class, 'view_entity'])->name('audit.values.view.entity')->middleware(CheckResponsibleProfile::class);
         Route::get('/view/{entityName}/{id}/details/{table_id}', [ValueController::class, 'view_entity_details'])->name('audit.values.view.entity.details')->middleware(CheckResponsibleProfile::class);
         Route::post('/store', [ValueController::class, 'store'])->name('audit.values.store')->middleware(CheckResponsibleProfile::class);

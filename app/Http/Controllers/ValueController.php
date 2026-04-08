@@ -539,6 +539,27 @@ class ValueController extends Controller
         }
     }
 
+    public function view_2 ($emp){
+        try {
+
+            $employee = $this->employeeService->getOneById($emp);
+            if (is_null($employee)) {
+                return back()->with('error', "Employée introuvable !!");
+            }
+
+            $values = $this->valueService->getAllByEmployee($emp, 0);
+
+            return view('app.audit.values.view-2', [
+                'employee' => $employee,
+                'values' => $values,
+                'groupedValues' => $values->groupBy('employee_id'),
+            ]);
+
+        }catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
     public function view_entity ($entityName, $id){
         try {
 
