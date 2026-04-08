@@ -22,6 +22,12 @@ class SectionEntityRepository extends MainRepository
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
 
+    public function AllByTitle($title) {
+        return Section::with('entity', 'affectations')
+            ->whereRaw('LOWER(title) = ?', [strtolower($title)])
+            ->first();
+    }
+
     public function AllByService($service_id, $pages) {
         $query = Section::with('entity', 'affectations')
             ->join('entities', 'entities.id', '=', 'sections.entity_id')

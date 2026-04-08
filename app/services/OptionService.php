@@ -25,6 +25,10 @@ class OptionService
         return $this->optionRepository->AllByFilter($value, ['qualifications'], $pages);
     }
 
+    public function getByTitle($title){
+        return $this->optionRepository->ByTitle($title, ['qualifications']);
+    }
+
     public function getOneById($id){
         return $this->optionRepository->One(Option::class, ['qualifications'], $id);
     }

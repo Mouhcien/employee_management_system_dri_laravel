@@ -14,4 +14,11 @@ class DiplomaRepository extends MainRepository
 
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
+
+    public function ByTitle($title, $with) {
+        return  Diploma::with($with)
+            ->whereRaw('LOWER(title) = ?', [strtolower($title)])
+            ->first();
+    }
+
 }

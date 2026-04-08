@@ -23,6 +23,12 @@ class SectorEntityRepository extends MainRepository
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
 
+    public function ByTitle($title) {
+        return Sector::with('entity', 'affectations')
+            ->whereRaw('LOWER(title) = ?', [strtolower($title)])
+            ->first();
+    }
+
     public function AllByService($service_id, $pages) {
         $query = Sector::with('entity', 'affectations')
             ->join('entities', 'entities.id', '=', 'sectors.entity_id')

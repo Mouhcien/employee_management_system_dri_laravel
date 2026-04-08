@@ -27,6 +27,10 @@ class CompetenceService
         return $this->competenceRepository->One(Competence::class, $this->with, $id);
     }
 
+    public function getOneByEmployeeId($id){
+        return $this->competenceRepository->OneByEmployeeId($id, $this->with);
+    }
+
     public function create($data){
         $obj = new Competence();
 

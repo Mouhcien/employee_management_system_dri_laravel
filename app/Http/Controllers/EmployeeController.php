@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+
+use App\services\AffectationService;
 use App\services\CategoryService;
 use App\services\CityService;
+use App\services\CompetenceService;
 use App\services\EntityService;
 use App\services\LevelService;
 use App\services\GradeService;
@@ -12,18 +15,21 @@ use App\services\EmployeeService;
 use App\services\LocalService;
 use App\services\OccupationService;
 use App\services\OptionService;
+use App\services\QualificationService;
 use App\services\SectionEntityService;
 use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
+use App\services\WorkService;
+use App\Models\Employee;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-use App\Models\Employee;
 use Maatwebsite\Excel\Facades\Excel;
 use Mockery\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Arabic;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Carbon\Carbon;
 
 class EmployeeController extends Controller
 {
@@ -40,6 +46,10 @@ class EmployeeController extends Controller
     private SectorEntityService $sectorEntityService;
     private CategoryService $categoryService;
     private OptionService $optionService;
+    private WorkService $workService;
+    private CompetenceService $competenceService;
+    private QualificationService $qualificationService;
+    private AffectationService $affectationService;
     private $pages = 10;
     private $rules = [
         'ppr' => 'required',
@@ -67,7 +77,11 @@ class EmployeeController extends Controller
         SectionEntityService $sectionEntityService,
         SectorEntityService $sectorEntityService,
         CategoryService $categoryService,
-        OptionService $optionService
+        OptionService $optionService,
+        WorkService $workService,
+        CompetenceService $competenceService,
+        QualificationService $qualificationService,
+        AffectationService $affectationService,
     ) {
         $this->employeeService = $employeeService;
         $this->localService = $localService;
@@ -82,6 +96,10 @@ class EmployeeController extends Controller
         $this->sectorEntityService = $sectorEntityService;
         $this->categoryService = $categoryService;
         $this->optionService = $optionService;
+        $this->workService = $workService;
+        $this->competenceService = $competenceService;
+        $this->qualificationService = $qualificationService;
+        $this->affectationService = $affectationService;
     }
 
 
@@ -189,6 +207,7 @@ class EmployeeController extends Controller
             $data['email'] = $request->input('email');
             $data['category_id'] = $request->input('category_id');
             $data['status'] = Employee::STATUS_ACTIVE;
+            $data['commission_card'] = $request->input('commission_card');
 
             $data['photo'] = null;
             if ($request->hasFile('photo')) {
@@ -267,6 +286,7 @@ class EmployeeController extends Controller
             $data['email'] = $request->input('email');
             $data['category_id'] = $request->input('category_id');
             $data['status'] = Employee::STATUS_ACTIVE;
+            $data['commission_card'] = $request->input('commission_card');
 
             if ($request->hasFile('photo')) {
                 // Delete old photo if exists
@@ -469,6 +489,182 @@ class EmployeeController extends Controller
             Log::error('Error in EmployeeController@import: ' . $exception->getMessage());
             return back()->with('error', 'Une erreur est survenue.');
         }
+    }
+
+    public function import_all(Request $request)
+    {
+        if (!$request->hasFile('file')) {
+            return redirect()->route('employees.index')->with('error', "Merci de spécifier le fichier excel.");
+        }
+
+        $request->validate(['file' => 'required|file|mimes:xlsx,csv,xls']);
+
+        try {
+            $rows = Excel::toArray([], $request->file('file'))[0];
+            array_shift($rows); // Remove header row
+
+            $totalRows = count($rows);
+            $importedCount = 0;
+
+            DB::beginTransaction();
+
+            foreach ($rows as $row) {
+                if (empty(array_filter($row))) continue;
+
+                $ppr = trim($row[0] ?? '');
+                if (empty($ppr)) continue;
+
+                $local = $this->localService->getByTitle(trim($row[23] ?? ''));
+                $occupation = $this->occupationService->getByTitle(trim($row[11] ?? ''));
+                $grade = $this->gradeService->getByTitle(trim($row[19] ?? ''));
+                $diploma = $this->diplomaService->getByTitle(trim($row[22] ?? ''));
+                $option = $this->optionService->getByTitle(trim($row[21] ?? ''));
+
+                $service = $this->serviceEntityService->getByTitle(trim($row[13] ?? ''));
+                $entityTitle = trim($row[15] ?? '');
+                $sector = $this->sectorEntityService->getByTitle($entityTitle);
+                $section = $this->sectionEntityService->getByTitle($entityTitle);
+                $entity = $this->entityService->getByTitle($entityTitle);
+
+                $employeeData = [
+                    'firstname'      => $row[33],
+                    'lastname'       => $row[32],
+                    'firstname_arab' => $row[35],
+                    'lastname_arab'  => $row[34],
+                    'cin'            => trim($row[1]),
+                    'ppr'            => $ppr,
+                    'local_id'       => $local ? $local->id : null,
+                    'birth_date'     => $this->transformDate($row[4]),
+                    'birth_city'     => $row[6],
+                    'gender'         => $row[8],
+                    'sit'            => $row[10],
+                    'hiring_date'    => $this->transformDate($row[16]),
+                    'address'        => $row[29],
+                    'tel'            => $row[30],
+                    'email'          => $row[31],
+                    'commission_card' => $row[24],
+                    'status'         => Employee::STATUS_ACTIVE,
+                    'category_id'    => 1,
+                ];
+
+                // Category logic
+                if (!empty($row[17])) {
+                    $employeeData['category_id'] = 2;
+                    $employeeData['disposition_date'] = $this->transformDate($row[17]);
+                }
+                if (!empty($row[18])) {
+                    $employeeData['category_id'] = 3;
+                    $employeeData['reintegration_date'] = $this->transformDate($row[18]);
+                }
+
+                // 3. Process Employee (Create or Update)
+                $employee = $this->employeeService->getOneByPPR($ppr);
+                if ($employee) {
+                    $this->employeeService->update($employee->id, $employeeData);
+                    $employeeId = $employee->id;
+                } else {
+                    $this->employeeService->create($employeeData);
+                    $employeeId = $this->employeeService->getLatestInserted()->id;
+                }
+
+                // 4. Process Affectation (ONLY if service exists)
+                /*
+                if ($service) {
+                    $targetEntityId = $sector ? $sector->entity_id : ($section ? $section->entity_id : ($entity ? $entity->id : null));
+
+                    $affectationData = [
+                        'employee_id' => $employeeId,
+                        'service_id'  => $service->id, // We know it's not null here
+                        'entity_id'   => $targetEntityId,
+                        'sector_id'   => $sector ? $sector->id : null,
+                        'section_id'  => $section ? $section->id : null,
+                    ];
+
+                    $existingAffectation = $this->affectationService->getOneByEmployeeId($employeeId);
+                    if ($existingAffectation) {
+                        $this->affectationService->update($existingAffectation->id, $affectationData);
+                    } else {
+                        $this->affectationService->create($affectationData);
+                    }
+                }
+                */
+
+                // 5. Process Work (Occupation)
+                if ($occupation) {
+                    $workData = ['employee_id' => $employeeId, 'occupation_id' => $occupation->id];
+                    $existingWork = $this->workService->getOneByEmployeeId($employeeId);
+                    $existingWork ? $this->workService->update($existingWork->id, $workData) : $this->workService->create($workData);
+                }
+
+                // 6. Process Competence (Grade/Level)
+                if ($grade) {
+                    $parts = explode(" ", $grade->title);
+                    $level_title = (count($parts) >= 3) ? strtoupper($parts[0] . " " . $parts[1]) : strtoupper($parts[0]);
+
+                    $space_count = substr_count($grade->title, ' ');
+                    $parts = explode(" ", $grade->title);
+                    $level_title = "";
+                    if ($space_count > 2) {
+                        $level_title = strtoupper($parts[0]);
+                    } elseif ($space_count == 1) {
+                        $level_title = strtoupper($parts[0] . " " . $parts[1]);
+                    } else {
+                        $level_title = strtoupper($grade->title);
+                    }
+
+                    $level = $this->levelService->getOneByTitle($level_title);
+
+                    if ($level) {
+                        $compData = ['employee_id' => $employeeId, 'grade_id' => $grade->id, 'level_id' => $level->id];
+                        $existingComp = $this->competenceService->getOneByEmployeeId($employeeId);
+                        $existingComp ? $this->competenceService->update($existingComp->id, $compData) : $this->competenceService->create($compData);
+                    }
+                }
+
+                // 7. Process Qualification (Diploma)
+                if ($diploma && $option) {
+                    $qualData = ['employee_id' => $employeeId, 'diploma_id' => $diploma->id, 'option_id' => $option->id];
+                    $existingQual = $this->qualificationService->getOneByEmployeeId($employeeId);
+                    $existingQual ? $this->qualificationService->update($existingQual->id, $qualData) : $this->qualificationService->create($qualData);
+                }
+
+                $importedCount++;
+            }
+
+            DB::commit();
+            return redirect()->route('employees.index')->with('success', "Importation réussie : $importedCount/$totalRows agents.");
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('employees.index')->with('error', 'Erreur : ' . $e->getMessage());
+        }
+    }
+
+    private function transformDate($value)
+    {
+        // 1. Check if the value is actually empty or null
+        if (empty($value) || trim($value) === "" || $value == "0") {
+            return null;
+        }
+
+        try {
+            // 2. Handle Excel Numeric Dates (e.g., 44197)
+            if (is_numeric($value)) {
+                return Date::excelToDateTimeObject($value)->format('Y-m-d');
+            }
+
+            // 3. Handle String Dates (e.g., "2024-05-15" or "15/05/2024")
+            // Use Carbon::parse or createFromFormat if the format is consistent
+            return Carbon::parse($value)->format('Y-m-d');
+
+        } catch (\Exception $e) {
+            // 4. Return null if parsing fails entirely to avoid 1970 errors
+            return null;
+        }
+    }
+
+    public function import_execute(Request $request) {
+
     }
 
     //Par local

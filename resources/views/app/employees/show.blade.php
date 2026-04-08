@@ -470,10 +470,18 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
+                                @if (!is_null($employee->reintegration_date))
                                 <small class="text-muted d-block mb-1">Réintégration</small>
                                 <div class="p-2 border border-light-subtle rounded-3 bg-light-subtle fw-bold text-dark text-center shadow-xs">
                                     {{ $employee->reintegration_date ? \Carbon\Carbon::parse($employee->reintegration_date)->format('d/m/Y') : '—' }}
                                 </div>
+                                @endif
+                                @if (!is_null($employee->disposition_date))
+                                    <small class="text-muted d-block mb-1">La date de disposition</small>
+                                    <div class="p-2 border border-light-subtle rounded-3 bg-light-subtle fw-bold text-dark text-center shadow-xs">
+                                        {{ $employee->disposition_date ? \Carbon\Carbon::parse($employee->disposition_date)->format('d/m/Y') : '—' }}
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

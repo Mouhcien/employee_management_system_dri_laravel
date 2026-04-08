@@ -174,6 +174,7 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/import', [EmployeeController::class, 'import'])->name('employees.import');
         Route::post('/sort', [EmployeeController::class, 'sort'])->name('employees.sort');
         Route::post('/download', [EmployeeController::class, 'download'])->name('employees.download');
+        Route::post('/import/all', [EmployeeController::class, 'import_all'])->name('employees.import.all');
         Route::get('/advance/search', [EmployeeController::class, 'advance'])->name('employees.advance');
         Route::get('/advance/result', [EmployeeController::class, 'result'])->name('employees.advance.result');
         Route::post('/importation', [EmployeeController::class, 'importation'])->name('employees.importation');
@@ -188,6 +189,7 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/bonus/certificate/{id}', [EmployeeController::class, 'bonus_certificate'])->name('employees.bonus.certificate');
         Route::get('/holiday/certificate/{id}', [EmployeeController::class, 'holiday_certificate'])->name('employees.holiday.certificate');
         Route::get('/renewal/certificate/{id}', [EmployeeController::class, 'renewal_certificate'])->name('employees.renewal.certificate');
+        Route::post('/import/all/execute', [EmployeeController::class, 'import_execute'])->name('employees.import.all.execute');
     });
 
     Route::prefix('settings')->group(function (){

@@ -30,6 +30,10 @@ class LocalService
         return $this->localRepository->AllByFilter($filter, $pages);
     }
 
+    public function getByTitle($title){
+        return $this->localRepository->ByTitle($title);
+    }
+
     public function getOneById($id){
         return $this->localRepository->One(Local::class, ['city'], $id);
     }

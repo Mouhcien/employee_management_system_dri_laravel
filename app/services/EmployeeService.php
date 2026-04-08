@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Employee;
 use App\Repositories\EmployeeRepository;
+use function PHPUnit\Framework\isString;
 
 class EmployeeService
 {
@@ -127,6 +128,12 @@ class EmployeeService
         $employee->category_id = $data['category_id'];
         $employee->status = $data['status'];
         $employee->photo = $data['photo'];
+        if (isset($data['commission_card']))
+            $employee->commission_card = $data['commission_card'];
+        if (isset($data['disposition_date']))
+                $employee->disposition_date = $data['disposition_date'];
+        if (isset($data['reintegration_date']))
+            $employee->reintegration_date = $data['reintegration_date'];
 
         return $this->employeeRepository->add($employee);
     }
@@ -139,25 +146,50 @@ class EmployeeService
             return null;
         }
 
-        $employee->ppr = $data['ppr'];
-        $employee->cin = $data['cin'];
-        $employee->firstname = $data['firstname'];
-        $employee->lastname = $data['lastname'];
-        $employee->local_id = $data['local_id'];
-        $employee->firstname_arab = $data['firstname_arab'];
-        $employee->lastname_arab = $data['lastname_arab'];
-        $employee->birth_date = $data['birth_date'];
-        $employee->birth_city = $data['birth_city'];
-        $employee->gender = $data['gender'];
-        $employee->sit = $data['sit'];
-        $employee->hiring_date = $data['hiring_date'];
-        $employee->hiring_public_date = $data['hiring_public_date'];
-        $employee->address = $data['address'];
-        $employee->tel = $data['tel'];
-        $employee->email = $data['email'];
-        $employee->category_id = $data['category_id'];
-        $employee->status = $data['status'];
-        $employee->photo = $data['photo'];
+        if (isset($data['ppr']))
+            $employee->ppr = $data['ppr'];
+        if (isset($data['cin']))
+            $employee->cin = $data['cin'];
+        if (isset($data['firstname']))
+            $employee->firstname = $data['firstname'];
+        if (isset($data['lastname']))
+            $employee->lastname = $data['lastname'];
+        if (isset($data['local_id']))
+            $employee->local_id = $data['local_id'];
+        if (isset($data['firstname_arab']))
+            $employee->firstname_arab = $data['firstname_arab'];
+        if (isset($data['lastname_arab']))
+            $employee->lastname_arab = $data['lastname_arab'];
+        if (isset($data['birth_date']))
+            $employee->birth_date = $data['birth_date'];
+        if (isset($data['birth_city']))
+            $employee->birth_city = $data['birth_city'];
+        if (isset($data['gender']))
+            $employee->gender = $data['gender'];
+        if (isset($data['sit']))
+            $employee->sit = $data['sit'];
+        if (isset($data['hiring_date']))
+            $employee->hiring_date = $data['hiring_date'];
+        if (isset($data['hiring_public_date']))
+            $employee->hiring_public_date = $data['hiring_public_date'];
+        if (isset($data['address']))
+            $employee->address = $data['address'];
+        if (isset($data['tel']))
+            $employee->tel = $data['tel'];
+        if (isset($data['email']))
+            $employee->email = $data['email'];
+        if (isset($data['category_id']))
+            $employee->category_id = $data['category_id'];
+        if (isset($data['status']))
+            $employee->status = $data['status'];
+        if (isset($data['photo']))
+            $employee->photo = $data['photo'];
+        if (isset($data['commission_card']))
+            $employee->commission_card = $data['commission_card'];
+        if (isset($data['disposition_date']))
+            $employee->disposition_date = $data['disposition_date'];
+        if (isset($data['reintegration_date']))
+            $employee->reintegration_date = $data['reintegration_date'];
 
         return $this->employeeRepository->update($employee);
     }

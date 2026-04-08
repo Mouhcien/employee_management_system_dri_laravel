@@ -31,6 +31,10 @@ class SectorEntityService
         return $this->sectorEntityRepository->AllByFilter($filter, $pages);
     }
 
+    public function getByTitle($title){
+        return $this->sectorEntityRepository->ByTitle($title);
+    }
+
     public function getAllByService($service_id, $pages=0){
         return $this->sectorEntityRepository->AllByService($service_id, $pages);
     }

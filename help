@@ -345,3 +345,42 @@
                                 @endif
                                 <span class="position-absolute bottom-0 end-0 p-2 bg-{{ $employee->status == 1 ? 'success' : 'danger' }} border border-3 border-white rounded-circle shadow"></span>
                             </div>
+
+
+// 0 => "DDP"
+                        //1 => "NCIN"
+                        //2 => "NOMS PRENOMS"
+                        //3 => "DOMICILE" Ville
+                        //4 => "DATNAIS"
+                        //5 => "NAI"
+                        //6 => "LIEU"
+                        //7 => "Age"
+                        //8 => "Sexe"
+                        //9 => "Sexe2"
+                        //10 => "Sit famille"
+                        //11 => "Fonction"
+                        //12 => "ABR"
+                        //13 => "Service"
+                        //14 => "AB"
+                        //15 => "SECTEUR"
+                        //16 => "DATREC"
+                        //17 => "DATE DE MISE A LA DIPOSITION"
+                        //18 => "DATE DE DETACHEMENT"
+                        //19 => "GRADE"
+                        //20 => "Eche"
+                        //21 => "OPTION"
+                        //22 => "DIPLÔME"
+                        //23 => "ADRESSE"
+                        //24 => "N° CARTE COMMISSION"
+                          //25 => "الإسم"
+                          //26 => "الدرجة"
+                        //27 => "المصلحة"
+                        //28 => "المكان"
+                        //29 => "ADRESSE PERSONNELLE"
+                        //30 => "TEL"
+                        //31 => "ADRESSE EMAIL PROFESSIONNELLE"
+                        //32 => "NOMS FR"
+                        //33 => "PRENOMS FR"
+                        //34 => "NOMS AR"
+                        //35 => "PRENOMS AR"
+                        //36 => null

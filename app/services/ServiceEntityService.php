@@ -26,6 +26,10 @@ class ServiceEntityService
         return $this->serviceEntityRepository->AllByFilter($filter, $this->with, $pages);
     }
 
+    public function getByTitle($title){
+        return $this->serviceEntityRepository->ByTitle($title, $this->with);
+    }
+
     public function getOneById($id){
         return $this->serviceEntityRepository->One(Service::class, $this->with, $id);
     }

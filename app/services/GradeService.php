@@ -25,6 +25,10 @@ class GradeService
         return $this->gradeRepository->AllByFilter($value, ['competences'], $pages);
     }
 
+    public function getByTitle($title){
+        return $this->gradeRepository->ByTitle($title, ['competences']);
+    }
+
     public function getOneById($id){
         return $this->gradeRepository->One(Grade::class, ['competences'], $id);
     }

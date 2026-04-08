@@ -23,6 +23,12 @@ class EntityRepository extends MainRepository
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
 
+    public function ByTitle($title) {
+        return Entity::with(['type', 'sectors', 'sections', 'affectations', 'service'])
+            ->whereRaw('LOWER(title) = ?', [strtolower($title)])
+            ->first();
+    }
+
     public function AllByType($type_id, $pages) {
         $query = Entity::with(['type', 'sectors', 'sections', 'affectations', 'service'])
             ->where('type_id', '=', $type_id)

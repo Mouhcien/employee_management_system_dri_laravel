@@ -30,6 +30,10 @@ class SectionEntityService
         return $this->sectionEntityRepository->AllByFilter($filter, $pages);
     }
 
+    public function getByTitle($title){
+        return $this->sectionEntityRepository->AllByTitle($title);
+    }
+
     public function getAllByService($service_id, $pages=0){
         return $this->sectionEntityRepository->AllByService($service_id, $pages);
     }

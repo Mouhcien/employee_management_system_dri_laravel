@@ -132,7 +132,7 @@
                 <form method="GET" action="{{ route('employees.search') }}" class="row g-3 align-items-end">
 
                     {{-- Search Input --}}
-                    <div class="col-xl-4">
+                    <div class="col-xl-3">
                         <label class="ls-caps fw-bold text-muted mb-2">Recherche intelligente</label>
                         <input type="text"
                                name="employee_search"
@@ -173,7 +173,7 @@
                     </div>
 
                     {{-- Actions --}}
-                    <div class="col-xl-2 d-flex gap-2">
+                    <div class="col-xl-3 d-flex gap-2">
                         <button type="submit" class="btn btn-primary w-100 rounded-3 py-2 fw-bold shadow-sm">
                             <i class="bi bi-filter me-1"></i>Filtrer
                         </button>
@@ -184,12 +184,22 @@
                                 title="Options de tri">
                             <i class="bi bi-sliders"></i>
                         </button>
+                        <button type="button"
+                                class="btn btn-outline-dark rounded-3 px-3"
+                                data-bs-toggle="modal"
+                                data-bs-target="#importAllEmployeeModal"
+                                title="Importer les agents">
+                            <i class="bi bi-database-add"></i>
+                        </button>
                     </div>
                 </form>
             </div>
         @endif
 
         <x-sort-employee-options />
+
+        {{-- import employees --}}
+        <x-import-all-employees />
 
         {{-- Table Container --}}
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
@@ -216,31 +226,30 @@
             </div>
         </div>
 
-<div class="table-responsive" style="min-height: 500px">
-    @if (session('opt') == 'cards')
-        <div class="p-4">@include('app.employees._cards')</div>
-    @elseif(session('opt') == 'empcrd')
-        @include('app.employees._employee_card')
-    @else
-        @include('app.employees._list')
-    @endif
-</div>
+        <div class="table-responsive" style="min-height: 500px">
+            @if (session('opt') == 'cards')
+                <div class="p-4">@include('app.employees._cards')</div>
+            @elseif(session('opt') == 'empcrd')
+                @include('app.employees._employee_card')
+            @else
+                @include('app.employees._list')
+            @endif
+        </div>
 
-            {{-- Modals de suppression --}}
+        {{-- Modals de suppression --}}
+        @foreach($employees as $employee)
 
-            @foreach($employees as $employee)
+            <x-delete-model
 
-                <x-delete-model
+                href="{{ route('employees.delete', $employee->id) }}"
 
-                    href="{{ route('employees.delete', $employee->id) }}"
+                message="Attention : La suppression de l'agent #{{ $employee->ppr }} est irréversible."
 
-                    message="Attention : La suppression de l'agent #{{ $employee->ppr }} est irréversible."
+                title="Confirmation de Suppression"
 
-                    title="Confirmation de Suppression"
+                target="deleteEmployeeModal" />
 
-                    target="deleteEmployeeModal" />
-
-            @endforeach
+        @endforeach
 
         </div>
 

@@ -25,6 +25,10 @@ class OccupationService
         return $this->occupationRepository->AllByFilter($filter, ['works'], $pages);
     }
 
+    public function getByTitle($title){
+        return $this->occupationRepository->ByTitle($title, ['works']);
+    }
+
     public function getOneById($id){
         return $this->occupationRepository->One(Occupation::class, ['works'], $id);
     }

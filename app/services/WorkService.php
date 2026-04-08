@@ -26,6 +26,10 @@ class WorkService
         return $this->workRepository->One(Work::class, $this->with, $id);
     }
 
+    public function getOneByEmployeeId($id){
+        return $this->workRepository->OneByEmployeeId($id, $this->with);
+    }
+
     public function create($data){
         $obj = new Work();
 

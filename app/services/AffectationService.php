@@ -26,6 +26,10 @@ class AffectationService
         return $this->affectationRepository->One(Affectation::class, $this->with, $id);
     }
 
+    public function getOneByEmployeeId($id){
+        return $this->affectationRepository->OneByEmployeeId($id, $this->with);
+    }
+
     public function create($data){
         $obj = new Affectation();
 
@@ -37,8 +41,11 @@ class AffectationService
             $obj->sector_id = $data['sector_id'];
         if ($data['section_id'] != 'null')
             $obj->section_id = $data['section_id'];
-        $obj->employee_id = $data['employee_id'];
-        $obj->affectation_date = $data['affectation_date'];
+
+        if (isset($data['employee_id']))
+            $obj->employee_id = $data['employee_id'];
+        if (isset($data['affectation_date']))
+            $obj->affectation_date = $data['affectation_date'];
 
         return $this->affectationRepository->Add($obj);
     }
@@ -65,9 +72,11 @@ class AffectationService
         else
             $obj->section_id = $data['section_id'];
 
-        $obj->employee_id = $data['employee_id'];
+        if (isset($data['employee_id']))
+            $obj->employee_id = $data['employee_id'];
 
-        $obj->affectation_date = $data['affectation_date'];
+        if (isset($data['affectation_date']))
+            $obj->affectation_date = $data['affectation_date'];
 
         return $this->affectationRepository->Update($obj);
     }

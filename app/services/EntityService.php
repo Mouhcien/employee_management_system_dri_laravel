@@ -33,6 +33,11 @@ class EntityService
         return $this->entityRepository->AllByFilter($filter, $pages);
     }
 
+    public function getByTitle($title)
+    {
+        return $this->entityRepository->ByTitle($title);
+    }
+
     public function getAllBytype($type_id, $pages = 0)
     {
         return $this->entityRepository->AllByType($type_id, $pages);

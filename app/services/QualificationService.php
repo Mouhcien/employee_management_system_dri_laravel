@@ -26,6 +26,9 @@ class QualificationService
         return $this->qualificationRepository->One(Qualification::class, $this->with, $id);
     }
 
+    public function getOneByEmployeeId($id){
+        return $this->qualificationRepository->OneByEmployeeId($id, $this->with);
+    }
     public function create($data){
         $obj = new Qualification();
 

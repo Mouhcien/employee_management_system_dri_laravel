@@ -91,9 +91,9 @@ class CompetenceController extends Controller
                     $space_count = substr_count($grade->title, ' ');
                     $parts = explode(" ", $grade->title);
                     $level_title = "";
-                    if ($space_count == 2) {
+                    if ($space_count > 2) {
                         $level_title = strtoupper($parts[0]);
-                    } elseif ($space_count > 2) {
+                    } elseif ($space_count == 1) {
                         $level_title = strtoupper($parts[0] . " " . $parts[1]);
                     } else {
                         $level_title = strtoupper($grade->title);

@@ -15,4 +15,10 @@ class OccupationRepository extends MainRepository
         return $pages == 0 ? $query->get() : $query->paginate($pages);
 
     }
+
+    public function ByTitle($title, $with) {
+        return Occupation::with($with)
+            ->whereRaw('LOWER(title) = ?', [strtolower($title)])
+            ->first();
+    }
 }
