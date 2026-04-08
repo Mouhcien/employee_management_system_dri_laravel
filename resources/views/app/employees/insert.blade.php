@@ -47,7 +47,7 @@
                             {{-- Bloc Noms Bilingues --}}
                             <div class="col-md-6 mt-4">
                                 <label class="form-label small fw-bold text-muted text-uppercase">Nom (Fr)</label>
-                                <input type="text" name="lastname" class="form-control border-0 bg-light shadow-none py-2" value="{{ old('lastname', $employee->lastname ?? '') }}">
+                                <input type="text" id="lastname" name="lastname" class="form-control border-0 bg-light shadow-none py-2" value="{{ old('lastname', $employee->lastname ?? '') }}">
                             </div>
                             <div class="col-md-6 mt-4">
                                 <label class="form-label small fw-bold text-primary text-uppercase text-end d-block">الاسم العائلي</label>
@@ -56,7 +56,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold text-muted text-uppercase">Prénom (Fr)</label>
-                                <input type="text" name="firstname" class="form-control border-0 bg-light shadow-none py-2" value="{{ old('firstname', $employee->firstname ?? '') }}">
+                                <input type="text" id="firstname" name="firstname" class="form-control border-0 bg-light shadow-none py-2" value="{{ old('firstname', $employee->firstname ?? '') }}">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold text-primary text-uppercase text-end d-block">الاسم الشخصي</label>
@@ -110,7 +110,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold text-muted">Email professionnel</label>
-                                <input type="email" name="email" class="form-control border-0 bg-light shadow-none" value="{{ old('email', $employee->email ?? '') }}">
+                                <input type="email" name="email" id="email" class="form-control border-0 bg-light shadow-none" value="{{ old('email', $employee->email ?? '') }}">
                             </div>
                             <div class="col-12">
                                 <label class="form-label small fw-bold text-muted">Adresse de résidence</label>
@@ -220,6 +220,36 @@
                     }
                 });
             }
+
+            //EMail
+            const firstNameInput = document.getElementById('firstname');
+            const lastNameInput = document.getElementById('lastname');
+            const emailInput = document.getElementById('email');
+
+            emailInput.addEventListener('click', function() {
+                const first = firstNameInput.value.trim().toLowerCase();
+                const last = lastNameInput.value.trim().toLowerCase();
+
+                if (first !== "" && last !== "") {
+                    // On récupère la première lettre du prénom
+                    const firstLetter = first.charAt(0);
+
+                    // Nettoyage des caractères spéciaux/accents pour le nom
+                    const cleanLast = last.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '');
+
+                    // Génération de l'email
+                    const generatedEmail = `${firstLetter}.${cleanLast}@tax.gov.ma`;
+
+                    // Injection de la valeur
+                    emailInput.value = generatedEmail;
+
+                    // Animation visuelle de succès
+                    emailInput.classList.remove('bg-light');
+                    emailInput.classList.add('is-valid');
+                } else {
+                    alert("Veuillez remplir le prénom et le nom avant de générer l'email.");
+                }
+            });
         });
     </script>
 

@@ -119,6 +119,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
+        /*
         const loader = document.getElementById('global-loader');
 
         const showLoader = () => {
@@ -156,7 +157,76 @@
                 document.getElementById('global-loader').style.display = 'none';
             }
         };
+        */
 
+        const loader = document.getElementById('global-loader');
+        const TIMEOUT_DURATION = 5000; // 5 secondes
+        let loaderTimeout;
+
+        const showLoader = () => {
+            // Annuler un timeout précédent s'il existe
+            if (loaderTimeout) clearTimeout(loaderTimeout);
+
+            loader.style.display = 'flex';
+
+            // Sécurité : Masquer automatiquement après 5 secondes
+            loaderTimeout = setTimeout(() => {
+                hideLoader();
+            }, TIMEOUT_DURATION);
+        };
+
+        const hideLoader = () => {
+            if (loader) {
+                loader.style.display = 'none';
+                if (loaderTimeout) clearTimeout(loaderTimeout);
+            }
+        };
+
+// 1. Soumissions de formulaires
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', showLoader);
+        });
+
+// 2. Liens (avec filtrage des touches de modification)
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+
+                // Ignore si : Ctrl, Shift, Meta (Cmd sur Mac) ou Clic Molette
+                if (e.ctrlKey || e.shiftKey || e.metaKey || e.button === 1) {
+                    return;
+                }
+
+                // Conditions de navigation interne normale
+                if (
+                    link.href &&
+                    link.getAttribute('target') !== '_blank' &&
+                    !link.href.includes('#') &&
+                    link.origin === window.location.origin &&
+                    !e.defaultPrevented
+                ) {
+                    showLoader();
+                }
+            });
+        });
+
+        // 3. Boutons personnalisés (ex: .trigger-loader)
+        document.querySelectorAll('.trigger-loader').forEach(btn => {
+            btn.addEventListener('click', showLoader);
+        });
+
+        // 4. Masquer le loader au retour en arrière ou chargement depuis le cache
+        window.onpageshow = function(event) {
+            if (event.persisted || (performance.getEntriesByType("navigation")[0] && performance.getEntriesByType("navigation")[0].type === 'back_forward')) {
+                hideLoader();
+            }
+        };
+
+        // 5. Sécurité : Touche Échap
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") hideLoader();
+        });
+
+        // --------------------------------------------------
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('sidebarToggle');
         const toggleIcon = document.getElementById('toggleIcon');
