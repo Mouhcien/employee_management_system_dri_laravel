@@ -118,6 +118,21 @@
                 </li>
                 @endif
 
+                {{-- Dropdown: Trainings --}}
+                @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
+                    <li class="nav-item dropdown">
+                        <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
+                              {{ request()->routeIs('chefs.*') || request()->routeIs('temps.*') ? 'active-link' : 'text-secondary' }}"
+                           href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-journal-bookmark me-2"></i>
+                            <span class="fw-semibold">Formations</span>
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-4 mt-2">
+                            <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('trainings.*') ? 'active' : '' }}" href="{{ route('trainings.index') }}"><i class="bi bi-person-video3 me-1 fs-4"></i>Consulter les formations</a></li>
+                        </ul>
+                    </li>
+                @endif
+
                 @if (auth()->user()->profile_id == 3)
                     <li class="nav-item dropdown">
                         <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base

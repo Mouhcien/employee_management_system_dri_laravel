@@ -68,4 +68,8 @@ class Employee extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function attendences() {
+        return $this->hasMany(Attendence::class);
+    }
 }

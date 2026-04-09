@@ -155,6 +155,26 @@
     </div>
     @endif
 
+    {{-- Section: Training --}}
+    @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
+        <div class="sidebar-section-title mt-3 mb-1 px-3">Formations</div>
+        <div class="sidebar-group mb-3">
+            <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('trainings.*') ? 'text-primary bg-primary-subtle' : '' }}"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#menuTrainings">
+            <span class="d-flex align-items-center">
+                <i class="bi bi-journal-bookmark me-2 fs-5"></i>
+                <span class="sidebar-text fw-semibold">Formations</span>
+            </span>
+                <i class="bi bi-chevron-down small transition-base"></i>
+            </button>
+            <div class="collapse {{ request()->routeIs('chefs.*') ? 'show' : '' }}" id="menuTrainings">
+                <ul class="nav flex-column ms-2 mt-1">
+                    <li><a href="{{ route('trainings.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('trainings.index') ? 'active' : '' }}"><i class="bi bi-person-video3 me-1 fs-4"></i>Consulter les formations</a></li>
+                </ul>
+            </div>
+        </div>
+    @endif
+
     @if (auth()->user()->profile_id == 3)
         <div class="sidebar-section-title mt-3 mb-1 px-3">Configuration</div>
         <div class="sidebar-group mb-3">

@@ -43,9 +43,9 @@
                                             {{ strtoupper($employee->lastname) }} {{ $employee->firstname }}
                                         </h6>
                                         <div class="d-flex align-items-center mt-1">
-                            <span class="badge bg-secondary bg-opacity-10 text-secondary border-0 fw-normal" style="font-size: 0.7rem;">
-                                PPR: #{{ $employee->ppr }}
-                            </span>
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary border-0 fw-normal" style="font-size: 0.7rem;">
+                                                PPR: #{{ $employee->ppr }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

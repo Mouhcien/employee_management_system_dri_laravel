@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AffectationController;
+use App\Http\Controllers\AttendenceController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChefController;
@@ -31,6 +32,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\TempController;
+use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ValueController;
 use App\Http\Controllers\WorkController;
@@ -282,6 +284,24 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/edit/{id}', [TempController::class, 'edit'])->name('temps.edit');
         Route::post('/update/{id}', [TempController::class, 'update'])->name('temps.update');
         Route::get('/delete/{id}', [TempController::class, 'delete'])->name('temps.delete');
+    });
+
+    Route::prefix('trainings')->group(function(){
+        Route::get('/', [TrainingController::class, 'index'])->name('trainings.index');
+        Route::post('/store', [TrainingController::class, 'store'])->name('trainings.store');
+        Route::get('/create', [TrainingController::class, 'create'])->name('trainings.create');
+        Route::get('/download', [TrainingController::class, 'download'])->name('trainings.download');
+        Route::get('/{id}', [TrainingController::class, 'show'])->name('trainings.show');
+        Route::get('/edit/{id}', [TrainingController::class, 'edit'])->name('trainings.edit');
+        Route::post('/update/{id}', [TrainingController::class, 'update'])->name('trainings.update');
+        Route::get('/delete/{id}', [TrainingController::class, 'delete'])->name('trainings.delete');
+        Route::get('/attendences/{id}', [TrainingController::class, 'attendences'])->name('trainings.attendences');
+    });
+
+    Route::prefix('attendences')->group(function(){
+        Route::get('/', [AttendenceController::class, 'index'])->name('attendences.index');
+        Route::post('/store/{id}', [AttendenceController::class, 'store'])->name('attendences.store');
+        Route::get('/delete/{id}', [AttendenceController::class, 'delete'])->name('attendences.delete');
     });
 
     Route::prefix('configs')->group(function(){
