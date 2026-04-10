@@ -8,7 +8,7 @@ use App\repositories\AffectationRepository;
 class AffectationService
 {
     private AffectationRepository $affectationRepository;
-    private $with = ['employee', 'service', 'entity', 'sector', 'section'];
+    private $with = ['employee', 'service', 'entity', 'sector', 'section', 'occupation'];
 
     /**
      * @param AffectationRepository $affectationRepository
@@ -41,6 +41,8 @@ class AffectationService
             $obj->sector_id = $data['sector_id'];
         if ($data['section_id'] != 'null')
             $obj->section_id = $data['section_id'];
+        if ($data['occupation_id'] != 'null')
+            $obj->occupation_id = $data['occupation_id'];
 
         if (isset($data['employee_id']))
             $obj->employee_id = $data['employee_id'];
@@ -77,6 +79,9 @@ class AffectationService
 
         if (isset($data['affectation_date']))
             $obj->affectation_date = $data['affectation_date'];
+
+        if (isset($data['occupation_id']))
+            $obj->occupation_id = $data['occupation_id'];
 
         return $this->affectationRepository->Update($obj);
     }

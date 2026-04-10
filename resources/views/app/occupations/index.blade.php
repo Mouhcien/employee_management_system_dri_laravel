@@ -89,7 +89,7 @@
                                         </div>
                                     </td>
                                     <td class="py-4" style="min-width: 200px;">
-                                        @php $count = count($occupation->works); @endphp
+                                        @php $count = $occupation->affectations->where('employee.status', 1)->count(); @endphp
                                         <div class="d-flex align-items-center">
                                             <div class="progress rounded-pill flex-grow-1" style="height: 6px; background-color: #f1f5f9;">
                                                 <div class="progress-bar gradient-progress shadow-sm" role="progressbar" style="width: {{ min(($count / 50) * 100, 100) }}%"></div>

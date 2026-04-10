@@ -20,10 +20,7 @@ class MainRepository
         if ($class === Period::class)
             $query->orderBy('periods.year', 'DESC')->orderBy('periods.title', 'ASC');
 
-        /*
-        else
-            $query->orderBy('title', 'ASC');
-        */
+        $query->orderBy('id', 'DESC');
 
         if ($pages != 0)
             return $query->paginate($pages);

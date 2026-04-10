@@ -145,7 +145,7 @@
                     {{-- Local Select (Restored ID & Selection Logic) --}}
                     <div class="col-xl-3">
                         <label class="ls-caps fw-bold text-muted mb-2">Localisation</label>
-                        <select name="local_id"
+                        <select name="lc"
                                 id="sl_employee_local"
                                 class="form-select form-control-futurist rounded-3 border-0 shadow-none">
                             <option value="-1">Tous les locaux</option>
@@ -160,7 +160,7 @@
                     {{-- City Select (Restored ID & Selection Logic) --}}
                     <div class="col-xl-3">
                         <label class="ls-caps fw-bold text-muted mb-2">Ville</label>
-                        <select name="city_id"
+                        <select name="ct"
                                 id="sl_employee_city"
                                 class="form-select form-control-futurist rounded-3 border-0 shadow-none">
                             <option value="-1">Toutes les villes</option>
@@ -215,7 +215,18 @@
                 <div class="d-flex align-items-center gap-3">
                 <div class="btn-group shadow-xs rounded-3 overflow-hidden border">
                    <button class="btn btn-white border-end" title="Imprimer"><i class="bi bi-printer text-muted"></i></button>
-                   <a class="btn btn-white" href="{{ route('employees.download') }}" title="Exporter Excel"><i class="bi bi-file-earmark-excel text-success"></i></a>
+                    {{-- employee_search=ali&local_id=1&city_id=-1 --}}
+                    @if (request()->has('employee_search') || request()->has('lc') || request()->has('city_id'))
+                        <a class="btn btn-white"
+                           href="{{ route('employees.download', ['employee_search' => request()->query('employee_search'),'lc' => request()->query('lc'),'ct' => request()->query('ct')]) }}"
+                           title="Exporter Excel">
+                            <i class="bi bi-file-earmark-excel text-success"></i>
+                        </a>
+                    @else
+                        <a class="btn btn-white" href="{{ route('employees.download') }}" title="Exporter Excel"><i class="bi bi-file-earmark-excel text-success"></i></a>
+                    @endif
+
+
                 </div>
 
                 <div class="view-switcher d-flex shadow-xs">
@@ -227,7 +238,9 @@
         </div>
 
         <div class="table-responsive" style="min-height: 500px">
+
             @if (session('opt') == 'cards')
+
                 <div class="p-4">@include('app.employees._cards')</div>
             @elseif(session('opt') == 'empcrd')
                 @include('app.employees._employee_card')

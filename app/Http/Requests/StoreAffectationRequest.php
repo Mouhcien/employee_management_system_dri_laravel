@@ -20,6 +20,7 @@ class StoreAffectationRequest extends FormRequest
             'sector_id' => 'nullable',
             'section_id' => 'nullable',
             'affectation_date' => 'required',
+            'occupation_id' => 'required',
         ];
     }
 }

@@ -25,4 +25,8 @@ class Affectation extends Model
     public function section() {
         return $this->belongsTo(Section::class);
     }
+
+    public function occupation() {
+        return $this->belongsTo(Occupation::class);
+    }
 }

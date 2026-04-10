@@ -129,10 +129,27 @@ class EmployeeRepository extends MainRepository
     {
         $query =  Employee::with($this->with);
 
-        if (isset($filter['local_id']))
-            $query->where('local_id', '=', $filter['local_id']);
+        if (isset($filter['filter_value'])) {
+            $val = $filter['filter_value'];
+            $query->when($val, function ($query) use ($val) {
+                $query->where(function ($q) use ($val) {
+                    $q->where('lastname', 'like', "%{$val}%")
+                        ->orWhere('firstname', 'like', "%{$val}%")
+                        ->orWhere('email', 'like', "%{$val}%")
+                        ->orWhere('cin', 'like', "%{$val}%")
+                        ->orWhere('ppr', 'like', "%{$val}%")
+                        ->orWhere('birth_date', 'like', "%{$val}%")
+                        ->orWhere('birth_city', 'like', "%{$val}%")
+                        ->orWhere('hiring_date', 'like', "%{$val}%")
+                        ->orWhere('tel', 'like', "%{$val}%");
+                });
+            });
+        }
 
-        if (isset($filter['city_id'])) {
+        if (isset($filter['local_id']) && $filter['local_id'] != '-1')
+            $query->where('employees.local_id', '=', $filter['local_id']);
+
+        if (isset($filter['city_id']) && $filter['city_id'] != '-1') {
             $query->join('locals', 'locals.id', '=', 'employees.local_id');
             $query->where('locals.city_id', '=', $filter['city_id']);
         }

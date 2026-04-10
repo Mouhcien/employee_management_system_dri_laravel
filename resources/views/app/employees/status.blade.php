@@ -132,19 +132,7 @@
                 @elseif(session('opt') == 'empcrd')
                     @include('app.employees._employee_card')
                 @else
-                    <table class="table align-middle mb-0">
-                        <thead class="bg-light">
-                        <tr>
-                            <th class="ps-4 border-0 py-3 text-uppercase small fw-bold text-muted">Agent</th>
-                            <th class="border-0 py-3 text-uppercase small fw-bold text-muted">Statut</th>
-                            <th class="border-0 py-3 text-uppercase small fw-bold text-muted text-end pe-4">Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {{-- This section logic is handled in your _list partial, but ensure it uses .hover-row-highlight --}}
-                        @include('app.employees._list')
-                        </tbody>
-                    </table>
+                    @include('app.employees._list')
                 @endif
             </div>
 

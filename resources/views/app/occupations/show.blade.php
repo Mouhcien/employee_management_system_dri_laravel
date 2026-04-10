@@ -65,7 +65,7 @@
                                     <i class="bi bi-pencil-square input-icon"></i>
                                 </div>
                                 <div class="form-text extra-small mt-3 text-muted">
-                                    <i class="bi bi-info-circle-fill me-1"></i> La modification impactera <strong>{{ $occupation->works->count() }} fiches agents</strong>.
+                                    <i class="bi bi-info-circle-fill me-1"></i> La modification impactera <strong>{{ $occupation->affectations->where('employee.status', 1)->count() }} fiches agents</strong>.
                                 </div>
                             </div>
 
@@ -78,7 +78,7 @@
                             <div class="row g-0 rounded-4 overflow-hidden border">
                                 <div class="col-6 border-end p-3 text-center">
                                     <div class="text-muted extra-small fw-bold text-uppercase mb-1">Agents</div>
-                                    <div class="h4 fw-bold text-primary mb-0">{{ $occupation->works->count() }}</div>
+                                    <div class="h4 fw-bold text-primary mb-0">{{ $occupation->affectations->where('employee.status', 1)->count() }}</div>
                                 </div>
                                 <div class="col-6 p-3 text-center bg-light-subtle">
                                     <div class="text-muted extra-small fw-bold text-uppercase mb-1">Statut</div>
@@ -99,18 +99,20 @@
                             <p class="text-muted small mb-0">Liste des collaborateurs rattachés à ce poste</p>
                         </div>
                         <span class="badge-cyber">
-                            {{ $occupation->works->count() }} Membres
+                            {{ $occupation->affectations->where('employee.status', 1)->count() }} Membres
                         </span>
                     </div>
                     <div class="card-body p-4">
-                        @if($occupation->works->isNotEmpty())
+                        @if($occupation->affectations->isNotEmpty())
                             <div class="row g-4">
-                                @foreach($occupation->works as $work)
+                                @foreach($occupation->affectations as $affectation)
+                                    @if  ($affectation->employee->status == 1)
                                     <div class="col-xl-4 col-md-6">
                                         <div class="hover-lift transition-base h-100">
-                                            <x-employee-card :employee="$work->employee" detach="false" />
+                                            <x-employee-card :employee="$affectation->employee" detach="false" />
                                         </div>
                                     </div>
+                                    @endif
                                 @endforeach
                             </div>
                         @else

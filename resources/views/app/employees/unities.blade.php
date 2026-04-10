@@ -187,7 +187,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-bold text-muted text-uppercase ls-1">Bureau / Section</label>
+                                    <label class="form-label small fw-bold text-muted text-uppercase ls-1"> Section spécifique</label>
                                     <div class="input-group border rounded-3 overflow-hidden shadow-xs transition-base">
                                         <span class="input-group-text bg-light border-0"><i class="bi bi-diagram-2 text-primary"></i></span>
                                         <select class="form-select border-0 bg-light shadow-none" name="section_id">
@@ -201,7 +201,22 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase ls-1">Fonction</label>
+                                    <div class="input-group border rounded-3 overflow-hidden shadow-xs transition-base">
+                                        <span class="input-group-text bg-light border-0"><i class="bi bi-diagram-3 text-primary"></i></span>
+                                        <select class="form-select border-0 bg-light shadow-none" name="occupation_id">
+                                            <option value="null">Aucune fonction </option>
+                                            @foreach($occupations as $occupation)
+                                                <option value="{{ $occupation->id }}" {{ !is_null($affectationObj) && $affectationObj->occupation_id == $occupation->id ? 'selected' : '' }}>
+                                                    {{ $occupation->title }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
                                     <label class="form-label small fw-bold text-muted text-uppercase ls-1">Date effective de l'affectation</label>
                                     <x-date-input id="affectation_date" name="affectation_date"
                                                   value="{{ is_null($affectationObj) ? '' : $affectationObj->affectation_date }}"

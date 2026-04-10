@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\services\AffectationService;
 use App\Services\EmployeeService;
 use App\services\EntityService;
+use App\services\OccupationService;
 use App\services\SectionEntityService;
 use App\services\SectorEntityService;
 use App\services\ServiceEntityService;
@@ -21,6 +22,7 @@ class AffectationController extends Controller
     private SectorEntityService $sectorEntityService;
     private SectionEntityService $sectionEntityService;
     private EmployeeService $employeeService;
+    private OccupationService $occupationService;
 
     /**
      * @param AffectationService $affectationService
@@ -31,7 +33,8 @@ class AffectationController extends Controller
         EntityService $entityService,
         SectorEntityService $sectorEntityService,
         SectionEntityService $sectionEntityService,
-        EmployeeService $employeeService
+        EmployeeService $employeeService,
+        OccupationService $occupationService
     ) {
         $this->affectationService = $affectationService;
         $this->serviceEntityService = $serviceEntityService;
@@ -39,6 +42,7 @@ class AffectationController extends Controller
         $this->sectorEntityService = $sectorEntityService;
         $this->sectionEntityService = $sectionEntityService;
         $this->employeeService = $employeeService;
+        $this->occupationService = $occupationService;
     }
 
     public function store(StoreAffectationRequest $request)
@@ -63,6 +67,7 @@ class AffectationController extends Controller
 
     public function edit(Request $request, $employee_id, $affectation_id)
     {
+        $occupations = $this->occupationService->getAll(0);
         $employee = $this->employeeService->getOneById($employee_id);
         if (is_null($employee)) {
             return back()->with('error', 'Employé introuvable');
@@ -100,7 +105,8 @@ class AffectationController extends Controller
             'sections' => $sections,
             'affectationObj' => $affectation,
             'service_id' => $service_id,
-            'entity_id' => $entity_id
+            'entity_id' => $entity_id,
+            'occupations' => $occupations,
         ]);
     }
 

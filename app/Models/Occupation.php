@@ -6,8 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Occupation extends Model
 {
+    /*
     public function works() {
         return $this->hasMany(Work::class);
+    }
+    */
+
+    public function affectations() {
+        return $this->hasMany(Affectation::class);
     }
 
 }

@@ -2,6 +2,7 @@
 
 use App\Models\Employee;
 use App\Models\Entity;
+use App\Models\Occupation;
 use App\Models\Section;
 use App\Models\Sector;
 use App\Models\Service;
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->foreignIdFor(Sector::class, 'sector_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Section::class, 'section_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Employee::class, 'employee_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Occupation::class, 'occupation_id')->nullable()->constrained()->cascadeOnDelete();
             $table->date('affectation_date')->nullable();
             $table->date('finished_date')->nullable();
             $table->timestamps();

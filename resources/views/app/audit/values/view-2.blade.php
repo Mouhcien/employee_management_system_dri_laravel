@@ -281,24 +281,7 @@
 
                     {{-- Career Cards Grid --}}
                     <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="card border-0 shadow-sm rounded-4 h-100">
-                                <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between">
-                                    <h6 class="fw-bold text-secondary small mb-0 text-uppercase tracking-wider">Fonction</h6>
-                                </div>
-                                <div class="card-body p-4 pt-2">
-                                    @forelse($employee->works->sortByDesc('starting_date') as $work)
-                                        <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded-3 border mb-2">
-                                            <span class="fw-bold text-dark small">{{ $work->occupation->title }}</span>
-                                         </div>
-                                    @empty
-                                        <div class="text-center py-2 border border-dashed rounded-3"><p class="extra-small text-muted mb-0">Aucune</p></div>
-                                    @endforelse
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="card border-0 shadow-sm rounded-4 h-100">
                                 <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between">
                                     <h6 class="fw-bold text-secondary small mb-0 text-uppercase tracking-wider">Grade</h6>
@@ -311,7 +294,7 @@
                                             </div>
                                             <div class="mt-1">
                                                 <span class="badge bg-success bg-opacity-10 text-success extra-small">Éch: {{ $competence->grade->scale }}</span>
-                                                <span class="badge bg-info bg-opacity-10 text-info extra-small">Échellon: {{ $competence->echellon->title ?? 'N/A' }}</span>
+                                                <span class="badge bg-success-subtle text-success mt-1"> {{ \Carbon\Carbon::parse($competence->starting_date)->format('d/m/Y') ?? '—' }}</span>
                                             </div>
                                         </div>
                                     @empty
@@ -346,6 +329,12 @@
                                                 <small class="text-muted d-block extra-small fw-bold">UNITÉ/DIRECTION</small>
                                                 <span class="fw-bold text-dark small text-truncate d-block">{{ $affectation->entity->title ?? 'N/A' }}</span>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-2">
+                                        <div class="d-flex flex-wrap gap-2 bg-white p-3 rounded-3 border shadow-xs">
+                                            <span class="fw-bold text-dark"> Fonction :  </span>
+                                            <span class="badge bg-success ms-2">{{ $affectation->occupation->title ?? 'N/A' }}</span>
                                         </div>
                                     </div>
                                 </div>

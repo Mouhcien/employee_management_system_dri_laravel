@@ -20,6 +20,7 @@ class UpdateAffectationRequest extends FormRequest
             'sector_id' => 'required',
             'section_id' => 'required',
             'affectation_date' => 'required',
+            'occupation_id' => 'required',
         ];
     }
 }

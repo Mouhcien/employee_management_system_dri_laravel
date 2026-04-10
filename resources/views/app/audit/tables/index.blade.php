@@ -139,10 +139,17 @@
                             <i class="bi bi-plus-circle-fill me-2"></i>Nouveau Schéma
                         </a>
                     </div>
+                    <div class="btn-group rounded-4 overflow-hidden shadow-lg p-1 bg-white bg-opacity-5">
+                        <button class="btn btn-info fw-bold px-4 rounded-3 py-2" data-bs-toggle="modal" data-bs-target="#importTableModal">
+                            <i class="bi bi-upload me-2"></i>Importer Schéma
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <x-import-table />
 
     {{-- Registry Card --}}
     <div class="card card-glass-premium">
@@ -153,7 +160,7 @@
             </div>
             <div class="text-end">
                 <span class="badge badge-colorful px-4 py-2 rounded-pill fw-bold">
-                    <i class="bi bi-layers me-2"></i>{{ $tables->count() }} Tables
+                    <i class="bi bi-layers me-2"></i>{{ $tables->total() }} Tables
                 </span>
             </div>
         </div>

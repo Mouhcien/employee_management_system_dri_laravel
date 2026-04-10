@@ -23,6 +23,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
 
                 {{-- Item: DASHBOARD --}}
+                {{--
                 <li class="nav-item">
                     <a href="{{ route('dashboard0') }}"
                        class="nav-link px-3 py-2 d-flex align-items-center rounded-3 transition-base
@@ -31,6 +32,7 @@
                         <span class="fw-semibold">Tableau de bord</span>
                     </a>
                 </li>
+                --}}
 
                 {{-- Dropdown: RH --}}
                 <li class="nav-item dropdown">
@@ -49,7 +51,6 @@
                 </li>
 
                 {{-- Dropdown: NOMENCLATURE --}}
-                @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
                 <li class="nav-item dropdown">
                     @php $isReferencial = request()->routeIs('occupations.*') || request()->routeIs('grades.*') || request()->routeIs('diplomas.*') || request()->routeIs('options.*'); @endphp
                     <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
@@ -65,10 +66,8 @@
                         <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('options.*') ? 'active' : '' }}" href="{{ route('options.index') }}"><i class="bi bi-journals me-1 fs-4"></i>Filières</a></li>
                     </ul>
                 </li>
-                @endif
 
                 {{-- Dropdown: LOCALISATION --}}
-                @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
                 <li class="nav-item dropdown">
                     <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
                               {{ request()->routeIs('locals.*') || request()->routeIs('cities.*') ? 'active-link' : 'text-secondary' }}"
@@ -81,10 +80,8 @@
                         <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('cities.*') ? 'active' : '' }}" href="{{ route('cities.index') }}"><i class="bi bi-geo-alt me-1 fs-4"></i>Villes</a></li>
                     </ul>
                 </li>
-                @endif
 
                 {{-- Dropdown: UNITÉS --}}
-                @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
                 <li class="nav-item dropdown">
                     @php $isOrg = request()->routeIs('services.*') || request()->routeIs('entities.*') || request()->routeIs('sectors.*') || request()->routeIs('sections.*'); @endphp
                     <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
@@ -100,10 +97,8 @@
                         <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('sections.*') ? 'active' : '' }}" href="{{ route('sections.index') }}"><i class="bi bi-list-nested me-1 fs-4"></i>Sections</a></li>
                     </ul>
                 </li>
-                @endif
 
                 {{-- Dropdown: HIÉRARCHIE --}}
-                @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
                 <li class="nav-item dropdown">
                     <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
                               {{ request()->routeIs('chefs.*') || request()->routeIs('temps.*') ? 'active-link' : 'text-secondary' }}"
@@ -116,10 +111,8 @@
                         <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('temps.*') ? 'active' : '' }}" href="{{ route('temps.index') }}"><i class="bi bi-hourglass-split me-1 fs-4"></i>Intérimaires</a></li>
                     </ul>
                 </li>
-                @endif
 
                 {{-- Dropdown: Trainings --}}
-                @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
                     <li class="nav-item dropdown">
                         <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
                               {{ request()->routeIs('chefs.*') || request()->routeIs('temps.*') ? 'active-link' : 'text-secondary' }}"
@@ -131,9 +124,7 @@
                             <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('trainings.*') ? 'active' : '' }}" href="{{ route('trainings.index') }}"><i class="bi bi-person-video3 me-1 fs-4"></i>Consulter les formations</a></li>
                         </ul>
                     </li>
-                @endif
 
-                @if (auth()->user()->profile_id == 3)
                     <li class="nav-item dropdown">
                         <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
                               {{ request()->routeIs('audit.tables.*') || request()->routeIs('audit.periods.*') ? 'active-link' : 'text-secondary' }}"
@@ -146,9 +137,7 @@
                             <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('audit.periods.*') ? 'active' : '' }}" href="{{ route('audit.periods.index') }}"><i class="bi bi-calendar-check me-1 fs-4"></i>Périodes de suivi</a></li>
                         </ul>
                     </li>
-                @endif
 
-                @if (auth()->user()->profile_id == 3)
                     <li class="nav-item dropdown">
                         <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
                               {{ request()->routeIs('audit.values.*') ? 'active-link' : 'text-secondary' }}"
@@ -162,9 +151,8 @@
                             <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('audit.values.select') ? 'active' : '' }}" href="{{ route('audit.values.select') }}"><i class="bi bi-person-workspace me-1 fs-4"></i>Superviser l'évaluation</a></li>
                         </ul>
                     </li>
-                @endif
 
-                @if (auth()->user()->profile_id == 4)
+                {{--
                     <li class="nav-item dropdown">
                         <a class="nav-link px-3 py-2 d-flex align-items-center rounded-3 dropdown-toggle transition-base
                               {{ request()->routeIs('performances.*') || request()->routeIs('temps.*') ? 'active-link' : 'text-secondary' }}"
@@ -176,9 +164,7 @@
                             <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('audit.values.select') ? 'active' : '' }}" href="{{ route('audit.values.select') }}"><i class="bi bi-person-workspace me-1 fs-4"></i>Superviser l'évaluation</a></li>
                         </ul>
                     </li>
-
-                @endif
-
+                    --}}
             </ul>
         </div>
 

@@ -18,19 +18,19 @@ class OccupationService
     }
 
     public function getAll($pages=0){
-        return $this->occupationRepository->All(Occupation::class, ['works'], $pages);
+        return $this->occupationRepository->All(Occupation::class, ['affectations'], $pages);
     }
 
     public function getAllByFilter($filter, $pages=0){
-        return $this->occupationRepository->AllByFilter($filter, ['works'], $pages);
+        return $this->occupationRepository->AllByFilter($filter, ['affectations'], $pages);
     }
 
     public function getByTitle($title){
-        return $this->occupationRepository->ByTitle($title, ['works']);
+        return $this->occupationRepository->ByTitle($title, ['affectations']);
     }
 
     public function getOneById($id){
-        return $this->occupationRepository->One(Occupation::class, ['works'], $id);
+        return $this->occupationRepository->One(Occupation::class, ['affectations'], $id);
     }
 
     public function create($data){

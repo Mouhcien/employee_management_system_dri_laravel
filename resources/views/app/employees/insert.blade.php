@@ -195,7 +195,7 @@
                     <div class="card-body p-4">
                         <div class="mb-3">
                             <label class="form-label small fw-bold text-muted">N° Carte de commission</label>
-                            <input type="text" id="carte" name="commission_card" value="{{ $employee->commission_card }}" class="form-control border-0 bg-light shadow-none" >
+                            <input type="text" id="carte" name="commission_card" value="{{ old('hiring_public_date', $employee->commission_card ?? '') }}" class="form-control border-0 bg-light shadow-none" >
                         </div>
                     </div>
                 </div>

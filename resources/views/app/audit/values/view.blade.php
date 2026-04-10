@@ -190,11 +190,17 @@
                                     @if($activeAff->sector || $activeAff->section)
                                         <div class="col-12 mt-2">
                                             <div class="d-flex flex-wrap gap-2 bg-white p-3 rounded-3 border shadow-xs">
-                                                @if($activeAff->sector) <span class="badge bg-success text-white px-3 py-2 rounded-pill small fw-bold">Secteur: {{ $activeAff->sector->title }}</span> @endif
+                                                @if($activeAff->sector) <span class="badge bg-info text-white px-3 py-2 rounded-pill small fw-bold">Secteur: {{ $activeAff->sector->title }}</span> @endif
                                                 @if($activeAff->section) <span class="badge bg-secondary text-white px-3 py-2 rounded-pill small fw-bold">Section: {{ $activeAff->section->title }}</span> @endif
                                             </div>
                                         </div>
                                     @endif
+                                    <div class="col-12 mt-2">
+                                        <div class="d-flex flex-wrap gap-2 bg-white p-3 rounded-3 border shadow-xs">
+                                            <span class="fw-bold text-dark"> Fonction :  </span>
+                                            <span class="badge bg-success ms-2">{{ $activeAff->occupation->title ?? 'N/A' }}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             @else
                                 <div class="text-center p-4 bg-white rounded-3 border border-dashed">
@@ -243,6 +249,12 @@
                                                 <span class="fw-bold text-dark">{{ $affectation->entity->title ?? 'N/A' }}</span>
                                             </div>
                                         </div>
+                                        <div class="col-12 mt-2">
+                                            <div class="d-flex flex-wrap gap-2 bg-white p-3 rounded-3 border shadow-xs">
+                                                <span class="fw-bold text-dark"> Fonction :  </span>
+                                                <span class="badge bg-success ms-2">{{ $affectation->occupation->title ?? 'N/A' }}</span>
+                                            </div>
+                                        </div>
                                     </div>
                                     @if(!$loop->last) <hr class="my-4 opacity-25"> @endif
                                 </div>
@@ -251,21 +263,13 @@
                     </section>
 
                     <div class="row g-3" id="info_grid">
-                        <div class="col-md-6">
-                            <div class="h-100 p-3 border rounded-4 bg-white shadow-xs">
-                                <small class="text-muted d-block mb-1 fw-bold">Fonction</small>
-                                @foreach($employee->works->sortByDesc('starting_date') as $work)
-                                    <span class="fw-bold text-dark">{{ $work->occupation->title }}</span>
-                                    <hr>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="h-100 p-3 border rounded-4 bg-white shadow-xs">
                                 <small class="text-muted d-block mb-1 fw-bold">Grade & Échelle</small>
                                 @foreach($employee->competences->sortByDesc('starting_date') as $competence)
                                     <span class="fw-bold text-dark d-block text-truncate">{{ $competence->grade->title ?? '—' }}</span>
                                     <span class="badge bg-info-subtle text-info mt-1">Échelle: {{ $competence->grade->scale ?? '—' }}</span>
+                                    <span class="badge bg-success-subtle text-success mt-1"> {{ \Carbon\Carbon::parse($competence->starting_date)->format('d/m/Y') ?? '—' }}</span>
                                     <hr>
                                 @endforeach
                             </div>

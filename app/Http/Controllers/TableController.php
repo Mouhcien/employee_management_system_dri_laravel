@@ -7,6 +7,7 @@ use App\services\RelationService;
 use App\services\TableService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TableController extends Controller
 {
@@ -83,6 +84,94 @@ class TableController extends Controller
 
             DB::commit();
             return redirect()->route('audit.tables.index')->with('success', 'Tableau créé avec succès');
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            return back()->withInput()->with('error', "Erreur: " . $exception->getMessage());
+        }
+    }
+
+    public function import(Request $request) {
+
+        if (!$request->hasFile('file')) {
+            return redirect()->route('employees.index')->with('error', "Merci de spécifier le fichier excel.");
+        }
+
+        $request->validate(['file' => 'required|file|mimes:xlsx,csv,xls']);
+
+        DB::beginTransaction();
+
+        try {
+            $rows = Excel::toArray([], $request->file('file'))[0];
+
+            if (count($rows) == 0) {
+                return redirect()->route('employees.index')->with('error', "Merci de spécifier les colonnes au fichier excel.");
+            }
+
+            $tableData = [
+                'title'       => $request->title,
+                'description' => $request->description,
+            ];
+
+            $table = $this->tableService->create($tableData);
+
+            if (!$table) {
+                throw new \Exception("Impossible de créer le tableau.");
+            }
+
+            $headers = null;
+            $insertion = false;
+            foreach ($rows[0] as $row) {
+                $headers[] = $row;
+                if ( strtoupper(trim($row)) != 'PPR') { //add more exceptions
+                    $columnData = [
+                        'title' => trim($row),
+                        'description' => trim($row),
+                    ];
+
+                    $this->columnService->create($columnData);
+
+                    $this->relationService->create([
+                        'table_id' => $this->tableService->getLatestInserted(),
+                        'column_id' => $this->columnService->getLatestInserted()
+                    ]);
+                }else{
+                    $insertion = true;
+                }
+            }
+
+
+            /** here we need the period id **/
+            /*
+            if ($insertion) {
+                $i=0;
+                foreach ($rows as $row) {
+                    if ($i > 0) {
+                        $table_id = $this->tableService->getLatestInserted();
+                        $columns = $this->columnService->getAllColumnsByTable($table_id);
+
+                        foreach ($columns as $column) {
+                            $data['relation_id'] = $column->relations[0]->id;
+                            $j=0;
+                            foreach ($headers as $header) {
+                                if ( strtoupper($header) == 'PPR')
+                                    $data['employee_id'] = $this->employeeService->getOneByPPR($row[$j])->id;
+
+                                if ($column->title == strtoupper($header))
+                                    $data['value'] = $row[$j];
+                                $j++;
+                            }
+                            $this->valueService->create($data);
+                        }
+                    }
+                    $i++;
+                }
+            }
+            */
+
+            DB::commit();
+            return redirect()->route('audit.tables.index')->with('success', 'Schéma créé avec succès');
 
         } catch (\Exception $exception) {
             DB::rollBack();

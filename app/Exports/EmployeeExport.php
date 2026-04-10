@@ -29,7 +29,7 @@ class EmployeeExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ['DDP','Fonction', 'Service', 'Secteur', 'DATREC',  'DATE DE MISE A LA DIPOSITION', 'DATE DE DETACHEMENT', 'DATE DE DETACHEMENT', 'Eche', 'DIPLÔME', 'ADRESSE',
+        return ['DDP','Fonction', 'Service', 'Entité', 'Secteur/Section', 'DATREC',  'DATE DE MISE A LA DIPOSITION', 'DATE DE DETACHEMENT', 'Eche', 'DIPLÔME', 'ADRESSE',
             'N° CARTE COMMISSION', 'الإسم', 'الدرجة', 'المديرية الجهوية للضرائب', 'المكان', 'ADRESSE PERSONNELLE', 'TEL', 'ADRESSE EMAIL PROFESSIONNELLE', 'NOMS FR', 'PRENOMS FR', 'NOMS AR', 'PRENOMS AR'];
     }
 }

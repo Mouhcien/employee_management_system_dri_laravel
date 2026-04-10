@@ -56,6 +56,7 @@ class DashboardController extends Controller
         $employeesByLocals = $this->employeeService->getTotalByLocal();
         //dd($employeesByLocals);
 
+        /*
         if (Auth::user()->profile_id == 3) {
             return view('app.audit.dashboard-auditor', [
 
@@ -67,18 +68,17 @@ class DashboardController extends Controller
 
             ]);
         }
-        if (Auth::user()->profile_id == 1) {
-            return view('app.dashboard', [
-                'totalEmployees' => $employees->count(),
-                'totalLocals' => $locals->count(),
-                'employeesByCategory' => $employeesByCategory,
-                'totalService' => ($services->count() - 1),
-                'totalEntity' => $entities->count(),
-                'totalSector' => $sectors->count(),
-                'totalSection' => $sections->count(),
-                'employeesByLocals' => $employeesByLocals,
-            ]);
-        }
+        */
+        return view('app.dashboard', [
+            'totalEmployees' => $employees->count(),
+            'totalLocals' => $locals->count(),
+            'employeesByCategory' => $employeesByCategory,
+            'totalService' => ($services->count() - 1),
+            'totalEntity' => $entities->count(),
+            'totalSector' => $sectors->count(),
+            'totalSection' => $sections->count(),
+            'employeesByLocals' => $employeesByLocals,
+        ]);
 
     }
 

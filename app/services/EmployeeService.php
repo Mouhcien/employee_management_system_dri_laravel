@@ -9,7 +9,7 @@ use function PHPUnit\Framework\isString;
 class EmployeeService
 {
     private EmployeeRepository $employeeRepository;
-    private $with = ['works', 'qualifications', 'competences', 'remunerations', 'chefs', 'affectations'];
+    private $with = ['works', 'qualifications', 'competences', 'remunerations', 'chefs', 'affectations', 'attendences'];
 
     public function __construct(
         EmployeeRepository $employeeRepository

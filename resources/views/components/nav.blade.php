@@ -1,5 +1,5 @@
 {{-- resources/views/components/sidebar-nav.blade.php --}}
-<nav id="sidebar" class="sidebar sidebar-open bg-white border-end d-flex flex-column p-3 transition-base">
+<nav id="sidebar" class="sidebar sidebar-open bg-white border-end d-flex flex-column p-3 transition-base overflow-y-scroll">
     {{-- Toggle Button inside Sidebar --}}
     <div class="d-flex justify-content-end mb-3 d-md-flex">
         <a class="navbar-brand d-flex align-items-center me-5" href="{{ route('dashboard0') }}" style="text-decoration: none;">
@@ -28,7 +28,6 @@
     </a>
 
     {{-- Section: EMPLOYÉS --}}
-    @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Ressources Humaines</div>
     <div class="sidebar-group mb-1">
         <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('employees.*') || request()->routeIs('categories.*') ? 'text-primary bg-primary-subtle' : '' }}"
@@ -62,11 +61,9 @@
             </ul>
         </div>
     </div>
-    @endif
 
 
     {{-- Section: RÉFÉRENTIELS --}}
-    @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Référentiels</div>
     <div class="sidebar-group mb-1">
         @php $isReferencial = request()->routeIs('occupations.*') || request()->routeIs('grades.*') || request()->routeIs('diplomas.*') || request()->routeIs('options.*'); @endphp
@@ -87,10 +84,8 @@
             </ul>
         </div>
     </div>
-    @endif
 
     {{-- Section: INFRASTRUCTURES --}}
-    @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Infrastructures</div>
     <div class="sidebar-group mb-1">
         <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('locals.*') || request()->routeIs('cities.*') ? 'text-primary bg-primary-subtle' : '' }}"
@@ -108,10 +103,8 @@
             </ul>
         </div>
     </div>
-    @endif
 
     {{-- Section: STRUCTURE --}}
-    @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Organisation</div>
     <div class="sidebar-group mb-1">
         @php $isOrg = request()->routeIs('services.*') || request()->routeIs('entities.*') || request()->routeIs('sectors.*') || request()->routeIs('sections.*'); @endphp
@@ -132,10 +125,7 @@
             </ul>
         </div>
     </div>
-    @endif
 
-    {{-- Section: CHEFS --}}
-    @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Hiérarchie</div>
     <div class="sidebar-group mb-3">
         <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('chefs.*') ? 'text-primary bg-primary-subtle' : '' }}"
@@ -153,87 +143,79 @@
             </ul>
         </div>
     </div>
-    @endif
 
-    {{-- Section: Training --}}
-    @if (auth()->user()->profile_id == 1 || auth()->user()->profile_id == 5)
-        <div class="sidebar-section-title mt-3 mb-1 px-3">Formations</div>
-        <div class="sidebar-group mb-3">
-            <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('trainings.*') ? 'text-primary bg-primary-subtle' : '' }}"
-                    type="button" data-bs-toggle="collapse" data-bs-target="#menuTrainings">
-            <span class="d-flex align-items-center">
-                <i class="bi bi-journal-bookmark me-2 fs-5"></i>
-                <span class="sidebar-text fw-semibold">Formations</span>
-            </span>
-                <i class="bi bi-chevron-down small transition-base"></i>
-            </button>
-            <div class="collapse {{ request()->routeIs('chefs.*') ? 'show' : '' }}" id="menuTrainings">
-                <ul class="nav flex-column ms-2 mt-1">
-                    <li><a href="{{ route('trainings.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('trainings.index') ? 'active' : '' }}"><i class="bi bi-person-video3 me-1 fs-4"></i>Consulter les formations</a></li>
-                </ul>
-            </div>
+    <div class="sidebar-section-title mt-3 mb-1 px-3">Formations</div>
+    <div class="sidebar-group mb-3">
+        <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('trainings.*') ? 'text-primary bg-primary-subtle' : '' }}"
+                type="button" data-bs-toggle="collapse" data-bs-target="#menuTrainings">
+        <span class="d-flex align-items-center">
+            <i class="bi bi-journal-bookmark me-2 fs-5"></i>
+            <span class="sidebar-text fw-semibold">Formations</span>
+        </span>
+            <i class="bi bi-chevron-down small transition-base"></i>
+        </button>
+        <div class="collapse {{ request()->routeIs('chefs.*') ? 'show' : '' }}" id="menuTrainings">
+            <ul class="nav flex-column ms-2 mt-1">
+                <li><a href="{{ route('trainings.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('trainings.index') ? 'active' : '' }}"><i class="bi bi-person-video3 me-1 fs-4"></i>Consulter les formations</a></li>
+            </ul>
         </div>
-    @endif
+    </div>
 
-    @if (auth()->user()->profile_id == 3)
-        <div class="sidebar-section-title mt-3 mb-1 px-3">Configuration</div>
-        <div class="sidebar-group mb-3">
-            <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('audit.tables.*') || request()->routeIs('audit.periods.*') ? 'text-primary bg-primary-subtle' : '' }}"
-                    type="button" data-bs-toggle="collapse" data-bs-target="#menuSuivi">
-            <span class="d-flex align-items-center">
-                <i class="bi bi-person-workspace me-2 fs-5"></i>
-                <span class="sidebar-text fw-semibold">Gestion de suivi</span>
-            </span>
-                <i class="bi bi-chevron-down small transition-base"></i>
-            </button>
-            <div class="collapse {{ request()->routeIs('audit.tables.*') || request()->routeIs('audit.periods.*') ? 'show' : '' }}" id="menuSuivi">
-                <ul class="nav flex-column ms-2 mt-1">
-                    <li><a href="{{ route('audit.tables.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.tables.*') ? 'active' : '' }}"><i class="bi bi-table me-1 fs-4"></i>Tableaux de suivi</a></li>
-                    <li><a href="{{ route('audit.periods.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.periods.*') ? 'active' : '' }}"><i class="bi bi-calendar-check me-1 fs-4"></i>Période de suivi</a></li>
-                </ul>
-            </div>
+    <div class="sidebar-section-title mt-3 mb-1 px-3">Configuration</div>
+    <div class="sidebar-group mb-3">
+        <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('audit.tables.*') || request()->routeIs('audit.periods.*') ? 'text-primary bg-primary-subtle' : '' }}"
+                type="button" data-bs-toggle="collapse" data-bs-target="#menuSuivi">
+        <span class="d-flex align-items-center">
+            <i class="bi bi-person-workspace me-2 fs-5"></i>
+            <span class="sidebar-text fw-semibold">Gestion de suivi</span>
+        </span>
+            <i class="bi bi-chevron-down small transition-base"></i>
+        </button>
+        <div class="collapse {{ request()->routeIs('audit.tables.*') || request()->routeIs('audit.periods.*') ? 'show' : '' }}" id="menuSuivi">
+            <ul class="nav flex-column ms-2 mt-1">
+                <li><a href="{{ route('audit.tables.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.tables.*') ? 'active' : '' }}"><i class="bi bi-table me-1 fs-4"></i>Tableaux de suivi</a></li>
+                <li><a href="{{ route('audit.periods.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.periods.*') ? 'active' : '' }}"><i class="bi bi-calendar-check me-1 fs-4"></i>Période de suivi</a></li>
+            </ul>
         </div>
-    @endif
+    </div>
 
-    @if (auth()->user()->profile_id == 3)
-        <div class="sidebar-section-title mt-3 mb-1 px-3">Performance</div>
-        <div class="sidebar-group mb-3">
-            <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('audit.values.*') ? 'text-primary bg-primary-subtle' : '' }}"
-                    type="button" data-bs-toggle="collapse" data-bs-target="#menuPerformance">
-            <span class="d-flex align-items-center">
-                <i class="bi bi-person-workspace me-2 fs-5"></i>
-                <span class="sidebar-text fw-semibold">Évaluations Périodiques</span>
-            </span>
-                <i class="bi bi-chevron-down small transition-base"></i>
-            </button>
-            <div class="collapse {{ request()->routeIs('audit.values.*') ? 'show' : '' }}" id="menuPerformance">
-                <ul class="nav flex-column ms-2 mt-1">
-                    <li><a href="{{ route('audit.values.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.index') ? 'active' : '' }}"><i class="bi bi-database-add me-1 fs-4"></i>Remplir les tableaux</a></li>
-                    <li><a href="{{ route('audit.values.consult') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.consult') ? 'active' : '' }}"><i class="bi bi-bar-chart-steps me-1 fs-4"></i>Consulter l'évaluation</a></li>
-                    <li><a href="{{ route('audit.values.select') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.select') ? 'active' : '' }}"><i class="bi bi-person-workspace me-1 fs-4"></i>Superviser l'évaluation</a></li>
-                </ul>
-            </div>
+    <div class="sidebar-section-title mt-3 mb-1 px-3">Performance</div>
+    <div class="sidebar-group mb-3">
+        <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('audit.values.*') ? 'text-primary bg-primary-subtle' : '' }}"
+                type="button" data-bs-toggle="collapse" data-bs-target="#menuPerformance">
+        <span class="d-flex align-items-center">
+            <i class="bi bi-person-workspace me-2 fs-5"></i>
+            <span class="sidebar-text fw-semibold">Évaluations Périodiques</span>
+        </span>
+            <i class="bi bi-chevron-down small transition-base"></i>
+        </button>
+        <div class="collapse {{ request()->routeIs('audit.values.*') ? 'show' : '' }}" id="menuPerformance">
+            <ul class="nav flex-column ms-2 mt-1">
+                <li><a href="{{ route('audit.values.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.index') ? 'active' : '' }}"><i class="bi bi-database-add me-1 fs-4"></i>Remplir les tableaux</a></li>
+                <li><a href="{{ route('audit.values.consult') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.consult') ? 'active' : '' }}"><i class="bi bi-bar-chart-steps me-1 fs-4"></i>Consulter l'évaluation</a></li>
+                <li><a href="{{ route('audit.values.select') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.select') ? 'active' : '' }}"><i class="bi bi-person-workspace me-1 fs-4"></i>Superviser l'évaluation</a></li>
+            </ul>
         </div>
-    @endif
+    </div>
 
-    @if (auth()->user()->profile_id == 4 )
-        <div class="sidebar-section-title mt-3 mb-1 px-3">Performance</div>
-        <div class="sidebar-group mb-3">
-            <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('audit.values.*') ? 'text-primary bg-primary-subtle' : '' }}"
-                    type="button" data-bs-toggle="collapse" data-bs-target="#menuPerformance">
-            <span class="d-flex align-items-center">
-                <i class="bi bi-person-workspace me-2 fs-5"></i>
-                <span class="sidebar-text fw-semibold">Évaluations Périodiques</span>
-            </span>
-                <i class="bi bi-chevron-down small transition-base"></i>
-            </button>
-            <div class="collapse {{ request()->routeIs('audit.values.*') ? 'show' : '' }}" id="menuPerformance">
-                <ul class="nav flex-column ms-2 mt-1">
-                    <li><a href="{{ route('audit.values.select') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.select') ? 'active' : '' }}"><i class="bi bi-person-workspace me-1 fs-4"></i>Superviser l'évaluation</a></li>
-                </ul>
-            </div>
+    {{--
+    <div class="sidebar-section-title mt-3 mb-1 px-3">Supervision </div>
+    <div class="sidebar-group mb-3">
+        <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('audit.values.*') ? 'text-primary bg-primary-subtle' : '' }}"
+                type="button" data-bs-toggle="collapse" data-bs-target="#menuSupervision">
+        <span class="d-flex align-items-center">
+            <i class="bi bi-person-workspace me-2 fs-5"></i>
+            <span class="sidebar-text fw-semibold">Supervision</span>
+        </span>
+            <i class="bi bi-chevron-down small transition-base"></i>
+        </button>
+        <div class="collapse {{ request()->routeIs('audit.values.*') ? 'show' : '' }}" id="menuSupervision">
+            <ul class="nav flex-column ms-2 mt-1">
+                <li><a href="{{ route('audit.values.select') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.select') ? 'active' : '' }}"><i class="bi bi-person-workspace me-1 fs-4"></i>Superviser l'évaluation</a></li>
+            </ul>
         </div>
-    @endif
+    </div>
+    --}}
 
 
 </nav>

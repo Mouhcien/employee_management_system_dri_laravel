@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Exports\EmployeeExport;
 use App\services\AffectationService;
 use App\services\CategoryService;
 use App\services\CityService;
@@ -22,6 +23,7 @@ use App\services\ServiceEntityService;
 use App\services\WorkService;
 use App\Models\Employee;
 use Barryvdh\DomPDF\Facade\Pdf;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -368,7 +370,7 @@ class EmployeeController extends Controller
 
         } catch (\Exception $exception) {
             Log::error('Error in EmployeeController@show: ' . $exception->getMessage());
-            return back()->with('error', 'Une erreur est survenue.');
+            return back()->with('error', 'Une erreur est survenue.'. $exception->getMessage());
         }
     }
 
@@ -404,6 +406,7 @@ class EmployeeController extends Controller
     public function unities(Request $request, $id)
     {
         try {
+            $occupations = $this->occupationService->getAll(0);
             $employee = $this->employeeService->getOneById($id);
             if (is_null($employee)) {
                 return back()->with('error', 'Agent introuvable');
@@ -436,7 +439,8 @@ class EmployeeController extends Controller
                 'sections' => $sections,
                 'affectationObj' => null,
                 'service_id' => $service_id,
-                'entity_id' => $entity_id
+                'entity_id' => $entity_id,
+                'occupations' => $occupations
             ]);
 
         } catch (\Exception $exception) {
@@ -449,14 +453,18 @@ class EmployeeController extends Controller
     {
         try {
 
+            $this->pages = $this->setEmployeeCardSession($request);
+
             $locals = $this->localService->getAll(0);
             $male_employees = $this->employeeService->getAllByFilter(['col' => 'gender', 'val' => 'M'], 0);
             $female_employees = $this->employeeService->getAllByFilter(['col' => 'gender', 'val' => 'F'], 0);
             $cities = $this->cityService->getAll(0);
 
-            $query = $request->input('employee_search');
+            $filter['filter_value'] = $request->input('employee_search');
+            $filter['local_id'] = $request->input('lc');
+            $filter['city_id'] = $request->input('ct');
 
-            $employees = $this->employeeService->getAllByFilterValue($query, $this->pages);
+            $employees = $this->employeeService->getAllByFilterAdvanced($filter, $this->pages);
 
             return view('app.employees.index', [
                 'locals' => $locals,
@@ -465,9 +473,9 @@ class EmployeeController extends Controller
                 'femaleCount' => $female_employees->count(),
                 'maleCount' => $male_employees->count(),
                 'total_employee' => $employees->total(),
-                'local_id' => null,
-                'city_id' => null,
-                'filter_val' => $query
+                'local_id' => $filter['local_id'],
+                'city_id' => $filter['city_id'],
+                'filter_val' => $filter['filter_value']
             ]);
 
         } catch (\Exception $exception) {
@@ -590,11 +598,13 @@ class EmployeeController extends Controller
                 */
 
                 // 5. Process Work (Occupation)
+                /*
                 if ($occupation) {
                     $workData = ['employee_id' => $employeeId, 'occupation_id' => $occupation->id];
                     $existingWork = $this->workService->getOneByEmployeeId($employeeId);
                     $existingWork ? $this->workService->update($existingWork->id, $workData) : $this->workService->create($workData);
                 }
+                */
 
                 // 6. Process Competence (Grade/Level)
                 if ($grade) {
@@ -1018,6 +1028,96 @@ class EmployeeController extends Controller
         }catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
+    }
+
+    public function download(Request $request) {
+
+        //['DDP','Fonction', 'Service', 'Entité', 'Secteur/Section', 'DATREC',  'DATE DE MISE A LA DIPOSITION', 'DATE DE DETACHEMENT',
+        // 'Eche', 'DIPLÔME', 'ADRESSE',
+        //            'N° CARTE COMMISSION', 'الإسم', 'الدرجة', 'المديرية الجهوية للضرائب', 'المكان',
+        // 'ADRESSE PERSONNELLE', 'TEL', 'ADRESSE EMAIL PROFESSIONNELLE', 'NOMS FR', 'PRENOMS FR',
+        // 'NOMS AR', 'PRENOMS AR'];
+
+        $employees = $this->employeeService->getAll(0);
+
+        if ($request->has('ct') && $request->query('ct') != '-1') {
+            $city_id = $request->query('ct');
+            $filter['city_id'] = $city_id;
+        }
+
+        if ($request->has('lc') && $request->query('lc') != '-1') {
+            $local_id = $request->query('lc');
+            $filter['local_id'] = $local_id;
+        }
+
+        if ($request->has('employee_search') && $request->query('employee_search') != '-1') {
+            $filter_value = $request->query('employee_search');
+            $filter['filter_value'] = $filter_value;
+        }
+
+        if (isset($filter['local_id']) || isset($filter['city_id']) || isset($filter['filter_value'])) {
+            $employees = $this->employeeService->getAllByFilterAdvanced($filter, 0);
+        }
+
+
+        $data = [];
+        foreach ($employees as $employee) {
+            $employeeData = null;
+            $employeeData[0] = $employee->ppr;
+            if (count($employee->affectations->where('state', '1')) != 0) {
+                $employeeData[1] = is_null($employee->affectations->where('state', '1')->first()->occupation) ? '' : $employee->affectations->where('state', '1')->first()->occupation->title;
+                $employeeData[2] = $employee->affectations->where('state', '1')->first()->service->title;
+                $employeeData[3] = is_null($employee->affectations->where('state', '1')->first()->entity) ? '' : $employee->affectations->where('state', '1')->first()->entity->title;
+                if (!is_null($employee->affectations->where('state', '1')->first()->sector))
+                    $employeeData[4] = $employee->affectations->where('state', '1')->first()->sector->title;
+                else
+                    $employeeData[4] = '';
+
+                if (!is_null($employee->affectations->where('state', '1')->first()->section))
+                    $employeeData[4] = $employee->affectations->where('state', '1')->first()->section->title;
+                else
+                    $employeeData[4] = '';
+            } else {
+                $employeeData[1] = '';
+                $employeeData[2] = '';
+                $employeeData[3] = '';
+                $employeeData[4] = '';
+            }
+            $employeeData[5] = is_null($employee->hiring_date) ? '' : \Carbon\Carbon::parse($employee->hiring_date)->format('m/d/Y');
+            $employeeData[6] = is_null($employee->disposition_date) ? '' : \Carbon\Carbon::parse($employee->disposition_date)->format('m/d/Y');
+            $employeeData[7] = is_null($employee->reintegration_date) ? '' : \Carbon\Carbon::parse($employee->reintegration_date)->format('m/d/Y');
+
+            if (count($employee->competences) != 0) {
+                $employeeData[8] = $employee->competences->sortByDesc('starting_date')->first()->grade->scale;
+            }else{
+                $employeeData[8] = '';
+            }
+            if (count($employee->qualifications) != 0){
+                $employeeData[9] = $employee->qualifications->sortByDesc('id')->first()->diploma->title;
+            }else{
+                $employeeData[9] = '';
+            }
+            $employeeData[10] = $employee->local->title;
+            $employeeData[11] = $employee->commission_card;
+            $employeeData[12] = '';
+            $employeeData[13] = '';
+            $employeeData[14] = '';
+            $employeeData[15] = '';
+            $employeeData[16] = $employee->address;
+            $employeeData[17] = $employee->tel;
+            $employeeData[18] = $employee->email;
+            $employeeData[19] = $employee->lastname;
+            $employeeData[20] = $employee->firstname;
+            $employeeData[21] = $employee->lastname_arab;
+            $employeeData[22] = $employee->firstname_arab;
+
+            $data[] = $employeeData;
+        }
+
+        $date = new DateTime();
+        $current_date =  $date->format('Y-m-d H:i:s');
+        return Excel::download(new EmployeeExport($data), 'agents_DRI-Marrakech_'.$current_date.'.xlsx');
+
     }
 
 
