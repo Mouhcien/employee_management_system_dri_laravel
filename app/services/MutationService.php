@@ -22,6 +22,10 @@ class MutationService
         return $this->mutationRepository->All(Mutation::class, $this->with, $pages);
     }
 
+    public  function getAllByFilter($filter, $pages) {
+        return $this->mutationRepository->AllByFilter($filter, $this->with, $pages);
+    }
+
     public function getOneById($id){
         return $this->mutationRepository->One(Mutation::class, $this->with, $id);
     }

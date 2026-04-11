@@ -142,17 +142,29 @@
         Pour nécessité de service,
     @endif
     j’ai l'honneur de vous informer, que vous êtes muté(e), au
-    @if (!is_null($mutation->toAffectation->section))
-        {{ $mutation->toAffectation->section->title }} de
-    @endif
-    @if (!is_null($mutation->toAffectation->sector))
-        {{ $mutation->toAffectation->sector->title }} de
-    @endif
-    @if (!is_null($mutation->toAffectation->entity))
-        {{ $mutation->toAffectation->entity->title }} relevant
-    @endif
-    @if (!is_null($mutation->toAffectation->service))
-        {{ $mutation->toAffectation->service->title }}
+    @if (!is_null($mutation->toAffectation))
+            @if (!is_null($mutation->toAffectation->section))
+                {{ $mutation->toAffectation->section->title }} de
+            @endif
+            @if (!is_null($mutation->toAffectation->sector))
+                {{ $mutation->toAffectation->sector->title }} de
+            @endif
+            @if (!is_null($mutation->toAffectation->entity))
+                {{ $mutation->toAffectation->entity->title }} relevant
+            @endif
+            @if (!is_null($mutation->toAffectation->service))
+                {{ $mutation->toAffectation->service->title }}
+            @endif
+    @else
+        @if (!is_null($mutation->entity_name))
+            {{ $mutation->entity_name ?? 'N/A' }} de
+        @endif
+        @if (!is_null($mutation->direction_name))
+                {{ $mutation->direction_name ?? 'N/A' }}
+        @endif
+        @if ( !is_null($mutation->city_name))
+                {{ $mutation->city_name ?? 'N/A' }}
+        @endif
     @endif
     et ce à compter du {{ \Carbon\Carbon::parse($mutation->starting_date)->locale('fr')->translatedFormat('d/m/Y') }}.
 

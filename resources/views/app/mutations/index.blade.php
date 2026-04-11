@@ -71,7 +71,7 @@
                                 <label class="small fw-bold text-uppercase text-muted mb-2 d-block">Recherche</label>
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-text bg-light border-light text-muted"><i class="bi bi-search"></i></span>
-                                    <input type="text" name="search" value="{{ $filter }}" class="form-control border-light bg-light" placeholder="Nom de l'agent ou PPR...">
+                                    <input type="text" name="fltr" value="{{ $emp ?? '' }}" class="form-control border-light bg-light" placeholder="Nom de l'agent ou PPR...">
                                 </div>
                             </div>
 
@@ -79,8 +79,8 @@
                                 <label class="small fw-bold text-uppercase text-muted mb-2 d-block">Type de Mutation</label>
                                 <select name="type" class="form-select form-select-sm border-light bg-light">
                                     <option value="">Tous les types</option>
-                                    <option value="I">Interne</option>
-                                    <option value="E">Externe</option>
+                                    <option value="I" {{ (request()->has('type') && request()->query('type') == 'I') ? 'selected' : ''}}>Interne</option>
+                                    <option value="E" {{ (request()->has('type') && request()->query('type') == 'E') ? 'selected' : ''}}>Externe</option>
                                 </select>
                             </div>
 
@@ -174,28 +174,49 @@
                                     <td class="py-3">
 
                                         <div class="d-flex flex-column">
-                                            @if (!is_null($mutation->toAffectation->sector))
-                                                <span class="text-uppercase fw-bold text-primary mb-1" style="font-size: 0.65rem; letter-spacing: 0.05rem;">
-                                                <i class="bi bi-geo-alt-fill me-1"></i>
-                                                {{ $mutation->toAffectation->sector->title ?? 'Secteur Non Défini' }}
-                                                </span>
-                                            @endif
-                                            @if (!is_null($mutation->toAffectation->section))
-                                                <span class="text-uppercase fw-bold text-primary mb-1" style="font-size: 0.65rem; letter-spacing: 0.05rem;">
+                                            @if (!is_null($mutation->toAffectation))
+                                                @if (!is_null($mutation->toAffectation->sector))
+                                                    <span class="text-uppercase fw-bold text-primary mb-1" style="font-size: 0.65rem; letter-spacing: 0.05rem;">
                                                     <i class="bi bi-layers me-1"></i>
-                                                    {{ $mutation->toAffectation->section->title ?? 'Secteur Non Défini' }}
+                                                    {{ $mutation->toAffectation->sector->title ?? 'Secteur Non Défini' }}
+                                                    </span>
+                                                @endif
+                                                @if (!is_null($mutation->toAffectation->section))
+                                                    <span class="text-uppercase fw-bold text-primary mb-1" style="font-size: 0.65rem; letter-spacing: 0.05rem;">
+                                                        <i class="bi bi-layers me-1"></i>
+                                                        {{ $mutation->toAffectation->section->title ?? 'Secteur Non Défini' }}
+                                                    </span>
+                                                @endif
+                                                @if ( !is_null($mutation->toAffectation->entity))
+                                                    <span class="fw-semibold text-dark mb-0" style="font-size: 0.85rem;">
+                                                        <i class="bi bi-diagram-2-fill me-1"></i>
+                                                        {{ $mutation->toAffectation->entity->title }}
+                                                    </span>
+                                                @endif
+                                                <span class="text-muted" style="font-size: 0.75rem;">
+                                                    <i class="bi bi-diagram-3-fill me-1"></i>
+                                                    Section: {{ $mutation->toAffectation->service->title ?? 'N/A' }}
                                                 </span>
+                                            @else
+                                                @if (!is_null($mutation->entity_name))
+                                                    <span class="text-uppercase fw-bold text-primary mb-1" style="font-size: 0.65rem; letter-spacing: 0.05rem;">
+                                                    <i class="bi bi-layers me-1"></i>
+                                                    {{ $mutation->entity_name ?? 'N/A' }}
+                                                    </span>
+                                                @endif
+                                                @if (!is_null($mutation->direction_name))
+                                                    <span class="text-uppercase fw-bold text-primary mb-1" style="font-size: 0.65rem; letter-spacing: 0.05rem;">
+                                                        <i class="bi bi-layers me-1"></i>
+                                                        {{ $mutation->direction_name ?? 'N/A' }}
+                                                    </span>
+                                                @endif
+                                                @if ( !is_null($mutation->city_name))
+                                                    <span class="fw-semibold text-dark mb-0" style="font-size: 0.85rem;">
+                                                        <i class="bi bi-diagram-2-fill me-1"></i>
+                                                        {{ $mutation->city_name ?? 'N/A' }}
+                                                    </span>
+                                                @endif
                                             @endif
-                                            @if ( !is_null($mutation->toAffectation->entity))
-                                                <span class="fw-semibold text-dark mb-0" style="font-size: 0.85rem;">
-                                                    <i class="bi bi-diagram-2-fill me-1"></i>
-                                                    {{ $mutation->toAffectation->entity->title }}
-                                                </span>
-                                            @endif
-                                            <span class="text-muted" style="font-size: 0.75rem;">
-                                                <i class="bi bi-diagram-3-fill me-1"></i>
-                                                Section: {{ $mutation->toAffectation->service->title ?? 'N/A' }}
-                                            </span>
                                         </div>
                                     </td>
 
