@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\services\AffectationService;
 use App\Services\EmployeeService;
 use App\services\EntityService;
+use App\services\MutationService;
 use App\services\OccupationService;
 use App\services\SectionEntityService;
 use App\services\SectorEntityService;
@@ -12,6 +13,7 @@ use App\services\ServiceEntityService;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreAffectationRequest;
 use App\Http\Requests\UpdateAffectationRequest;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AffectationController extends Controller
@@ -23,6 +25,7 @@ class AffectationController extends Controller
     private SectionEntityService $sectionEntityService;
     private EmployeeService $employeeService;
     private OccupationService $occupationService;
+    private MutationService $mutationService;
 
     /**
      * @param AffectationService $affectationService
@@ -34,7 +37,8 @@ class AffectationController extends Controller
         SectorEntityService $sectorEntityService,
         SectionEntityService $sectionEntityService,
         EmployeeService $employeeService,
-        OccupationService $occupationService
+        OccupationService $occupationService,
+        MutationService $mutationService
     ) {
         $this->affectationService = $affectationService;
         $this->serviceEntityService = $serviceEntityService;
@@ -43,26 +47,45 @@ class AffectationController extends Controller
         $this->sectionEntityService = $sectionEntityService;
         $this->employeeService = $employeeService;
         $this->occupationService = $occupationService;
+        $this->mutationService = $mutationService;
     }
 
     public function store(StoreAffectationRequest $request)
     {
-        $data = $request->validated();
-        $old_affectation = $request->input('old_affectation');
+        try {
+            DB::beginTransaction();
 
-        if (!is_null($old_affectation)) {
-            $affectation = $this->affectationService->getOneById($old_affectation);
-            if (is_null($affectation))
-                return back()->with('error', "L'encien affectation est introuvable !!");
+            $data = $request->validated();
+            $old_affectation = $request->input('old_affectation');
 
-            $this->affectationService->changeState($old_affectation, false);
+            if (!is_null($old_affectation)) {
+                $affectation = $this->affectationService->getOneById($old_affectation);
+                if (is_null($affectation))
+                    return back()->with('error', "L'encien affectation est introuvable !!");
+
+                $this->affectationService->changeState($old_affectation, false);
+            }
+
+            if ($this->affectationService->create($data)) {
+                $affectation_id = $this->affectationService->getLatestInserted();
+                //Add mutation
+                $dataMutation['employee_id'] = $data['employee_id'];
+                $dataMutation['from_affectation_id'] = $old_affectation;
+                $dataMutation['to_affectation_id'] = $affectation_id;
+
+                $this->mutationService->create($dataMutation);
+
+                DB::commit();
+                return back()->with('success', 'Affectation est bien spécifié');
+            }
+
+            return back()->with('error', 'Erreur insertion Affectation');
+
+        }catch (\Exception $exception) {
+            DB::rollBack();
+            return back()->with('error', $exception->getMessage());
         }
 
-        if ($this->affectationService->create($data)) {
-            return back()->with('success', 'Affectation est bien spécifié');
-        }
-
-        return back()->with('error', 'Erreur insertion Affectation');
     }
 
     public function edit(Request $request, $employee_id, $affectation_id)

@@ -19,6 +19,7 @@ use App\Http\Controllers\GradeController;
 use App\Http\Controllers\HabilitationController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\LocalController;
+use App\Http\Controllers\MutationController;
 use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\OptionController;
 use App\Http\Controllers\PeriodController;
@@ -284,6 +285,17 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/edit/{id}', [TempController::class, 'edit'])->name('temps.edit');
         Route::post('/update/{id}', [TempController::class, 'update'])->name('temps.update');
         Route::get('/delete/{id}', [TempController::class, 'delete'])->name('temps.delete');
+    });
+
+    Route::prefix('mutations')->group(function(){
+        Route::get('/', [MutationController::class, 'index'])->name('mutations.index');
+        Route::post('/store', [MutationController::class, 'store'])->name('mutations.store');
+        Route::get('/create', [MutationController::class, 'create'])->name('mutations.create');
+        Route::get('/decision/{id}', [MutationController::class, 'decision'])->name('mutations.decision');
+        Route::get('/{id}', [MutationController::class, 'show'])->name('mutations.show');
+        Route::get('/edit/{id}', [MutationController::class, 'edit'])->name('mutations.edit');
+        Route::post('/update/{id}', [MutationController::class, 'update'])->name('mutations.update');
+        Route::get('/delete/{id}', [MutationController::class, 'delete'])->name('mutations.delete');
     });
 
     Route::prefix('trainings')->group(function(){

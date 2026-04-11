@@ -52,10 +52,17 @@
                        class="nav-link sidebar-link-nested rounded-3 px-3 py-2 d-flex align-items-center small {{ request()->routeIs('categories.index') ? 'active fw-bold' : '' }}">
                         <i class="bi bi-person me-1 fs-4"></i><span class="sidebar-text">Catégories</span>
                     </a>
-                </li><li class="nav-item">
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('employees.status') }}"
                        class="nav-link sidebar-link-nested rounded-3 px-3 py-2 d-flex align-items-center small {{ request()->routeIs('employees.status') ? 'active fw-bold' : '' }}">
                         <i class="bi bi-layers me-1 fs-4"></i><span class="sidebar-text">Status</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('mutations.index') }}"
+                       class="nav-link sidebar-link-nested rounded-3 px-3 py-2 d-flex align-items-center small {{ request()->routeIs('mutations.index') ? 'active fw-bold' : '' }}">
+                        <i class="bi bi-shuffle me-1 fs-4"></i><span class="sidebar-text">Mutations</span>
                     </a>
                 </li>
             </ul>

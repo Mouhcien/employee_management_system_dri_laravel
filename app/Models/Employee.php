@@ -72,4 +72,8 @@ class Employee extends Model
     public function attendences() {
         return $this->hasMany(Attendence::class);
     }
+
+    public function mutations() {
+        return $this->hasMany(Mutation::class);
+    }
 }

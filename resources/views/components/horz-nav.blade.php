@@ -47,6 +47,8 @@
                         <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('employees.index') ? 'active' : '' }}" href="{{ route('employees.index') }}"><i class="bi bi-list me-1 fs-4"></i>Annuaire</a></li>
                         <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('categories.*') ? 'active' : '' }}" href="{{ route('categories.index') }}"><i class="bi bi-person me-1 fs-4"></i>Catégories</a></li>
                         <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('employees.status') ? 'active' : '' }}" href="{{ route('employees.status') }}"><i class="bi bi-layers me-1 fs-4"></i>Status</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 {{ request()->routeIs('mutations.index') ? 'active' : '' }}" href="{{ route('mutations.index') }}"><i class="bi bi-shuffle me-1 fs-4"></i>Mutation</a></li>
+
                     </ul>
                 </li>
 
