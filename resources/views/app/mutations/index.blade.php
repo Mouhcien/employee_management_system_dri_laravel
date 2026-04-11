@@ -210,7 +210,8 @@
                                     {{-- Actions --}}
                                     <td class="pe-4 text-end">
                                         <div class="btn-group border rounded-2 bg-white">
-                                            <a href="#" class="btn btn-white btn-sm px-3 border-start text-danger" title="PDF"><i class="bi bi-file-earmark-pdf small"></i></a>
+                                            <a href="{{ route('mutations.decision', $mutation) }}" target="_blank" class="btn btn-white btn-sm px-3 border-start text-danger" title="PDF">
+                                                <i class="bi bi-file-earmark-pdf small"></i></a>
                                         </div>
                                     </td>
                                 </tr>

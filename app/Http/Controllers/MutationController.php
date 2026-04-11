@@ -6,6 +6,7 @@ use App\services\AffectationService;
 use App\Services\EmployeeService;
 use App\services\MutationService;
 use Illuminate\Http\Request;
+use Mockery\Exception;
 
 class MutationController extends Controller
 {
@@ -48,5 +49,24 @@ class MutationController extends Controller
         }
     }
 
+    public function decision($id) {
+        try {
+
+            $mutation = $this->mutationService->getOneById($id);
+
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('app.mutations.decision', [
+                    'mutation' => $mutation
+                ]
+            )->setPaper('a4', 'portrait');
+
+            // Download the file
+            //return $pdf->download('invoice.pdf');
+
+            return $pdf->stream();
+
+        }catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
 
 }
