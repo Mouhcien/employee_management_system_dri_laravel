@@ -108,7 +108,7 @@
                                 <option value="" selected disabled>Sélectionner l'agent...</option>
                                 @foreach($employees as $employee)
                                     <option value="{{ $employee->id }}" data-full-name="{{ strtolower($employee->lastname . ' ' . $employee->firstname) }}"
-                                    {{ $demand->employee_id == $employee->id ? 'selected' : '' }}>
+                                    {{ !is_null($demand) && $demand->employee_id == $employee->id ? 'selected' : '' }}>
                                         {{ strtoupper($employee->lastname) }} {{ $employee->firstname }}
                                     </option>
                                 @endforeach

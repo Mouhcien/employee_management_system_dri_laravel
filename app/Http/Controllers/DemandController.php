@@ -39,7 +39,7 @@ class DemandController extends Controller
     public function index(Request $request) {
         try {
 
-            $demands = $this->demandService->getAll($this->pages);
+            $demands = $this->demandService->getAllByState(1, $this->pages);
             //$employees = $this->employeeService->getAll(0);
 
             $filter = null;
@@ -50,6 +50,11 @@ class DemandController extends Controller
 
             if ($request->has('type')) {
                 $filter['type'] = $request->query('type');
+                $demands = $this->demandService->getAllByFilter($filter, $this->pages);
+            }
+
+            if ($request->has('state')) {
+                $filter['state'] = $request->query('state');
                 $demands = $this->demandService->getAllByFilter($filter, $this->pages);
             }
 
@@ -71,7 +76,8 @@ class DemandController extends Controller
             $employees = $this->employeeService->getAll(0);
 
             return view('app.demands.insert', [
-                'employees' => $employees
+                'employees' => $employees,
+                'demand' => null
             ]);
 
 
@@ -166,6 +172,15 @@ class DemandController extends Controller
     public function delete($id) {
         try {
 
+            $demand = $this->demandService->getOneById($id);
+            if (is_null($demand))
+                return back()->with('error', "La demande est introuvable !!!");
+
+            $result = $this->demandService->delete($id);
+            if ($result)
+                return back()->with('success', "La suppression de la demande est bien faite !!");
+
+            return back()->with('error', "Erreur lors de la suppression de la demande !!!");
         }catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }

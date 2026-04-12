@@ -48,6 +48,13 @@ class DemandRepository extends MainRepository
             $query->where('type', '=', $filter['type']);
         }
 
+        if (isset($filter['state'])) {
+            if ($filter['state'] == "*")
+                $query->where('state', '<>',100);
+            else
+                $query->where('state', '=', $filter['state']);
+        }
+
         $query->orderBy('id', 'DESC');
 
         return $pages == 0 ? $query->get() : $query->paginate($pages);

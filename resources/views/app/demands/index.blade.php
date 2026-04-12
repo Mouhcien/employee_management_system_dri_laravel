@@ -58,7 +58,14 @@
                             <option value="C">Congés</option>
                         </select>
                     </div>
-                    <div class="col-md-5 text-md-end">
+                    <div class="col-md-3">
+                        <select name="state" class="form-select form-select-sm bg-light border-0">
+                            <option value="1">Les demandes en cours</option>
+                            <option value="*">Tous les demandes</option>
+                            <option value="0">Les demandes satisfaites</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 text-md-end">
                         <button type="submit" class="btn btn-dark btn-sm px-4 rounded-3 fw-bold">Filtrer</button>
                         <a href="{{ route('demands.index') }}" class="btn btn-link btn-sm text-muted">Effacer</a>
                     </div>
@@ -140,7 +147,9 @@
                                     <a href="{{ route('demands.edit', $demand) }}" class="btn btn-white btn-sm border" title="Modifier">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <button class="btn btn-white btn-sm border text-danger" title="Supprimer">
+                                    <button class="btn btn-white btn-sm border text-danger" title="Supprimer"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteDemandModal-{{ $demand->id }}">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </div>
@@ -159,4 +168,15 @@
             </div>
         </div>
     </div>
+
+    {{-- Modals de suppression --}}
+    @foreach($demands as $demand)
+
+        <x-delete-model
+            href="{{ route('demands.delete', $demand->id) }}"
+            message="Attention : La suppression - #{{ $demand->title }} est irréversible."
+            title="Confirmation de Suppression"
+            target="deleteDemandModal-{{ $demand->id }}" />
+
+    @endforeach
 </x-layout>
