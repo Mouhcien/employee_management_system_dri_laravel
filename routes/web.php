@@ -10,6 +10,7 @@ use App\Http\Controllers\ColumnController;
 use App\Http\Controllers\CompetenceController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DemandController;
 use App\Http\Controllers\DiplomaController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EntityController;
@@ -296,6 +297,17 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/edit/{id}', [MutationController::class, 'edit'])->name('mutations.edit');
         Route::post('/update/{id}', [MutationController::class, 'update'])->name('mutations.update');
         Route::get('/delete/{id}', [MutationController::class, 'delete'])->name('mutations.delete');
+    });
+
+    Route::prefix('demands')->group(function(){
+        Route::get('/', [DemandController::class, 'index'])->name('demands.index');
+        Route::post('/store', [DemandController::class, 'store'])->name('demands.store');
+        Route::get('/create', [DemandController::class, 'create'])->name('demands.create');
+        Route::get('/decision/{id}', [DemandController::class, 'decision'])->name('demands.decision');
+        Route::get('/{id}', [DemandController::class, 'show'])->name('demands.show');
+        Route::get('/edit/{id}', [DemandController::class, 'edit'])->name('demands.edit');
+        Route::post('/update/{id}', [DemandController::class, 'update'])->name('demands.update');
+        Route::get('/delete/{id}', [DemandController::class, 'delete'])->name('demands.delete');
     });
 
     Route::prefix('trainings')->group(function(){

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Affectation;
+use App\Models\Demand;
 use App\Models\Employee;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->string('direction_name')->nullable();
             $table->string('city_name')->nullable();
             $table->char('type')->default('I'); // I:Interne E:Externe
+            $table->foreignIdFor(Demand::class, 'demand_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

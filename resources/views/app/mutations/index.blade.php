@@ -231,9 +231,14 @@
                                     {{-- Actions --}}
                                     <td class="pe-4 text-end">
                                         <div class="btn-group border rounded-2 bg-white">
-                                            <a href="{{ route('mutations.decision', $mutation) }}" target="_blank" class="btn btn-white btn-sm px-3 border-start text-danger" title="PDF">
+                                            <a href="{{ route('mutations.decision', $mutation) }}" target="_blank" class="btn btn-white btn-sm px-3 border-start text-danger" title="Décision">
                                                 <i class="bi bi-file-earmark-pdf small"></i></a>
+                                            @if (!is_null($mutation->demand))
+                                            <a href="{{ Storage::url($mutation->demand->file)  }}" target="_blank" class="btn btn-white btn-sm px-3 border-start text-primary" title="Demande">
+                                                <i class="bi bi-filetype-doc small"></i></a>
+                                            @endif
                                         </div>
+
                                     </td>
                                 </tr>
                             @empty

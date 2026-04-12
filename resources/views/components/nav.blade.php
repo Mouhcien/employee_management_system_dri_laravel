@@ -65,6 +65,12 @@
                         <i class="bi bi-shuffle me-1 fs-4"></i><span class="sidebar-text">Mutations</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('demands.index') }}"
+                       class="nav-link sidebar-link-nested rounded-3 px-3 py-2 d-flex align-items-center small {{ request()->routeIs('demands.index') ? 'active fw-bold' : '' }}">
+                        <i class="bi bi-filetype-doc me-1 fs-4"></i><span class="sidebar-text">Demandes</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

@@ -71,12 +71,26 @@
                         </div>
 
                         <div class="col-12 border-bottom pb-3 mt-5 mb-2">
-                            <h5 class="text-primary fw-bold mb-0"><i class="bi bi-calendar-date me-2"></i> Date de mutation</h5>
+                            <h5 class="text-primary fw-bold mb-0"><i class="bi bi-calendar-date me-2"></i> Autres</h5>
                         </div>
 
                         <div class="col-md-4">
+                            <label class="form-label">Date de mutation</label>
                             <x-date-input name="starting_date" id="starting_date" />
                         </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Demande</label>
+                            <select name="demand_id" id="demand_id" class="form-select shadow-sm" required>
+                                <option value="" selected disabled>Sélectionner la demande de l'agent...</option>
+                                @foreach($demands as $demand)
+                                    <option value="{{ $demand->id }}" >
+                                        {{ strtoupper($demand->title) }} - {{ $demand->employee->lastname }} {{ $demand->employee->firstname }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
 
 
                         <div class="col-12 d-flex justify-content-end gap-2 mt-4">

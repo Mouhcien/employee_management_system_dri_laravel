@@ -132,11 +132,11 @@
 <div class="content">
     <u>Objet</u> : Mutation <br>
 
-    @if (!is_null($mutation->ref))
-        <u>REF</u>  : {{ $mutation->ref }}.
+    @if (!is_null($mutation->demand))
+        <u>REF</u>  : votre demande de mutation du {{ \Carbon\Carbon::parse($mutation->demand->demand_date)->locale('fr')->translatedFormat('d/m/Y') }}. <br><br>
     @endif
 
-    @if (!is_null($mutation->ref))
+    @if (!is_null($mutation->demand))
         Suite à votre demande,
     @else
         Pour nécessité de service,
@@ -166,7 +166,7 @@
                 {{ $mutation->city_name ?? 'N/A' }}
         @endif
     @endif
-    et ce à compter du {{ \Carbon\Carbon::parse($mutation->starting_date)->locale('fr')->translatedFormat('d/m/Y') }}.
+    et ce à compter du <strong>{{ \Carbon\Carbon::parse($mutation->starting_date)->locale('fr')->translatedFormat('d F Y') }}</strong>.
 
     <div id="footer">
         <img src="{{ public_path('images/footer.jpg') }}" class="footer-img">

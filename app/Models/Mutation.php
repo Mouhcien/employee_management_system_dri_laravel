@@ -19,4 +19,8 @@ class Mutation extends Model
     public function employee() {
         return $this->belongsTo(Employee::class);
     }
+
+    public function demand() {
+        return $this->belongsTo(Demand::class);
+    }
 }

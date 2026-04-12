@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\services\AffectationService;
+use App\services\DemandService;
 use App\Services\EmployeeService;
 use App\services\EntityService;
 use App\services\MutationService;
@@ -26,6 +27,7 @@ class AffectationController extends Controller
     private EmployeeService $employeeService;
     private OccupationService $occupationService;
     private MutationService $mutationService;
+    private DemandService $demandService;
 
     /**
      * @param AffectationService $affectationService
@@ -38,7 +40,8 @@ class AffectationController extends Controller
         SectionEntityService $sectionEntityService,
         EmployeeService $employeeService,
         OccupationService $occupationService,
-        MutationService $mutationService
+        MutationService $mutationService,
+        DemandService $demandService
     ) {
         $this->affectationService = $affectationService;
         $this->serviceEntityService = $serviceEntityService;
@@ -48,6 +51,8 @@ class AffectationController extends Controller
         $this->employeeService = $employeeService;
         $this->occupationService = $occupationService;
         $this->mutationService = $mutationService;
+        $this->demandService = $demandService;
+
     }
 
     public function store(StoreAffectationRequest $request)
@@ -68,12 +73,29 @@ class AffectationController extends Controller
 
             if ($this->affectationService->create($data)) {
                 $affectation_id = $this->affectationService->getLatestInserted();
-                //Add mutation
-                $dataMutation['employee_id'] = $data['employee_id'];
-                $dataMutation['from_affectation_id'] = $old_affectation;
-                $dataMutation['to_affectation_id'] = $affectation_id;
+                $last_demand = null;
+                if (!is_null($old_affectation)) {
+                    //get a demand if existe
+                    $demands = $this->demandService->getAllByEmployee($data['employee_id'], 0);
+                    if (count($demands) != 0) {
+                        $last_demand = $demands->sortByDesc('id')->first();
+                        if (!is_null($last_demand))
+                          $dataMutation['demand_id'] = $last_demand->id;
+                    }
 
-                $this->mutationService->create($dataMutation);
+                    //Add mutation
+                    $dataMutation['employee_id'] = $data['employee_id'];
+                    $dataMutation['from_affectation_id'] = $old_affectation;
+                    $dataMutation['to_affectation_id'] = $affectation_id;
+
+                    $resultMutation = $this->mutationService->create($dataMutation);
+
+                    if ($resultMutation && !is_null($last_demand)) {
+                        //updated the state of the demand
+                        $demand = $this->demandService->getOneById($last_demand->id);
+                        $this->demandService->update($last_demand->id, ['state' => 0]);
+                    }
+                }
 
                 DB::commit();
                 return back()->with('success', 'Affectation est bien spécifié');

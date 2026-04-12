@@ -8,7 +8,7 @@ use App\repositories\MutationRepository;
 class MutationService
 {
     private MutationRepository $mutationRepository;
-    private $with = ['fromAffectation', 'toAffectation', 'employee'];
+    private $with = ['fromAffectation', 'toAffectation', 'employee', 'demand'];
 
     /**
      * @param MutationRepository $mutationRepository
@@ -55,6 +55,8 @@ class MutationService
             $obj->ref = $data['ref'];
         if ( isset($data['category_name']))
             $obj->category_name = $data['category_name'];
+        if ( isset($data['demand_id']))
+            $obj->demand_id = $data['demand_id'];
 
         return $this->mutationRepository->Add($obj);
     }
@@ -82,6 +84,8 @@ class MutationService
             $obj->ref = $data['ref'];
         if ( isset($data['category_name']))
             $obj->category_name = $data['category_name'];
+        if ( isset($data['demand_id']))
+            $obj->demand_id = $data['demand_id'];
 
         return $this->mutationRepository->Update($obj);
     }
