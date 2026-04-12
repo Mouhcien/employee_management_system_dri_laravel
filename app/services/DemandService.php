@@ -34,6 +34,10 @@ class DemandService
         return $this->demandRepository->AllByState($state, $this->with, $pages);
     }
 
+    public function getAllByFilter($filter, $pages){
+        return $this->demandRepository->AllByFilter($filter, $this->with, $pages);
+    }
+
     public function create($data){
         $obj = new Demand();
 

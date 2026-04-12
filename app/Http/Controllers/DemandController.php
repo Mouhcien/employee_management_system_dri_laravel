@@ -6,6 +6,7 @@ use App\services\DemandService;
 use App\Services\EmployeeService;
 use App\services\MutationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DemandController extends Controller
 {
@@ -39,12 +40,24 @@ class DemandController extends Controller
         try {
 
             $demands = $this->demandService->getAll($this->pages);
-            $employees = $this->employeeService->getAll(0);
+            //$employees = $this->employeeService->getAll(0);
+
+            $filter = null;
+            if ($request->has('fltr')) {
+                $filter['fltr'] = $request->query('fltr');
+                $demands = $this->demandService->getAllByFilter($filter, $this->pages);
+            }
+
+            if ($request->has('type')) {
+                $filter['type'] = $request->query('type');
+                $demands = $this->demandService->getAllByFilter($filter, $this->pages);
+            }
 
             return view('app.demands.index', [
                 'demands' => $demands,
-                'employees' => $employees
+                'fltr' => $filter['fltr'] ?? '',
             ]);
+
 
 
         }catch (\Exception $exception) {
@@ -97,6 +110,18 @@ class DemandController extends Controller
     public function edit($id) {
         try {
 
+            $demand = $this->demandService->getOneById($id);
+            if (is_null($demand))
+                return back()->with('error', "La demande est introuvable !!!");
+
+            $employees = $this->employeeService->getAll(0);
+
+            return view('app.demands.insert', [
+                'employees' => $employees,
+                'demand' => $demand
+            ]);
+
+
         }catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
@@ -104,6 +129,34 @@ class DemandController extends Controller
 
     public function update(Request $request, $id) {
         try {
+
+            $data = $request->validate($this->rules);
+
+            $demand = $this->demandService->getOneById($id);
+            if (is_null($demand))
+                return back()->with('error', "La demande est introuvable !!!");
+
+            if ($request->hasFile('file')) {
+                // Delete old photo if exists
+                if (!is_null($demand->file) && Storage::disk('public')->exists($demand->file)) {
+                    Storage::disk('public')->delete($demand->file);
+                }
+
+                $file = $request->file('file');
+
+                $filename = $data['employee_id'].".".$file->extension();
+                $path = $file->storeAs('files/demands/employees', $filename, 'public');
+
+                $data['file'] = $path;
+            }
+
+            $result = $this->demandService->update($id, $data);
+
+            if ($result) {
+                return redirect()->route('demands.index')->with('success', "Demande est bien enregistré !!");
+            }
+
+            return back()->with('error', "Erreur lors de l'enregistrement du demandes !!!");
 
         }catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());

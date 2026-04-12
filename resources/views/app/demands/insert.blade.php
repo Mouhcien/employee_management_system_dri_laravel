@@ -58,10 +58,22 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-2">
                         <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Ressources Humaines</a></li>
-                        <li class="breadcrumb-item active">Nouvelle Demande</li>
+                        @if (is_null($demand))
+                            <li class="breadcrumb-item active">Nouvelle Demande</li>
+                        @else
+                            <li class="breadcrumb-item active">Mettre à jour la demande</li>
+                        @endif
                     </ol>
                 </nav>
-                <h1 class="h3 fw-bold text-dark"><i class="bi bi-person-plus me-2 text-primary"></i>Nouvelle Demande <span class="text-muted fw-normal small">Personnel</span></h1>
+                <h1 class="h3 fw-bold text-dark">
+                    @if (is_null($demand))
+                        <i class="bi bi-person-plus me-2 text-primary">
+                        </i>Nouvelle Demande <span class="text-muted fw-normal small">Personnel</span>
+                    @else
+                        <i class="bi bi-pencil-square me-2 text-primary">
+                        </i>Mettre à jour la demande
+                    @endif
+                </h1>
             </div>
             <div class="col-md-4 text-md-end align-self-end">
                 <a href="{{ route('demands.index') }}" class="btn btn-light btn-sm px-3 shadow-sm">
@@ -72,7 +84,7 @@
 
         <div class="card shadow-sm border-0">
             <div class="card-body p-4 p-lg-5">
-                <form action="{{ route('demands.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ is_null($demand) ? route('demands.store') : route('demands.update', $demand) }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     {{-- Section 1: Agent --}}
@@ -85,7 +97,8 @@
                             <label for="txt_employee_mutation" class="form-label">Rechercher un agent</label>
                             <div class="input-group search-group shadow-sm">
                                 <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                <input type="text" id="txt_employee_mutation" class="form-control" placeholder="Nom, prénom ou matricule...">
+                                <input type="text" id="txt_employee_mutation" class="form-control" placeholder="Nom, prénom ou matricule..."
+                                       value="{{ is_null($demand) ? '' : $demand->employee->lastname }}">
                             </div>
                         </div>
 
@@ -94,7 +107,8 @@
                             <select name="employee_id" id="employee_id" class="form-select shadow-sm" required>
                                 <option value="" selected disabled>Sélectionner l'agent...</option>
                                 @foreach($employees as $employee)
-                                    <option value="{{ $employee->id }}" data-full-name="{{ strtolower($employee->lastname . ' ' . $employee->firstname) }}">
+                                    <option value="{{ $employee->id }}" data-full-name="{{ strtolower($employee->lastname . ' ' . $employee->firstname) }}"
+                                    {{ $demand->employee_id == $employee->id ? 'selected' : '' }}>
                                         {{ strtoupper($employee->lastname) }} {{ $employee->firstname }}
                                     </option>
                                 @endforeach
@@ -110,20 +124,21 @@
                     <div class="row g-4">
                         <div class="col-md-6">
                             <label class="form-label">Entité d'accueil / Titre</label>
-                            <input type="text" name="title" class="form-control" placeholder="ex: Direction Financière">
+                            <input type="text" name="title" class="form-control" placeholder="ex: Direction Financière"
+                            value="{{ is_null($demand) ? '' : $demand->title }}">
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Type de demande</label>
                             <select name="type" class="form-select">
-                                <option value="M">🔄 Mutation</option>
-                                <option value="C">📅 Congé</option>
+                                <option value="M" {{ !is_null($demand) && $demand->type == 'M' ? 'selected' : '' }}>🔄 Mutation</option>
+                                <option value="C" {{ !is_null($demand) && $demand->type == 'C' ? 'selected' : '' }}>📅 Congé</option>
                             </select>
                         </div>
 
                         <div class="col-12">
                             <label class="form-label">Objet / Motifs</label>
-                            <textarea name="object" class="form-control" rows="3" placeholder="Description détaillée..."></textarea>
+                            <textarea name="object" class="form-control" rows="3" placeholder="Description détaillée...">{{ is_null($demand) ? '' : $demand->object }}</textarea>
                         </div>
                     </div>
 
@@ -135,7 +150,7 @@
                     <div class="row g-4">
                         <div class="col-md-6">
                             <label class="form-label">Date de demande</label>
-                            <x-date-input name="demand_date" id="starting_date" />
+                            <x-date-input name="demand_date" id="starting_date" value="{{ is_null($demand) ? '' : $demand->demand_date }}" />
                         </div>
 
                         <div class="col-md-6">
@@ -144,6 +159,9 @@
                                 <input type="file" name="file" class="form-control" id="inputGroupFile02">
                                 <label class="input-group-text" for="inputGroupFile02 px-3"><i class="bi bi-upload"></i></label>
                             </div>
+                            @if (!is_null($demand))
+                                <a href="{{ Storage::url($demand->file) }}" target="_blank" class="text-decoration-none" >Copie de la demande</a>
+                            @endif
                         </div>
                     </div>
 

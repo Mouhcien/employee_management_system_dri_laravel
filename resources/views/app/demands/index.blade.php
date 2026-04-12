@@ -48,7 +48,7 @@
                     <div class="col-md-4">
                         <div class="input-group input-group-sm">
                             <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
-                            <input type="text" name="search" class="form-control bg-light border-0" placeholder="Agent, titre ou objet...">
+                            <input type="text" name="fltr" value="{{ $fltr }}" class="form-control bg-light border-0" placeholder="Agent, titre ou objet...">
                         </div>
                     </div>
                     <div class="col-md-3">
