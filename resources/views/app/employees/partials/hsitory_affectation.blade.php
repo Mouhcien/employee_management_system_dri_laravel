@@ -15,7 +15,7 @@
     </div>
     @if($activeAff)
         <div class="mb-3">
-            <span class="badge bg-success fs-6"> {{ $activeAff->occupation->title }} </span>
+            <span class="badge bg-success fs-6"> {{ !is_null($activeAff->occupation) ? $activeAff->occupation->title : 'N/A' }} </span>
             @if (!is_null($activeAff->section))
                 <span class="badge bg-info fs-6"> {{ $activeAff->section->title }} </span>
             @endif
@@ -68,7 +68,7 @@
                 @if (!is_null($affectation->sector))
                     <span class="badge bg-info fs-6"> {{ $affectation->sector->title }} </span>
                 @endif
-                <span class="badge bg-success fs-6"> {{ $activeAff->occupation->title }} </span>
+                <span class="badge bg-success fs-6"> {{ is_null($affectation->occupation) ? 'N/A' : $affectation->occupation->title }} </span>
             </h6>
 
             <div class="row g-3">

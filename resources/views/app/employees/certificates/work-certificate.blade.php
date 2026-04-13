@@ -116,7 +116,13 @@
 
     {{ $civility }}. <strong>{{ $employee->firstname }} {{ $employee->lastname }}</strong>, <strong>{{ $grade }}</strong>,
     titulaire de la CNIE N° {{ $employee->cin }}, est mis à la disposition auprès de la Direction Régionale des Impôts de Marrakech
-    à compter du <strong>{{ \Carbon\Carbon::parse($employee->disposition_date)->translatedFormat('d/m/Y') }}</strong>.
+    à compter du
+    @if (!is_null($employee->disposition_date))
+    <strong>{{ \Carbon\Carbon::parse($employee->disposition_date)->translatedFormat('d/m/Y') }}</strong>.
+    @endif
+    @if (!is_null($employee->reintegration_date))
+    <strong>{{ \Carbon\Carbon::parse($employee->reintegration_date)->translatedFormat('d/m/Y') }}</strong>.
+    @endif
     <br><br>
 
     <div class="closing-statement">

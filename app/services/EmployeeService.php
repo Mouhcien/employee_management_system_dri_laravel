@@ -27,6 +27,62 @@ class EmployeeService
         return $this->employeeRepository->inActiveEmployees($this->with, $pages);
     }
 
+    public function getAllEmployeeWithoutAffectation()
+    {
+        return $this->employeeRepository->AllEmployeeWithoutAffectation($this->with);
+    }
+
+    public function getAllDuplicatePPR()
+    {
+        return $this->employeeRepository->AllDuplicatePPR($this->with);
+    }
+
+    public function getAllDuplicateCIN()
+    {
+        return $this->employeeRepository->AllDuplicateCIN($this->with);
+    }
+
+    public function getAllDuplicateEmail()
+    {
+        return $this->employeeRepository->AllDuplicateEmail($this->with);
+    }
+
+    public function getAllDuplicateCommissionCard()
+    {
+        return $this->employeeRepository->AllDuplicateCommissionCard($this->with);
+    }
+
+    public function getAllEmployeeWithoutGrade()
+    {
+        return $this->employeeRepository->AllEmployeeWithoutGrade($this->with);
+    }
+
+    public function getAllEmployeeWithoutDiploma()
+    {
+        return $this->employeeRepository->AllEmployeeWithoutDiploma($this->with);
+    }
+
+    public function getAllEmployeeWithoutPPR()
+    {
+        return $this->employeeRepository->AllEmployeeWithoutPPR($this->with);
+    }
+
+    public function getAllEmployeeWithoutCIN()
+    {
+        return $this->employeeRepository->AllEmployeeWithoutCIN($this->with);
+    }
+
+    public function getAllEmployeeWithoutEmail()
+    {
+        return $this->employeeRepository->AllEmployeeWithoutEmail($this->with);
+    }
+
+    public function getAllEmployeeWithoutCommissionCard()
+    {
+        return $this->employeeRepository->AllEmployeeWithoutCommissionCard($this->with);
+    }
+
+
     public function getAllByCategory($category_id, $pages = 0)
     {
         return $this->employeeRepository->allByCategory($category_id, $this->with, $pages);

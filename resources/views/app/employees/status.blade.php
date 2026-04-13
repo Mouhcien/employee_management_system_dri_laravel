@@ -109,7 +109,7 @@
                             <option value="0" {{ $state == "0" ? 'selected' : '' }}>Mise à disposition</option>
                             <option value="-1" {{ $state == "-1" ? 'selected' : '' }}>Mise à la retraite</option>
                             <option value="-2" {{ $state == "-2" ? 'selected' : '' }}>Suspension immédiate</option>
-                            <option value="2" {{ $state == "2" ? 'selected' : '' }}>Réintégration</option>
+                            <option value="-8" {{ $state == "-8" ? 'selected' : '' }}>Mutation Externe</option>
                         </select>
                     </div>
                     <div class="col-xl-3 col-lg-12 d-flex gap-2">

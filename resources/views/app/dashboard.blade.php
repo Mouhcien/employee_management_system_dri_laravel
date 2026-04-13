@@ -474,15 +474,15 @@
                                 </a>
                             </div>
                             <div class="col-6 col-md-3">
-                                <a href="#" class="action-btn">
+                                <a href="{{ route('employees.verification') }}" class="action-btn">
                                     <div class="action-icon warning">
-                                        <i class="bi bi-calendar-check"></i>
+                                        <i class="bi bi-check-all"></i>
                                     </div>
-                                    <span class="fw-semibold">Congés</span>
+                                    <span class="fw-semibold">Vérification</span>
                                 </a>
                             </div>
                             <div class="col-6 col-md-3">
-                                <a href="#" class="action-btn">
+                                <a href="{{ route('employees.download') }}" class="action-btn">
                                     <div class="action-icon info">
                                         <i class="bi bi-file-earmark-excel"></i>
                                     </div>

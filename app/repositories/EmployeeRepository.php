@@ -247,6 +247,144 @@ class EmployeeRepository extends MainRepository
         return $pages == 0 ? $query->get() : $query->paginate($pages);
     }
 
+    public function AllEmployeeWithoutAffectation($with) {
+        return Employee::with($with)
+            ->whereNotIn('employees.id', function($query) {
+                $query->select('affectations.employee_id')->from('affectations');
+            })
+            ->where('employees.status', '=', '1')
+            ->orderBy('lastname', 'ASC')
+            ->get();
+    }
+
+    public function AllEmployeeWithoutGrade($with) {
+        return Employee::with($with)
+            ->whereNotIn('employees.id', function($query) {
+                $query->select('competences.employee_id')->from('competences');
+            })
+            ->where('employees.status', '=', '1')
+            ->orderBy('lastname', 'ASC')
+            ->get();
+    }
+
+    public function AllEmployeeWithoutDiploma($with) {
+        return Employee::with($with)
+            ->whereNotIn('employees.id', function($query) {
+                $query->select('qualifications.employee_id')->from('qualifications');
+            })
+            ->where('employees.status', '=', '1')
+            ->orderBy('lastname', 'ASC')
+            ->get();
+    }
+
+    /**
+     * Récupérer les doublons par PPR
+     */
+    public function AllDuplicatePPR($with) {
+        $duplicates = Employee::where('status', 1)
+            ->whereNotNull('ppr')
+            ->where('ppr', '!=', '')
+            ->groupBy('ppr')
+            ->havingRaw('COUNT(ppr) > 1')
+            ->pluck('ppr');
+
+        return Employee::with($with)
+            ->whereIn('ppr', $duplicates)
+            ->where('status', 1)
+            ->orderBy('ppr', 'ASC')
+            ->get()
+            ->groupBy('ppr');
+    }
+
+    /**
+     * Récupérer les doublons par CIN
+     */
+    public function AllDuplicateCIN($with) {
+        $duplicates = Employee::where('status', 1)
+            ->whereNotNull('cin')
+            ->where('cin', '!=', '')
+            ->groupBy('cin')
+            ->havingRaw('COUNT(cin) > 1')
+            ->pluck('cin');
+
+        return Employee::with($with)
+            ->whereIn('cin', $duplicates)
+            ->where('status', 1)
+            ->orderBy('cin', 'ASC')
+            ->get()
+            ->groupBy('cin');
+    }
+
+    /**
+     * Récupérer les doublons par Email
+     */
+    public function AllDuplicateEmail($with) {
+        $duplicates = Employee::where('status', 1)
+            ->whereNotNull('email')
+            ->where('email', '!=', '')
+            ->groupBy('email')
+            ->havingRaw('COUNT(email) > 1')
+            ->pluck('email');
+
+        return Employee::with($with)
+            ->whereIn('email', $duplicates)
+            ->where('status', 1)
+            ->orderBy('email', 'ASC')
+            ->get()
+            ->groupBy('email');
+    }
+
+    /**
+     * Récupérer les doublons par Carte Commission
+     */
+    public function AllDuplicateCommissionCard($with) {
+        $duplicates = Employee::where('status', 1)
+            ->whereNotNull('commission_card')
+            ->where('commission_card', '!=', '')
+            ->groupBy('commission_card')
+            ->havingRaw('COUNT(commission_card) > 1')
+            ->pluck('commission_card');
+
+        return Employee::with($with)
+            ->whereIn('commission_card', $duplicates)
+            ->where('status', 1)
+            ->orderBy('commission_card', 'ASC')
+            ->get()
+            ->groupBy('commission_card');
+    }
+
+    public function AllEmployeeWithoutPPR($with) {
+        return Employee::with($with)
+            ->where('employees.status', '=', 1)
+            ->whereNull('employees.ppr')
+            ->orderBy('lastname', 'ASC')
+            ->get();
+    }
+
+    public function AllEmployeeWithoutCIN($with) {
+        return Employee::with($with)
+            ->where('employees.status', '=', 1)
+            ->whereNull('employees.cin')
+            ->orderBy('lastname', 'ASC')
+            ->get();
+    }
+
+    public function AllEmployeeWithoutEmail($with) {
+        return Employee::with($with)
+            ->where('employees.status', '=', 1)
+            ->whereNull('employees.email')
+            ->orderBy('lastname', 'ASC')
+            ->get();
+    }
+
+    public function AllEmployeeWithoutCommissionCard($with) {
+        return Employee::with($with)
+            ->where('employees.status', '=', 1)
+            ->whereNull('employees.commission_card')
+            ->orderBy('lastname', 'ASC')
+            ->get();
+    }
+
     public function sortEmployeesByOption($request, $pages) {
 
         $query = Employee::with(['works', 'qualifications', 'competences', 'remunerations', 'chefs', 'affectations'])

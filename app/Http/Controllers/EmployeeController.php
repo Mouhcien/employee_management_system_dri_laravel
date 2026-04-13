@@ -1120,6 +1120,85 @@ class EmployeeController extends Controller
 
     }
 
+    public function verification(Request $request) {
+        try {
+
+            return view('app.employees.verif', [
+                'result' => null
+            ]);
+
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function verif_execute(Request $request) {
+        try {
+
+            $result = [];
+            if ($request->has('verif_affectation')) {
+                //Get the employees wich has any active affectation
+                $employees = $this->employeeService->getAll(0);
+                $employeesWithoutAffectation = $this->employeeService->getAllEmployeeWithoutAffectation();
+                $result['employeesWithoutAffectation'] = $employeesWithoutAffectation;
+            }
+
+            if ($request->has('verif_data')) {
+                //dd("verif_referenciel");
+
+
+                // get duplicate ppr ,cin, tel , email, carte de commision and nom complete
+                $duplicatePPR = $this->employeeService->getAllDuplicatePPR();
+                $duplicateCIN = $this->employeeService->getAllDuplicateCIN();
+                $duplicateEmail = $this->employeeService->getAllDuplicateEmail();
+                $duplicateCommissionCard = $this->employeeService->getAllDuplicateCommissionCard();
+
+                $result['duplicatePPR'] = $duplicatePPR;
+                $result['duplicateCIN'] = $duplicateCIN;
+                $result['duplicateEmail'] = $duplicateEmail;
+                $result['duplicateCommissionCard'] = $duplicateCommissionCard;
+
+
+            }
+
+            if ($request->has('verif_info_personnel')) {
+
+                //Get the employees without ppr or cin or photo, commission_card
+
+                $employeesWithoutPPR = $this->employeeService->getAllEmployeeWithoutPPR();
+                $employeesWithoutCIN = $this->employeeService->getAllEmployeeWithoutCIN();
+                $employeesWithoutEmail = $this->employeeService->getAllEmployeeWithoutEmail();
+                $employeesWithoutCommissionCard = $this->employeeService->getAllEmployeeWithoutCommissionCard();
+
+                $result['employeesWithoutPPR'] = $employeesWithoutPPR;
+                $result['employeesWithoutCIN'] = $employeesWithoutCIN;
+                $result['employeesWithoutEmail'] = $employeesWithoutEmail;
+                $result['employeesWithoutCommissionCard'] = $employeesWithoutCommissionCard;
+            }
+
+            if ($request->has('verif_info_professionnel')) {
+
+                //Get the employees without grade
+                $employeesWithoutGrade = $this->employeeService->getAllEmployeeWithoutGrade();
+
+                //Get the employees without diploma
+                $employeesWithoutDiploma = $this->employeeService->getAllEmployeeWithoutDiploma();
+
+                $result['employeesWithoutGrade'] = $employeesWithoutGrade;
+                $result['employeesWithoutDiploma'] = $employeesWithoutDiploma;
+            }
+
+            return view('app.employees.verif', [
+                'result' => $result
+            ]);
+
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
 
 }
 

@@ -176,11 +176,13 @@ Route::middleware('check.auth')->group(function (){
         Route::post('/store', [EmployeeController::class, 'store'])->name('employees.store');
         Route::get('/search', [EmployeeController::class, 'search'])->name('employees.search');
         Route::get('/import', [EmployeeController::class, 'import'])->name('employees.import');
-        Route::get('/{id}', [EmployeeController::class, 'show'])->name('employees.show');
         Route::post('/sort', [EmployeeController::class, 'sort'])->name('employees.sort');
+        Route::get('/verification', [EmployeeController::class, 'verification'])->name('employees.verification');
+        Route::get('/{id}', [EmployeeController::class, 'show'])->name('employees.show');
         Route::get('/download/all', [EmployeeController::class, 'download'])->name('employees.download');
         Route::post('/import/all', [EmployeeController::class, 'import_all'])->name('employees.import.all');
         Route::get('/advance/search', [EmployeeController::class, 'advance'])->name('employees.advance');
+        Route::post('/verification/execute', [EmployeeController::class, 'verif_execute'])->name('employees.verification.execute');
         Route::get('/advance/result', [EmployeeController::class, 'result'])->name('employees.advance.result');
         Route::post('/importation', [EmployeeController::class, 'importation'])->name('employees.importation');
         Route::get('/history/{id}', [EmployeeController::class, 'history'])->name('employees.history');
