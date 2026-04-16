@@ -142,8 +142,8 @@
             <tr>
                 <td style="width: 20%"> <h5>ARTICLE 1 </h5> </td>
                 <td>
-                    : Un congé rémunéré d’une durée de <strong>10 jours ouvrables </strong> est accordé à <strong>{{ $employee->firstname }} {{ $employee->lastname }}</strong>
-                    à compter du <strong>04 novembre 2024.</strong>
+                    : Un congé rémunéré d’une durée de <strong> {{ is_null($employee->holidays->last()) ? 'N/A' : $employee->holidays->last()->demand }} Jours ouvrables </strong> est accordé à <strong>{{ $employee->firstname }} {{ $employee->lastname }}</strong>
+                    à compter du <strong>{{ is_null($employee->holidays->last()) ? 'N/A' : \Carbon\Carbon::parse($employee->holidays->last()->starting_date)->locale('fr')->translatedFormat('d F Y') }}.</strong>
                 </td>
             </tr>
             <tr>
@@ -161,7 +161,7 @@
             <td style="width: 40%;">
             </td>
             <td style="text-align: right; vertical-align: top;">
-                Marrakech, le {{ \Carbon\Carbon::parse($employee->created_at)->locale('fr')->translatedFormat('d F Y') }} <br>
+                Marrakech, le {{ \Carbon\Carbon::parse(now())->locale('fr')->translatedFormat('d F Y') }} <br>
                 <b>Pour le Ministre de l’Economie et des Finances</b>
             </td>
         </tr>

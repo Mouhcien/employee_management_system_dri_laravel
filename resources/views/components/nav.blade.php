@@ -71,6 +71,12 @@
                         <i class="bi bi-filetype-doc me-1 fs-4"></i><span class="sidebar-text">Demandes</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('holidays.index') }}"
+                       class="nav-link sidebar-link-nested rounded-3 px-3 py-2 d-flex align-items-center small {{ request()->routeIs('holidays.index') ? 'active fw-bold' : '' }}">
+                        <i class="bi bi-compass me-1 fs-4"></i><span class="sidebar-text">Congés</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

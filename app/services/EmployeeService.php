@@ -93,6 +93,11 @@ class EmployeeService
         return $this->employeeRepository->allTotalByCategory();
     }
 
+    public function getAllExternEmployees($pages)
+    {
+        return $this->employeeRepository->allExternEmployees($pages);
+    }
+
     public function getTotalByLocal()
     {
         return $this->employeeRepository->allTotalByLocal();

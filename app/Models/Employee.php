@@ -76,4 +76,8 @@ class Employee extends Model
     public function mutations() {
         return $this->hasMany(Mutation::class);
     }
+
+    public function holidays() {
+        return $this->hasMany(Holiday::class);
+    }
 }

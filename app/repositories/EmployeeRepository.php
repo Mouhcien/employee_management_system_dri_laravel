@@ -229,6 +229,16 @@ class EmployeeRepository extends MainRepository
             ->get();
     }
 
+    public function allExternEmployees($pages) {
+        $query =  Employee::with($this->with)
+            ->whereIn('employees.category_id', [2, 3])
+            ->where('employees.status', '=', 1)
+            ->orderBy('lastname', 'ASC');
+
+
+        return $pages == 0 ? $query->get() : $query->paginate($pages);
+    }
+
     public function allTotalByLocal() {
         return Employee::query()
             ->join('locals', 'locals.id', '=', 'employees.local_id')

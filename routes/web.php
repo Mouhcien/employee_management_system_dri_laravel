@@ -18,6 +18,7 @@ use App\Http\Controllers\EntityTypeController;
 use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\HabilitationController;
+use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\LocalController;
 use App\Http\Controllers\MutationController;
@@ -310,6 +311,17 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/edit/{id}', [DemandController::class, 'edit'])->name('demands.edit');
         Route::post('/update/{id}', [DemandController::class, 'update'])->name('demands.update');
         Route::get('/delete/{id}', [DemandController::class, 'delete'])->name('demands.delete');
+    });
+
+    Route::prefix('holidays')->group(function(){
+        Route::get('/', [HolidayController::class, 'index'])->name('holidays.index');
+        Route::post('/store', [HolidayController::class, 'store'])->name('holidays.store');
+        Route::get('/create', [HolidayController::class, 'create'])->name('holidays.create');
+        Route::get('/decision/{id}', [HolidayController::class, 'decision'])->name('holidays.decision');
+        Route::get('/{id}', [HolidayController::class, 'show'])->name('holidays.show');
+        Route::get('/edit/{id}', [HolidayController::class, 'edit'])->name('holidays.edit');
+        Route::post('/update/{id}', [HolidayController::class, 'update'])->name('holidays.update');
+        Route::get('/delete/{id}', [HolidayController::class, 'delete'])->name('holidays.delete');
     });
 
     Route::prefix('trainings')->group(function(){
