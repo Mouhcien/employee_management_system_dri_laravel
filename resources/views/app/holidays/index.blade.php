@@ -9,7 +9,7 @@
                     </ol>
                 </nav>
                 <h2 class="fw-bold text-dark">
-                    <i class="bi bi-building-check text-primary me-2"></i>Suivi des Congés : Agents & Détachés
+                    <i class="bi bi-compass text-primary me-2"></i>Suivi des Congés : Agents Communaux & Détachés
                 </h2>
             </div>
             <div class="col-auto">
