@@ -421,14 +421,14 @@
         if (profileCol.classList.contains('col-lg-5')) {
             profileCol.classList.replace('col-lg-5', 'col-lg-12');
             dataCol.classList.replace('col-lg-7', 'col-lg-12');
-            if(img) { img.width = 600; img.height = 600; }
-            if(placeholder) { placeholder.style.width = '600px'; placeholder.style.height = '600px'; placeholder.style.fontSize = '10rem'; }
+            if(img) { img.width = 600; img.height = 700; }
+            if(placeholder) { placeholder.style.width = '600px'; placeholder.style.height = '700px'; placeholder.style.fontSize = '10rem'; }
             btnText.innerText = "Réduire";
         } else {
             profileCol.classList.replace('col-lg-12', 'col-lg-5');
             dataCol.classList.replace('col-lg-12', 'col-lg-7');
-            if(img) { img.width = 300; img.height = 300; }
-            if(placeholder) { placeholder.style.width = '300px'; placeholder.style.height = '300px'; placeholder.style.fontSize = '5rem'; }
+            if(img) { img.width = 300; img.height = 400; }
+            if(placeholder) { placeholder.style.width = '300px'; placeholder.style.height = '400px'; placeholder.style.fontSize = '5rem'; }
             btnText.innerText = "Agrandir";
         }
     }
@@ -446,11 +446,11 @@
             //
             if(img) {
                 img.style.width = "600px";
-                img.style.height = "600px";
+                img.style.height = "700px";
             }
             if(placeholder) {
                 placeholder.style.width = "600px";
-                placeholder.style.height = "600px";
+                placeholder.style.height = "700px";
             }
 
             // 2. Hide Sections
@@ -464,11 +464,11 @@
             // 1. Reset Sizes
             if(img) {
                 img.style.width = "300px";
-                img.style.height = "300px";
+                img.style.height = "400px";
             }
             if(placeholder) {
                 placeholder.style.width = "300px";
-                placeholder.style.height = "300px";
+                placeholder.style.height = "400px";
             }
 
             // 2. Show Sections

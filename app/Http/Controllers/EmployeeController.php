@@ -971,13 +971,11 @@ class EmployeeController extends Controller
             $grade = is_null($employee->competences->where('finished_date', null)->first()) ? 'N/A' : $employee->competences->where('finished_date', null)->first()->grade->title;
             $civility = $employee->gender == 'M' ? 'M' : 'Mme';
 
-            $pdf = Pdf::loadView('app.employees.certificates.bonus-certificate', [
+            return view('app.categories.prepare-bonus', [
                 'employee' => $employee,
                 'grade' => $grade,
                 'civility' => $civility,
-            ])->setPaper('a4', 'portrait');
-
-            return $pdf->stream();
+            ]);
 
         }catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());

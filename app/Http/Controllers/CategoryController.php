@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\services\CategoryService;
 use App\Services\EmployeeService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -80,6 +81,40 @@ class CategoryController extends Controller
 
         }catch (\Exception $exception) {
             return back()->with('erropr', $exception->getMessage());
+        }
+    }
+
+    public function load(Request $request, $id) {
+        try {
+
+            $year = $request->txt_year;
+            $gross = $request->txt_gross;
+            $ir = $request->txt_ir;
+            $net = $request->txt_net;
+            $words = $request->txt_words;
+
+            $employee = $this->employeeService->getOneById($id);
+            if (is_null($employee))
+                return back()->with('error', 'Agent introuvable !!');
+
+            $grade = is_null($employee->competences->where('finished_date', null)->first()) ? 'N/A' : $employee->competences->where('finished_date', null)->first()->grade->title;
+            $civility = $employee->gender == 'M' ? 'M' : 'Mme';
+
+            $pdf = Pdf::loadView('app.employees.certificates.bonus-certificate', [
+                'employee' => $employee,
+                'grade' => $grade,
+                'civility' => $civility,
+                'year' => $year,
+                'gross' => $gross,
+                'ir' => $ir,
+                'net' => $net,
+                'words' => $words,
+            ])->setPaper('a4', 'portrait');
+
+            return $pdf->stream();
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
     }
 

@@ -129,13 +129,13 @@
                                 <img src="{{ Storage::url($employee->photo) }}"
                                      id="employee_img"
                                      class="object-fit-cover transition-all"
-                                     width="300" height="300"
+                                     width="300" height="400"
                                      ondblclick="toggleView(true)"
                                      style="cursor: pointer; transition: all 0.3s ease;">
                             @else
                                 <div id="employee_placeholder"
                                      class="d-flex align-items-center justify-content-center text-white fw-bold transition-all"
-                                     style="width:300px; height:300px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); font-size: 5rem;">
+                                     style="width:300px; height:400px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); font-size: 5rem;">
                                     {{ strtoupper(substr($employee->firstname, 0, 1)) }}{{ strtoupper(substr($employee->lastname, 0, 1)) }}
                                 </div>
                             @endif
@@ -347,14 +347,14 @@
         if (profileCol.classList.contains('col-lg-5')) {
             profileCol.classList.replace('col-lg-5', 'col-lg-12');
             dataCol.classList.replace('col-lg-7', 'col-lg-12');
-            if(img) { img.width = 600; img.height = 600; }
-            if(placeholder) { placeholder.style.width = '600px'; placeholder.style.height = '600px'; placeholder.style.fontSize = '10rem'; }
+            if(img) { img.width = 600; img.height = 700; }
+            if(placeholder) { placeholder.style.width = '600px'; placeholder.style.height = '700px'; placeholder.style.fontSize = '10rem'; }
             btnText.innerText = "Réduire";
         } else {
             profileCol.classList.replace('col-lg-12', 'col-lg-5');
             dataCol.classList.replace('col-lg-12', 'col-lg-7');
-            if(img) { img.width = 300; img.height = 300; }
-            if(placeholder) { placeholder.style.width = '300px'; placeholder.style.height = '300px'; placeholder.style.fontSize = '5rem'; }
+            if(img) { img.width = 300; img.height = 400; }
+            if(placeholder) { placeholder.style.width = '300px'; placeholder.style.height = '400px'; placeholder.style.fontSize = '5rem'; }
             btnText.innerText = "Agrandir";
         }
     }
@@ -372,11 +372,11 @@
             //
             if(img) {
                 img.style.width = "600px";
-                img.style.height = "600px";
+                img.style.height = "700px";
             }
             if(placeholder) {
                 placeholder.style.width = "600px";
-                placeholder.style.height = "600px";
+                placeholder.style.height = "700px";
             }
 
             // 2. Hide Sections
@@ -390,11 +390,11 @@
             // 1. Reset Sizes
             if(img) {
                 img.style.width = "300px";
-                img.style.height = "300px";
+                img.style.height = "400px";
             }
             if(placeholder) {
                 placeholder.style.width = "300px";
-                placeholder.style.height = "300px";
+                placeholder.style.height = "400px";
             }
 
             // 2. Show Sections

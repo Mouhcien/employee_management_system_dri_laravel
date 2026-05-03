@@ -23,13 +23,13 @@
                             <img src="{{ Storage::url($employee->photo) }}"
                                  id="employee_img"
                                  class="object-fit-cover transition-all"
-                                 width="300" height="300"
+                                 width="300" height="400"
                                  ondblclick="toggleView(true)"
                                  style="cursor: pointer; transition: all 0.3s ease;">
                         @else
                             <div id="employee_placeholder"
                                  class="d-flex align-items-center justify-content-center text-white fw-bold transition-all"
-                                 style="width:300px; height:300px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); font-size: 5rem;">
+                                 style="width:300px; height:400px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); font-size: 5rem;">
                                 {{ strtoupper(substr($employee->firstname, 0, 1)) }}{{ strtoupper(substr($employee->lastname, 0, 1)) }}
                             </div>
                         @endif

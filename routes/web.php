@@ -164,6 +164,7 @@ Route::middleware('check.auth')->group(function (){
         Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
         Route::get('/create', [CategoryController::class, 'create'])->name('categories.create');
         Route::post('/store', [CategoryController::class, 'store'])->name('categories.store');
+        Route::post('/load/{id}', [CategoryController::class, 'load'])->name('categories.load');
         Route::get('/{id}', [CategoryController::class, 'show'])->name('categories.show');
         Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('categories.edit');
         Route::post('/update/{id}', [CategoryController::class, 'update'])->name('categories.update');
