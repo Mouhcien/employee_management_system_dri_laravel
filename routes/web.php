@@ -330,6 +330,7 @@ Route::middleware('check.auth')->group(function (){
         Route::post('/store', [TrainingController::class, 'store'])->name('trainings.store');
         Route::get('/create', [TrainingController::class, 'create'])->name('trainings.create');
         Route::get('/download', [TrainingController::class, 'download'])->name('trainings.download');
+        Route::post('/upload', [TrainingController::class, 'upload'])->name('trainings.upload');
         Route::get('/{id}', [TrainingController::class, 'show'])->name('trainings.show');
         Route::get('/edit/{id}', [TrainingController::class, 'edit'])->name('trainings.edit');
         Route::post('/update/{id}', [TrainingController::class, 'update'])->name('trainings.update');
@@ -339,6 +340,7 @@ Route::middleware('check.auth')->group(function (){
 
     Route::prefix('attendences')->group(function(){
         Route::get('/', [AttendenceController::class, 'index'])->name('attendences.index');
+        Route::post('/upload/{id}', [AttendenceController::class, 'upload'])->name('attendences.upload');
         Route::post('/store/{id}', [AttendenceController::class, 'store'])->name('attendences.store');
         Route::get('/delete/{id}', [AttendenceController::class, 'delete'])->name('attendences.delete');
     });

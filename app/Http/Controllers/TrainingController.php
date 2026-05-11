@@ -6,6 +6,7 @@ use App\Services\EmployeeService;
 use App\services\TrainingService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TrainingController extends Controller
 {
@@ -201,5 +202,58 @@ class TrainingController extends Controller
             return back()->with('error', $exception->getMessage());
         }
     }
+
+
+    public function upload(Request $request) {
+        try {
+
+            if (!$request->hasFile('file')) {
+                return redirect()->route('employees.index')->with('error', "Merci de spécifier le fichier excel.");
+            }
+
+            $request->validate(['file' => 'required|file|mimes:xlsx,csv,xls']);
+
+            $rows = Excel::toArray([], $request->file('file'))[0];
+
+            $count = 0;
+            foreach ($rows as $row) {
+
+                $starting = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1]));
+                $end = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[2]));
+
+                $starting_date =  $starting->format('Y-m-d'); // Outputs: 2025-09-04
+                $end_date =  $end->format('Y-m-d'); // Outputs: 2025-09-04
+
+                $training = $row[0]; // title ,theme
+
+                $durationInDays = $starting->diffInDays($end);
+
+                $data['duration'] = $durationInDays == 0 ? 1 : $durationInDays;
+
+                $data['local'] = 'Marrakech';
+                $data['title'] = $training;
+                $data['theme'] = $training;
+
+
+
+                $data['starting_date'] = $starting_date;
+                $data['end_date'] = $end_date;
+
+                $this->trainingService->create($data);
+                $count++;
+            }
+
+
+            if ($count != 0) {
+                return redirect()->route('trainings.index')->with('success', "Les formations est bien ajouté $count / ".count($rows)." !!");
+            }
+            return back()->with('error', "Erreur à linsertion d'une formation !!");
+
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
 
 }

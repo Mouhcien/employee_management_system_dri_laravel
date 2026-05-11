@@ -240,7 +240,6 @@
         <div class="table-responsive" style="min-height: 500px">
 
             @if (session('opt') == 'cards')
-
                 <div class="p-4">@include('app.employees._cards')</div>
             @elseif(session('opt') == 'empcrd')
                 @include('app.employees._employee_card')
