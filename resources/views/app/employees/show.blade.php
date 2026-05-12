@@ -242,6 +242,11 @@
     <x-affect-diploma-modal :employee="$employee" :diplomas="$diplomas" :options="$options" />
     <x-affect-grade-modal :employee="$employee" :levels="$levels" :grades="$grades" />
 
+    <hr>
+
+    <!-- Training sessions -->
+    @include('app.employees.partials.employee_training', ['attendences' => $employee->attendences])
+
     <style>
         .hover-lift:hover { transform: translateY(-4px); transition: all 0.2s ease-in-out; }
         .ls-1 { letter-spacing: 0.5px; }

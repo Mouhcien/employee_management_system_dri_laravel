@@ -300,13 +300,6 @@
                                                 @endforelse
                                                 </tbody>
                                             </table>
-                                            @foreach($employee->qualifications as $qualification)
-                                                <x-delete-model
-                                                    href="{{ route('qualifications.delete', $qualification->id) }}"
-                                                    message="Attention : La suppression du {{ $qualification->diploma->title }}  est irréversible."
-                                                    title="Confirmation de Suppression du diplôme"
-                                                    target="deleteQualificationModal-{{ $qualification->id }}" />
-                                            @endforeach
                                         </div>
                                     </div>
 
@@ -325,6 +318,8 @@
                                 </div>
                             </div>
                         </div>
+                        <hr>
+                        @include('app.employees.partials.employee_training', ['attendences' => $employee->attendences])
                     </div>
                 </div>
             </div>

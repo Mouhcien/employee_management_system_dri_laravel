@@ -42,10 +42,18 @@
                     </div>
                     <table class="table">
                         <thead>
-                        <th> Title </th><th>Date de début</th><th>Date de fin</th>
+                            <th> ID </th><th> Title </th><th> Thème </th><th>Date de début</th><th>Date de fin</th><th>PPR</th>
                         </thead>
                         <tbod>
-                            <td> CTR </td><td> MM/dd/yyyy </td><td> MM/dd/yyyy </td>
+                            <tr>
+                                <td> #1 </td><td> CTR </td><td> CTR </td><td> MM/dd/yyyy </td><td> MM/dd/yyyy </td><td>PPR ou null</td>
+                            </tr>
+                            <tr>
+                                <td> #1 </td><td> CTR </td><td> CTR </td><td> MM/dd/yyyy </td><td> MM/dd/yyyy </td><td>PPR ou null</td>
+                            </tr>
+                            <tr>
+                                <td> #2 </td><td> CTR </td><td> CTR </td><td> MM/dd/yyyy </td><td> MM/dd/yyyy </td><td>PPR ou null</td>
+                            </tr>
                         </tbod>
                     </table>
                 </div>

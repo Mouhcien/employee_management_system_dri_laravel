@@ -183,6 +183,8 @@
                         </div>
                     </div>
                 </div>
+                <hr>
+                @include('app.employees.partials.employee_training', ['attendences' => $employee->attendences])
             @else
                 <P> pas de chef actuellment </P>
             @endif

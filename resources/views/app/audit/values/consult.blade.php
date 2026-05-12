@@ -294,6 +294,7 @@
         @endif
     </div>
 
+
     {{-- Restored JS logic exactly as requested --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
