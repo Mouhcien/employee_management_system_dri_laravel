@@ -194,7 +194,15 @@
                                 <li><a class="dropdown-item rounded-3 py-2 fw-bold" href="{{ route('audit.tables.edit', $table) }}"><i class="bi bi-vector-pen me-2 text-primary"></i>Designer</a></li>
                                 <li><a class="dropdown-item rounded-3 py-2 fw-bold" href="#"><i class="bi bi-cloud-arrow-down me-2 text-success"></i>Exporter</a></li>
                                 <li><hr class="dropdown-divider opacity-50"></li>
-                                <li><a class="dropdown-item rounded-3 py-2 text-danger fw-bold" href="#"><i class="bi bi-trash3 me-2"></i>Supprimer</a></li>
+                                <li>
+                                    <button class="btn rounded-3 py-2 text-danger fw-bold"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteTableModal-{{ $table->id }}"
+                                            data-bs-toggle="tooltip"
+                                            title="Supprimer">
+                                        <i class="bi bi-trash3 me-2"></i> Supprimer
+                                    </button>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -258,5 +266,22 @@
                 </div>
             </div>
         @endif
+
+
     </div>
+
+    {{-- Modals de suppression --}}
+    @foreach($tables as $table)
+
+        <x-delete-model
+
+            href="{{ route('audit.tables.delete', $table->id) }}"
+
+            message="Attention : La suppression du tableau #{{ $table->title }} est irréversible."
+
+            title="Confirmation de Suppression"
+
+            target="deleteTableModal-{{ $table->id }}" />
+
+    @endforeach
 </x-layout>

@@ -1,34 +1,6 @@
 <x-layout>
     @section('title', 'Gestion des formations - HR Management')
 
-    <style>
-        /* Modern Scrollbar Styling */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #bbb;
-        }
-
-        .border-transparent { border-left-color: transparent !important; }
-
-        .employee-item {
-            transition: all 0.2s ease;
-        }
-
-        .employee-item:hover {
-            background-color: #f8f9fa;
-            transform: translateX(2px);
-        }
-    </style>
-
     <div class="container-fluid py-4 px-md-5">
         {{-- Header Professionnel --}}
         <div class="row align-items-center mb-5">
@@ -43,11 +15,21 @@
                 <p class="text-muted small">Pilotez les compétences et les cycles d'apprentissage de vos agents.</p>
             </div>
             <div class="col-md-4 text-md-end">
+
                 <a class="btn btn-primary shadow-sm rounded-3 px-4 py-2 fw-bold" href="{{ route('trainings.create') }}">
                     <i class="bi bi-plus-lg me-2"></i>Nouvelle Formation
                 </a>
+                <button class="btn btn-outline-dark shadow-sm rounded-3 px-4 py-2 fw-bold"
+                        data-bs-toggle="modal"
+                        data-bs-target="#importAllTrainingsModal">
+                    <i class="bi bi-file-excel me-2"></i>Import Formation
+                </button>
+
             </div>
         </div>
+
+        {{-- import employees --}}
+        <x-import-trainings />
 
         <div class="row g-4">
             {{-- Barre Latérale de Filtres --}}
@@ -91,7 +73,7 @@
             <div class="col-lg-9">
                 <div class="card border-0 shadow-sm rounded-4">
                     <div class="table-responsive" style="min-height: 400px">
-                        <table class="table table-hover align-middle mb-0">
+                        <table class="table table-bordered align-middle mb-0">
                             <thead class="bg-light">
                             <tr>
                                 <th class="ps-4 py-3 border-0 text-muted small uppercase ls-1 fw-bold">Formation</th>
@@ -117,7 +99,7 @@
                                         <div class="d-flex align-items-center gap-2">
                                             <span class="small fw-medium bg-light px-2 py-1 rounded border">{{ \Carbon\Carbon::parse($training->starting_date)->format('d M Y') }}</span>
                                             <i class="bi bi-arrow-right text-muted small"></i>
-                                            <span class="small fw-medium bg-light px-2 py-1 rounded border">{{ \Carbon\Carbon::parse($training->ending_date)->format('d M Y') }}</span>
+                                            <span class="small fw-medium bg-light px-2 py-1 rounded border">{{ \Carbon\Carbon::parse($training->end_date)->format('d M Y') }}</span>
                                         </div>
                                     </td>
                                     <td class="py-4 text-center">
@@ -132,7 +114,7 @@
                                     <td class="pe-4 py-4 text-end">
 
                                         <div class="dropdown">
-                                            <button class="btn btn-light btn-sm rounded-circle shadow-sm" data-bs-toggle="dropdown">
+                                            <button class="btn btn-light btn-sm rounded-circle shadow-sm " data-bs-toggle="dropdown">
                                                 <i class="bi bi-three-dots-vertical"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-3">
@@ -288,6 +270,11 @@
         .form-control:focus, .form-select:focus {
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
             border-color: #4f46e5;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            z-index: 9999; /* Higher than surrounding elements */
         }
     </style>
 </x-layout>

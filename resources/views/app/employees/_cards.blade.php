@@ -167,7 +167,7 @@
     </div>
 </div>
 
-<div id="employee-photo-preview" style="display: none; position: fixed; z-index: 10000; width: 400px; height: 400px; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.3); border: 5px solid white; pointer-events: none; background-color: #fff;">
+<div id="employee-photo-preview" style="display: none; position: fixed; z-index: 10000; width: 400px; height: 500px; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.3); border: 5px solid white; pointer-events: none; background-color: #fff;">
     <img src="" alt="Aperçu employé" style="width: 100%; height: 100%; object-fit: cover;">
 </div>
 

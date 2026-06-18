@@ -14,11 +14,16 @@
                 <p class="text-muted small">{{ $training->theme }}</p>
             </div>
             <div class="col-md-4 text-md-end">
-                <a class="btn btn-primary shadow-sm rounded-3 px-4 py-2 fw-bold" href="{{ route('trainings.create') }}">
-                    <i class="bi bi-plus-lg me-2"></i>Nouvelle Formation
-                </a>
+                <button class="btn btn-primary shadow-sm rounded-3 px-4 py-2 fw-bold"
+                        data-bs-toggle="modal"
+                        data-bs-target="#importAllAttendancesModal">
+                    <i class="bi bi-plus-lg me-2"></i>Importer les  participants
+                </button>
             </div>
         </div>
+
+        {{-- import attendences --}}
+        <x-import-attendances training_id="{{ $training->id }}" />
 
         <div class="row g-4">
             <div class="col-lg-4 col-xl-3">

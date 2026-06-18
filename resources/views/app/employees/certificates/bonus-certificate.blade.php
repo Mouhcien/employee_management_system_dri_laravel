@@ -214,12 +214,12 @@
             </thead>
             <tbody>
             <tr>
-                <td class="fw-bold">2024</td>
-                <td class="text-end">106 449,79</td>
-                <td class="text-end">26 427,79</td>
-                <td class="text-end fw-bold">80 022,00</td>
+                <td class="fw-bold">{{ $year }}</td>
+                <td class="text-end"> {{ number_format($gross, 2, ',', ' ') }}</td>
+                <td class="text-end"> {{ number_format($ir, 2, ',', ' ') }}</td>
+                <td class="text-end fw-bold"> {{ number_format($net, 2, ',', ' ') }}</td>
                 <td class="amount-words">
-                    Quatre vingt mille et <br> vingt deux Dirhams
+                    {{ $words }}
                 </td>
             </tr>
             </tbody>

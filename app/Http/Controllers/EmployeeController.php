@@ -83,7 +83,7 @@ class EmployeeController extends Controller
         WorkService $workService,
         CompetenceService $competenceService,
         QualificationService $qualificationService,
-        AffectationService $affectationService,
+        AffectationService $affectationService
     ) {
         $this->employeeService = $employeeService;
         $this->localService = $localService;
@@ -501,6 +501,9 @@ class EmployeeController extends Controller
 
     public function import_all(Request $request)
     {
+
+        //dd($request);
+
         if (!$request->hasFile('file')) {
             return redirect()->route('employees.index')->with('error', "Merci de spécifier le fichier excel.");
         }
@@ -574,6 +577,8 @@ class EmployeeController extends Controller
                     $this->employeeService->create($employeeData);
                     $employeeId = $this->employeeService->getLatestInserted()->id;
                 }
+
+
 
                 // 4. Process Affectation (ONLY if service exists)
                 /*
@@ -971,13 +976,11 @@ class EmployeeController extends Controller
             $grade = is_null($employee->competences->where('finished_date', null)->first()) ? 'N/A' : $employee->competences->where('finished_date', null)->first()->grade->title;
             $civility = $employee->gender == 'M' ? 'M' : 'Mme';
 
-            $pdf = Pdf::loadView('app.employees.certificates.bonus-certificate', [
+            return view('app.categories.prepare-bonus', [
                 'employee' => $employee,
                 'grade' => $grade,
                 'civility' => $civility,
-            ])->setPaper('a4', 'portrait');
-
-            return $pdf->stream();
+            ]);
 
         }catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());

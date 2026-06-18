@@ -4,6 +4,7 @@ namespace App\repositories;
 
 use App\Models\Employee;
 use App\Models\Period;
+use App\Models\Training;
 
 class MainRepository
 {
@@ -19,6 +20,9 @@ class MainRepository
 
         if ($class === Period::class)
             $query->orderBy('periods.year', 'DESC')->orderBy('periods.title', 'ASC');
+
+        if ($class === Training::class)
+            $query->orderBy('starting_date', 'DESC');
 
         $query->orderBy('id', 'DESC');
 

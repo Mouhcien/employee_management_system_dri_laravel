@@ -345,6 +345,9 @@
                             @endforelse
                         </div>
                     </div>
+
+                    <hr>
+                    @include('app.employees.partials.employee_training', ['attendences' => $employee->attendences])
                 </div>
             </div>
         </div>

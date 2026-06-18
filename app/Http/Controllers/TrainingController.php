@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\services\AttendenceService;
 use App\Services\EmployeeService;
 use App\services\TrainingService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TrainingController extends Controller
 {
     private TrainingService $trainingService;
     private EmployeeService $employeeService;
+    private AttendenceService $attendenceService;
     private $pages = 10;
     private $rules = [
         'title' => 'required',
@@ -24,10 +28,11 @@ class TrainingController extends Controller
      * @param TrainingService $trainingService
      * @param EmployeeService $employeeService
      */
-    public function __construct(TrainingService $trainingService, EmployeeService $employeeService)
+    public function __construct(TrainingService $trainingService, EmployeeService $employeeService, AttendenceService $attendenceService)
     {
         $this->trainingService = $trainingService;
         $this->employeeService = $employeeService;
+        $this->attendenceService = $attendenceService;
     }
 
 
@@ -199,6 +204,89 @@ class TrainingController extends Controller
 
         }catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
+        }
+    }
+
+
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv,xls'
+        ]);
+
+        try {
+            $count = $this->importTrainingsFromExcel($request->file('file'));
+
+            if ($count > 0) {
+                return redirect()->route('trainings.index')
+                    ->with('success', "Importation réussie : $count formations ajoutées.");
+            }
+
+            return back()->with('error', "Aucune formation n'a été importée.");
+
+        } catch (\Exception $e) {
+            return back()->with('error', "Une erreur est survenue lors de l'import : " . $e->getMessage());
+        }
+    }
+
+    public function importTrainingsFromExcel($file)
+    {
+        $rows = Excel::toArray([], $file)[0];
+        array_shift($rows); // Remove header
+
+        return DB::transaction(function () use ($rows) {
+            $count = 0;
+            $currentSessionId = null;
+            $currentTrainingId = null;
+
+            foreach ($rows as $row) {
+                // Skip empty rows
+                if (empty(array_filter($row))) continue;
+
+                $excelSessionId = $row[0];
+
+                // Scenario: New Training Session
+                if ($currentSessionId !== $excelSessionId) {
+                    $training_id = $this->createTrainingFromRow($row);
+                    $currentTrainingId = $training_id;
+                    $currentSessionId = $excelSessionId;
+                    $count++;
+                }
+
+                // Scenario: Add Employee Attendance
+                $this->attachEmployeeToTraining($row[5], $currentTrainingId);
+            }
+
+            return $count;
+        });
+    }
+
+    private function createTrainingFromRow(array $row)
+    {
+        $starting = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[3]));
+        $end = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[4]));
+
+        $duration = $starting->diffInDays($end);
+
+        $this->trainingService->create([
+            'title'         => $row[1],
+            'theme'         => $row[2],
+            'starting_date' => $starting->format('Y-m-d'),
+            'end_date'      => $end->format('Y-m-d'),
+            'duration'      => $duration ?: 1,
+            'local'         => 'Marrakech',
+        ]);
+        return $this->trainingService->getLatestInserted();
+    }
+
+    private function attachEmployeeToTraining($ppr, $trainingId)
+    {
+        $employee = $this->employeeService->getOneByPPR(trim($ppr));
+        if ($employee) {
+            $this->attendenceService->create([
+                'employee_id' => $employee->id,
+                'training_id' => $trainingId,
+            ]);
         }
     }
 

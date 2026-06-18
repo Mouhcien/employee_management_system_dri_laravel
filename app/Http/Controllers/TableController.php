@@ -264,4 +264,24 @@ class TableController extends Controller
         }
     }
 
+    public function delete($id)
+    {
+        try {
+
+            $table = $this->tableService->getOneById($id);
+            if (is_null($table))
+                return back()->with('error', 'tableau Introuvable !!');
+
+            $result = $this->tableService->delete($id);
+
+            if (is_null($result))
+                return back()->with('error', 'Suppression est impossible !!');
+            else
+                return back()->with('success', 'La suppression est bien fiate !!');
+
+        }catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
 }
