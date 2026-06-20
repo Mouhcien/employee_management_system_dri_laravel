@@ -27,6 +27,58 @@
         <span class="sidebar-text fw-semibold">Tableau de bord</span>
     </a>
 
+    @if (auth()->user()->profile->id == 1)
+        <div class="sidebar-section-title mt-3 mb-1 px-3"></div>
+        <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base"
+                type="button" data-bs-toggle="collapse" data-bs-target="#menuAccesRapide">
+            <span class="d-flex align-items-center">
+                <i class="bi bi-arrows-angle-contract me-2 fs-5"></i>
+                <span class="sidebar-text fw-semibold">Accès rapide</span>
+            </span>
+            <i class="bi bi-chevron-down small transition-base"></i>
+        </button>
+        <div class="collapse" id="menuAccesRapide">
+            <ul class="nav flex-column ms-2 mt-1">
+                <li class="nav-item">
+                    <a href="{{ route('employees.index') }}"
+                       class="nav-link sidebar-link-nested rounded-3 px-3 py-2 d-flex align-items-center small {{ request()->routeIs('employees.index') ? 'active fw-bold' : '' }}">
+                        <i class="bi bi-list me-1 fs-4"></i><span class="sidebar-text">Annuaire</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('audit.values.select') }}"
+                       class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.select') ? 'active' : '' }}">
+                        <i class="bi bi-person-workspace me-1 fs-4"></i><span class="sidebar-text">Superviser l'évaluation</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    @endif
+
+    @if (auth()->user()->profile->id == 4)
+        <div class="sidebar-section-title mt-3 mb-1 px-3">Ressources Humaines</div>
+        <div class="sidebar-group mb-1">
+            <div>
+                <ul class="nav flex-column ms-2 mt-1">
+                    <li class="nav-item">
+                        <a href="{{ route('employees.index') }}"
+                           class="nav-link sidebar-link-nested rounded-3 px-3 py-2 d-flex align-items-center small {{ request()->routeIs('employees.index') ? 'active fw-bold' : '' }}">
+                            <i class="bi bi-list me-1 fs-4"></i><span class="sidebar-text">Annuaire</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('audit.values.select') }}"
+                           class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.select') ? 'active' : '' }}">
+                            <i class="bi bi-person-workspace me-1 fs-4"></i><span class="sidebar-text">Superviser l'évaluation</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    @endif
+
+    @if (auth()->user()->profile->id == 1 || auth()->user()->profile->id == 5 )
     {{-- Section: EMPLOYÉS --}}
     <div class="sidebar-section-title mt-3 mb-1 px-3">Ressources Humaines</div>
     <div class="sidebar-group mb-1">
@@ -56,7 +108,7 @@
                 <li class="nav-item">
                     <a href="{{ route('employees.status') }}"
                        class="nav-link sidebar-link-nested rounded-3 px-3 py-2 d-flex align-items-center small {{ request()->routeIs('employees.status') ? 'active fw-bold' : '' }}">
-                        <i class="bi bi-layers me-1 fs-4"></i><span class="sidebar-text">Status</span>
+                        <i class="bi bi-layers me-1 fs-4"></i><span class="sidebar-text">Hors Service</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -80,8 +132,10 @@
             </ul>
         </div>
     </div>
+    @endif
 
 
+    @if (auth()->user()->profile->id == 1 || auth()->user()->profile->id == 5)
     {{-- Section: RÉFÉRENTIELS --}}
     <div class="sidebar-section-title mt-3 mb-1 px-3">Référentiels</div>
     <div class="sidebar-group mb-1">
@@ -103,7 +157,9 @@
             </ul>
         </div>
     </div>
+    @endif
 
+    @if (auth()->user()->profile->id == 1 || auth()->user()->profile->id == 5)
     {{-- Section: INFRASTRUCTURES --}}
     <div class="sidebar-section-title mt-3 mb-1 px-3">Infrastructures</div>
     <div class="sidebar-group mb-1">
@@ -122,7 +178,9 @@
             </ul>
         </div>
     </div>
+    @endif
 
+    @if (auth()->user()->profile->id == 1 || auth()->user()->profile->id == 5)
     {{-- Section: STRUCTURE --}}
     <div class="sidebar-section-title mt-3 mb-1 px-3">Organisation</div>
     <div class="sidebar-group mb-1">
@@ -144,7 +202,9 @@
             </ul>
         </div>
     </div>
+    @endif
 
+    @if (auth()->user()->profile->id == 1 || auth()->user()->profile->id == 5)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Hiérarchie</div>
     <div class="sidebar-group mb-3">
         <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('chefs.*') ? 'text-primary bg-primary-subtle' : '' }}"
@@ -162,7 +222,9 @@
             </ul>
         </div>
     </div>
+    @endif
 
+    @if (auth()->user()->profile->id == 1 || auth()->user()->profile->id == 5)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Formations</div>
     <div class="sidebar-group mb-3">
         <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('trainings.*') ? 'text-primary bg-primary-subtle' : '' }}"
@@ -179,7 +241,9 @@
             </ul>
         </div>
     </div>
+    @endif
 
+    @if (auth()->user()->profile->id == 1 || auth()->user()->profile->id == 3)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Configuration</div>
     <div class="sidebar-group mb-3">
         <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('audit.tables.*') || request()->routeIs('audit.periods.*') ? 'text-primary bg-primary-subtle' : '' }}"
@@ -197,7 +261,9 @@
             </ul>
         </div>
     </div>
+    @endif
 
+    @if (auth()->user()->profile->id == 1 || auth()->user()->profile->id == 3)
     <div class="sidebar-section-title mt-3 mb-1 px-3">Performance</div>
     <div class="sidebar-group mb-3">
         <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('audit.values.*') ? 'text-primary bg-primary-subtle' : '' }}"
@@ -211,30 +277,12 @@
         <div class="collapse {{ request()->routeIs('audit.values.*') ? 'show' : '' }}" id="menuPerformance">
             <ul class="nav flex-column ms-2 mt-1">
                 <li><a href="{{ route('audit.values.index') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.index') ? 'active' : '' }}"><i class="bi bi-database-add me-1 fs-4"></i>Remplir les tableaux</a></li>
-                <li><a href="{{ route('audit.values.consult') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.consult') ? 'active' : '' }}"><i class="bi bi-bar-chart-steps me-1 fs-4"></i>Consulter l'évaluation</a></li>
+                {{-- <li><a href="{{ route('audit.values.consult') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.consult') ? 'active' : '' }}"><i class="bi bi-bar-chart-steps me-1 fs-4"></i>Consulter l'évaluation</a></li> --}}
                 <li><a href="{{ route('audit.values.select') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.select') ? 'active' : '' }}"><i class="bi bi-person-workspace me-1 fs-4"></i>Superviser l'évaluation</a></li>
             </ul>
         </div>
     </div>
-
-    {{--
-    <div class="sidebar-section-title mt-3 mb-1 px-3">Supervision </div>
-    <div class="sidebar-group mb-3">
-        <button class="btn sidebar-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 transition-base {{ request()->routeIs('audit.values.*') ? 'text-primary bg-primary-subtle' : '' }}"
-                type="button" data-bs-toggle="collapse" data-bs-target="#menuSupervision">
-        <span class="d-flex align-items-center">
-            <i class="bi bi-person-workspace me-2 fs-5"></i>
-            <span class="sidebar-text fw-semibold">Supervision</span>
-        </span>
-            <i class="bi bi-chevron-down small transition-base"></i>
-        </button>
-        <div class="collapse {{ request()->routeIs('audit.values.*') ? 'show' : '' }}" id="menuSupervision">
-            <ul class="nav flex-column ms-2 mt-1">
-                <li><a href="{{ route('audit.values.select') }}" class="nav-link sidebar-link-nested rounded-3 px-3 py-2 small {{ request()->routeIs('audit.values.select') ? 'active' : '' }}"><i class="bi bi-person-workspace me-1 fs-4"></i>Superviser l'évaluation</a></li>
-            </ul>
-        </div>
-    </div>
-    --}}
+    @endif
 
 
 </nav>

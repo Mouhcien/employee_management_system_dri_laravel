@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'HR Management')</title>
+    <title>@yield('title', 'Gerstion des RH')</title>
 
     @vite(['resources/css/app.css', 'resources/css/toastr.min.css'])
 
@@ -119,46 +119,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-
-        /*
-        const loader = document.getElementById('global-loader');
-
-        const showLoader = () => {
-            loader.style.display = 'flex';
-        };
-
-        // 1. All Form Submissions
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', showLoader);
-        });
-
-        // 2. All Links (except external or hash links)
-        document.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Only show loader if it's a normal internal navigation
-                if (
-                    link.href &&
-                    link.getAttribute('target') !== '_blank' &&
-                    !link.href.includes('#') &&
-                    link.origin === window.location.origin
-                ) {
-                    showLoader();
-                }
-            });
-        });
-
-        // 3. Custom Buttons (like "Refresh" or specific actions)
-        document.querySelectorAll('.trigger-loader').forEach(btn => {
-            btn.addEventListener('click', showLoader);
-        });
-
-        // 4. Hide loader if the user hits the "Back" button
-        window.onpageshow = function(event) {
-            if (event.persisted) {
-                document.getElementById('global-loader').style.display = 'none';
-            }
-        };
-        */
 
         const loader = document.getElementById('global-loader');
         const TIMEOUT_DURATION = 5000; // 5 secondes

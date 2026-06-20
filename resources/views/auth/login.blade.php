@@ -123,10 +123,10 @@
                     @csrf
 
                     <div class="mb-4">
-                        <label for="email" class="input-label">Identifiant</label>
-                        <input id="email" class="form-control @error('email') is-invalid @enderror"
-                               type="email" name="email" value="{{ old('email') }}"
-                               placeholder="nom@entreprise.fr" required autofocus autocomplete="username">
+                        <label for="username" class="input-label">Identifiant</label>
+                        <input id="username" class="form-control @error('username') is-invalid @enderror"
+                               type="text" name="username" value="{{ old('username') }}"
+                               required autofocus autocomplete="username">
                         @error('email')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -166,5 +166,46 @@
     </div>
 </div>
 
+@vite(['resources/js/jquery-3.7.1.js', 'resources/js/app.js', 'resources/js/toastr.min.js', 'resources/js/script.js', 'resources/js/chart.js', 'resources/js/tom-select.complete.min.js'])
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Toastr Configuration
+        window.addEventListener('load', function () {
+            // Configure Toastr
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-bottom-right",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut",
+                "preventDuplicates": true,
+                "newestOnTop": true
+            };
+
+            // Display Session Messages
+            @if(Session::has('success'))
+            toastr.success("{{ session('success') }}", "Succès");
+            @endif
+
+            @if(Session::has('error'))
+            toastr.error("{{ session('error') }}", "Erreur");
+            @endif
+
+            @if(Session::has('info'))
+            toastr.info("{{ session('info') }}", "Information");
+            @endif
+
+            @if(Session::has('warning'))
+            toastr.warning("{{ session('warning') }}", "Attention");
+            @endif
+        });
+    });
+
+</script>
 </body>
 </html>

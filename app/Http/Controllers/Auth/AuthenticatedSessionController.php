@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\services\ConfigService;
 use App\Services\EmployeeService;
+use App\services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -16,14 +18,13 @@ class AuthenticatedSessionController extends Controller
 {
     private EmployeeService $employeeService;
     private ConfigService $configService;
+    private UserService $userService;
 
-    /**
-     * @param EmployeeService $employeeService
-     */
-    public function __construct(EmployeeService $employeeService, ConfigService $configService)
+    public function __construct(EmployeeService $employeeService, ConfigService $configService, UserService $userService)
     {
         $this->employeeService = $employeeService;
         $this->configService = $configService;
+        $this->userService = $userService;
     }
 
 
@@ -38,35 +39,54 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $request->authenticate();
+        $username = $request->username;
+        $password = $request->password;
 
-        $request->session()->regenerate();
+        $existed_user = $this->userService->getOneByUsername($username);
 
-        $user = auth()->user();
+        if (is_null($existed_user)) {
+            return redirect()->route('login')->with('error', 'Utilisateur Introuvable');
+        } else {
+            if (Hash::check($password, $existed_user->password)) {
 
-        $employee = $this->employeeService->getOneByEmail($user->email);
+                $user = $existed_user;
 
-        if (is_null($employee)) {
-            return redirect()->route('login')->with('error', 'Agent Introuvable');
+                $employee = $this->employeeService->getOneByEmail(strtolower($user->email));
+
+                if (is_null($employee)) {
+                    return redirect()->route('login')->with('error', 'Agent Introuvable');
+                }
+
+                // 1. Log the user into Laravel's Auth System
+                Auth::login($user);
+
+                // 2. Regenerate the session immediately AFTER login (Laravel security best practice)
+                $request->session()->regenerate();
+
+                $photoUrl = ($employee->photo && Storage::disk('public')->exists($employee->photo))
+                    ? $employee->photo
+                    : asset('images/default-avatar.png');
+
+                session([
+                    'employee_id'    => $employee->id,
+                    'employee_name'  => $employee->firstname . ' ' . $employee->lastname,
+                    'employee_photo' => $photoUrl,
+                ]);
+
+                // Get the Navigation config
+                $configs = $this->configService->getAllByUser($user->id, 0);
+                session()->put('configs', $configs);
+
+                return redirect()->route('dashboard0');
+
+            } else {
+                return redirect()->route('login')->with('error', 'Mot de passe incorrect');
+            }
+
         }
 
-        $photoUrl = ($employee->photo && Storage::disk('public')->exists($employee->photo))
-            ? $employee->photo
-            : asset('images/default-avatar.png');
-
-        session([
-            'employee_id'    => $employee->id,
-            'employee_name'  => $employee->firstname . ' ' . $employee->lastname,
-            'employee_photo' => $photoUrl,
-        ]);
-
-        // Get the Navigation config
-        $configs = $this->configService->getAllByUser($user->id, 0);
-        session()->put('configs', $configs);
-
-        return redirect()->intended(route('dashboard0', absolute: false));
     }
 
     /**
