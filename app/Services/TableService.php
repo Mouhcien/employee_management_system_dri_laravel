@@ -19,7 +19,7 @@ class TableService
     }
 
     public function getAll($pages=0){
-        return $this->tableRepository->All(Table::class, $this->with, $pages);
+        return $this->tableRepository->All(Table::class, [], $pages);
     }
 
     public function getOneById($id){

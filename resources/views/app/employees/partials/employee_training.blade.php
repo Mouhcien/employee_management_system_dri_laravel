@@ -30,36 +30,36 @@
                     <tr>
                         <td class="ps-4 py-4">
                             <div class="d-flex flex-column">
-                                <span class="fw-semibold text-dark mb-1 h6">{{ $attendence->training->title }}</span>
+                                <span class="fw-semibold text-dark mb-1 h6">{{ $attendence->training->title ?? 'N/A' }}</span>
                                 <span class="text-muted small d-flex align-items-center">
-                                        <i class="bi bi-tag me-1"></i> {{ Str::limit($attendence->training->theme, 60) }}
+                                        <i class="bi bi-tag me-1"></i> {{ Str::limit($attendence->training->theme ?? 'N/A', 60) }}
                                     </span>
                             </div>
                         </td>
                         <td class="py-4 text-center">
                             <div class="d-inline-flex align-items-center px-3 py-1 rounded-pill bg-info bg-opacity-10 text-info border border-info border-opacity-10">
                                 <i class="bi bi-clock-history me-2 small"></i>
-                                <span class="fw-bold">{{ $attendence->training->duration }}</span>
+                                <span class="fw-bold">{{ $attendence->training->duration ?? 'N/A' }}</span>
                                 <span class="ms-1 small fw-normal">Jours</span>
                             </div>
                         </td>
                         <td class="py-4">
                             <div class="d-flex align-items-center">
                                 <div class="date-box text-center me-2">
-                                    <div class="small fw-bold text-primary">{{ \Carbon\Carbon::parse($attendence->training->starting_date)->format('d') }}</div>
-                                    <div class="text-uppercase text-muted" style="font-size: 0.65rem;">{{ \Carbon\Carbon::parse($attendence->training->starting_date)->format('M') }}</div>
+                                    <div class="small fw-bold text-primary">{{ \Carbon\Carbon::parse($attendence->training->starting_date ?? '0000-00-00')->format('d') }}</div>
+                                    <div class="text-uppercase text-muted" style="font-size: 0.65rem;">{{ \Carbon\Carbon::parse($attendence->training->starting_date ?? '0000-00-00')->format('M') }}</div>
                                 </div>
                                 <i class="bi bi-arrow-right-short text-muted mx-1"></i>
                                 <div class="date-box text-center ms-1">
-                                    <div class="small fw-bold text-dark">{{ \Carbon\Carbon::parse($attendence->training->end_date)->format('d') }}</div>
-                                    <div class="text-uppercase text-muted" style="font-size: 0.65rem;">{{ \Carbon\Carbon::parse($attendence->training->end_date)->format('M') }}</div>
+                                    <div class="small fw-bold text-dark">{{ \Carbon\Carbon::parse($attendence->training->end_date ?? '0000-00-00')->format('d') }}</div>
+                                    <div class="text-uppercase text-muted" style="font-size: 0.65rem;">{{ \Carbon\Carbon::parse($attendence->training->end_date ?? '0000-00-00')->format('M') }}</div>
                                 </div>
                             </div>
                         </td>
                         <td class="py-4">
                             <div class="d-flex align-items-center">
                                 <div class="date-box text-center me-2">
-                                    <div class="small fw-bold text-primary">{{ \Carbon\Carbon::parse($attendence->training->starting_date)->format('Y') }}</div>
+                                    <div class="small fw-bold text-primary">{{ \Carbon\Carbon::parse($attendence->training->starting_date ?? '0000-00-00')->format('Y') }}</div>
                                 </div>
                             </div>
                         </td>

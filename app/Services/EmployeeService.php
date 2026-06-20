@@ -22,6 +22,11 @@ class EmployeeService
         return $this->employeeRepository->all(Employee::class, $this->with, $pages);
     }
 
+    public function getClearAll(int $pages = 0)
+    {
+        return $this->employeeRepository->all(Employee::class, [], $pages);
+    }
+
     public function getInActiveEmployees(int $pages = 0)
     {
         return $this->employeeRepository->inActiveEmployees($this->with, $pages);

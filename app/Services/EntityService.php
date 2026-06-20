@@ -23,6 +23,11 @@ class EntityService
         return $this->entityRepository->All(Entity::class, $this->with, $pages);
     }
 
+    public function getClearAll($pages = 0)
+    {
+        return $this->entityRepository->All(Entity::class, [], $pages);
+    }
+
     public function getAllByService($service_id, $pages = 0)
     {
         return $this->entityRepository->AllByService($service_id, $pages);

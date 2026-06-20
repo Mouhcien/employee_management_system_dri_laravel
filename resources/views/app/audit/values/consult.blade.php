@@ -209,84 +209,113 @@
                             <span class="ls-caps text-muted opacity-75">ID-{{ $employeeValues->first()->employee?->id }}</span>
                         </div>
                         <div class="d-flex gap-3">
-                            <small class="ls-caps text-primary fw-bold"><i class="bi bi-diagram-2 me-1"></i> Performance Insight</small>
-                            <small class="ls-caps text-muted"><i class="bi bi-clock-history me-1"></i> Analyse Multi-Périodes</small>
+                            <small class="ls-caps text-primary fw-bold"><i class="bi bi-diagram-2 me-1"></i> Structure Fidèle au Fichier Excel</small>
+                            <small class="ls-caps text-muted"><i class="bi bi-clock-history me-1"></i> Toutes les lignes d'opérations</small>
                         </div>
                     </div>
                 </div>
 
                 @foreach($employeeValues->groupBy(fn($item) => $item->relation->table->title) as $tableTitle => $tableEntries)
-                    <div class="px-4 py-3 bg-indigo-soft text-primary ls-caps border-start border-end border-white">
+                    <div class="px-4 py-3 bg-indigo-soft text-primary ls-caps border-start border-end border-white fw-bold">
                         <i class="bi bi-table me-2"></i> Dimension : {{ $tableTitle }}
                     </div>
 
                     <div class="bg-white border p-4 mb-4 rounded-bottom-4 shadow-sm">
                         @php
                             $periodsInTable = $tableEntries->groupBy('period_id')->sortByDesc(fn($group) => $group->first()->period->year);
-                            $periodKeys = $periodsInTable->keys()->toArray();
+
+                            // Dynamic generation pulling configured headers directly from your columns schema definition
+                            $excelOrderedHeaders = $tableEntries->pluck('relation.column.title')->unique()->toArray();
                         @endphp
 
                         @foreach($periodsInTable as $periodId => $valuesInPeriod)
-                            @php $currentPeriod = $valuesInPeriod->first()->period; @endphp
+                            @php
+                                $currentPeriod = $valuesInPeriod->first()->period;
+
+                                /**
+                                 * CRITICAL FIX: Group items by a compound key or unique transaction tracking instance.
+                                 * If your import process writes a unique tracking grouping parameter, use it here.
+                                 * Alternatively, we sub-group by 'or' AND a row line identifier so duplicate OR entries split into independent rows.
+                                 */
+                                $orGroups = $valuesInPeriod->groupBy(function($item) {
+                                    // Fallback grouping schema to preserve individual rows if multiple items share an OR index
+                                    return $item->or . '_' . ($item->row_identifier ?? $item->id);
+                                });
+                            @endphp
+
                             <div class="card border-light shadow-xs mb-4 overflow-hidden rounded-3">
+                                <div class="card-header bg-light py-2 px-3 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="badge bg-dark px-3 py-2 text-uppercase rounded-2">
+                                    {{ $currentPeriod->title }} {{ $currentPeriod->year }}
+                                </span>
+                                    <small class="text-muted fw-bold">{{ $orGroups->count() }} Ligne(s) d'opérations affichée(s)</small>
+                                </div>
+
                                 <div class="table-responsive">
                                     <table class="table table-technical align-middle mb-0">
-                                        <thead>
+                                        <thead class="bg-light-subtle">
                                         <tr>
-                                            <th class="ps-4" style="width: 220px;">
-                                                    <span class="badge bg-dark px-3 py-2 text-uppercase rounded-2">
-                                                        {{ $currentPeriod->title }} {{ $currentPeriod->year }}
-                                                    </span>
-                                            </th>
-                                            @foreach($valuesInPeriod as $entry)
-                                                <th class="text-center">{{ $entry->relation->column->title }}</th>
+                                            <th class="ps-4" style="min-width: 120px;">OR</th>
+                                            @foreach($excelOrderedHeaders as $headerTitle)
+                                                <th class="text-center small fw-bold text-uppercase text-secondary">
+                                                    {{ str_replace('_', ' ', $headerTitle) }}
+                                                </th>
                                             @endforeach
-                                            <th class="text-end pe-4">Actions</th>
+                                            <th class="text-end pe-4" style="width: 120px;">Actions</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr class="bg-light bg-opacity-25">
-                                            <td class="ps-4 py-3 small text-muted fw-medium italic"><i class="bi bi-activity me-2"></i>Métriques</td>
-                                            @php $attr = ""; @endphp
-                                            @foreach($valuesInPeriod as $entry)
-                                                <td class="text-center">
-                                                    <div class="d-flex align-items-center justify-content-center gap-2">
-                                                        <div class="input-readonly-data px-3 py-2">{{ $entry->value }}</div>
+                                        @foreach($orGroups as $groupKey => $entriesInLine)
+                                            @php
+                                                // Pluck all distinct attribute block entity values tied to this true operational spreadsheet line
+                                                $attr = $entriesInLine->pluck('id')->implode('-');
+                                                $displayOr = $entriesInLine->first()->or;
+                                            @endphp
+                                            <tr>
+                                                <td class="ps-4 py-3 fw-bold text-dark">
+                                                <span class="badge bg-secondary-subtle text-secondary border px-2 py-1">
+                                                    {{ !empty($displayOr) ? $displayOr : '—' }}
+                                                </span>
+                                                </td>
 
-                                                        @php
-                                                            $currentIndex = array_search($periodId, $periodKeys);
-                                                            $prevPeriodId = $periodKeys[$currentIndex + 1] ?? null;
-                                                            $trend = null;
-                                                            if ($prevPeriodId) {
-                                                                $prevEntry = $tableEntries->where('period_id', $prevPeriodId)->where('relation_id', $entry->relation_id)->first();
-                                                                if ($prevEntry) {
-                                                                    if ($entry->value > $prevEntry->value) $trend = 'up';
-                                                                    elseif ($entry->value < $prevEntry->value) $trend = 'down';
-                                                                }
-                                                            }
-                                                        @endphp
-
-                                                        @if($trend === 'up')
-                                                            <span class="trend-badge trend-up"><i class="bi bi-graph-up"></i></span>
-                                                        @elseif($trend === 'down')
-                                                            <span class="trend-badge trend-down"><i class="bi bi-graph-down"></i></span>
+                                                @foreach($excelOrderedHeaders as $headerTitle)
+                                                    @php
+                                                        // Search for matching data cell explicitly bounded within this true horizontal line collection subset
+                                                        $cellEntry = $entriesInLine->first(fn($entry) => ($entry->relation->column->title ?? '') === $headerTitle);
+                                                        $val = $cellEntry?->value;
+                                                    @endphp
+                                                    <td class="text-center">
+                                                        @if(!is_null($val) && $val !== '')
+                                                            <div class="px-2 py-1 d-inline-block rounded small text-dark fw-medium">
+                                                                {{ is_numeric($val) && !str_contains(strtolower($headerTitle), 'date') ? number_format((float)$val, 2, ',', ' ') : $val }}
+                                                            </div>
+                                                        @else
+                                                            <span class="text-muted opacity-25">—</span>
                                                         @endif
+                                                    </td>
+                                                @endforeach
+
+                                                <td class="text-end pe-4">
+                                                    <div class="btn-group rounded-3 overflow-hidden shadow-xs">
+                                                        <a href="{{ route('audit.values.edit', ['id' => $entriesInLine->first()->relation_id, 'attr' => $attr]) }}" class="btn btn-sm btn-white border px-2 text-warning" title="Modifier la ligne">
+                                                            <i class="bi bi-pencil-square"></i>
+                                                        </a>
+                                                        <button class="btn btn-sm btn-white border px-2 text-danger native-modal-trigger"
+                                                                type="button"
+                                                                data-target="deleteValueElementModal-{{ $entriesInLine->first()->id }}"
+                                                                title="Supprimer la ligne">
+                                                            <i class="bi bi-trash3"></i>
+                                                        </button>
                                                     </div>
                                                 </td>
-                                                @php $attr .= $entry->id."-" @endphp
-                                            @endforeach
-                                            <td class="text-end pe-4">
-                                                <div class="btn-group rounded-3 overflow-hidden shadow-xs">
-                                                    <a href="{{ route('audit.values.edit', ['id' => $valuesInPeriod->first()->relation_id, 'attr' => $attr]) }}" class="btn btn-white border px-2 text-warning"><i class="bi bi-pencil-square"></i></a>
-                                                    <button class="btn btn-white border px-2 text-danger" data-bs-toggle="modal" data-bs-target="#deleteValueElementModal-{{ $valuesInPeriod->first()->id }}"><i class="bi bi-trash3"></i></button>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                            </tr>
+
+                                            <x-delete-model href="{{ route('audit.values.delete', ['attr' => $attr]) }}" message="Attention : Suppression définitive de toute la ligne d'enregistrement OR." title="Confirmer" target="deleteValueElementModal-{{ $entriesInLine->first()->id }}" />
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <x-delete-model href="{{ route('audit.values.delete', ['attr' => $attr]) }}" message="Attention : Suppression irréversible." title="Confirmer" target="deleteValueElementModal-{{ $valuesInPeriod->first()->id }}" />
                         @endforeach
                     </div>
                 @endforeach

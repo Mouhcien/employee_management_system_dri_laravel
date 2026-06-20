@@ -331,6 +331,8 @@
     </div>
 </div>
 
+@vite(['resources/js/bootstrap.js'])
+
 <script>
     function toggleImageSize() {
         const profileCol = document.getElementById('profile_column');

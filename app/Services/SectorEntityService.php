@@ -23,6 +23,10 @@ class SectorEntityService
         return $this->sectorEntityRepository->All(Sector::class, $this->with, $pages);
     }
 
+    public function getClearAll($pages=0){
+        return $this->sectorEntityRepository->All(Sector::class, [], $pages);
+    }
+
     public function getAllByEntity($entity_id, $pages=0){
         return $this->sectorEntityRepository->AllByByEntity($entity_id, $pages);
     }

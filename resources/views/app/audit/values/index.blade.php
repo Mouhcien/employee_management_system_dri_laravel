@@ -299,6 +299,7 @@
     <x-import-values-modal :periods="$periods" :table="$tableObj ?? null" />
 
     <script>
+
         document.addEventListener('DOMContentLoaded', function() {
             const input = document.getElementById('employee_selected');
             const list = document.getElementById('employee_list');
@@ -330,5 +331,6 @@
             const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
             tooltipTriggerList.map(t => new bootstrap.Tooltip(t))
         });
+
     </script>
 </x-layout>

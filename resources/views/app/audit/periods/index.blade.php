@@ -133,7 +133,13 @@
                                         <div class="d-flex justify-content-end gap-1">
                                             <a href="{{ route('audit.periods.show', $period) }}" class="action-pill bg-sky-soft" title="Détails"><i class="bi bi-eye"></i></a>
                                             <a href="{{ route('audit.periods.edit', $period) }}" class="action-pill bg-indigo-soft" title="Modifier"><i class="bi bi-pencil-square"></i></a>
-                                            <a href="{{ route('audit.periods.delete', $period) }}" class="action-pill bg-rose-soft" title="Supprimer"><i class="bi bi-trash3"></i></a>
+                                            <button class="btn action-pill bg-rose-soft"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deletePeriodModal-{{ $period->id }}"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Supprimer">
+                                                <i class="bi bi-trash3 me-2"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -151,6 +157,18 @@
                 </div>
             </div>
         </div>
+
+        @foreach($periods as $period)
+            <x-delete-model
+
+                href="{{ route('audit.periods.delete', $period->id) }}"
+
+                message="Attention : La suppression de la période #{{ $period->title }} est irréversible."
+
+                title="Confirmation de Suppression"
+
+                target="deletePeriodModal-{{ $period->id }}" />
+        @endforeach
 
         {{-- Form Section --}}
         <div class="col-lg-5">

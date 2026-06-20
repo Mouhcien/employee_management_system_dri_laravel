@@ -1,3 +1,4 @@
+<?php ini_set('memory_limit', '1024M'); // Or '1024M' for 1GB ?>
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>

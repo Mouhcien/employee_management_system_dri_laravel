@@ -22,6 +22,10 @@ class SectionEntityService
         return $this->sectionEntityRepository->All(Section::class, $this->with, $pages);
     }
 
+    public function getClearAll($pages=0){
+        return $this->sectionEntityRepository->All(Section::class, [], $pages);
+    }
+
     public function getAllByEntity($entity_id, $pages=0){
         return $this->sectionEntityRepository->getAllByEntity($entity_id, $pages);
     }

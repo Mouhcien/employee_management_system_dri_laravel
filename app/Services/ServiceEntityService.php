@@ -22,6 +22,10 @@ class ServiceEntityService
         return $this->serviceEntityRepository->All(Service::class, $this->with, $pages);
     }
 
+    public function getClearAll($pages=0){
+        return $this->serviceEntityRepository->All(Service::class, [], $pages);
+    }
+
     public function getAllByFilter($filter, $pages=0){
         return $this->serviceEntityRepository->AllByFilter($filter, $this->with, $pages);
     }

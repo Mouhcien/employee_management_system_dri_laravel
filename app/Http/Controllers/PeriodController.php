@@ -98,5 +98,24 @@ class PeriodController extends Controller
         }
     }
 
+    public function delete($id) {
+        try {
+
+            $periodObj = $this->periodService->getOneById($id);
+            if (is_null($periodObj))
+                return back()->with('error', 'Période introuvable');
+
+            $result = $this->periodService->delete($id);
+
+            if ($result)
+                return back()->with('success', 'Période supprimé avec success !!');
+            else
+                return back()->with('error', 'Erreur lors de la suppression de la période !!');
+
+        }catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
 
 }

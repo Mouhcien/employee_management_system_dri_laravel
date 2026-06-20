@@ -68,10 +68,10 @@ class ValueController extends Controller
 
             $tables = $this->tableService->getAll(0);
             $periods = $this->periodService->getAll(0);
-            $employees = $this->employeeService->getAll(0);
-            $services = $this->serviceEntityService->getAll(0);
-            $entities = $this->entityService->getAll(0);
-            $sectors = $this->sectorEntityService->getAll(0);
+            $employees = $this->employeeService->getClearAll(0);
+            $services = $this->serviceEntityService->getClearAll(0);
+            $entities = $this->entityService->getClearAll(0);
+            $sectors = $this->sectorEntityService->getClearAll(0);
             $sections = $this->sectionEntityService->getAll(0);
 
             $selected_period = null;
@@ -137,11 +137,11 @@ class ValueController extends Controller
         try {
             $tables = $this->tableService->getAll(0);
             $periods = $this->periodService->getAll(0);
-            $employees = $this->employeeService->getAll(0);
-            $services = $this->serviceEntityService->getAll(0);
-            $entities = $this->entityService->getAll(0);
-            $sectors = $this->sectorEntityService->getAll(0);
-            $sections = $this->sectionEntityService->getAll(0);
+            $employees = $this->employeeService->getClearAll(0);
+            $services = $this->serviceEntityService->getClearAll(0);
+            $entities = $this->entityService->getClearAll(0);
+            $sectors = $this->sectorEntityService->getClearAll(0);
+            $sections = $this->sectionEntityService->getClearAll(0);
             //$values = $this->valueService->getAll($this->pages);
 
             $values = [];
@@ -252,73 +252,92 @@ class ValueController extends Controller
     }
 
     public function import(Request $request) {
+        set_time_limit(0);
         try {
-            //dd($request);
 
             $data['period_id'] = $request->period_id;
             $data['table_id'] = $request->table_id;
 
             $period = $this->periodService->getOneById($request->period_id);
-            if (is_null($period))
+            if (is_null($period)) {
                 return back()->with('error', 'Période introuvable !!!');
+            }
 
             $table = $this->tableService->getOneById($request->table_id);
-            if (is_null($table))
+            if (is_null($table)) {
                 return back()->with('error', 'Le tableau de suivi est introuvable !!!');
-
-            //get table columns
+            }
 
             $columns = $this->columnService->getAllColumnsByTable($table->id);
 
-            if ($request->hasFile('file')) {
-
-                $request->validate([
-                    'file' => 'required|file|mimes:xlsx,csv,xls'
-                ]);
-
-                // Read data into array
-                $rows = Excel::toArray([], $request->file('file'));
-
-                //get the headers
-                $headers = null;
-                foreach ($rows[0] as $rr) {
-                    $headers = $rr;
-                    break;
-                }
-
-                $count = 0; //count the header
-                foreach ($rows[0] as $rr) {
-                    if ($count > 0) {
-                        foreach ($columns as $column) {
-                            $data['relation_id'] = $column->relations[0]->id;
-                            $j=0;
-                            foreach ($headers as $header) {
-                                if ($header == 'PPR')
-                                    $data['employee_id'] = $this->employeeService->getOneByPPR($rr[$j])->id;
-
-                                if ($column->title == $header)
-                                    $data['value'] = $rr[$j];
-                                $j++;
-                            }
-                            $this->valueService->create($data);
-                        }
-                    }
-                    $count++;
-                }
-
-                if ($count == count($rows[0])) {
-                    return redirect()->route('audit.values.index')->with('success', "Importation est bien faite!!  " . $count . "/" . count($rows[0]) . " !");
-                } else {
-                    return redirect()->route('audit.values.index')->with('error', "Erreur lors d'imortation !!! " . $count . "/" . count($rows[0]) . " !");
-                }
-
-            } else {
+            if (!$request->hasFile('file')) {
                 return redirect()->route('audit.values.index')->with('error', "Merci de spécifier le fichier excel !!!");
             }
 
+            $request->validate([
+                'file' => 'required|file|mimes:xlsx,csv,xls'
+            ]);
 
+            $sheets = Excel::toArray([], $request->file('file'));
+            $rows = $sheets[0] ?? [];
 
-            return redirect()->route('audit.values.index')->with('success', "Sauvgrade est bien faite !!!");
+            if (empty($rows)) {
+                return redirect()->route('audit.values.index')->with('error', "Le fichier Excel est vide.");
+            }
+
+            // 1. Extract and normalize headers (replace spaces with underscores)
+            $rawHeaders = array_shift($rows);
+            $normalizedHeaders = array_map(function($header) {
+                return str_replace(' ', '_', trim($header));
+            }, $rawHeaders);
+
+            // Create lookup map ['Header_Name' => Index]
+            $headerMap = array_flip($normalizedHeaders);
+
+            // Verify required structural column using its normalized name
+            if (!isset($headerMap['PPR_affectataire'])) {
+                return redirect()->route('audit.values.index')->with('error', "La colonne obligatoire 'PPR affectataire' est introuvable dans le fichier.");
+            }
+
+            $successCount = 0;
+
+            // 2. Process data rows
+            foreach ($rows as $row) {
+                $pprValue = $row[$headerMap['PPR_affectataire']] ?? null;
+                if (empty($pprValue)) {
+                    continue;
+                }
+
+                $employee = $this->employeeService->getOneByPPR($pprValue);
+                if (!$employee) {
+                    continue;
+                }
+
+                // 3. Match database columns to normalized excel headers
+                foreach ($columns as $column) {
+                    // Normalize DB column title as well to ensure matching consistency
+                    $normalizedColumnTitle = str_replace(' ', '_', trim($column->title));
+
+                    if (isset($headerMap[$normalizedColumnTitle])) {
+                        $excelValue = $row[$headerMap[$normalizedColumnTitle]] ?? null;
+
+                        $insertData = [
+                            'period_id'   => $data['period_id'],
+                            'table_id'    => $data['table_id'],
+                            'employee_id' => $employee->id,
+                            'relation_id' => $column->relations[0]->id ?? null,
+                            'value'       => $excelValue
+                        ];
+
+                        if ($insertData['relation_id']) {
+                            $this->valueService->create($insertData);
+                        }
+                    }
+                }
+                $successCount++;
+            }
+
+            return redirect()->route('audit.values.index')->with('success', "Importation terminée avec succès ! " . $successCount . " lignes traitées.");
 
         }catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
@@ -334,11 +353,11 @@ class ValueController extends Controller
 
             $tables = $this->tableService->getAll(0);
             $periods = $this->periodService->getAll(0);
-            $employees = $this->employeeService->getAll(0);
-            $services = $this->serviceEntityService->getAll(0);
-            $entities = $this->entityService->getAll(0);
-            $sectors = $this->sectorEntityService->getAll(0);
-            $sections = $this->sectionEntityService->getAll(0);
+            $employees = $this->employeeService->getClearAll(0);
+            $services = $this->serviceEntityService->getClearAll(0);
+            $entities = $this->entityService->getClearAll(0);
+            $sectors = $this->sectorEntityService->getClearAll(0);
+            $sections = $this->sectionEntityService->getClearAll(0);
 
             $selected_period = $relationObj->period_id;
 
@@ -461,7 +480,7 @@ class ValueController extends Controller
 
             $periods = $this->periodService->getAll(0);
             $employees = $this->employeeService->getAll($this->pages);
-            $employees_all = $this->employeeService->getAll(0);
+            $employees_all = $this->employeeService->getClearAll(0);
             $services = $this->serviceEntityService->getAll(0);
             $entities = $this->entityService->getAll(0);
             $sectors = $this->sectorEntityService->getAll(0);

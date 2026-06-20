@@ -20,11 +20,11 @@ class PeriodService
     }
 
     public function getAll($pages=0){
-        return $this->periodRepository->All(Period::class, $this->with, $pages);
+        return $this->periodRepository->All(Period::class, [], $pages);
     }
 
     public function getOneById($id){
-        return $this->periodRepository->One(Period::class, $this->with, $id);
+        return $this->periodRepository->One(Period::class, [], $id);
     }
 
     public function create($data){
